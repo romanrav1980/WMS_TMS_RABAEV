@@ -1,5 +1,25 @@
 import pytest
-from app.modules.master_data.domain.store_profile import StoreProfileInvalid, normalize_profile, normalize_windows
+from app.modules.master_data.domain.store_profile import StoreProfileInvalid, normalize_profile, normalize_windows, normalize_delivery_changes, delivery_rules_hash
+
+
+def test_legacy_profile_body_does_not_change_delivery_rules_or_hash():
+    assert normalize_delivery_changes({"receiving_window_mode": "UNCONFIGURED"}) == {}
+    assert delivery_rules_hash("A", 30, 0) == delivery_rules_hash("A", "30.00", False)
+    assert delivery_rules_hash("A", 30, 0) != delivery_rules_hash("A", 45, 0)
+
+
+@pytest.mark.parametrize("values", [
+    {"unload_norm_min": True}, {"unload_norm_min": 0}, {"unload_norm_min": 1441},
+    {"window_strict": 1}, {"window_strict": "false"}, {"unload_norm_min": 30, "expected_delivery_rules_hash": "wrong"},
+])
+def test_invalid_delivery_rules_or_missing_basis_are_rejected(values):
+    with pytest.raises(StoreProfileInvalid):
+        normalize_delivery_changes(values)
+
+
+def test_delivery_changes_preserve_explicit_unset_and_soft_window():
+    values = {"unload_norm_min": None, "window_strict": False, "expected_delivery_rules_hash": "a" * 64}
+    assert normalize_delivery_changes(values) == values
 
 
 def test_windows_sorted_and_non_overlapping():

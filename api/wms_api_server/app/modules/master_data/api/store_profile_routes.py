@@ -17,7 +17,12 @@ def read_profile(addr: str = Query(min_length=1, max_length=255), _user: AdminUs
 def save_profile(body: StoreProfileInput, user: AdminUser = Depends(require_permission("warehouse_settings_edit")),
                  service: StoreProfilePort = Depends(store_profile_service)) -> dict[str, Any]:
     try:
-        return service.save(user.username, body.model_dump(mode="json"))
+        value = body.model_dump(mode="json")
+        # Absent additive fields preserve both old request hashes and existing address rules.
+        for key in ("unload_norm_min", "window_strict", "expected_delivery_rules_hash"):
+            if key not in body.model_fields_set:
+                value.pop(key, None)
+        return service.save(user.username, value)
     except StoreProfileError as exc:
         raise HTTPException(exc.status, {"code": exc.code, "message": str(exc), "operation_id": body.operation_id,
                                          "outcome_confirmed": exc.status in (409, 422)}) from exc

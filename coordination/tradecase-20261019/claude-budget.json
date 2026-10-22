@@ -1,190 +1,207 @@
 {
-  "date": "2026-10-19",
-  "timezone": "Europe/Moscow",
-  "limit": 14,
-  "used": 14,
-  "requests": [
-    {
-      "id": "C-0130",
-      "task": "TRADECASE document workspace and T02 interface review",
-      "registered_at": "2026-10-19T09:29:00+03:00",
-      "status": "RESULT + RELEASE K-0082; compiled UI accepted by Codex",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00",
-      "cli_auth": "loggedIn=false; no CLI model request sent"
-    },
-    {
-      "id": "C-0133",
-      "task": "TRADECASE stock and supply capture workspace, safe retry and operator help",
-      "registered_at": "2026-10-19T10:25:00+03:00",
-      "status": "RESULT + RELEASE K-0084; compiled UI accepted by Codex",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    },
-    {
-      "id": "C-0136",
-      "task": "TRADECASE buyout and scanned sorting UI, help, independent sorting admission review",
-      "registered_at": "2026-10-19T12:13:39.3612802+03:00",
-      "status": "RESULT + RELEASE K0086; root compiled UI10/10 PASS; review fixes integrated",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    },
-    {
-      "id": "C-0139",
-      "task": "TRADECASE transport execution and AFTER_PICK/IN_TRANSIT UI, operator help, independent admission review and compiled regression",
-      "registered_at": "2026-10-19T14:08:22.8454725+03:00",
-      "status": "RESULT + RELEASE K0088; root compiled11checks65GET PASS; integrated review fixes; no further requests",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    },
-    {
-      "id": "C-0142",
-      "status": "RESULT + RELEASE K0090; Codex acceptance 24 UI + 12 model + 11 regression PASS",
-      "delivery": "existing file channel",
-      "grant_date": "2026-10-22",
-      "registered_at": "2026-10-22T07:58:00+03:00",
-      "task": "TRADECASE shift supervisor and unified resource Gantt integration, defects and acceptance evidence"
-    },
-    {
-      "id": "C-0143",
-      "delivery": "existing file channel",
-      "grant_date": "2026-10-22",
-      "registered_at": "2026-10-22T06:06:15.8615645+00:00",
-      "status": "RESULT RELEASE K0096; candidate 9f62fcb8; NOT_APPLIED; Codex native review found replay access issues",
-      "task": "TRADECASE T08 durable topup approval, stock and capacity reservation, SAP order correlation and acceptance"
-    },
-    {
-      "id": "C-0145",
-      "grant_date": "2026-10-22",
-      "registered_at": "2026-10-22T17:29:36.0926307+03:00",
-      "status": "RESULT RELEASE K0098; route coverage delivered, pending Codex acceptance",
-      "delivery": "existing file channel",
-      "task": "T09 real route and order coverage read model/UI, outside blocked inventory and Oracle reads"
-    },
-    {
-      "id": "C-0146",
-      "registered_at": "2026-10-22T21:25:14.0837279+03:00",
-      "grant_date": "2026-10-22",
-      "status": "RESULT RELEASE K0101; candidate143a37c6 NOT_APPLIED; pending Codex native review/live acceptance",
-      "delivery": "existing file channel",
-      "task": "T08 atomic adoption of topup holds by native warehouse wave; capacity accounting after updated TRIP"
-    },
-    {
-      "id": "C-0147",
-      "registered_at": "2026-10-22T21:30:49.7645333+03:00",
-      "grant_date": "2026-10-22",
-      "status": "RESULT RELEASE K0103; candidatefe93fb8f; pending Codex real original receipt replay",
-      "delivery": "existing file channel",
-      "task": "Investigate and fix marked receipt1000-unit REQUEST_DEADLINE, preserving stock and regulatory invariants"
-    },
-    {
-      "id": "C-0148",
-      "registered_at": "2026-10-22T22:01:40.6857477+03:00",
-      "status": "RESULT RELEASE K0105; read-only route points/window plan; pending Codex review/deployment/acceptance",
-      "delivery": "existing file channel",
-      "task": "T09 recipient-to-route-point bindings and real time-window route readiness, UI and evidence"
-    },
-    {
-      "id": "C-0149",
-      "registered_at": "2026-10-22T22:20:57.1390852+03:00",
-      "status": "RELEASE K0107 candidate699ef716 NOT_APPLIED; Codex found owner/actor/vehicle/receipt gaps; rework C0150",
-      "delivery": "existing file channel",
-      "task": "T10 yard visits and gate occupancy: real lifecycle, conflict prevention, supervisor risks, UI and acceptance"
-    },
-    {
-      "id": "C-0150",
-      "registered_at": "2026-10-22T22:57:46.2304558+03:00",
-      "status": "RELEASE K0109; applied/rollback/reapply 16/8/16; native lifecycle PASS3; scoped/concurrency/HTTP acceptance pending",
-      "delivery": "existing file channel",
-      "task": "C0149 yard candidate rework: source-owner admission, actor-bound replay, global vehicle occupancy, receipt identity and regressions"
-    },
-    {
-      "id": "C-0151",
-      "registered_at": "2026-10-22T23:24:15.2909607+03:00",
-      "status": "Transferred to Codex23Oct after session limit; route implementation owned by root",
-      "delivery": "existing file channel",
-      "task": "Complete T09 editable route inputs, full window calculation and additional-stop decision using existing native TMS"
-    },
-    {
-      "id": "C-0152",
-      "registered_at": "2026-10-23T00:32:18.437634+03:00",
-      "status": "ACK K0111; WORKING: T11 quarantine/quality exceptions; write-off semantics clarification sent",
-      "delivery": "existing file channel",
-      "task": "T11 exception workplace: inventory discrepancies, quarantine, defect and write-off using existing native operations"
-    }
-  ],
-  "additional_grants": [
-    {
-      "date": "2026-10-22",
-      "used": 3,
-      "authorization": "Owner explicitly granted three additional Claude Code requests",
-      "limit": 3,
-      "request_ids": [
-        "C-0142",
-        "C-0143",
-        "C-0145"
-      ]
-    },
-    {
-      "date": "2026-10-22",
-      "authorization": "Owner: Можешь при разработке подгружать claude code больше",
-      "limit": 2,
-      "used": 2,
-      "allocation_basis": "Codex working batch of two large tasks; owner did not specify a numeric cap",
-      "request_ids": [
-        "C-0146",
-        "C-0147"
-      ]
-    },
-    {
-      "date": "2026-10-22",
-      "authorization": "Owner authorized more Claude tasks and joint completion of all sprints",
-      "allocation_basis": "One additional large T09 task assigned by Codex under open owner authorization",
-      "limit": 1,
-      "used": 1,
-      "request_ids": [
-        "C-0148"
-      ]
-    },
-    {
-      "date": "2026-10-22",
-      "authorization": "Owner: joint execution of all sprints, more Claude delegation authorized",
-      "allocation_basis": "One further large independent T10 delivery",
-      "limit": 1,
-      "used": 1,
-      "request_ids": [
-        "C-0149"
-      ]
-    },
-    {
-      "date": "2026-10-22",
-      "authorization": "Owner authorized more Claude calls and joint completion",
-      "allocation_basis": "One consolidated review-rework request before applying yard candidate",
-      "limit": 1,
-      "used": 1,
-      "request_ids": [
-        "C-0150"
-      ]
-    },
-    {
-      "date": "2026-10-22",
-      "authorization": "Owner: accelerate joint completion with Claude Code",
-      "allocation_basis": "One large T09 completion task under existing open authorization; no new owner numeric cap",
-      "limit": 1,
-      "used": 1,
-      "request_ids": [
-        "C-0151"
-      ]
-    },
-    {
-      "date": "2026-10-23",
-      "authorization": "Owner explicitly authorized additional parallel Claude work",
-      "allocation_basis": "One large T11 package; no numeric cap imposed by owner",
-      "limit": 1,
-      "used": 1,
-      "request_ids": [
-        "C-0152"
-      ]
-    }
-  ]
+    "date":  "2026-10-19",
+    "timezone":  "Europe/Moscow",
+    "limit":  15,
+    "used":  15,
+    "requests":  [
+                     {
+                         "id":  "C-0130",
+                         "task":  "TRADECASE document workspace and T02 interface review",
+                         "registered_at":  "2026-10-19T09:29:00+03:00",
+                         "status":  "RESULT + RELEASE K-0082; compiled UI accepted by Codex",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00",
+                         "cli_auth":  "loggedIn=false; no CLI model request sent"
+                     },
+                     {
+                         "id":  "C-0133",
+                         "task":  "TRADECASE stock and supply capture workspace, safe retry and operator help",
+                         "registered_at":  "2026-10-19T10:25:00+03:00",
+                         "status":  "RESULT + RELEASE K-0084; compiled UI accepted by Codex",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0136",
+                         "task":  "TRADECASE buyout and scanned sorting UI, help, independent sorting admission review",
+                         "registered_at":  "2026-10-19T12:13:39.3612802+03:00",
+                         "status":  "RESULT + RELEASE K0086; root compiled UI10/10 PASS; review fixes integrated",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0139",
+                         "task":  "TRADECASE transport execution and AFTER_PICK/IN_TRANSIT UI, operator help, independent admission review and compiled regression",
+                         "registered_at":  "2026-10-19T14:08:22.8454725+03:00",
+                         "status":  "RESULT + RELEASE K0088; root compiled11checks65GET PASS; integrated review fixes; no further requests",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0142",
+                         "status":  "RESULT + RELEASE K0090; Codex acceptance 24 UI + 12 model + 11 regression PASS",
+                         "delivery":  "existing file channel",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T07:58:00+03:00",
+                         "task":  "TRADECASE shift supervisor and unified resource Gantt integration, defects and acceptance evidence"
+                     },
+                     {
+                         "id":  "C-0143",
+                         "delivery":  "existing file channel",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T06:06:15.8615645+00:00",
+                         "status":  "RESULT RELEASE K0096; candidate 9f62fcb8; NOT_APPLIED; Codex native review found replay access issues",
+                         "task":  "TRADECASE T08 durable topup approval, stock and capacity reservation, SAP order correlation and acceptance"
+                     },
+                     {
+                         "id":  "C-0145",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T17:29:36.0926307+03:00",
+                         "status":  "RESULT RELEASE K0098; route coverage delivered, pending Codex acceptance",
+                         "delivery":  "existing file channel",
+                         "task":  "T09 real route and order coverage read model/UI, outside blocked inventory and Oracle reads"
+                     },
+                     {
+                         "id":  "C-0146",
+                         "registered_at":  "2026-10-22T21:25:14.0837279+03:00",
+                         "grant_date":  "2026-10-22",
+                         "status":  "RESULT RELEASE K0101; candidate143a37c6 NOT_APPLIED; pending Codex native review/live acceptance",
+                         "delivery":  "existing file channel",
+                         "task":  "T08 atomic adoption of topup holds by native warehouse wave; capacity accounting after updated TRIP"
+                     },
+                     {
+                         "id":  "C-0147",
+                         "registered_at":  "2026-10-22T21:30:49.7645333+03:00",
+                         "grant_date":  "2026-10-22",
+                         "status":  "RESULT RELEASE K0103; candidatefe93fb8f; pending Codex real original receipt replay",
+                         "delivery":  "existing file channel",
+                         "task":  "Investigate and fix marked receipt1000-unit REQUEST_DEADLINE, preserving stock and regulatory invariants"
+                     },
+                     {
+                         "id":  "C-0148",
+                         "registered_at":  "2026-10-22T22:01:40.6857477+03:00",
+                         "status":  "RESULT RELEASE K0105; read-only route points/window plan; pending Codex review/deployment/acceptance",
+                         "delivery":  "existing file channel",
+                         "task":  "T09 recipient-to-route-point bindings and real time-window route readiness, UI and evidence"
+                     },
+                     {
+                         "id":  "C-0149",
+                         "registered_at":  "2026-10-22T22:20:57.1390852+03:00",
+                         "status":  "RELEASE K0107 candidate699ef716 NOT_APPLIED; Codex found owner/actor/vehicle/receipt gaps; rework C0150",
+                         "delivery":  "existing file channel",
+                         "task":  "T10 yard visits and gate occupancy: real lifecycle, conflict prevention, supervisor risks, UI and acceptance"
+                     },
+                     {
+                         "id":  "C-0150",
+                         "registered_at":  "2026-10-22T22:57:46.2304558+03:00",
+                         "status":  "RELEASE K0109; applied/rollback/reapply 16/8/16; native lifecycle PASS3; scoped/concurrency/HTTP acceptance pending",
+                         "delivery":  "existing file channel",
+                         "task":  "C0149 yard candidate rework: source-owner admission, actor-bound replay, global vehicle occupancy, receipt identity and regressions"
+                     },
+                     {
+                         "id":  "C-0151",
+                         "registered_at":  "2026-10-22T23:24:15.2909607+03:00",
+                         "status":  "Transferred to Codex23Oct after session limit; route implementation owned by root",
+                         "delivery":  "existing file channel",
+                         "task":  "Complete T09 editable route inputs, full window calculation and additional-stop decision using existing native TMS"
+                     },
+                     {
+                         "id":  "C-0152",
+                         "registered_at":  "2026-10-23T00:32:18.437634+03:00",
+                         "status":  "RELEASE K0112 checkpoint c4a2f0b8; native NOT_APPLIED; Codex review/live acceptance pending",
+                         "delivery":  "existing file channel",
+                         "task":  "T11 exception workplace: inventory discrepancies, quarantine, defect and write-off using existing native operations"
+                     },
+                     {
+                         "id":  "C-0153",
+                         "registered_at":  "2026-10-23T01:04:06.2239989+03:00",
+                         "status":  "REGISTERED before file delivery; ACK pending",
+                         "delivery":  "existing file channel",
+                         "task":  "T11 native quality hold enforcement and actual goods write-off through stock posting with transactional outgoing document"
+                     }
+                 ],
+    "additional_grants":  [
+                              {
+                                  "date":  "2026-10-22",
+                                  "used":  3,
+                                  "authorization":  "Owner explicitly granted three additional Claude Code requests",
+                                  "limit":  3,
+                                  "request_ids":  [
+                                                      "C-0142",
+                                                      "C-0143",
+                                                      "C-0145"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-22",
+                                  "authorization":  "Owner: Можешь при разработке подгружать claude code больше",
+                                  "limit":  2,
+                                  "used":  2,
+                                  "allocation_basis":  "Codex working batch of two large tasks; owner did not specify a numeric cap",
+                                  "request_ids":  [
+                                                      "C-0146",
+                                                      "C-0147"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-22",
+                                  "authorization":  "Owner authorized more Claude tasks and joint completion of all sprints",
+                                  "allocation_basis":  "One additional large T09 task assigned by Codex under open owner authorization",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0148"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-22",
+                                  "authorization":  "Owner: joint execution of all sprints, more Claude delegation authorized",
+                                  "allocation_basis":  "One further large independent T10 delivery",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0149"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-22",
+                                  "authorization":  "Owner authorized more Claude calls and joint completion",
+                                  "allocation_basis":  "One consolidated review-rework request before applying yard candidate",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0150"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-22",
+                                  "authorization":  "Owner: accelerate joint completion with Claude Code",
+                                  "allocation_basis":  "One large T09 completion task under existing open authorization; no new owner numeric cap",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0151"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-23",
+                                  "authorization":  "Owner explicitly authorized additional parallel Claude work",
+                                  "allocation_basis":  "One large T11 package; no numeric cap imposed by owner",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0152"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-23",
+                                  "authorization":  "Owner: продолжай работу пока все не сделаешь. клод ждет",
+                                  "allocation_basis":  "One large follow-up under open delegation authorization; not an owner numeric cap",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0153"
+                                                  ]
+                              }
+                          ]
 }

@@ -5,7 +5,7 @@ from typing import Any
 import oracledb
 from ...platform.public import stock_configuration_transaction, read_oracle_json
 from ..contracts_store_profile import StoreProfileError
-from ..domain.store_profile import FLAGS, StoreProfileInvalid, normalize_profile, normalize_windows
+from ..domain.store_profile import FLAGS, StoreProfileInvalid, normalize_profile, normalize_windows, normalize_delivery_changes, delivery_rules_hash
 
 COLUMNS = ("RECEIVING_WINDOW_MODE,TIMEZONE_REGION,BACKROOM_FLAG,BACKROOM_PALLETS,BACKROOM_ROLLS,UNATTENDED_DROP_FLAG,STORAGE_TEMP_CLASS,"
            "RAMP_FLAG,RAMP_HEIGHT_MM,MAX_VEHICLE_OUTER_HEIGHT_MM,MAX_VEHICLE_OUTER_LENGTH_MM,DEFAULT_UNLOAD_METHOD,LOADER_REQUIRED,ACCESS_NOTE")
@@ -17,11 +17,36 @@ def _not_installed(error: oracledb.DatabaseError) -> bool:
     return getattr(error.args[0], "code", 0) == 942  # ORA-00942: таблицы профиля ещё не установлены
 
 
+def read_delivery_rules(cur: Any, address: str, lock: bool = False) -> dict[str, Any]:
+    cur.execute("select UNLOAD_NORM_MIN,TW_STRICT from RRL_ADDR where ADDR=:a and nvl(DELETED3,0)=0" + (" for update wait 5" if lock else ""), a=address)
+    rows = cur.fetchall()
+    if len(rows) != 1:
+        return {"status": "MISSING_OR_AMBIGUOUS", "source_hash": None}
+    duration, strict = rows[0]
+    return {"status": "KNOWN", "unload_norm_min": duration, "window_strict": None if strict is None else bool(strict),
+            "source_hash": delivery_rules_hash(address, duration, strict)}
+
+
+def save_delivery_rules(cur: Any, address: str, canonical: dict[str, Any]) -> None:
+    columns = {"unload_norm_min": "UNLOAD_NORM_MIN", "window_strict": "TW_STRICT"}
+    changes = {key: canonical[key] for key in columns if key in canonical}
+    if not changes:
+        return
+    current = read_delivery_rules(cur, address, lock=True)
+    if current["status"] != "KNOWN" or current["source_hash"] != canonical["expected_delivery_rules_hash"]:
+        raise StoreProfileError("STORE_DELIVERY_RULES_CHANGED", 409, "Правила доставки изменились. Перечитайте карточку магазина")
+    params = {key: int(value) if isinstance(value, bool) else value for key, value in changes.items()}
+    cur.execute("update RRL_ADDR set " + ",".join(columns[key] + "=:" + key for key in changes) + " where ADDR=:a and nvl(DELETED3,0)=0", a=address, **params)
+    if cur.rowcount != 1:
+        raise StoreProfileError("STORE_PROFILE_ADDRESS_MISSING_OR_AMBIGUOUS", 409)
+
+
 def read_profile(cur: Any, address: str) -> dict[str, Any]:
+    rules = read_delivery_rules(cur, address)
     cur.execute("select PROFILE_VERSION," + COLUMNS + ",UPDATED_BY,to_char(UPDATED_AT,'YYYY-MM-DD\"T\"HH24:MI:SS') from RRL_STORE_PROFILE where STORE_ADDR=:a", a=address)
     row = cur.fetchone()
     if row is None:
-        return {"store_addr": address, "configured": False, "version": 0,
+        return {"store_addr": address, "configured": False, "version": 0, "delivery_rules": rules,
                 "profile": {**{name: None for name in NAMES}, "receiving_window_mode": "UNCONFIGURED"}, "windows": []}
     profile = dict(zip(NAMES, row[1:1 + len(NAMES)]))
     for name in FLAGS:
@@ -32,7 +57,7 @@ def read_profile(cur: Any, address: str) -> dict[str, Any]:
     if len(rows) > 56:
         raise StoreProfileError("STORE_PROFILE_WINDOW_BOUND_EXCEEDED", 409)
     windows = [{"weekday": d, "from_minute": f, "to_minute": t} for d, f, t in rows]
-    return {"store_addr": address, "configured": True, "version": row[0], "profile": profile, "windows": windows,
+    return {"store_addr": address, "configured": True, "version": row[0], "profile": profile, "windows": windows, "delivery_rules": rules,
             "updated_by": row[-2], "updated_at": row[-1]}
 
 
@@ -54,10 +79,11 @@ class StoreProfile:
         try:
             profile = normalize_profile(body)
             windows = normalize_windows(body.get("windows") or [], profile["receiving_window_mode"])
+            delivery_changes = normalize_delivery_changes(body)
         except StoreProfileInvalid as invalid:
             raise StoreProfileError(invalid.code, 422, str(invalid)) from invalid
         canonical = {"store_addr": body["store_addr"], "expected_version": body["expected_version"], "reason": body["reason"],
-                     **profile, "windows": windows}
+                     **profile, "windows": windows, **delivery_changes}
         wire = json.dumps(canonical, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
         digest = hashlib.sha256(wire.encode("utf-8")).hexdigest()
         try:
@@ -89,6 +115,7 @@ class StoreProfile:
             current = row[0] if row else 0
             if current != canonical["expected_version"]:
                 raise StoreProfileError("STORE_PROFILE_VERSION_CHANGED")
+            save_delivery_rules(cur, address, canonical)
             values = {name: (int(profile[name]) if name in FLAGS and profile[name] is not None else profile[name]) for name in NAMES}
             params = {"a": address, "v": current + 1, "actor": actor, **values}
             assignments = ",".join(f"{column}=:{name}" for column, name in zip(COLUMNS.split(","), NAMES))

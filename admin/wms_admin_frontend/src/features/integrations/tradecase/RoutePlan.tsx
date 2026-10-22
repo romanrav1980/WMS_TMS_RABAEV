@@ -1,5 +1,6 @@
 import { useRead } from "./useRead";
 import { Tech } from "./ui";
+import { RAW_ADMIN_BASE } from "../../../api";
 
 export type RouteMember = { id: number; st_number: string; address: string | null; route_ordinal: number | null; delivery_window_from: string | null; delivery_window_to: string | null };
 type Point = { point_id: number; link_status: "LINKED" | "UNLINKED" | "AMBIGUOUS" | "HIDDEN" | "OTHER_WAREHOUSE"; reason?: string; recipient_id?: string;
@@ -48,6 +49,8 @@ export function RoutePlan({ nativeTask, members, points }: { nativeTask: number;
       const p = byPoint.get(m.id), s = stop(m.address);
       return <article key={m.id} className="tc-panel" aria-label={`Точка ${m.route_ordinal ?? "без номера"}`}>
         <h5>{m.route_ordinal ?? "—"}. {p?.link_status === "OTHER_WAREHOUSE" ? "точка другого склада" : m.address ?? "адрес отсутствует"}</h5>
+        {m.address && <p><a href={`${RAW_ADMIN_BASE}/store-directory.html?addr=${encodeURIComponent(m.address)}`} target="_blank" rel="noopener"
+          title="Открыть карточку адреса: настроить окна приёма, норму разгрузки и строгость окна доставки" data-help-id="tradecase.route.store-settings">Настроить окна и разгрузку магазина</a></p>}
         <dl className="tc-fields">
           <dt>Получатель</dt><dd>{!p ? "нет данных" : p.link_status === "LINKED"
             ? <>{p.recipient_title ?? p.recipient_id} ({p.recipient_id}) · заказ {p.order_ids?.join(", ")}</>

@@ -16,6 +16,9 @@ class StoreProfileInput(BaseModel):
     store_addr: str = Field(min_length=1, max_length=255)
     expected_version: int = Field(strict=True, ge=0)
     reason: str = Field(min_length=8, max_length=1000)
+    unload_norm_min: int | None = Field(default=None, strict=True, gt=0, le=1440)
+    window_strict: bool | None = Field(default=None, strict=True)
+    expected_delivery_rules_hash: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     receiving_window_mode: Literal["UNCONFIGURED", "WEEKLY"] = "UNCONFIGURED"
     timezone_region: str | None = Field(default=None, max_length=64)
     backroom_flag: bool | None = None

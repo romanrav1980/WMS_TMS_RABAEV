@@ -1,9 +1,8 @@
-"""Профиль магазина: только явно заданные параметры, отсутствующих в RRL_ADDR и смежных политиках.
-
-Незаданный параметр (None) ничего не означает и не влияет на планирование/допуск — интеграция с транспортом
-и временем приёмки выполняется отдельно владельцем native-правил.
-"""
+"""Store profile and explicit delivery-rule changes; native transport rules consume the saved values."""
 from typing import Any
+from decimal import Decimal
+import hashlib
+import json
 
 TEMP_CLASSES = ("AMBIENT", "CHILLED", "FROZEN")
 UNLOAD_METHODS = ("PALLET", "ROLL_CAGE", "MANUAL")
@@ -21,6 +20,28 @@ class StoreProfileInvalid(ValueError):
     def __init__(self, code: str, message: str) -> None:
         super().__init__(message)
         self.code = code
+
+
+def delivery_rules_hash(address: str, duration: Any, strict: Any) -> str:
+    value = {"address": address, "unload_norm_min": None if duration is None else format(Decimal(str(duration)).normalize(), "f"),
+             "window_strict": None if strict is None else int(strict)}
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()).hexdigest()
+
+
+def normalize_delivery_changes(values: dict[str, Any]) -> dict[str, Any]:
+    changes = {key: values[key] for key in ("unload_norm_min", "window_strict") if key in values}
+    if not changes:
+        return {}
+    duration = changes.get("unload_norm_min")
+    if duration is not None and (type(duration) is not int or not 1 <= duration <= 1440):
+        raise StoreProfileInvalid("STORE_DELIVERY_DURATION_INVALID", "Норма разгрузки: целое число1–1440минут или не задано")
+    strict = changes.get("window_strict")
+    if strict is not None and type(strict) is not bool:
+        raise StoreProfileInvalid("STORE_DELIVERY_STRICT_INVALID", "Строгость окна: да, нет или не задано")
+    expected = values.get("expected_delivery_rules_hash")
+    if not isinstance(expected, str) or len(expected) != 64 or any(c not in "0123456789abcdef" for c in expected):
+        raise StoreProfileInvalid("STORE_DELIVERY_BASIS_REQUIRED", "Перечитайте правила доставки перед изменением")
+    return {**changes, "expected_delivery_rules_hash": expected}
 
 
 def normalize_windows(windows: list[dict[str, Any]], mode: str = "WEEKLY") -> list[dict[str, int]]:
