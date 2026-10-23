@@ -21,6 +21,14 @@ TAG = "RD23" + uuid4().hex[:10]
 WARE = 240000000 + secrets.randbelow(9000000)
 DEPOT, STORE = TAG + ".DEPOT", TAG + ".STORE"
 report = {"status": "FAIL", "provider": "LIVE ROAD PROVIDER" if any(x in sys.argv for x in ("--live-provider", "--served-api")) else "CONTROLLED TEST RESPONSE, not a live road calculation", "checks": [], "timings": []}
+MULTI_STOP = '--multi-stop' in sys.argv
+if MULTI_STOP and '--served-api' not in sys.argv:
+    raise SystemExit('--multi-stop requires the actual served API')
+addresses = [(DEPOT, 56.8389, 60.5975), (STORE, 56.8519, 60.6122)]
+if MULTI_STOP:
+    addresses += [(TAG + '.BRANCH', 56.833, 60.621), (TAG + '.SHOP', 56.824, 60.603)]
+expected_legs = len(addresses)
+pallets = []
 trip = pallet = None
 depot_version = 0
 created = False
@@ -86,7 +94,7 @@ if __name__ == "__main__":
             before = stock(q)
             q.execute("select nvl(max(LOG_ID),0)from RRL_SQL_SLOW_LOG"); marker = q.fetchone()[0]
             q.execute("insert into RRL_WARES(ID,NAME)values(:w,:n)", w=WARE, n="TRADECASE QA road " + TAG)
-            for address, lat, lon in [(DEPOT, 56.8389, 60.5975), (STORE, 56.8519, 60.6122)]:
+            for address, lat, lon in addresses:
                 q.execute("insert into RRL_ADDR(ADDR,SHIROTA,DOLGOTA,DELETED3)values(:a,:lat,:lon,0)", a=address, lat=lat, lon=lon)
             c.commit(); created = True
         depot_version = depot(DEPOT, 0)
@@ -94,20 +102,32 @@ if __name__ == "__main__":
             q = c.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"]); out = q.var(oracledb.DB_TYPE_NUMBER)
             q.callproc("RRL_TRANSPORT_EDIT_API.create_trip", ["1", datetime(2026, 10, 23), "admin", out])
             trip = int(out.getvalue())
-            pallet = int(q.callfunc("RRL_SBORKA_PALLETS_ADD2", oracledb.DB_TYPE_NUMBER,
-                                   [TAG + ".ST", STORE, 1, TAG + ".PALLET", "1", datetime(2026, 10, 23), "", "admin", WARE]))
-            q.execute("update RRL_SBORKA_PALLETS set TRANSTASK_ID=:t where ID=:p", t=trip, p=pallet)
+            for i, (address, _, _) in enumerate(addresses[1:], 1):
+                uid = TAG + '.PALLET.' + str(i)
+                pallet = int(q.callfunc("RRL_SBORKA_PALLETS_ADD2", oracledb.DB_TYPE_NUMBER,
+                                       [TAG + '.ST.' + str(i), address, 1, uid, "1", datetime(2026, 10, 23), "", "admin", WARE]))
+                pallets.append((pallet, uid))
+                q.execute("update RRL_SBORKA_PALLETS set TRANSTASK_ID=:t,ORD=:ordinal where ID=:p", t=trip, p=pallet, ordinal=i)
             q.callproc("RRL_STOCK_CONFIG_API.end_change")
             c.commit()
         service = TransportPreflight(OracleGateway(), provider)
         snapshot = service.road_legs(trip, "", 24, "admin")
         body = dict(trip_id=trip, expected_version=snapshot["route_input_version"], source_hash=snapshot["source_hash"])
         first = command(service, TAG + ".refresh", body)
-        assert first["updated_legs"] == 2 and calls == (0 if "--served-api" in sys.argv else 1)
+        assert first["updated_legs"] == expected_legs and calls == (0 if "--served-api" in sys.argv else 1)
         assert command(service, TAG + ".refresh", body) == first and calls == (0 if "--served-api" in sys.argv else 1)
         report["checks"].append("Actual native snapshot, atomic cache publication and exact replay; provider spy confirms no recomputation only in the in-process mode")
         current = service.road_legs(trip, "", 24, "admin")
         assert current["drive_min"] > 0 and current["drive_back_min"] > 0 and current["unknown_leg_count"] == 0
+        assert current['stops'] == [a for a, _, _ in addresses[1:]]
+        assert len(current['legs']) == expected_legs
+        assert [(x['from_address'], x['to_address']) for x in current['legs']] == list(zip(
+            [a for a, _, _ in addresses], [a for a, _, _ in addresses[1:]] + [DEPOT]))
+        if '--served-api' in sys.argv:
+            from live_document_acceptance import http, expect
+            served = expect(200, http('GET', f'/api/transport/preflight/trips/{trip}/road-legs'))
+            assert served['legs'] == current['legs'] and served['stops'] == current['stops']
+            report['served_read'] = served
         report["road_result"] = current
         assert current["operational_admission"] is False
         try:
@@ -115,7 +135,7 @@ if __name__ == "__main__":
             raise AssertionError("Stale basis accepted")
         except TransportPlanError as error:
             assert error.code == "ROAD_REFRESH_SOURCE_CHANGED"
-        report["checks"].append("Stale source rejected; native read returns two directed legs; no extra provider call observed only in the in-process spy mode")
+        report["checks"].append("Stale source rejected; native read returns all directed route legs; no extra provider call observed only in the in-process spy mode")
         changed = dict(body, expected_version=body["expected_version"] + 1)
         try:
             command(service, TAG + ".refresh", changed)
@@ -134,18 +154,19 @@ if __name__ == "__main__":
             with oracle_connection() as c:
                 q = c.cursor()
                 # Only own empty planning metadata and synthetic road pairs; receipt history stays immutable.
-                if pallet is not None:
-                    q.execute("delete from RRL_SBORKA_PALLETS where ID=:p and PALLET_UID=:u", p=pallet, u=TAG + ".PALLET")
+                for pallet_id, uid in pallets:
+                    q.execute("delete from RRL_SBORKA_PALLETS where ID=:p and PALLET_UID=:u", p=pallet_id, u=uid)
                 if trip is not None:
                     q.execute("update RRL_TRANSPORT_TASK set DELETED=1 where ID=:t and USER_ID='admin'", t=trip)
-                q.execute("delete from RRL_ADDR_DISTANCE_MATRIX where FROM_ADDR in(:d,:s)or TO_ADDR in(:d,:s)", d=DEPOT, s=STORE)
-                q.execute("update RRL_ADDR set DELETED3=1 where ADDR in(:d,:s)", d=DEPOT, s=STORE)
+                for address, _, _ in addresses:
+                    q.execute("delete from RRL_ADDR_DISTANCE_MATRIX where FROM_ADDR=:a or TO_ADDR=:a", a=address)
+                    q.execute("update RRL_ADDR set DELETED3=1 where ADDR=:a", a=address)
                 c.commit()
                 assert stock(q) == before
                 q.execute("select count(*)from USER_OBJECTS where STATUS='INVALID'"); assert q.fetchone() == (0,)
                 q.execute("select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:m order by ELAPSED_MS desc fetch first 8 rows only", m=marker)
                 report.update(fixture_retired=True, stock=before, slow_sql=[list(r) for r in q])
-        report.update(trip=trip, warehouse=WARE, tag=TAG)
+        report.update(trip=trip, warehouse=WARE, tag=TAG, expected_legs=expected_legs, fixture_addresses=addresses)
         path = ROOT / "runtime/test-evidence/tradecase/2026-10-23/T09" / (TAG + ".json")
         path.write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
     print(json.dumps(dict(status=report["status"], checks=len(report["checks"]), evidence=str(path))))

@@ -1,0 +1,272 @@
+{
+  "status": "PASS",
+  "provider": "LIVE ROAD PROVIDER",
+  "checks": [
+    "Actual native snapshot, atomic cache publication and exact replay; provider spy confirms no recomputation only in the in-process mode",
+    "Stale source rejected; native read returns all directed route legs; no extra provider call observed only in the in-process spy mode",
+    "Changed-body replay rejected; one durable receipt"
+  ],
+  "timings": [
+    688.94,
+    99.68,
+    138.85,
+    152.62
+  ],
+  "http": [
+    {
+      "status": 200,
+      "result": {
+        "operation_id": "RD239ccceaaf0c.refresh",
+        "trip_id": 33680,
+        "updated_legs": 4,
+        "provider": "osrm",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "stock_changed": false,
+        "operational_admission": false
+      }
+    },
+    {
+      "status": 200,
+      "result": {
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "operation_id": "RD239ccceaaf0c.refresh",
+        "operational_admission": false,
+        "provider": "osrm",
+        "stock_changed": false,
+        "trip_id": 33680,
+        "updated_legs": 4
+      }
+    },
+    {
+      "status": 409,
+      "result": {
+        "detail": {
+          "code": "ROAD_REFRESH_SOURCE_CHANGED",
+          "message": "\u0420\u0435\u0439\u0441 \u0438\u043b\u0438 \u0434\u043e\u0440\u043e\u0436\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0438\u0441\u044c. \u041f\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043c\u0430\u0440\u0448\u0440\u0443\u0442"
+        }
+      }
+    },
+    {
+      "status": 409,
+      "result": {
+        "detail": {
+          "code": "ROAD_REFRESH_OPERATION_CONFLICT",
+          "message": "\u041d\u043e\u043c\u0435\u0440 \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u0438 \u0443\u0436\u0435 \u0441\u0432\u044f\u0437\u0430\u043d \u0441 \u0434\u0440\u0443\u0433\u0438\u043c \u0437\u0430\u043f\u0440\u043e\u0441\u043e\u043c"
+        }
+      }
+    }
+  ],
+  "served_read": {
+    "stops": [
+      "RD239ccceaaf0c.STORE",
+      "RD239ccceaaf0c.BRANCH",
+      "RD239ccceaaf0c.SHOP"
+    ],
+    "legs": [
+      {
+        "from_address": "RD239ccceaaf0c.DEPOT",
+        "to_address": "RD239ccceaaf0c.STORE",
+        "duration_min": "5.98",
+        "distance_km": "3.65",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.STORE",
+        "to_address": "RD239ccceaaf0c.BRANCH",
+        "duration_min": "4.03",
+        "distance_km": "2.22",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.BRANCH",
+        "to_address": "RD239ccceaaf0c.SHOP",
+        "duration_min": "4.25",
+        "distance_km": "2.2",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.SHOP",
+        "to_address": "RD239ccceaaf0c.DEPOT",
+        "duration_min": "3.93",
+        "distance_km": "2.05",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      }
+    ],
+    "source_issues": [],
+    "unknown_leg_count": 0,
+    "status": "ROAD_PROFILE_ESTIMATE_AVAILABLE",
+    "drive_min": 15,
+    "drive_back_min": 4,
+    "time_window_admission": false,
+    "physical_capacity_verified": false,
+    "operational_admission": false,
+    "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+    "warehouse_origin": {
+      "warehouse_id": 246462372,
+      "version": 1,
+      "depot_address": "RD239ccceaaf0c.DEPOT",
+      "latitude": 56.8389,
+      "longitude": 60.5975,
+      "configured": true,
+      "status": "CONFIGURED_REFERENCE",
+      "physical_site_verified": false
+    },
+    "trip_id": 33680,
+    "depot_address": "RD239ccceaaf0c.DEPOT",
+    "source_hash": "248ac81f4dcac252fe29283e2d2214d34bc5a65e0fae14742593c6b4cf4a435c",
+    "route_input_version": 0,
+    "maximum_cache_age_hours": 24,
+    "consistent_snapshot": true,
+    "stock_changed": false,
+    "road_snapshot_signature": "178d22572b64a7a1e518dfad31c43a49c16ece3ec3cf93c1180e8009429de600"
+  },
+  "road_result": {
+    "stops": [
+      "RD239ccceaaf0c.STORE",
+      "RD239ccceaaf0c.BRANCH",
+      "RD239ccceaaf0c.SHOP"
+    ],
+    "legs": [
+      {
+        "from_address": "RD239ccceaaf0c.DEPOT",
+        "to_address": "RD239ccceaaf0c.STORE",
+        "duration_min": "5.98",
+        "distance_km": "3.65",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.STORE",
+        "to_address": "RD239ccceaaf0c.BRANCH",
+        "duration_min": "4.03",
+        "distance_km": "2.22",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.BRANCH",
+        "to_address": "RD239ccceaaf0c.SHOP",
+        "duration_min": "4.25",
+        "distance_km": "2.2",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD239ccceaaf0c.SHOP",
+        "to_address": "RD239ccceaaf0c.DEPOT",
+        "duration_min": "3.93",
+        "distance_km": "2.05",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 13:38:56",
+        "unknown_reason": null
+      }
+    ],
+    "source_issues": [],
+    "unknown_leg_count": 0,
+    "status": "ROAD_PROFILE_ESTIMATE_AVAILABLE",
+    "drive_min": 15,
+    "drive_back_min": 4,
+    "time_window_admission": false,
+    "physical_capacity_verified": false,
+    "operational_admission": false,
+    "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+    "warehouse_origin": {
+      "warehouse_id": 246462372,
+      "version": 1,
+      "depot_address": "RD239ccceaaf0c.DEPOT",
+      "latitude": 56.8389,
+      "longitude": 60.5975,
+      "configured": true,
+      "status": "CONFIGURED_REFERENCE",
+      "physical_site_verified": false
+    },
+    "trip_id": 33680,
+    "depot_address": "RD239ccceaaf0c.DEPOT",
+    "source_hash": "248ac81f4dcac252fe29283e2d2214d34bc5a65e0fae14742593c6b4cf4a435c",
+    "route_input_version": 0,
+    "maximum_cache_age_hours": 24,
+    "consistent_snapshot": true,
+    "stock_changed": false,
+    "road_snapshot_signature": "178d22572b64a7a1e518dfad31c43a49c16ece3ec3cf93c1180e8009429de600"
+  },
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6845,
+      56,
+      "TRANSACTION"
+    ],
+    [
+      6844,
+      45,
+      "TRANSACTION"
+    ]
+  ],
+  "trip": 33680,
+  "warehouse": 246462372,
+  "tag": "RD239ccceaaf0c",
+  "expected_legs": 4,
+  "fixture_addresses": [
+    [
+      "RD239ccceaaf0c.DEPOT",
+      56.8389,
+      60.5975
+    ],
+    [
+      "RD239ccceaaf0c.STORE",
+      56.8519,
+      60.6122
+    ],
+    [
+      "RD239ccceaaf0c.BRANCH",
+      56.833,
+      60.621
+    ],
+    [
+      "RD239ccceaaf0c.SHOP",
+      56.824,
+      60.603
+    ]
+  ]
+}
