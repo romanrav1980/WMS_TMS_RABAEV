@@ -2,7 +2,7 @@
   "target": "RABAEV/orcl",
   "migration_id": "2026-10-23-trade-composition-ack-v2",
   "revision": "C-0164 root V2",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "applied_by_claude": false,
   "new_objects": [
     "RRL_TRADE_ORDER_COMPOSITION (+index RRL_TRADE_ORDER_COMP_CUR_UK, trigger RRL_TRADE_ORDER_COMP_FROZEN)",
@@ -34,5 +34,7 @@
     "verify.sql": "5419e30a94d693813231d11f77b4fac88a2a6006a28f900d05b71b3bfa593a6c"
   },
   "root_review": "Before first apply: signature includes live unit/code identities; report and ack use one SERIALIZABLE transaction snapshot.",
-  "supersedes": "2026-10-23-trade-composition-ack"
+  "supersedes": "2026-10-23-trade-composition-ack",
+  "applied_by_root": true,
+  "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T02/composition-ack-v2-native-result.json"
 }

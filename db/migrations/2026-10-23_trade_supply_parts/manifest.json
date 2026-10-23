@@ -2,7 +2,7 @@
   "target": "RABAEV/orcl",
   "migration_id": "2026-10-23-trade-supply-parts",
   "revision": "C-0163",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "applied_by_claude": false,
   "new_objects": [
     "RRL_TRADE_SUPPLY_TRANSFER",
@@ -32,5 +32,7 @@
     "rollback_verify.sql": "c90bb42eb27a60c5550aa07cb731c587f33a1e7447c36b356b0b485bdaa89007",
     "verify.sql": "e584f0d60195949b2e2fee644557b2456d719ec3ab6957bc42af0a6f1d348a15"
   },
-  "root_review": "Before first apply: rollback preserves END-only transfer; event ids cannot cross part/END or transfers; retries keep original event id; mark_delivered checks current recorded owner."
+  "root_review": "Before first apply: rollback preserves END-only transfer; event ids cannot cross part/END or transfers; retries keep original event id; mark_delivered checks current recorded owner.",
+  "applied_by_root": true,
+  "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T02/supply-parts-live.json"
 }

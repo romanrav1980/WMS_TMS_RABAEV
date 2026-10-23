@@ -1,3 +1,30 @@
+# Продолжение TRADECASE — 23.10.2026, 13:38 Europe/Moscow
+
+Поручение владельца: продолжать все спринты совместно с Claude. T01 завершён, T02–T12 частичные; DONE complete не создавать. GitHub не обновлять, SAP исключён.
+
+## Сейчас
+
+- API PID45508, exec session30705; root serv.bat, TMS_API_RELOAD=0. Загружен исправленный adapter состава без SERIALIZABLE. Native INVALID0.
+- Собран frontend3000: index-DZPUJBZM.js. Реальные read-only UI проверки составов/частей6 и рисков смены20 при1440/390 PASS. Исправлены одинаковые React keys SupplyParts/CompositionAck в TradecasePage (parts:/composition:). Скриншоты в T02 и T10/built-latest. Полезный экран рисков4.24с первый/1.80с второй, не SLA.
+- C0164 основной V2 применён11/8/11. Первый live report выявил ORA01555/22924 при SERIALIZABLE/CLOB; неуспешные вызовы сохранены. Root заменил это отдельным согласованным чтением физического состава на одном SCN. Первый incremental kit не скомпилировался (Oracle flashback join parser), восстановлен исходный body/INVALID0. consistent_read_v2 применён5/5/5. Текущий body F5ACF2084BB955531E093873DCC7E686C04B869131C83344F07D3605C2E51293. НЕ применять старые комплекты поверх него.
+- tests/tradecase/live_composition_ack.py: PASS_BASIC_RETRY_PENDING,10ед/10кодов, стабильный repeat, раздельные SAP ACCEPTED/SKM REJECTED, wrong signature/sender/event/ware, owner revoke/replay/filter/restore. WARE221164919/FP21.221164919.ORDER snapshot1 оставлен для проверки targeted retry. Actor retired; stock0/H0. Не выполнять заново закрытый harness.
+- live_composition_switch.py PASS: WARE220639789, concurrent report один снимок, смена СКМ/старый ответ409, SKM→SAP CONFIRMED, возврат настроек/новый outbox, frozen row rejected. Три снимка сохранены, текущий CONFIRMED; site restored, stock0/H0. Только метаданные, физических команд не было.
+- C0163 supply parts52HTTP и2реальных process exits96/97 PASS. Миграция APPLIED, UI открывает MessageView результата приёма (DELIVERED может означать WAITING), не отсутствующую SUPPLY. Существующая асинхронная повторная обработка использована.
+- Quality gate PASS,18composition/parts focused PASS, encoding PASS. После будущих изменений проверять затронутый объём; не повторять весь закрытый набор без причины.
+
+## Claude
+
+Регистраций27, прямых CLI model calls0; новый числовой лимит не выдумывать. Файловый канал coordination/retailcase-claude. TASK.md обновлён: завершить C0165 performance, затем исправить прежний C0164 — явный повтор только отказавшей стороне. Последний ACK K0149 только READ ONLY C0165, нового RELEASE/ACK правок ещё нет. Не утверждать, что новая доработка уже начата. Все свежие review и текущий native SHA в CODEX_TO_CLAUDE.md. Его candidate performance paths не править до RELEASE.
+
+Targeted retry отсутствует: не помечать T02 готовым. Другой ответ должен сохраниться; пока он WAITING, нельзя сделать его позднюю квитанцию устаревшей без нового запроса. Попросили минимально дождаться ACCEPTED/NOT_REQUIRED, сохранить журнал, новый номер попытки и outbox только нужной системе. Root применяет native и выполняет live acceptance после ACK/RELEASE.
+
+## Далее
+
+Принять C0165/C0164 correction; проверить оставшуюся бизнес-матрицу по roadmap/program revision27. Реальные SAP/СКМ, оборудование и пилот недоступны и остаются открытыми. Не снимать их из объёма. Дополнительные ветки/нормативы не придумывать.
+
+Ниже прежний контекст и закрытые физические fixtures. Склад225837931 не трогать. WARE210564699=250/H0,3лота после законного возврата40EA, а не один исходный UID. CASE1168/1169 и их маршруты не менять. Все старые QAакторы retired.
+
+---
 # Продолжение 23.10.2026, 12:35 Europe/Moscow
 
 Поручение владельца — продолжать все спринты вместе с Claude. Старые пределы 19.10 сняты поздними сообщениями. T01 завершён, T02–T12 остаются частичными; DONE complete не создавать. GitHub/SAP не публиковать: нового разрешения нет.

@@ -263,7 +263,7 @@ def test_native_rules():
 
 def test_kit_and_live_proofs():
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False and m["shared_objects_changed"] == {}
+    assert m["status"] in {"NOT_APPLIED", "APPLIED"} and m["applied_by_claude"] is False and m["shared_objects_changed"] == {}
     for v in m["unchanged_dependency_sha256"].values():
         assert v in text("000_preflight.sql") and v in text("verify.sql") and v in text("rollback_verify.sql")
     for v in m["after_sha256"].values():
