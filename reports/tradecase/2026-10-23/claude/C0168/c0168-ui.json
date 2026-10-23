@@ -1,22 +1,59 @@
 {
- "kind": "FIXTURE_MARKUP",
+ "kind": "LIVE_SERVED_GET_ONLY",
+ "url": "http://127.0.0.1:8088/wms-admin/receiving.html",
  "checks": [
   {
    "width": 1440,
-   "name": "factory pallet hint present; does not widen the page",
-   "page_scroll_width_with": 1440,
-   "page_scroll_width_without": 1440,
-   "hint_right": 1380,
-   "container_right": 1399
+   "name": "LIVE served receiving page after real login"
+  },
+  {
+   "width": 1440,
+   "name": "measure",
+   "scroll": 0,
+   "columns": 2,
+   "clipped": [],
+   "hint": true,
+   "tables": 4
+  },
+  {
+   "width": 1440,
+   "name": "factory pallet hint sits in the marking scan section"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll; nothing clipped outside a scrolling wrapper"
+  },
+  {
+   "width": 1440,
+   "name": "desktop layout unchanged (two columns)"
   },
   {
    "width": 390,
-   "name": "factory pallet hint present; does not widen the page",
-   "page_scroll_width_with": 1280,
-   "page_scroll_width_without": 1280,
-   "hint_right": 1220,
-   "container_right": 1239
+   "name": "LIVE served receiving page after real login"
+  },
+  {
+   "width": 390,
+   "name": "measure",
+   "scroll": 0,
+   "columns": 1,
+   "clipped": [],
+   "hint": true,
+   "tables": 4
+  },
+  {
+   "width": 390,
+   "name": "factory pallet hint sits in the marking scan section"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll; nothing clipped outside a scrolling wrapper"
+  },
+  {
+   "width": 390,
+   "name": "phone layout: one column, tables scroll inside their wrapper (4)"
   }
  ],
+ "writes": [],
+ "errors": [],
  "status": "PASS"
 }

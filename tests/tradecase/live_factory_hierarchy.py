@@ -117,25 +117,74 @@ def run(f):
                         "Regulatory confirmation of the boxes by the SKM is not part of this receipt"])
 
 
+PROTECTED = {225837931}
+STATE = OUT / "factory-hierarchy-state.json"
+
+
+def save_state(state):
+    STATE.write_text(json.dumps(state, indent=2, ensure_ascii=True, default=str), encoding="utf-8")
+
+
+def plan_fixture():
+    """Pick a tag whose warehouse id (the same formula as setup) is absent from every warehouse-keyed table checked here."""
+    for _ in range(10):
+        tag = uuid4().hex
+        ware = 210000000 + int(tag[:6], 16)
+        if ware in PROTECTED:
+            continue
+        with oracle_connection() as conn:
+            q = conn.cursor()
+            q.execute("""select (select count(*) from RRL_WARES where ID=:w)+(select count(*) from RRL_CELLS where WARE_ID=:w)
+                +(select count(*) from RRL_TRADE_SITE where WARE_ID=:w)+(select count(*) from RRL_ACCESS_OBJECT where KIND='WAREHOUSE' and OBJECT_ID=to_char(:w))
+                +(select count(*) from RUSERS where ID=:a or WARE_ID=:w) from dual""", w=ware, a="TC03"+tag[:8])
+            if q.fetchone()[0] == 0:
+                return tag, ware
+    raise RuntimeError("No absent warehouse id found in 10 attempts")
+
+
 if __name__ == "__main__":
     os.environ.setdefault("TRADECASE_ADMIN_USER", "admin")
     os.environ.setdefault("TRADECASE_ADMIN_PASSWORD", re.search(r"PASS=(\S+?)[`,)\s]", (ROOT/"AGENTS.md").read_text(encoding="utf-8"))[1])
     OUT.mkdir(parents=True, exist_ok=True)
-    f = None; report = dict(status="FAIL")
+    if STATE.exists():  # one isolated fixture per state file: never a second one after an earlier pass or failure
+        print(json.dumps({"status": "REFUSED", "reason": "previous run state exists; inspect/clean it and move the file deliberately",
+                          "state": json.loads(STATE.read_text(encoding="utf-8"))}))
+        sys.exit(2)
+    import live_stock_acceptance
+    tag, ware = plan_fixture()
+    state = {"phase": "PLANNED", "tag": tag[:8], "warehouse_id": ware, "planned_at": datetime.now(timezone.utc).isoformat()}
+    save_state(state)
+    f = None; report = dict(status="FAIL"); cleanup_error = None
     try:
-        f = setup()  # inserts a NEW RRL_WARES row; an existing warehouse id fails on its key, so nothing shared is reused
+        original = live_stock_acceptance.uuid4
+        live_stock_acceptance.uuid4 = lambda: type("Tag", (), {"hex": tag})()  # setup derives the warehouse from this exact tag
+        try:
+            f = setup()
+        finally:
+            live_stock_acceptance.uuid4 = original
+        assert f["warehouse_id"] == ware and ware not in PROTECTED, (f["warehouse_id"], ware)
+        state.update(phase="SETUP_DONE", actor=f["actor"], role=f["role"]); save_state(state)
         report.update(run(f))
+        state.update(phase="RUN_DONE", run_status=report["status"]); save_state(state)
     except Exception as exc:
-        report["error"] = str(exc); raise
+        report["error"] = str(exc); state.update(run_error=str(exc)); save_state(state); raise
     finally:
         if f:
-            with oracle_connection() as conn:
-                q = conn.cursor()
-                q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=f["actor"])
-                q.execute("update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:r", r=f["role"])
-                q.execute("select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:n order by LOG_ID fetch first 30 rows only", n=f["slow_marker"])
-                report["slow_sql"] = [list(x) for x in q]; conn.commit()
+            try:
+                with oracle_connection() as conn:
+                    q = conn.cursor()
+                    q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=f["actor"])
+                    q.execute("update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:r", r=f["role"])
+                    q.execute("select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:n order by LOG_ID fetch first 30 rows only", n=f["slow_marker"])
+                    report["slow_sql"] = [list(x) for x in q]; conn.commit()
+                state["phase"] = "CLEANED"
+            except Exception as exc:  # a failed cleanup is a failed run, never hidden behind PASS
+                cleanup_error = str(exc); report["status"] = "FAIL_CLEANUP"; report["cleanup_error"] = cleanup_error
+                state.update(phase="CLEANUP_FAILED", cleanup_error=cleanup_error)
             report["fixture"] = {k: v for k, v in f.items() if k != "password"}
-        report["http"] = CALLS
-        (OUT/("factory-hierarchy-"+str(f["warehouse_id"] if f else uuid4().hex)+".json")).write_text(json.dumps(report, indent=2, ensure_ascii=True, default=str), encoding="utf-8")
-    print(json.dumps({k: v for k, v in report.items() if k not in {"http", "fixture", "failures", "receipt"}}))
+        save_state(state)
+        report["http"] = CALLS; report["state"] = state
+        (OUT/("factory-hierarchy-"+str(ware)+".json")).write_text(json.dumps(report, indent=2, ensure_ascii=True, default=str), encoding="utf-8")
+        print(json.dumps({k: v for k, v in report.items() if k not in {"http", "fixture", "failures", "receipt"}}))
+    if cleanup_error:
+        sys.exit(3)

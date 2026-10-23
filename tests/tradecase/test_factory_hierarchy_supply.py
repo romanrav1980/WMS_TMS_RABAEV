@@ -130,3 +130,44 @@ def test_receipt_refusals(monkeypatch):
         rm("PALLET").resolve("O1", "TC03X", "1", Decimal(10), {"units": [], "aggregations": [scan("PALLET", "SSCC-UNKNOWN")]}, "EA")
     with pytest.raises(ValueError, match="must equal pallet quantity"):
         rm("PALLET").resolve("O1", "TC03X", "1", Decimal(9), {"units": [], "aggregations": [scan("PALLET", "SSCC1")]}, "EA")
+
+
+def raw_order(aggregations_xml, lines=("1",)):
+    line_xml = "".join(f"<Line><LineNumber>{n}</LineNumber><Material>TC03{n}</Material><Quantity unit=\"EA\">10</Quantity></Line>" for n in lines)
+    return ("<WarehouseSupplyOrder version=\"1\"><Sender>S</Sender><MessageId>M</MessageId><OrderNumber>F1</OrderNumber><Revision>1</Revision>"
+            f"<WarehouseId>210000001</WarehouseId><ReceiveCell>R1</ReceiveCell><Supplier>F</Supplier><Lines>{line_xml}</Lines>"
+            f"<Aggregations>{aggregations_xml}</Aggregations></WarehouseSupplyOrder>").encode()
+
+
+def box_xml(code_value, units, line="1", profile="TOBACCO"):
+    members = "".join(f"<Unit><UnitId>{n}</UnitId><Code>{code(n)}</Code></Unit>" for n in units)
+    return (f"<Aggregation><LineNumber>{line}</LineNumber><System>CRPT</System><Profile>{profile}</Profile><Level>BOX</Level>"
+            f"<Code>{code_value}</Code><Units>{members}</Units></Aggregation>")
+
+
+def pallet_xml(children_xml, line="1"):
+    return (f"<Aggregation><LineNumber>{line}</LineNumber><System>CRPT</System><Profile>TOBACCO</Profile><Level>PALLET</Level>"
+            f"<Code>SSCC1</Code><Children>{children_xml}</Children></Aggregation>")
+
+
+@pytest.mark.parametrize("aggs,lines,message", [
+    (box_xml("B1", range(1, 6)) + pallet_xml("<Child/>"), ("1",), "Exactly one scalar Code"),                         # child without code
+    (box_xml("B1", range(1, 6)) + pallet_xml("<Child><Code>B1</Code><Code>B1</Code></Child>"), ("1",), "Exactly one scalar Code"),
+    (box_xml("B1", range(1, 6)) + pallet_xml("<Box><Code>B1</Code></Box>"), ("1",), "Unexpected child aggregation element"),
+    (box_xml("B1", range(1, 6), line="2") + pallet_xml("<Child><Code>B1</Code></Child>"), ("1", "2"), "same line"),  # child of another line
+    (box_xml("B1", range(1, 6), profile="OTHER") + pallet_xml("<Child><Code>B1</Code></Child>"), ("1",), "same line and profile"),
+    (box_xml("B1", range(1, 6)) + pallet_xml("<Child><Code>B1</Code></Child>") + pallet_xml("<Child><Code>B1</Code></Child>"), ("1",), "duplicate source aggregation"),
+])
+def test_malformed_children_are_refused(aggs, lines, message):
+    with pytest.raises(ValueError, match=message):
+        read_supply_order(raw_order(aggs, lines))
+
+
+def test_base64_child_code_and_unchanged_flat_message():
+    import base64
+    encoded = base64.b64encode(b"B1").decode()
+    parsed = read_supply_order(raw_order(box_xml("B1", range(1, 6)) + pallet_xml(f"<Child><Code encoding=\"base64\">{encoded}</Code></Child>")))
+    assert {a["code"]: len(a["units"]) for a in parsed["aggregations"]} == {"B1": 5, "SSCC1": 5}
+    flat = read_supply_order(raw_order(box_xml("B1", range(1, 6))))
+    assert flat["aggregations"] == [{"line_number": "1", "system": "CRPT", "profile": "TOBACCO", "level": "BOX", "code": "B1",
+                                     "units": [{"unit_id": str(n), "code": code(n)} for n in range(1, 6)]}]

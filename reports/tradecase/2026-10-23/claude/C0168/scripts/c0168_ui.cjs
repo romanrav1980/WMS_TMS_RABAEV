@@ -1,31 +1,44 @@
-// C-0168: the receiving markup with its styles (FIXTURE, no scripts, no API): the factory pallet hint is visible and fits 1440/390.
+// C-0168: the SERVED receiving page (http://127.0.0.1:8088/wms-admin/receiving.html), real login, GET only, at 1440 and 390.
+// Checks: no horizontal page scroll on 390, wide tables scroll inside their wrapper, the factory pallet hint is in the scan section,
+// desktop keeps its two-column layout. Any non-GET request is aborted and recorded; nothing is received.
 const fs = require("fs"), path = require("path"), assert = require("assert");
 const { chromium } = require("C:/projects/TMS/admin/wms_admin_frontend/node_modules/playwright");
-const UI = "C:/projects/TMS/wiki-raw/wms_admin_ui_reference", OUT = path.join(__dirname, "..");
-const res = { kind: "FIXTURE_MARKUP", checks: [] };
+const OUT = path.join(__dirname, ".."), SHOTS = path.join(OUT, "screenshots"); fs.mkdirSync(SHOTS, { recursive: true });
+const pass = fs.readFileSync("C:/projects/TMS/AGENTS.md", "utf8").match(/PASS=(\S+?)[`,)\s]/)[1];
+const URL_ = "http://127.0.0.1:8088/wms-admin/receiving.html";
+const res = { kind: "LIVE_SERVED_GET_ONLY", url: URL_, checks: [], writes: [], errors: [] };
+const ok = (w, name, extra = {}) => { res.checks.push({ width: w, name, ...extra }); console.log("PASS", w, name); };
 (async () => {
   const b = await chromium.launch();
   try {
     for (const w of [1440, 390]) {
-      const p = await (await b.newContext({ viewport: { width: w, height: 900 } })).newPage();
-      let html = fs.readFileSync(UI + "/receiving.html", "utf8").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
-      html = html.replace(/<link\b[^>]*href="([^"]+\.css)[^"]*"[^>]*>/gi, (m, f) => fs.existsSync(UI + "/" + f) ? "<style>" + fs.readFileSync(UI + "/" + f, "utf8") + "</style>" : "");
-      await p.setContent(html); await p.evaluate(() => document.body.classList.remove("auth-pending"));
-      const hint = p.locator("#receiptFactoryHint");
-      // the scan section is shown by the page script for a marked line; reveal its ancestors for the static check
-      await p.evaluate(() => { document.getElementById("receiptMarking").hidden = false; });
-      const why = await hint.evaluate(el => { const r = el.getBoundingClientRect(); return { w: r.width, h: r.height, text: el.innerText.slice(0, 60) }; });
-      assert(why.w > 0 && why.h > 0 && /отсканируйте только её код/.test(await hint.innerText()), JSON.stringify(why));
-      const box = await hint.evaluate(el => Math.round(el.getBoundingClientRect().right));
-      const withHint = await p.evaluate(() => document.documentElement.scrollWidth);
-      const parentRight = await hint.evaluate(el => Math.round(el.parentElement.getBoundingClientRect().right));
-      const without = await p.evaluate(() => { const h = document.getElementById("receiptFactoryHint"); h.hidden = true; const v = document.documentElement.scrollWidth; h.hidden = false; return v; });
-      assert(withHint <= without && box <= parentRight + 1, JSON.stringify({ withHint, without, box, parentRight }));
-      res.checks.push({ width: w, name: "factory pallet hint present; does not widen the page", page_scroll_width_with: withHint, page_scroll_width_without: without, hint_right: box, container_right: parentRight });
-      console.log("PASS", w, withHint, without, box, parentRight);
+      const ctx = await b.newContext({ viewport: { width: w, height: w === 390 ? 844 : 1000 } }), p = await ctx.newPage();
+      p.on("pageerror", e => res.errors.push(w + ": " + e));
+      await ctx.route("**/*", r => { const m = r.request().method(); if (m !== "GET" && m !== "OPTIONS" && !r.request().url().includes("/auth/")) { res.writes.push(m + " " + r.request().url()); return r.abort(); } return r.continue(); });
+      await p.goto(URL_);
+      await p.locator("#loginUser").waitFor({ timeout: 20000 });
+      await p.fill("#loginUser", "admin"); await p.fill("#loginPassword", pass); await p.keyboard.press("Enter");
+      await p.waitForFunction(() => !document.body.classList.contains("auth-pending"), null, { timeout: 30000 });
+      ok(w, "LIVE served receiving page after real login");
+      const m = await p.evaluate(() => {
+        const W = innerWidth, page = document.querySelector(".receiving-page");
+        const scrollAnc = el => { for (let a = el.parentElement; a; a = a.parentElement) { const o = getComputedStyle(a).overflowX; if ((o === "auto" || o === "scroll") && a.getBoundingClientRect().right <= W + 2) return true; } return false; };
+        const clipped = [...document.querySelectorAll("body *")].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 2 && !scrollAnc(el); }).slice(0, 10).map(el => el.tagName + "#" + el.id + "." + el.className);
+        return { scroll: document.documentElement.scrollWidth - W, columns: getComputedStyle(page).gridTemplateColumns.split(" ").length, clipped,
+                 hint: !!document.querySelector("#receiptMarking #receiptFactoryHint"), tables: document.querySelectorAll(".receiving-page .rights-table-wrap").length };
+      });
+      res.checks.push({ width: w, name: "measure", ...m });
+      assert(m.hint, "factory pallet hint missing in the scan section"); ok(w, "factory pallet hint sits in the marking scan section");
+      assert(m.scroll <= 1 && m.clipped.length === 0, JSON.stringify(m)); ok(w, "no horizontal page scroll; nothing clipped outside a scrolling wrapper");
+      if (w === 1440) { assert.equal(m.columns, 2, "desktop keeps two columns"); ok(w, "desktop layout unchanged (two columns)"); }
+      else { assert.equal(m.columns, 1); ok(w, "phone layout: one column, tables scroll inside their wrapper (" + m.tables + ")"); }
+      await p.screenshot({ path: path.join(SHOTS, `receiving-${w}.png`), fullPage: false });
+      await ctx.close();
     }
-    res.status = "PASS";
-  } catch (e) { res.status = "FAIL"; res.error = String(e); console.error(e); }
+    assert.deepStrictEqual(res.writes, []); assert.deepStrictEqual(res.errors, []); res.status = "PASS";
+  } catch (e) { res.status = "FAIL"; res.error = String(e.stack || e); console.error(e); }
   finally { await b.close(); }
-  fs.writeFileSync(path.join(OUT, "c0168-ui.json"), JSON.stringify(res, null, 1)); process.exit(res.status === "PASS" ? 0 : 1);
+  fs.writeFileSync(path.join(OUT, "c0168-ui.json"), JSON.stringify(res, null, 1));
+  console.log(res.status, res.checks.filter(c => c.name !== "measure").length, "checks");
+  process.exit(res.status === "PASS" ? 0 : 1);
 })();
