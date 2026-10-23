@@ -403,6 +403,8 @@ from .yard_plan_composition import register_yard_plans
 register_yard_plans(app)
 from .supply_parts_composition import register_supply_parts
 register_supply_parts(app)
+from .composition_ack_composition import register_composition_ack
+register_composition_ack(app)
 
 from .modules.resources.public import case_read_service,case_carrier_lookup_router
 app.include_router(case_carrier_lookup_router)

@@ -1,0 +1,10 @@
+{
+ "codes": [
+  "ORA-00942",
+  "ORA-06550",
+  "PLS-00201",
+  "PLS-00320"
+ ],
+ "syntax_error": false,
+ "message": "ORA-06550: line 90, column 18:\nPLS-00201: identifier 'RRL_TRADE_ORDER_COMPOSITION' must be declared\nORA-06550: line 90, column 2:\nPL/SQL: Item ignored\nORA-06550: line 116, column 64:\nPLS-00201: identifier 'RRL_TRADE_ORDER_COMPOSITION' must be declared\nORA-06550: line 116, column 64:\nPL/SQL: Item ignored\nORA-06550: line 127, column 23:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 127, column 4:\nPL/SQL: SQL Statement ignored\nORA-06550: line 129, column 7:\nPLS-00320: the declaration of the type of this expression is incomplete or malformed\nORA-06550: line 129, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 132, column 11:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 132, column 4:\nPL/SQL: SQL Statement ignored\nORA-06550: line 137, column 57:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 137, column 3:\nPL/SQL: SQL Statement ignored\nORA-06550: line 142, column 15:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 142, column 3:\nPL/SQL: SQL Statement ignored\nORA-06550: line 148, column 10:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 148, column 3:\nPL/SQL: SQL Statement ignored\nORA-06550: line 149, column 22:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 149, column 3:\nPL/SQL: SQL Statement ignored\nORA-06550: line 150, column 18:\nPLS-00320: the declaration of the type of this expression is incomplete or malformed\nORA-06550: line 150, column 3:\nPL/SQL: Statement ignored\nHelp: https://docs.oracle.com/error-help/db/ora-06550/"
+}

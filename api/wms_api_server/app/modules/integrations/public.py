@@ -79,6 +79,9 @@ from .infrastructure.tradecase_documents import OracleTradecaseDocuments
 from .contracts_supply_parts import SupplyPartsPort, supply_parts_service
 from .api.supply_parts_routes import router as supply_parts_router
 from .infrastructure.supply_parts import OracleSupplyParts
+from .contracts_composition_ack import CompositionAckPort, composition_ack_service
+from .api.composition_ack_routes import router as composition_ack_router
+from .infrastructure.composition_ack import OracleCompositionAck
 
 
 def build_tradecase_documents() -> OracleTradecaseDocuments:

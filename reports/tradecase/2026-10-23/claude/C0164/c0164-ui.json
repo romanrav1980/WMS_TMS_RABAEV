@@ -1,0 +1,86 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE exchange tab opens with the composition panel"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE: open assembly, closed-not-reported, waiting SKM, SKM rejection, SKM change, confirmed — each system separately"
+  },
+  {
+   "width": 1440,
+   "name": "no report button while assembly is open or the answer is awaited"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE report posts the order once"
+  },
+  {
+   "width": 1440,
+   "name": "open order goes to the existing ORDER document in place"
+  },
+  {
+   "width": 1440,
+   "name": "every panel button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "static help link answers 200 with the composition section"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 clears the list (no stale rows)"
+  },
+  {
+   "width": 390,
+   "name": "LIVE exchange tab opens with the composition panel"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE: open assembly, closed-not-reported, waiting SKM, SKM rejection, SKM change, confirmed — each system separately"
+  },
+  {
+   "width": 390,
+   "name": "no report button while assembly is open or the answer is awaited"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE report posts the order once"
+  },
+  {
+   "width": 390,
+   "name": "open order goes to the existing ORDER document in place"
+  },
+  {
+   "width": 390,
+   "name": "every panel button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "static help link answers 200 with the composition section"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 clears the list (no stale rows)"
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "posts": [
+  {
+   "warehouse_id": 210564699,
+   "order_id": "O.NEW"
+  }
+ ],
+ "status": "PASS"
+}
