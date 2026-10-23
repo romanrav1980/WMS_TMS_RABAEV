@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-23-paper-task-version",
+  "target": "RABAEV/orcl",
+  "before": {
+    "RRL_STOCK_HU_TASK": "8F91705B227316EDCA9D2CDF14B847F7DB1D6DBABF3BF0A4469E89B05E9055F9",
+    "RRL_STOCK_CASE_MOVE_CMD": "ADB27D680CB686A05E6FBE1F4EF37A3A4C287AD939474C9007CAD5B395E12333"
+  },
+  "after": {
+    "RRL_STOCK_HU_TASK": "34D8A9F0490E22C5239C39BC772C423803E76E7450AC8A2A8CAB31B6F291E031",
+    "RRL_STOCK_CASE_MOVE_CMD": "884DFDEF660533285D5857A3C518497384BEE33C9237C2D58AE052E43AFD8C83"
+  },
+  "quantity_changes": false,
+  "changes": "Optional expected_task_signature in HU compile; deferred CASE check before compile and after validate_move holds the physical task row; replay path unchanged",
+  "rollback": "Restore previous bodies. Disable new paper reconciliation clients before rollback: older bodies ignore the optional HU/CASE signature."
+}

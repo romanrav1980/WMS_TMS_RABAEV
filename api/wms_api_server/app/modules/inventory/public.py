@@ -402,6 +402,8 @@ __all__.append("normalize_unit_scan_codes")
 
 
 from .contracts_task_read import TaskReadError,TaskViewScope
+from .infrastructure.task_paper import task_paper_snapshot
+__all__.append("task_paper_snapshot")
 from .infrastructure.task_read_scope import read_task_snapshot,read_task_progress_snapshot
 from .infrastructure.task_scoped_view import scoped_task_queue,scoped_task_detail
 __all__ += ["TaskReadError","TaskViewScope","read_task_snapshot","read_task_progress_snapshot"]

@@ -17,6 +17,7 @@ from ..transaction_gateway import TransactionGateway
 from ..modules.inventory.public import TaskReadError,TaskViewScope,read_task_snapshot,read_task_progress_snapshot
 from ..modules.inventory.public import scoped_task_queue, scoped_task_detail
 from ..modules.inventory.public import authorize_task_completion, TaskCompletionAccessError
+from ..modules.inventory.public import task_paper_snapshot
 
 router = APIRouter(prefix="/api/warehouse-tasks", tags=["warehouse-tasks"])
 ReadResult=TypeVar("ReadResult")
@@ -99,6 +100,17 @@ def get_warehouse_task_sync(
 ) -> dict:
     sync = _read(_user,lambda gateway,scope: WarehouseTaskDomainSyncService(gateway).get_task_sync(task_id),task_id)
     return sync or {"task_id": task_id, "sync_status": "NOT_CREATED"}
+
+
+@router.get("/{task_id}/paper")
+def warehouse_task_paper(task_id: int, expected_signature: str | None = Query(default=None, pattern=r"^[A-F0-9]{64}$"),
+                         user: AdminUser = Depends(get_current_admin)) -> dict:
+    if task_id < 1:
+        raise HTTPException(422, detail="Positive task identifier required")
+    try:
+        return task_paper_snapshot(WarehouseTaskService().gateway, user.username, task_id, expected_signature)
+    except TaskReadError as error:
+        raise HTTPException(error.status, detail={"code": error.code}) from error
 
 
 @router.post("/{task_id}/assign")

@@ -39,4 +39,10 @@ def scoped_task_detail(gateway: Any, actor: str, task: int) -> dict[str, Any]:
             raise TaskReadError("TASK_NOT_FOUND_OR_DENIED", 404)
         cur.execute("select RRL_WAREHOUSE_TASK_ACCESS.task_signature(:task) from dual", task=task)
         result["task_signature"] = cur.fetchone()[0]
+        cur.execute("""select
+            (select max(NAME) from RRL_WARES where ID=t.FROM_WARE_ID),
+            (select max(NAME) from RRL_WARES where ID=t.TO_WARE_ID),
+            (select case when count(*)=1 then max(NAME)end from RUSERS where ID=t.ASSIGNED_TO)
+            from RRL_WAREHOUSE_TASK t where t.TASK_ID=:task""", task=task)
+        result["from_warehouse_name"], result["to_warehouse_name"], result["assigned_to_name"] = cur.fetchone()
         return result
