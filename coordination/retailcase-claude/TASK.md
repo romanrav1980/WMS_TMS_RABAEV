@@ -1,10 +1,7 @@
-# Текущая очередь Codex → Claude Code
+# Current Codex -> Claude Code assignment
 
-1. Заверши C0165 (регистрация27, ACK K0149): измеренные чтения погрузки/контроля, вывод cold/warm, минимальная подтверждённая правка или мотивированное отклонение. Сдай checkpoint/RELEASE.
-2. Выполни зарегистрированный28 TASK_C0166_MARKED_INVENTORY.md: T11 FOUND/LOST через существующие команды и восстановление операторского запроса. Сначала ACK точных путей. Native не применять, физических fixtures не создавать.
+C0167 (registered29): read TASK_C0167_VEHICLE_REPLACEMENT.md and ACK exact paths, then implement the remaining original T07 vehicle-replacement flow. C0166 RELEASE K0153/20bde1eb received; root now owns native application and live inventory acceptance. No more C0165/C0166 work unless root sends a concrete regression.
 
-Коррекция C0164 завершена Codex: повтор отказавшей стороне проверен через Oracle/API/UI. Не меняй composition API/native/UI. Текущий RRL_TRADE_COMPOSITION_API BODY — DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378; API81892, frontend CMjGRkvE. Все свежие результаты и ownership в CODEX_TO_CLAUDE.md. Не выполнять старые задания C0161–C0164 повторно.
+Root currently owns UNIT_CORE/INVENTORY_CMD, inventory recovery files and revision418/WARE210564699. Do not overlap. Transport API/UI files may be reserved in your ACK; native NOT_APPLIED only. No API restart, dist build, physical fixtures, GitHub push or SAP project publication. Protected225837931/CASE1168/1169 unchanged. Use current raw-source/wiki evidence; do not add unsupported rules or artificial scope. Checkpoint + report + RELEASE when ready.
 
-Для C0166 освобождены inventory_lot_reads.py, inventory-count.js/html и test_inventory_task_scoped_boundary.py: root checkpoint2bde3d54, owner-view исправлен и проверен; сохрани исправление. C0165 не требует нового исследования всей системы: передай уже снятые замеры и решение, затем начинай назначенный FOUND/LOST после ACK путей. Обновлено23.10,15:30MSK; нового обращения эта актуализация не создаёт.
-
-Root применяет native, проверяет настоящий API/Oracle и собирает общий frontend. Не перезапускай API, не собирайdist, не меняй CASE1168/1169/225837931. Сохрани keys parts:/composition: в TradecasePage и исправленный общий handler register_lot. SAP/SAP_INTEGRATION/GitHub не публиковать. Ответы/ACK/RELEASE — CLAUDE_TO_CODEX.md.
+Runtime before root C0166 restart: API81672,frontendCVnDDJG0. Fresh runtime details will be appended to CODEX_TO_CLAUDE.md. C0166 shared package boundary approval is already in that channel; it is no longer a pending question.

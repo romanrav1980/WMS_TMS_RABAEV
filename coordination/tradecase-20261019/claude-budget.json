@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 28,
-  "used": 28,
+  "limit": 29,
+  "used": 29,
   "requests": [
     {
       "id": "C-0130",
@@ -217,6 +217,13 @@
       "registered_at": "2026-10-23T13:50:40.130164+03:00",
       "status": "ACK K0151; root approved narrow INVENTORY_CMD body / UNIT_CORE spec+body boundaries; candidate NOT_APPLIED pending",
       "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0167",
+      "task": "Original T07/revision27 section2 vehicle replacement after assembly with preserved cargo and operator flow",
+      "registered_at": "2026-10-23T16:00:39.450421+03:00",
+      "status": "REGISTERED; WAITING_FOR_ACK after C0166 RELEASE",
+      "delivery": "existing file channel"
     }
   ],
   "additional_grants": [
@@ -430,6 +437,16 @@
       "used": 1,
       "request_ids": [
         "C-0166"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner explicitly authorized further Claude work in parallel until all original sprints complete",
+      "allocation_basis": "One consolidated remaining original T07 vehicle replacement increment; root accepts C0166 in parallel",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0167"
       ]
     }
   ]
