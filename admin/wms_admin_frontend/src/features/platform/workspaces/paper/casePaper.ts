@@ -7,7 +7,7 @@ import { ApiRequestError, apiFetch, apiOperationScope } from "../../../../api";
 
 export type CaseTask = { case_pick_task_id: number; status: string; assigned_to: string | null; sscc: string | null; order_no: string | null;
   customer_name: string | null; total_lines: number | null; picked_lines: number | null };
-export type CaseLine = { line_id: number; articul: string; product_name: string | null; cell_code: string | null; pick_sequence: number | null;
+export type CaseLine = { line_id: number; articul: string; product_name: string | null; cell_code: string | null; pick_sequence: number | null; unit_code?: string | null;
   planned_qty: string; picked_qty: string; status: string; required_scan_mode: string | null; signature: string; reference: string;
   barcode_svg: string; device_required: "MARKING_SCAN_REQUIRED" | "WEIGHT_LABEL_SCAN_REQUIRED" | null; scale_reading: boolean };
 export type CasePaper = { task: { task_id: number; ware_id: number; wave_code: string | null; order_no: string | null; customer_name: string | null;
@@ -37,6 +37,8 @@ export function casePaper(raw: unknown): CasePaper {
 
 export const lineOpen = (l: CaseLine) => !DONE_LINE.has(l.status);
 export const qty = (v: string | null) => v == null ? "—" : v.startsWith(".") ? "0" + v : v;
+const CASE_UNITS: Record<string, string> = { EA: "шт.", BOX: "кор.", KG: "кг" };
+export const caseUnit = (l: CaseLine) => CASE_UNITS[l.unit_code ?? ""] ?? (l.scale_reading ? "кг" : l.unit_code || "единица не указана");
 
 /** Код со штрихкода бланка CASE: CPICK:<задание>:<строка>:<версия строки>. WTASK сюда не подходит: номера сущностей могут совпадать. */
 export function parseCaseReference(text: string): { taskId: number; lineId: number; signature: string } | null {
@@ -94,7 +96,8 @@ function clearIfSame(intent: CaseIntent) {
 }
 
 /** Запись этого входа и именно этот факт: scope, путь и байты совпадают с сохранённым. */
-const own = (intent: CaseIntent) => intent.scope === apiOperationScope() && readCasePending(intent.task, intent.line).intent !== null
+const inScope = (intent: CaseIntent) => { try { return intent.scope === apiOperationScope(); } catch { return false; } };
+const own = (intent: CaseIntent) => inScope(intent) && readCasePending(intent.task, intent.line).intent !== null
   && (() => { try { return localStorage.getItem(key(intent.task, intent.line)) === JSON.stringify(intent); } catch { return false; } })();
 const OTHER_LOGIN: CaseSend = { kind: "foreign", message: "Вход сменился: сохранённый факт прежнего входа не отправлен и не показан." };
 
@@ -104,12 +107,12 @@ export async function sendCasePending(intent: CaseIntent): Promise<CaseSend> {
   if (!own(intent)) return OTHER_LOGIN;  // старое намерение не уходит под другим входом
   try {
     const v = await apiFetch<{ operation_id?: string }>(intent.path, { method: "POST", body: intent.wire });
-    if (intent.scope !== apiOperationScope()) return OTHER_LOGIN;  // ответ пришёл после смены входа: запись остаётся, результат не показываем
+    if (!own(intent)) return OTHER_LOGIN;  // Logout also removes credentials; a late reply must not throw or clear another record.
     if (v?.operation_id !== intent.operation_id) return { kind: "unknown", message: "Ответ сервера не относится к этому факту. Факт сохранён; повторите его." };
     clearIfSame(intent);
     return { kind: "ack" };
   } catch (error) {
-    if (intent.scope !== apiOperationScope()) return OTHER_LOGIN;
+    if (!own(intent)) return OTHER_LOGIN;
     if (error instanceof ApiRequestError) {
       const d = (typeof error.detail === "object" && error.detail ? error.detail : {}) as { code?: string; rule_reason?: string; outcome_confirmed?: boolean; operation_id?: string; read_before_retry?: boolean };
       const reason = d.rule_reason || d.code || `HTTP ${error.status}`;

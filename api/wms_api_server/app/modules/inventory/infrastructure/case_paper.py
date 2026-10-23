@@ -11,7 +11,7 @@ from ....transaction_gateway import TransactionGateway
 from ..contracts_case_paper import CasePaperError
 from ..domain.case_paper import case_line_barcode
 
-LINE_LIMIT = 200  # a pallet task far above any real CASE task; more is refused, not cut
+LINE_LIMIT = 200  # Read one extra row and reject overflow instead of printing a truncated task.
 
 
 # Same projection as case_pick_policy (marking-policy endpoint), once per distinct article of the task in this READ ONLY snapshot.
@@ -51,12 +51,14 @@ class OracleCasePaper:
                 raise CasePaperError("CASE_TASK_NOT_FOUND", 404)
             try:
                 lines = bound.fetch_all(
-                    "select CASE_PICK_LINE_ID LINE_ID,ARTICUL,PRODUCT_NAME,CELL_CODE,PICK_SEQUENCE,"
-                    "to_char(PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,"
-                    "to_char(nvl(PICKED_QTY,0),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PICKED_QTY,STATUS,REQUIRED_SCAN_MODE,"
-                    "RRL_CASE_PICK_PAPER.line_signature(CASE_PICK_LINE_ID) SIGNATURE from RRL_CASE_PICK_LINE "
-                    "where CASE_PICK_TASK_ID=:task and (:line is null or CASE_PICK_LINE_ID=:line) "
-                    "order by PICK_SEQUENCE nulls last,CASE_PICK_LINE_ID fetch first :limit rows only",
+                    "select l.CASE_PICK_LINE_ID LINE_ID,l.ARTICUL,l.PRODUCT_NAME,l.CELL_CODE,l.PICK_SEQUENCE,r.BASE_UOM UNIT_CODE,"
+                    "to_char(l.PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,"
+                    "to_char(nvl(l.PICKED_QTY,0),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PICKED_QTY,l.STATUS,l.REQUIRED_SCAN_MODE,"
+                    "RRL_CASE_PICK_PAPER.line_signature(l.CASE_PICK_LINE_ID) SIGNATURE from RRL_CASE_PICK_LINE l "
+                    "left join RRL_PICK_TASK pt on pt.PICK_TASK_ID=l.PICK_TASK_ID "
+                    "left join RRL_REMAINS r on r.UID_POLETA=pt.PALLET_UID and r.CELL=pt.SOURCE_CELL_CODE "
+                    "where l.CASE_PICK_TASK_ID=:task and (:line is null or l.CASE_PICK_LINE_ID=:line) "
+                    "order by l.PICK_SEQUENCE nulls last,l.CASE_PICK_LINE_ID fetch first :limit rows only",
                     {"task": task, "line": line, "limit": LINE_LIMIT + 1})
             except oracledb.DatabaseError as exc:  # NOT_APPLIED package: no version, so no sheet
                 if getattr(exc.args[0], "code", 0) in {904, 4063, 4067, 6508, 6550}:

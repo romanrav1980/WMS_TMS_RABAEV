@@ -1,6 +1,7 @@
 import type { HelpEntry } from "../../help/catalog";
 
-const h = (id: string, text: string): HelpEntry => ({ id: "paper." + id, text, article: "paper-tasks" });
+const h = (id: string, text: string): HelpEntry => ({ id: "paper." + id, text,
+  article: "/help/warehouse-task-paper.html" + (id.startsWith("case") ? "#case" : "") });
 
 export const paperHelp = {
   refresh: h("refresh", "Перечитать незавершённые задания склада. Показывается не больше 100 заданий; сузьте список по исполнителю."),
@@ -20,7 +21,7 @@ export const paperHelp = {
   caseQty: h("case-qty", "Сколько всего собрано по строке, включая уже подтверждённое (накопленное количество)."),
   caseSend: h("case-send", "Сохранить факт в браузере и передать штатной командой подтверждения строки с версией бланка."),
   caseProfile: h("case-profile", "Система и профиль кодов маркировки товара из его правил маркировки."),
-  caseCode: h("case-code", "Отсканируйте код маркировки каждой собранной единицы; сканер сам нажимает Enter. Повторный код не добавляется."),
+  caseCode: h("case-code", "Отсканируйте коды единиц этого подтверждения; ранее подтверждённые коды повторять не нужно. Enter добавляет код в список."),
   caseCodesClear: h("case-codes-clear", "Убрать отсканированные коды и отсканировать заново (факт ещё не отправлен)."),
   caseRetry: h("case-retry", "Повторить сохранённый факт с тем же номером операции и теми же данными; второго отбора не будет."),
 } satisfies Record<string, HelpEntry>;

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 18,
-  "used": 18,
+  "limit": 20,
+  "used": 20,
   "requests": [
     {
       "id": "C-0130",
@@ -137,9 +137,23 @@
     {
       "id": "C-0156",
       "registered_at": "2026-10-23T06:38:31.2260841+03:00",
-      "status": "ACK K0123: CASE-specific paper UI/API and NOT_APPLIED native candidate in progress",
+      "status": "K0124/ac0bfde0 + K0126/9d73f60a + K0128/8743cb7c received; root native7/6/7, marked1/replay/return and UI/print accepted within documented scope",
       "delivery": "existing file channel",
       "task": "T11 CASE picking paper workflow using current native pick contracts, distinct barcode identity, version checks, operator UI/help and evidence"
+    },
+    {
+      "id": "C-0157",
+      "registered_at": "2026-10-23T07:27:06.8559365+03:00",
+      "status": "RESULT RELEASE d28e2e6a NOT_APPLIED; root native review and live acceptance",
+      "delivery": "existing file channel",
+      "task": "T08 common-pool topup adoption and remaining native partial-transfer conditions, existing reservation coordinator, UI/help and NOT_APPLIED migration"
+    },
+    {
+      "id": "C-0158",
+      "registered_at": "2026-10-23T07:55:09.9971136+03:00",
+      "status": "ACK K0131: planned dock intervals native/UI in progress",
+      "delivery": "existing file channel",
+      "task": "T10 planned dock intervals in real resource Gantt using existing yard/native authority, conflict protection, UI/help and evidence"
     }
   ],
   "additional_grants": [
@@ -156,7 +170,7 @@
     },
     {
       "date": "2026-10-22",
-      "authorization": "Owner: Можешь при разработке подгружать claude code больше",
+      "authorization": "Owner: Р СљР С•Р В¶Р ВµРЎв‚¬РЎРЉ Р С—РЎР‚Р С‘ РЎР‚Р В°Р В·РЎР‚Р В°Р В±Р С•РЎвЂљР С”Р Вµ Р С—Р С•Р Т‘Р С–РЎР‚РЎС“Р В¶Р В°РЎвЂљРЎРЉ claude code Р В±Р С•Р В»РЎРЉРЎв‚¬Р Вµ",
       "limit": 2,
       "used": 2,
       "allocation_basis": "Codex working batch of two large tasks; owner did not specify a numeric cap",
@@ -217,7 +231,7 @@
     },
     {
       "date": "2026-10-23",
-      "authorization": "Owner: продолжай работу пока все не сделаешь. клод ждет",
+      "authorization": "Owner: Р С—РЎР‚Р С•Р Т‘Р С•Р В»Р В¶Р В°Р в„– РЎР‚Р В°Р В±Р С•РЎвЂљРЎС“ Р С—Р С•Р С”Р В° Р Р†РЎРѓР Вµ Р Р…Р Вµ РЎРѓР Т‘Р ВµР В»Р В°Р ВµРЎв‚¬РЎРЉ. Р С”Р В»Р С•Р Т‘ Р В¶Р Т‘Р ВµРЎвЂљ",
       "allocation_basis": "One large follow-up under open delegation authorization; not an owner numeric cap",
       "limit": 1,
       "used": 1,
@@ -253,6 +267,26 @@
       "used": 1,
       "request_ids": [
         "C-0156"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner authorized additional Claude work until all sprints complete",
+      "allocation_basis": "One large remaining original T08 package, while root accepts T11",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0157"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner authorized continued parallel Claude development until all sprints complete",
+      "allocation_basis": "One independent remaining T10 package while root accepts T08/T11",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0158"
       ]
     }
   ]

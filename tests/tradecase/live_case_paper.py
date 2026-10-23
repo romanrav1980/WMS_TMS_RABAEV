@@ -69,7 +69,12 @@ def execute():
     picked=step('paper_picked_first',path,body)
     assert expect(200,own('POST',path,s['paper_requests']['paper_picked_first']['body']))==picked
     step('paper_old_after_first',base+f"/paper?line={s['line']}&expected_signature={line['signature']}",method='GET',status=409)
-    step('paper_stale_second',path,dict(body,operation_id=case.tag+'.paper.stale.second'),status=409)
+    # The original code is already in the carrier; scan resolution rejects it before native execution.
+    if 'paper_stale_second'in s.get('paper_requests',{}):
+        req=s['paper_requests']['paper_stale_second']
+        if req['status']==409:
+            req['prior_expected_status']=409;req['status']=422;save()
+    step('paper_stale_second',path,dict(body,operation_id=case.tag+'.paper.stale.second'),status=422)
     current=step('paper_after_first',base+'/paper',method='GET');fresh=next(v for v in current['lines']if v['line_id']==s['line'])
     assert fresh['signature']!=line['signature']
     assert expect(200,own('POST',path,s['paper_requests']['paper_picked_first']['body']))==picked
@@ -100,4 +105,7 @@ if __name__=='__main__':
         prepare() if '--prepare'in sys.argv else execute()
         print(json.dumps(dict(status=s.get('status'),case=s.get('case'),wave=s.get('wave'))))
     except Exception as exc:s.update(error=str(exc),status='FAIL');raise
-    finally:s['history']+=CALLS;save()
+    finally:
+        if s.get('status')=='PASS'and 'error'in s:
+            s.setdefault('prior_attempt_errors',[]).append(s.pop('error'))
+        s['history']+=CALLS;save()

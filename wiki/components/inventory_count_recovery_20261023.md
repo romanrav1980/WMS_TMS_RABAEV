@@ -6,4 +6,4 @@
 
 Девять ASGI-проверок с подставленной ошибкой сервиса проверяют HTTP-код, исходный operation_id, точную строку количества, признак подтверждения и режим повтора. Вместе с task-scoped boundary прошли18проверок. Это проверка классификации ошибок API, не новый физический пересчёт и не аппаратное испытание. Oracle-записи и новые транзакции тест не выполняет; SQL/индексы не изменялись.
 
-Файлы: api/wms_api_server/app/modules/inventory/api/inventory_count_routes.py; tests/retailcase/test_inventory_count_outcomes.py. Применение в запущенном API требует следующего штатного рестарта без reload. Полный T11-инвентаризационный цикл остаётся открытым.
+Файлы: api/wms_api_server/app/modules/inventory/api/inventory_count_routes.py; tests/retailcase/test_inventory_count_outcomes.py. Исправление загружено штатным рестартом без reload: текущий API PID78876/session69030. Полный T11-инвентаризационный цикл остаётся открытым.

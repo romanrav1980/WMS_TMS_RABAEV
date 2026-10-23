@@ -81,7 +81,7 @@ async function width(b, w, h) {
   const over = await p.evaluate(() => document.documentElement.scrollWidth - innerWidth); assert(over <= 1, "overflow " + over); ok(w, "no horizontal page scroll");
   await desk(p).screenshot({ path: path.join(SHOTS, `case-paper-queue-${w}.png`) });
   const [popup] = await Promise.all([ctx.waitForEvent("page"), row.getByRole("button", { name: "Печать / PDF" }).click()]);
-  await popup.waitForLoadState(); await popup.emulateMedia({ media: "print" });
+  await popup.waitForLoadState(); await popup.locator("svg").first().waitFor(); await popup.emulateMedia({ media: "print" });
   const probe = await popup.evaluate(() => { const s = document.querySelector("svg").getBoundingClientRect(); return { printed: document.documentElement.dataset.printed === "1",
     svgRight: Math.round(s.right), svgWidth: Math.round(s.width), viewport: innerWidth, scroll: document.documentElement.scrollWidth, code: document.querySelector("code").textContent, sections: document.querySelectorAll("section").length }; });
   res["print_" + w] = probe; assert(probe.printed && probe.code === CUR && probe.sections === 1 && probe.svgRight <= probe.viewport + 1 && probe.scroll <= probe.viewport + 1, JSON.stringify(probe));
@@ -107,7 +107,7 @@ async function width(b, w, h) {
   assert(sent.expected_case_signature === L.signature && sent.scan_container === PAPER["1019"].task.sscc && sent.fact_qty === "5" && /^case-paper-/.test(sent.operation_id));
   ok(w, "exact replay: three sends of identical bytes (same operation id, sheet version, scans); own receipt clears the fact");
 
-  fx.confirm = ["stale"]; await fill(p); await fact(p).getByText("Бланк устарел").waitFor();
+  assert(await fact(p).getByRole("button", { name: "Внести факт" }).count() === 0); ok(w, "ack requires a fresh sheet check before another fact"); await scan(p, CUR); fx.confirm = ["stale"]; await fill(p); await fact(p).getByText("Бланк устарел").waitFor();
   assert(await fact(p).getByRole("button", { name: "Внести факт" }).count() === 1); ok(w, "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown");
   const retry = () => fact(p).getByRole("button", { name: "Повторить отправку" });
   const login = name => p.evaluate(async n => { const api = await import(performance.getEntriesByType("resource").map(e => e.name).find(u => /\/src\/api\.ts(\?|$)/.test(u))); api.setSessionCredentials(n === "admin" ? window.__c0156 : { username: n, password: "x" }); }, name);
@@ -119,7 +119,7 @@ async function width(b, w, h) {
   let n = res.posts.length; await login("other"); await retry().click(); await fact(p).getByText("Вход сменился").waitFor(); assert(res.posts.length === n, JSON.stringify({ n, posts: res.posts.slice(n - 1) }));
   ok(w, "account switched before retry: the old fact is not sent under the new login");
   await login("admin"); await scan(p, CUR); fx.confirm = ["ack"]; await retry().click(); await fact(p).getByText("Факт строки принят").waitFor(); ok(w, "back on the own login the same bytes are replayed and acknowledged");
-  fx.confirm = ["slow_ack"]; n = res.posts.length; await fill(p); await p.waitForTimeout(300); await login("other");
+  await scan(p, CUR); fx.confirm = ["slow_ack"]; n = res.posts.length; await fill(p); await p.waitForTimeout(300); await login("other");
   await fact(p).getByText("Вход сменился").waitFor(); await p.waitForTimeout(300);
   const kept = await p.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith("retailcase.casepaper.pending.v1:") && k.includes(":admin:")).length);
   assert(kept === 1 && res.posts.length === n + 1 && await fact(p).getByText("Факт строки принят").count() === 0, "kept " + kept);

@@ -1,65 +1,72 @@
 {
- "target": "RABAEV/orcl",
- "migration_id": "2026-10-23-case-pick-paper",
- "revision": "C-0156",
- "status": "NOT_APPLIED",
- "shared_objects_changed": [
-  "RRL_STOCK_CASE_PICK_CMD (PACKAGE BODY): one added call RRL_CASE_PICK_PAPER.assert_expected in execute, after the canonical task/line locks and the actor check, before any update"
- ],
- "before_sha256": {
-  "RRL_STOCK_CASE_PICK_CMD:PACKAGE BODY": "528383B6901231C39FF47D1BCAD2BC35E778E3A0F1A268ABE9F9CBF3FA000489"
- },
- "after_sha256": {
-  "RRL_STOCK_CASE_PICK_CMD:PACKAGE BODY": "53EA97ECEF44BC34CEBEAC464F6A131D0F31D51A3C27221CB2715740485E735F",
-  "RRL_CASE_PICK_PAPER:PACKAGE": "CFA6B9FF605C009EC8960270808152865A809D4675CB73DEB153CF60591BD688",
-  "RRL_CASE_PICK_PAPER:PACKAGE BODY": "E7B8B94A53DEBC472A6B28D3423D957BC838745362969FA14A86FFBE4C3CE6CD"
- },
- "new_objects": [
-  "RRL_CASE_PICK_PAPER"
- ],
- "existing_objects_called": [
-  "RRL_STOCK_PLAN_HELPER.decimal_text",
-  "SYS.DBMS_CRYPTO.hash"
- ],
- "signature_fields": {
-  "task": [
-   "CASE_PICK_TASK_ID",
-   "WARE_ID",
-   "SSCC",
-   "ASSIGNED_TO"
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-23-case-pick-paper",
+  "revision": "C-0156",
+  "status": "APPLIED",
+  "shared_objects_changed": [
+    "RRL_STOCK_CASE_PICK_CMD (PACKAGE BODY): one added call RRL_CASE_PICK_PAPER.assert_expected in execute, after the canonical task/line locks and the actor check, before any update"
   ],
-  "line": [
-   "CASE_PICK_LINE_ID",
-   "PICK_TASK_ID",
-   "ARTICUL",
-   "CELL_CODE",
-   "PLANNED_QTY",
-   "PICKED_QTY",
-   "STATUS",
-   "REQUIRED_SCAN_MODE"
+  "before_sha256": {
+    "RRL_STOCK_CASE_PICK_CMD:PACKAGE BODY": "528383B6901231C39FF47D1BCAD2BC35E778E3A0F1A268ABE9F9CBF3FA000489"
+  },
+  "after_sha256": {
+    "RRL_STOCK_CASE_PICK_CMD:PACKAGE BODY": "53EA97ECEF44BC34CEBEAC464F6A131D0F31D51A3C27221CB2715740485E735F",
+    "RRL_CASE_PICK_PAPER:PACKAGE": "CFA6B9FF605C009EC8960270808152865A809D4675CB73DEB153CF60591BD688",
+    "RRL_CASE_PICK_PAPER:PACKAGE BODY": "E7B8B94A53DEBC472A6B28D3423D957BC838745362969FA14A86FFBE4C3CE6CD"
+  },
+  "new_objects": [
+    "RRL_CASE_PICK_PAPER"
   ],
-  "sku": [
-   "RRL_SKU_RECEIPT_POLICY.POLICY_VERSION"
+  "existing_objects_called": [
+    "RRL_STOCK_PLAN_HELPER.decimal_text",
+    "SYS.DBMS_CRYPTO.hash"
   ],
-  "not_included": [
-   "task STATUS",
-   "ASSIGNMENT_VERSION (bumped by RRL_CASE_ASSIGN_VERSION_GUARD on any status/start/resource change)",
-   "CONTENT_VERSION",
-   "other lines"
-  ]
- },
- "replay": "a committed operation is replayed by RRL_STOCK_POSTING_API before compile/execute (v_exists branch), so exact replay never evaluates the paper signature",
- "compile_evidence": "line_signature and field coverage executed unchanged as READ ONLY anonymous blocks on the live DB (reports/tradecase/2026-10-23/claude/C0156); the CMD body differs from the live source only by the hook line (diff in RESULT_C0156.md)",
- "applied_by_claude": false,
- "files_sha256": {
-  "000_preflight.sql": "004bcb775a05c4a11f0a8903b068b3cecb4cb5d16184a1e2e508c44230c3752a",
-  "001_case_pick_paper.sql": "5f78eb3cf9e0072c1c2bbe414658d1f8c2510213d5322ff2ae1ec324cd28cc55",
-  "002_case_pick_cmd.sql": "f1a6474065442c4c2eb132aa3cc3c3fcc9cb1ffb99a6946dd905ef2d25d873b7",
-  "apply.sql": "3258a2933ec0144e4038b72bdcbaa1d89b5d768e4484d573143c0536dc674bc2",
-  "before_hashes.json": "b42a3c3ebffedf82a8b738b041d56edecb208b107e5bbbe00a8c45b099e713a3",
-  "before_rrl_stock_case_pick_cmd.sql": "9b24d1891dd15f0aebb7b7e8e315e5753a38b52deb86a3a7813272e59c00bb0c",
-  "rollback.sql": "b5e3c5e8a63b50031b71471e1accd81ec123b05901092e672ed8bf7a109779f3",
-  "rollback_verify.sql": "5a1f5c9ba29f7dba9cc064d0ac2484c432aaf05862f3c67d98ce023de5e5e452",
-  "verify.sql": "a7f453d9924aa79247d290ba5244e463814a0d0baff2fdf12c1fec66a5bd5ac2"
- }
+  "signature_fields": {
+    "task": [
+      "CASE_PICK_TASK_ID",
+      "WARE_ID",
+      "SSCC",
+      "ASSIGNED_TO"
+    ],
+    "line": [
+      "CASE_PICK_LINE_ID",
+      "PICK_TASK_ID",
+      "ARTICUL",
+      "CELL_CODE",
+      "PLANNED_QTY",
+      "PICKED_QTY",
+      "STATUS",
+      "REQUIRED_SCAN_MODE"
+    ],
+    "sku": [
+      "RRL_SKU_RECEIPT_POLICY.POLICY_VERSION"
+    ],
+    "not_included": [
+      "task STATUS",
+      "ASSIGNMENT_VERSION (bumped by RRL_CASE_ASSIGN_VERSION_GUARD on any status/start/resource change)",
+      "CONTENT_VERSION",
+      "other lines"
+    ]
+  },
+  "replay": "a committed operation is replayed by RRL_STOCK_POSTING_API before compile/execute (v_exists branch), so exact replay never evaluates the paper signature",
+  "compile_evidence": "line_signature and field coverage executed unchanged as READ ONLY anonymous blocks on the live DB (reports/tradecase/2026-10-23/claude/C0156); the CMD body differs from the live source only by the hook line (diff in RESULT_C0156.md)",
+  "applied_by_claude": false,
+  "files_sha256": {
+    "000_preflight.sql": "004bcb775a05c4a11f0a8903b068b3cecb4cb5d16184a1e2e508c44230c3752a",
+    "001_case_pick_paper.sql": "5f78eb3cf9e0072c1c2bbe414658d1f8c2510213d5322ff2ae1ec324cd28cc55",
+    "002_case_pick_cmd.sql": "f1a6474065442c4c2eb132aa3cc3c3fcc9cb1ffb99a6946dd905ef2d25d873b7",
+    "apply.sql": "3258a2933ec0144e4038b72bdcbaa1d89b5d768e4484d573143c0536dc674bc2",
+    "before_hashes.json": "b42a3c3ebffedf82a8b738b041d56edecb208b107e5bbbe00a8c45b099e713a3",
+    "before_rrl_stock_case_pick_cmd.sql": "9b24d1891dd15f0aebb7b7e8e315e5753a38b52deb86a3a7813272e59c00bb0c",
+    "rollback.sql": "b5e3c5e8a63b50031b71471e1accd81ec123b05901092e672ed8bf7a109779f3",
+    "rollback_verify.sql": "5a1f5c9ba29f7dba9cc064d0ac2484c432aaf05862f3c67d98ce023de5e5e452",
+    "verify.sql": "a7f453d9924aa79247d290ba5244e463814a0d0baff2fdf12c1fec66a5bd5ac2"
+  },
+  "applied_by_codex": true,
+  "apply_rollback_reapply": [
+    7,
+    6,
+    7
+  ],
+  "native_acceptance": "CASE1172 marked1/exact replay/return, source10/H0, SHA3 and INVALID0 verified"
 }

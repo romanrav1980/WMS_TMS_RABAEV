@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ApiRequestError, apiFetch } from "../../../../api";
+import { ApiRequestError, apiFetch, apiOperationScope } from "../../../../api";
 import { useApiRead } from "../../access-admin";
 import { HelpButton } from "../../help/HelpButton";
-import { CASE_STATE, DEVICE, LIMIT, WORKING, casePaper, lineOpen, markingProfiles, openCaseTasks, parseCaseReference, qty, readCasePending, refusal,
+import { CASE_STATE, DEVICE, LIMIT, WORKING, casePaper, caseUnit, lineOpen, markingProfiles, openCaseTasks, parseCaseReference, qty, readCasePending, refusal,
   saveCasePending, sendCasePending, type CaseIntent, type CaseLine, type CasePaper } from "./casePaper";
 import { paperHelp } from "./help";
 
@@ -41,12 +41,34 @@ function readError(e: unknown): string {
 /** Бланк одного CASE-задания: что собрать по строкам, версия каждой строки и печать. Ничего не выполняет. */
 function CaseSheet({ taskId }: { taskId: number }) {
   const [state, setState] = useState<{ paper: CasePaper | null; error: string }>({ paper: null, error: "" });
+  const [printing, setPrinting] = useState(false), printController = useRef<AbortController | null>(null);
   useEffect(() => {
+    setPrinting(false); setState({ paper: null, error: "" });
     let live = true;  // ответ закрытого/сменившегося бланка не показывается
     apiFetch<unknown>(`/api/case-pick/tasks/${taskId}/paper`).then(r => { if (live) setState({ paper: casePaper(r), error: "" }); })
       .catch(e => { if (live) setState({ paper: null, error: e instanceof Error && e.message.startsWith("Неожиданный") ? e.message : readError(e) }); });
-    return () => { live = false; };
+    return () => { live = false; printController.current?.abort(); };
   }, [taskId]);
+  const print = async (paper: CasePaper) => {
+    const popup = window.open("", "_blank", "width=1120,height=800");
+    if (!popup) { setState({ paper: null, error: "Разрешите открытие окна печати и снова откройте бланк." }); return; }
+    popup.opener = null;
+    printController.current?.abort(); const own = new AbortController(); printController.current = own;
+    const scope = apiOperationScope(); setPrinting(true);
+    try {
+      const current = casePaper(await apiFetch<unknown>(`/api/case-pick/tasks/${taskId}/paper`, { signal: own.signal }));
+      if (own.signal.aborted || scope !== apiOperationScope()) { popup.close(); return; }
+      const version = (p: CasePaper) => JSON.stringify([p.task.task_id, p.task.sscc, p.task.assigned_to, p.lines.map(l => [l.line_id, l.signature])]);
+      if (current.task.task_id !== taskId || version(current) !== version(paper)) {
+        throw new Error("Задание изменилось. Закройте бланк, проверьте выполненную работу и откройте актуальную версию.");
+      }
+      printSheet(current, popup);
+    } catch (error) {
+      popup.close();
+      if (!own.signal.aborted && scope === apiOperationScope()) setState({ paper: null,
+        error: error instanceof Error && error.message.startsWith("Задание изменилось") ? error.message : readError(error) });
+    } finally { if (!own.signal.aborted) setPrinting(false); }
+  };
   if (state.error) return <p role="alert" className="ops-err">{state.error}</p>;
   if (!state.paper) return <p className="ops-note">Готовим бланк…</p>;
   const p = state.paper;
@@ -54,26 +76,24 @@ function CaseSheet({ taskId }: { taskId: number }) {
     <p className="ops-note">Короб {p.task.sscc} · исполнитель {p.task.assigned_to ?? "не назначен"} · {CASE_STATE[p.task.status] ?? p.task.status}</p>
     <div className="case-paper-scroll"><table className="ops-table">
       <thead><tr><th>Ячейка</th><th>Товар</th><th>План</th><th>Уже собрано</th><th>Ввод с бумаги</th></tr></thead>
-      <tbody>{p.lines.map(l => <tr key={l.line_id}><td>{l.cell_code ?? "—"}</td><td>{l.articul} {l.product_name ?? ""}</td><td>{qty(l.planned_qty)}</td>
-        <td>{qty(l.picked_qty)}</td><td>{!lineOpen(l) ? "строка закрыта" : l.device_required ? DEVICE[l.device_required] : l.scale_reading ? "можно, вес с весов (кг)" : "можно"}</td></tr>)}</tbody>
+      <tbody>{p.lines.map(l => <tr key={l.line_id}><td>{l.cell_code ?? "—"}</td><td>{l.articul} {l.product_name ?? ""}</td><td>{qty(l.planned_qty)} {caseUnit(l)}</td>
+        <td>{qty(l.picked_qty)} {caseUnit(l)}</td><td>{!lineOpen(l) ? "строка закрыта" : l.device_required ? DEVICE[l.device_required] : l.scale_reading ? "можно, вес с весов (кг)" : "можно"}</td></tr>)}</tbody>
     </table></div>
-    <HelpButton help={paperHelp.casePrint} onClick={() => printSheet(p)}>Печать / PDF</HelpButton>
+    <HelpButton help={paperHelp.casePrint} disabled={printing} onClick={() => void print(p)}>Печать / PDF</HelpButton>
   </div>;
 }
 
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
-function printSheet(p: CasePaper) {
-  const w = window.open("", "_blank", "width=1120,height=800");
-  if (!w) return;
+function printSheet(p: CasePaper, w: Window) {
   const rows = p.lines.filter(lineOpen).map(l => `<section><h2>Ячейка ${esc(l.cell_code)} · ${esc(l.articul)} ${esc(l.product_name)}</h2>
-    <dl><dt>План</dt><dd>${esc(qty(l.planned_qty))}</dd><dt>Уже собрано</dt><dd>${esc(qty(l.picked_qty))}</dd>
+    <dl><dt>План</dt><dd>${esc(qty(l.planned_qty))} ${esc(caseUnit(l))}</dd><dt>Уже собрано</dt><dd>${esc(qty(l.picked_qty))} ${esc(caseUnit(l))}</dd>
     <dt>Собрано всего${l.scale_reading ? ", кг с весов" : ""} (вписать)</dt><dd class="blank"></dd><dt>Время / подпись</dt><dd class="blank"></dd></dl>
     ${l.device_required ? `<p class="warn">${esc(DEVICE[l.device_required])}${l.device_required === "WEIGHT_LABEL_SCAN_REQUIRED" ? ": на бумаге не подтверждается" : ": при вводе факта"}</p>` : ""}${l.barcode_svg}<code>${esc(l.reference)}</code></section>`).join("");
   w.document.write(`<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>CASE ${p.task.task_id}</title><style>
-    @page{size:A4 portrait;margin:10mm}body{font:12px system-ui,sans-serif;margin:0}h1{font-size:16px}h2{font-size:13px;margin:0 0 4px}
+    @page{size:A4 landscape;margin:10mm}body{font:12px system-ui,sans-serif;margin:0}h1{font-size:16px}h2{font-size:13px;margin:0 0 4px}
     section{border:1px solid #000;padding:6px;margin:0 0 6px;break-inside:avoid}dl{display:grid;grid-template-columns:repeat(4,auto 1fr);gap:4px;margin:0 0 4px}
-    dt{font-weight:600}dd{margin:0}dd.blank{border-bottom:1px solid #000;min-height:16px}svg{display:block;width:100%;max-width:180mm;height:18mm}code{font-size:8px;word-break:break-all}.warn{font-weight:700}
+    dt{font-weight:600}dd{margin:0}dd.blank{border-bottom:1px solid #000;min-height:16px}svg{display:block;width:100%;max-width:260mm;height:25mm}code{font-size:8px;word-break:break-all}.warn{font-weight:700}
     </style></head><body><h1>Сборка короба CASE ${p.task.task_id} · короб ${esc(p.task.sscc)}</h1>
     <p>Заказ ${esc(p.task.order_no)} · ${esc(p.task.customer_name)} · волна ${esc(p.task.wave_code)} · исполнитель ${esc(p.task.assigned_to ?? "не назначен")} · подготовлено ${esc(new Date(p.prepared_at).toLocaleString("ru-RU"))}</p>
     <p>Печать не подтверждает выполнение. Сканы ячейки, короба и товара обязательны при вводе факта.</p>${rows}</body></html>`);
@@ -117,6 +137,7 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
   const [, bump] = useState(0), pending = readCasePending(taskId, line.line_id);
   const [form, setForm] = useState({ fact_qty: "", scan_cell: "", scan_container: "", scan_product: "" });
   const [msg, setMsg] = useState<{ text: string; tone: "ok" | "err"; code?: string }>({ text: "", tone: "ok" }), [busy, setBusy] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const marked = line.device_required === "MARKING_SCAN_REQUIRED";
   const [codes, setCodes] = useState<string[]>([]), [code, setCode] = useState("");
   const [profiles, setProfiles] = useState<{ list: { system_code: string; profile_code: string }[]; error: string } | null>(null), [profile, setProfile] = useState(0);
@@ -135,6 +156,7 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
     const r = await sendCasePending(intent);
     bump(n => n + 1);
     setBusy(false);
+    if (r.kind === "ack") setAccepted(true);
     setMsg(r.kind === "ack" ? { text: "Факт строки принят сервером.", tone: "ok" } : r.kind === "refused" ? { text: refusal(r.code), code: r.code, tone: "err" } : { text: r.message, tone: "err" });
   };
   const submit = () => {
@@ -149,8 +171,11 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
   const field = (k: keyof typeof form, label: string, help: { id: string; text: string }) =>
     <label>{label} <input value={form[k]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} autoComplete="off" spellCheck={false}
       inputMode={k === "fact_qty" ? "decimal" : undefined} title={help.text} data-help-id={help.id} disabled={Boolean(blocked) || Boolean(pending.intent) || busy} /></label>;
+  if (accepted && !pending.intent) return <section className="paper-scan case-fact" aria-label="Факт строки с бланка">
+    <p role="status">Факт строки принят сервером. Перед следующим подтверждением сверьте бланк с текущей строкой.</p>
+  </section>;
   return <form className="paper-scan case-fact" aria-label="Факт строки с бланка" onSubmit={e => { e.preventDefault(); submit(); }}>
-    <p className="ops-note">Строка {line.line_id}: ячейка {line.cell_code ?? "—"}, {line.articul} {line.product_name ?? ""}; план {qty(line.planned_qty)}, уже собрано {qty(line.picked_qty)}.
+    <p className="ops-note">Строка {line.line_id}: ячейка {line.cell_code ?? "—"}, {line.articul} {line.product_name ?? ""}; план {qty(line.planned_qty)} {caseUnit(line)}, уже собрано {qty(line.picked_qty)} {caseUnit(line)}.
       Факт записывается под вашим входом; за назначенного другого сотрудника — только при штатном праве управления сборкой CASE.</p>
     {blocked && <p role="alert" className="ops-err">С бумаги не вносится: {blocked}.</p>}
     {pending.damaged && <p role="alert" className="ops-err">{pending.damaged}</p>}
