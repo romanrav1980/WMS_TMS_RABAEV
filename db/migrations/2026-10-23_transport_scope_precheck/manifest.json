@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-23-transport-scope-precheck",
+  "target": "RABAEV/orcl",
+  "object": "RRL_TT_TIME_API PACKAGE BODY",
+  "sha256": {
+    "before": "A053B35969B1918819B28B9CE03BE6B0B6F17D70A1493A338D73E64DFBBD6DD6",
+    "after": "EC2C4AF3351057ED1031BE81CB8FD7891A270E4D53CE42048EFEF7C6CE7C4DFB"
+  },
+  "change": "CASE current existing warehouse fast path; any-warehouse fallback and all member checks unchanged",
+  "quantity_changes": false
+}

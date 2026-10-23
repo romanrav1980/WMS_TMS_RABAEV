@@ -151,3 +151,6 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 [Accepted-short inventory audit](retailcase_short_independent_scope_20261016.md): dev APPLIED/4SHA/INVALID0; accepted-short count/replay/rollback and fresh RESTORE regression PASS, existing count writer retained.
 
 [Expected consolidation manifest](retailcase_consolidation_manifest_20261016.md): IN PROGRESS; fulfillment-owned metadata/receipt and native shipping readiness.
+
+- [Транспортный scope precheck23.10](transport_scope_precheck_20261023.md): кандидат CASE, текущий существующий склад перед прежним общим поиском; без кеша прав/количественных эффектов.
+
