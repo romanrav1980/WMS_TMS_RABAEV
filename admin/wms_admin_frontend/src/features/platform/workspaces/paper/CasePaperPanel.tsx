@@ -113,9 +113,10 @@ function CaseByReference() {
 
 /** Факт строки с бумаги: накопленное количество и обязательные сканы; уходит существующей командой с версией бланка. */
 function LineFact({ taskId, signature, line, status }: { taskId: number; signature: string; line: CaseLine; status: string }) {
-  const [pending, setPending] = useState(() => readCasePending(taskId, line.line_id));
+  // Журнал браузера — единственный источник: читается на каждом рендере (и при смене входа — уже по новому входу).
+  const [, bump] = useState(0), pending = readCasePending(taskId, line.line_id);
   const [form, setForm] = useState({ fact_qty: "", scan_cell: "", scan_container: "", scan_product: "" });
-  const [msg, setMsg] = useState<{ text: string; tone: "ok" | "err" }>({ text: "", tone: "ok" }), [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ text: string; tone: "ok" | "err"; code?: string }>({ text: "", tone: "ok" }), [busy, setBusy] = useState(false);
   const marked = line.device_required === "MARKING_SCAN_REQUIRED";
   const [codes, setCodes] = useState<string[]>([]), [code, setCode] = useState("");
   const [profiles, setProfiles] = useState<{ list: { system_code: string; profile_code: string }[]; error: string } | null>(null), [profile, setProfile] = useState(0);
@@ -132,16 +133,16 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
   const send = async (intent: CaseIntent) => {
     setBusy(true);
     const r = await sendCasePending(intent);
-    setPending(readCasePending(taskId, line.line_id));  // журнал браузера — источник: снят только подтверждённым исходом
+    bump(n => n + 1);
     setBusy(false);
-    setMsg(r.kind === "ack" ? { text: "Факт строки принят сервером.", tone: "ok" } : r.kind === "refused" ? { text: refusal(r.code), tone: "err" } : { text: r.message, tone: "err" });
+    setMsg(r.kind === "ack" ? { text: "Факт строки принят сервером.", tone: "ok" } : r.kind === "refused" ? { text: refusal(r.code), code: r.code, tone: "err" } : { text: r.message, tone: "err" });
   };
   const submit = () => {
     try {
       const p = profiles?.list[profile];
       if (marked && (!p || !codes.length)) throw new Error("Отсканируйте код маркировки каждой собранной единицы.");
       const intent = saveCasePending(taskId, line.line_id, { ...form, expected_case_signature: signature, unit_scans: marked && p ? codes.map(c => ({ ...p, code: c })) : undefined });
-      setPending({ intent, damaged: "" }); void send(intent);
+      bump(n => n + 1); void send(intent);
     }
     catch (e) { setMsg({ text: (e as Error).message, tone: "err" }); }
   };
@@ -163,9 +164,9 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
       <p className="ops-note">Отсканировано кодов: {codes.length}{codes.length ? ` · последний …${codes[codes.length - 1].slice(-8)}` : ""}</p>
       {codes.length > 0 && !pending.intent && <HelpButton help={paperHelp.caseCodesClear} type="button" onClick={() => setCodes([])}>Очистить коды</HelpButton>}
     </> : field("scan_product", "Скан товара", paperHelp.caseProduct)}{field("fact_qty", line.scale_reading ? "Собрано всего по строке, кг (показание весов)" : "Собрано всего по строке", paperHelp.caseQty)}
-    {pending.intent ? <HelpButton help={paperHelp.caseRetry} type="button" disabled={busy} onClick={() => void send(pending.intent!)}>Повторить отправку</HelpButton>
-      : <HelpButton help={paperHelp.caseSend} type="submit" disabled={busy || Boolean(blocked) || Boolean(pending.damaged)}>Внести факт</HelpButton>}
+    {pending.intent ? <HelpButton key="retry" help={paperHelp.caseRetry} type="button" disabled={busy} onClick={() => void send(pending.intent!)}>Повторить отправку</HelpButton>
+      : <HelpButton key="send" help={paperHelp.caseSend} type="submit" disabled={busy || Boolean(blocked) || Boolean(pending.damaged)}>Внести факт</HelpButton>}
     {pending.intent && <p className="ops-note">Сохранённый факт {pending.intent.operation_id} ждёт подтверждения; повтор отправит те же данные.</p>}
-    {msg.text && <p role={msg.tone === "err" ? "alert" : "status"} className={msg.tone === "err" ? "ops-err" : "ops-note"}>{msg.text}</p>}
+    {msg.text && <p role={msg.tone === "err" ? "alert" : "status"} className={msg.tone === "err" ? "ops-err" : "ops-note"}>{msg.text}{msg.code && <><br /><small>код: {msg.code}</small></>}</p>}
   </form>;
 }

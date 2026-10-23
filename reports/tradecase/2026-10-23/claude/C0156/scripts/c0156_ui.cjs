@@ -32,6 +32,8 @@ async function route(r) {
     if (next === "503") return r.fulfill({ status: 503, json: { detail: { code: "RESULT_UNCERTAIN", operation_id: op, outcome_confirmed: false, retry_same_operation_id: true } }, headers: cors });
     if (next === "403") return r.fulfill({ status: 403, json: { detail: { code: "CASE_CURRENT_EXECUTE_REQUIRED", operation_id: op, outcome_confirmed: false, read_before_retry: true } }, headers: cors });
     if (next === "stale") return r.fulfill({ status: 409, json: { detail: { code: "STOCK_RULE_REJECTED", rule_reason: "ORA-20886: CASE_PAPER_LINE_CHANGED", operation_id: op, outcome_confirmed: true } }, headers: cors });
+    if (next === "other_op") return r.fulfill({ status: 409, json: { detail: { code: "STOCK_RULE_REJECTED", rule_reason: "ORA-20886: CASE_PAPER_LINE_CHANGED", operation_id: "someone-else", outcome_confirmed: true } }, headers: cors });
+    if (next === "slow_ack") { await new Promise(ok => setTimeout(ok, 1500)); return r.fulfill({ status: 200, json: { operation_id: op, status: "PARTIAL" }, headers: cors }); }
     if (next === "conflict") return r.fulfill({ status: 409, json: { detail: { code: "OPERATION_CONTENT_CONFLICT", operation_id: op, outcome_confirmed: true } }, headers: cors });
   }
   if (m === "GET" && /\/marking-policy$/.test(u.pathname)) return r.fulfill({ status: 200, json: { article: L.articul, marking_required: true, profiles: [{ system_code: "CRPT", profile_code: "WATER" }], serialized_weight_boxes: false, loose_weight_kg: false }, headers: cors });
@@ -107,7 +109,22 @@ async function width(b, w, h) {
 
   fx.confirm = ["stale"]; await fill(p); await fact(p).getByText("Бланк устарел").waitFor();
   assert(await fact(p).getByRole("button", { name: "Внести факт" }).count() === 1); ok(w, "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown");
-  fx.confirm = ["conflict"]; await fill(p); await fact(p).getByText("OPERATION_CONTENT_CONFLICT").waitFor(); ok(w, "FIXTURE conflict is confirmed and shown");
+  const retry = () => fact(p).getByRole("button", { name: "Повторить отправку" });
+  const login = name => p.evaluate(async n => { const api = await import(performance.getEntriesByType("resource").map(e => e.name).find(u => /\/src\/api\.ts(\?|$)/.test(u))); api.setSessionCredentials(n === "admin" ? window.__c0156 : { username: n, password: "x" }); }, name);
+  await p.evaluate(async () => { const api = await import(performance.getEntriesByType("resource").map(e => e.name).find(u => /\/src\/api\.ts(\?|$)/.test(u))); window.__c0156 = { username: "admin", password: api.adminBasicAuth().split(":").slice(1).join(":") }; });
+  fx.confirm = ["other_op"]; await fill(p); await fact(p).getByText("Исход не подтверждён (HTTP 409)").waitFor(); assert(await retry().count() === 1);
+  ok(w, "FIXTURE confirmed refusal with another operation id does not clear the saved fact");
+  fx.confirm = ["conflict"]; await retry().click(); await fact(p).getByText("уже использован с другими данными").waitFor(); assert(await retry().count() === 1);
+  ok(w, "FIXTURE content conflict keeps the saved fact (readable text, no internal code as the message)");
+  let n = res.posts.length; await login("other"); await retry().click(); await fact(p).getByText("Вход сменился").waitFor(); assert(res.posts.length === n, JSON.stringify({ n, posts: res.posts.slice(n - 1) }));
+  ok(w, "account switched before retry: the old fact is not sent under the new login");
+  await login("admin"); await scan(p, CUR); fx.confirm = ["ack"]; await retry().click(); await fact(p).getByText("Факт строки принят").waitFor(); ok(w, "back on the own login the same bytes are replayed and acknowledged");
+  fx.confirm = ["slow_ack"]; n = res.posts.length; await fill(p); await p.waitForTimeout(300); await login("other");
+  await fact(p).getByText("Вход сменился").waitFor(); await p.waitForTimeout(300);
+  const kept = await p.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith("retailcase.casepaper.pending.v1:") && k.includes(":admin:")).length);
+  assert(kept === 1 && res.posts.length === n + 1 && await fact(p).getByText("Факт строки принят").count() === 0, "kept " + kept);
+  ok(w, "late reply after an account switch: result not shown, the own record stays for its login");
+  await login("admin"); await scan(p, CUR); fx.confirm = ["ack"]; await retry().click(); await fact(p).getByText("Факт строки принят").waitFor(); ok(w, "own login: exact replay of the kept record is acknowledged");
   await fact(p).screenshot({ path: path.join(SHOTS, `case-paper-fact-${w}.png`) });
 
   fx.device = "MARKING_SCAN_REQUIRED"; await scan(p, CUR);

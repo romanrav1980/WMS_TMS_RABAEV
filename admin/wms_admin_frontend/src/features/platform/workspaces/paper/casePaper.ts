@@ -45,7 +45,7 @@ export function parseCaseReference(text: string): { taskId: number; lineId: numb
 }
 
 export type CaseIntent = { task: number; line: number; path: string; wire: string; operation_id: string; scope: string; created_at: string };
-export type CaseSend = { kind: "ack" } | { kind: "refused"; code: string } | { kind: "unknown"; message: string };
+export type CaseSend = { kind: "ack" } | { kind: "refused"; code: string } | { kind: "unknown"; message: string } | { kind: "foreign"; message: string };
 export type UnitScan = { system_code: string; profile_code: string; code: string };
 export type CaseFact = { fact_qty: string; scan_cell: string; scan_container: string; scan_product: string; expected_case_signature: string; unit_scans?: UnitScan[] };
 /** Профили маркировки строки из существующего marking-policy; неизвестная форма — ошибка. */
@@ -93,18 +93,32 @@ function clearIfSame(intent: CaseIntent) {
   try { if (localStorage.getItem(key(intent.task, intent.line)) === JSON.stringify(intent)) localStorage.removeItem(key(intent.task, intent.line)); } catch { /* останется до повтора */ }
 }
 
-/** Отправить ровно сохранённые байты существующей командой подтверждения строки. */
+/** Запись этого входа и именно этот факт: scope, путь и байты совпадают с сохранённым. */
+const own = (intent: CaseIntent) => intent.scope === apiOperationScope() && readCasePending(intent.task, intent.line).intent !== null
+  && (() => { try { return localStorage.getItem(key(intent.task, intent.line)) === JSON.stringify(intent); } catch { return false; } })();
+const OTHER_LOGIN: CaseSend = { kind: "foreign", message: "Вход сменился: сохранённый факт прежнего входа не отправлен и не показан." };
+
+/** Отправить ровно сохранённые байты существующей командой подтверждения строки. Запись снимается только квитанцией своей операции или
+ *  подтверждённым отказом своей операции (409 с outcome_confirmed=true и тем же operation_id, не конфликт содержимого), либо 422 формы. */
 export async function sendCasePending(intent: CaseIntent): Promise<CaseSend> {
+  if (!own(intent)) return OTHER_LOGIN;  // старое намерение не уходит под другим входом
   try {
     const v = await apiFetch<{ operation_id?: string }>(intent.path, { method: "POST", body: intent.wire });
+    if (intent.scope !== apiOperationScope()) return OTHER_LOGIN;  // ответ пришёл после смены входа: запись остаётся, результат не показываем
     if (v?.operation_id !== intent.operation_id) return { kind: "unknown", message: "Ответ сервера не относится к этому факту. Факт сохранён; повторите его." };
     clearIfSame(intent);
     return { kind: "ack" };
   } catch (error) {
+    if (intent.scope !== apiOperationScope()) return OTHER_LOGIN;
     if (error instanceof ApiRequestError) {
-      const d = (typeof error.detail === "object" && error.detail ? error.detail : {}) as { code?: string; rule_reason?: string; outcome_confirmed?: boolean };
-      if (d.outcome_confirmed === true && error.status !== 503) { clearIfSame(intent); return { kind: "refused", code: d.rule_reason || d.code || `HTTP ${error.status}` }; }
-      if (error.status === 422) { clearIfSame(intent); return { kind: "refused", code: d.code ?? "CASE_COMMAND_INVALID" }; }
+      const d = (typeof error.detail === "object" && error.detail ? error.detail : {}) as { code?: string; rule_reason?: string; outcome_confirmed?: boolean; operation_id?: string; read_before_retry?: boolean };
+      const reason = d.rule_reason || d.code || `HTTP ${error.status}`;
+      if (error.status === 409 && d.outcome_confirmed === true && d.operation_id === intent.operation_id && !d.read_before_retry && !reason.includes("CONFLICT_CONTENT") && !reason.includes("CONTENT_CONFLICT")) {
+        clearIfSame(intent); return { kind: "refused", code: reason };
+      }
+      // 422: тело не прошло проверку формы до проведения (эффекта не было); это же тело никогда не пройдёт.
+      if (error.status === 422 && (d.code === "CASE_COMMAND_INVALID" || Array.isArray(error.detail))) { clearIfSame(intent); return { kind: "refused", code: d.code ?? "CASE_COMMAND_INVALID" }; }
+      if (reason.includes("CONTENT_CONFLICT")) return { kind: "unknown", message: "Номер этой операции уже использован с другими данными. Факт сохранён без изменений; сверьте строку в карточке CASE и обратитесь к руководителю." };
       return { kind: "unknown", message: error.status === 401 || error.status === 403 ? "Доступ закрыт или сессия завершена. Факт сохранён; войдите снова и повторите его."
         : `Исход не подтверждён (HTTP ${error.status}). Факт сохранён; повторите его тем же номером.` };
     }
@@ -119,5 +133,8 @@ export function refusal(code: string): string {
   if (code.includes("CASE_FACT_NOT_INCREASING") || code.includes("FACT_NOT_INCREASING")) return "Количество должно быть больше уже подтверждённого (вводится накопленное по строке).";
   if (code.includes("CASE_TASK_ACTOR_CONFLICT")) return "Задание назначено другому сотруднику; подтверждать за него может только сотрудник с правом управления сборкой CASE.";
   if (code.includes("CASE_TASK_LINE_STATE_CONFLICT")) return "Задание или строка не в работе: начните задание штатно или проверьте строку.";
-  return `Сервер отказал: ${code}.`;
+  if (code.includes("CASE_MARKED_UNIT_SCANS_REQUIRED")) return "Для маркированного товара нужны коды маркировки каждой собранной единицы.";
+  if (code.includes("CASE_SELECTED_UNIT_NOT_OWNED") || code.includes("CASE_SCANNED_UNIT_QUANTITY_CONFLICT")) return "Коды маркировки не совпали с единицами в ячейке или с количеством.";
+  if (code.includes("CASE_COMMAND_INVALID")) return "Данные факта не прошли проверку (например, повторный или неизвестный код). Исправьте и внесите заново.";
+  return "Сервер отказал в подтверждении строки.";
 }

@@ -59,7 +59,27 @@
   },
   {
    "width": 1440,
-   "name": "FIXTURE conflict is confirmed and shown"
+   "name": "FIXTURE confirmed refusal with another operation id does not clear the saved fact"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE content conflict keeps the saved fact (readable text, no internal code as the message)"
+  },
+  {
+   "width": 1440,
+   "name": "account switched before retry: the old fact is not sent under the new login"
+  },
+  {
+   "width": 1440,
+   "name": "back on the own login the same bytes are replayed and acknowledged"
+  },
+  {
+   "width": 1440,
+   "name": "late reply after an account switch: result not shown, the own record stays for its login"
+  },
+  {
+   "width": 1440,
+   "name": "own login: exact replay of the kept record is acknowledged"
   },
   {
    "width": 1440,
@@ -131,7 +151,27 @@
   },
   {
    "width": 390,
-   "name": "FIXTURE conflict is confirmed and shown"
+   "name": "FIXTURE confirmed refusal with another operation id does not clear the saved fact"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE content conflict keeps the saved fact (readable text, no internal code as the message)"
+  },
+  {
+   "width": 390,
+   "name": "account switched before retry: the old fact is not sent under the new login"
+  },
+  {
+   "width": 390,
+   "name": "back on the own login the same bytes are replayed and acknowledged"
+  },
+  {
+   "width": 390,
+   "name": "late reply after an account switch: result not shown, the own record stays for its login"
+  },
+  {
+   "width": 390,
+   "name": "own login: exact replay of the kept record is acknowledged"
   },
   {
    "width": 390,
@@ -153,11 +193,11 @@
  "liveWrites": [],
  "errors": [],
  "posts": [
-  "{\"operation_id\":\"case-paper-31be2503-0ad2-4360-9123-92f5fbc4f893\",\"fact_qty\":\"2\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":null,\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\",\"unit_scans\":[{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215abcDEF\"},{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215ghiJKL\"}]}"
+  "{\"operation_id\":\"case-paper-f58ce6e1-910b-49d7-96ce-205994aea335\",\"fact_qty\":\"2\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":null,\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\",\"unit_scans\":[{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215abcDEF\"},{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215ghiJKL\"}]}"
  ],
  "timings": {
-  "case_queue_1440": 1644,
-  "case_queue_390": 1610
+  "case_queue_1440": 2177,
+  "case_queue_390": 1659
  },
  "print_1440": {
   "printed": true,
