@@ -19,7 +19,6 @@ class OracleCompositionAck:
             raise TradecaseError("TRADECASE_MESSAGE_TOO_LARGE", 413)
         try:
             with self.gateway.transaction("TRADECASE order composition " + procedure) as cur:
-                cur.execute("set transaction isolation level serializable")
                 request = cur.var(oracledb.DB_TYPE_CLOB)
                 request.setvalue(0, raw)
                 result = cur.var(oracledb.DB_TYPE_CLOB)

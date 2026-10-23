@@ -79,7 +79,7 @@ def test_adapter_calls_one_native_procedure_each():
     assert [c[0] for c in g.calls] == ["RRL_TRADE_COMPOSITION_API.report", "RRL_TRADE_COMPOSITION_API.acknowledge", "RRL_TRADE_COMPOSITION_API.orders"]
     assert json.loads(g.calls[0][1][2]) == {"warehouse_id": 210564699, "order_id": "O1"}
     assert json.loads(g.calls[1][1][2])["payload_hash"] == ack_wire(ack())["payload_hash"]
-    assert g.statements == ["set transaction isolation level serializable", "set transaction isolation level serializable", "set transaction read only"]
+    assert g.statements == ["set transaction read only"]
     assert g.calls[2][1] == [210564699, "viewer", 50]
 
 

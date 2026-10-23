@@ -77,3 +77,5 @@
 - <a id="requirements"></a> **Requirements.** [Требования и версии](sources/wiki_index_catalog_20261015.md#requirements).
 - <a id="control-files"></a> **Control Files.** [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
 
+
+- Подтверждение состава: V2 применён; исправление согласованного чтения проверяется отдельно, см. [карточку](database/trade_composition_ack_20261023.md).
