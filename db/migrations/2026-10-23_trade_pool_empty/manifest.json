@@ -1,6 +1,6 @@
 {
   "migration_id": "2026-10-23-trade-pool-empty",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "target": "RABAEV/orcl",
   "before_sha256": {
     "RRL_STOCK_POOL_CMD:PACKAGE BODY": "747454DA64658AA501E89EB897719E1956A326167CA76C71882AD3C32BC61661"
@@ -16,5 +16,7 @@
     "rollback.sql": "47c5f604d558e611184efb8cdb7c546b557c69c709177fe14c6f2cdb7a78b5d3",
     "rollback_verify.sql": "357f190c4ebbdfa785370d28e501ff45e44dc8c07b53c34b55b13185a7349902",
     "verify.sql": "b43fb6857ef3cd5926b32726582c780ea4bcaa5ecac9dde3f2b835dce66b932e"
-  }
+  },
+  "applied_by_root": true,
+  "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T08/trade-pool-empty-native-result.json"
 }

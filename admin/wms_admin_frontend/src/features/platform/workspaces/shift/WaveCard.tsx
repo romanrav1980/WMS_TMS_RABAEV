@@ -62,7 +62,7 @@ export function WaveCard({ wave, detail, risks, tasks, caseStatuses, onClose, on
 export function RiskList({ risks, onWave }: { risks: Risk[]; onWave?: (id: number) => void }) {
   return <ul className="ops-list">{risks.slice(0, 40).map(r => <li key={r.key} title={shiftHelp.risk.text} data-help-id={shiftHelp.risk.id}>
     <span><span className={"ops-chip " + (r.severity === "BLOCKER" ? "bad" : "other")}>{r.severity === "BLOCKER" ? "блокирует" : "внимание"}</span> <b>{r.basis}</b><br />
-      <small>{r.wave_id != null ? `волна ${r.wave_id}` : ""}{r.task_id != null ? ` · задание ${r.task_id}` : ""} · влияние: {r.impact} · ответственный: {r.owner ?? "не указан в источнике"} · источник: {r.source}</small></span>
+      <small>{r.wave_id != null ? `волна ${r.wave_id}` : ""}{r.task_id != null ? ` · задание ${r.task_id}` : ""} · {r.impact}{r.owner ? ` · исполнитель: ${r.owner}` : ""}</small></span>
     <span style={{ display: "flex", flexDirection: "column", gap: 4 }}>
       {onWave && r.wave_id != null && <HelpButton help={shiftHelp.wavePick} onClick={() => onWave(r.wave_id!)}>Волна</HelpButton>}
       {r.action && <HelpButton help={shiftHelp.riskAction} onClick={() => openLink(r.action)}>{r.action.label}</HelpButton>}

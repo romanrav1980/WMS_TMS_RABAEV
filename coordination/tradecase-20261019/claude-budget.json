@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 23,
-  "used": 23,
+  "limit": 25,
+  "used": 25,
   "requests": [
     {
       "id": "C-0130",
@@ -178,6 +178,22 @@
       "status": "REGISTERED; queued after C0160 RELEASE",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0162",
+      "task": "T08 common pool current warehouse/owner scope including immutable replay and preview",
+      "registered_at": "2026-10-23T08:01:16.262298+00:00",
+      "status": "REGISTERED; after C0161 RELEASE",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0163",
+      "task": "T02 durable partial code composition transfer through current trade document intake",
+      "registered_at": "2026-10-23T08:10:27.287209+00:00",
+      "status": "REGISTERED; queued after C0162 RELEASE and C0161 corrections",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
     }
   ],
   "additional_grants": [
@@ -194,7 +210,7 @@
     },
     {
       "date": "2026-10-22",
-      "authorization": "Owner: \u0420\u00a0\u0421\u0459\u0420\u00a0\u0421\u2022\u0420\u00a0\u0412\u00b6\u0420\u00a0\u0412\u00b5\u0420\u040e\u0432\u201a\u00ac\u0420\u040e\u0420\u0409 \u0420\u00a0\u0421\u2014\u0420\u040e\u0420\u201a\u0420\u00a0\u0421\u2018 \u0420\u040e\u0420\u201a\u0420\u00a0\u0412\u00b0\u0420\u00a0\u0412\u00b7\u0420\u040e\u0420\u201a\u0420\u00a0\u0412\u00b0\u0420\u00a0\u0412\u00b1\u0420\u00a0\u0421\u2022\u0420\u040e\u0432\u0402\u0459\u0420\u00a0\u0421\u201d\u0420\u00a0\u0412\u00b5 \u0420\u00a0\u0421\u2014\u0420\u00a0\u0421\u2022\u0420\u00a0\u0422\u2018\u0420\u00a0\u0421\u2013\u0420\u040e\u0420\u201a\u0420\u040e\u0421\u201c\u0420\u00a0\u0412\u00b6\u0420\u00a0\u0412\u00b0\u0420\u040e\u0432\u0402\u0459\u0420\u040e\u0420\u0409 claude code \u0420\u00a0\u0412\u00b1\u0420\u00a0\u0421\u2022\u0420\u00a0\u0412\u00bb\u0420\u040e\u0420\u0409\u0420\u040e\u0432\u201a\u00ac\u0420\u00a0\u0412\u00b5",
+      "authorization": "Owner: Р СљР С•Р В¶Р ВµРЎв‚¬РЎРЉ Р С—РЎР‚Р С‘ РЎР‚Р В°Р В·РЎР‚Р В°Р В±Р С•РЎвЂљР С”Р Вµ Р С—Р С•Р Т‘Р С–РЎР‚РЎС“Р В¶Р В°РЎвЂљРЎРЉ claude code Р В±Р С•Р В»РЎРЉРЎв‚¬Р Вµ",
       "limit": 2,
       "used": 2,
       "allocation_basis": "Codex working batch of two large tasks; owner did not specify a numeric cap",
@@ -255,7 +271,7 @@
     },
     {
       "date": "2026-10-23",
-      "authorization": "Owner: \u0420\u00a0\u0421\u2014\u0420\u040e\u0420\u201a\u0420\u00a0\u0421\u2022\u0420\u00a0\u0422\u2018\u0420\u00a0\u0421\u2022\u0420\u00a0\u0412\u00bb\u0420\u00a0\u0412\u00b6\u0420\u00a0\u0412\u00b0\u0420\u00a0\u0432\u201e\u2013 \u0420\u040e\u0420\u201a\u0420\u00a0\u0412\u00b0\u0420\u00a0\u0412\u00b1\u0420\u00a0\u0421\u2022\u0420\u040e\u0432\u0402\u0459\u0420\u040e\u0421\u201c \u0420\u00a0\u0421\u2014\u0420\u00a0\u0421\u2022\u0420\u00a0\u0421\u201d\u0420\u00a0\u0412\u00b0 \u0420\u00a0\u0420\u2020\u0420\u040e\u0420\u0453\u0420\u00a0\u0412\u00b5 \u0420\u00a0\u0420\u2026\u0420\u00a0\u0412\u00b5 \u0420\u040e\u0420\u0453\u0420\u00a0\u0422\u2018\u0420\u00a0\u0412\u00b5\u0420\u00a0\u0412\u00bb\u0420\u00a0\u0412\u00b0\u0420\u00a0\u0412\u00b5\u0420\u040e\u0432\u201a\u00ac\u0420\u040e\u0420\u0409. \u0420\u00a0\u0421\u201d\u0420\u00a0\u0412\u00bb\u0420\u00a0\u0421\u2022\u0420\u00a0\u0422\u2018 \u0420\u00a0\u0412\u00b6\u0420\u00a0\u0422\u2018\u0420\u00a0\u0412\u00b5\u0420\u040e\u0432\u0402\u0459",
+      "authorization": "Owner: Р С—РЎР‚Р С•Р Т‘Р С•Р В»Р В¶Р В°Р в„– РЎР‚Р В°Р В±Р С•РЎвЂљРЎС“ Р С—Р С•Р С”Р В° Р Р†РЎРѓР Вµ Р Р…Р Вµ РЎРѓР Т‘Р ВµР В»Р В°Р ВµРЎв‚¬РЎРЉ. Р С”Р В»Р С•Р Т‘ Р В¶Р Т‘Р ВµРЎвЂљ",
       "allocation_basis": "One large follow-up under open delegation authorization; not an owner numeric cap",
       "limit": 1,
       "used": 1,
@@ -341,6 +357,26 @@
       "used": 1,
       "request_ids": [
         "C-0161"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner: continue all sprints and delegate parallel work to waiting Claude",
+      "allocation_basis": "One consolidated pool access and replay correction following actual native acceptance",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0162"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner explicitly requested continued joint completion and more parallel delegation",
+      "allocation_basis": "One original T02 packeted composition requirement, delegated while root accepts existing packages",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0163"
       ]
     }
   ]
