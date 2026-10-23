@@ -1,0 +1,1 @@
+{"status": "DEPARTED_C_TARE_RETURN_PENDING", "warehouse": 213059748, "trip": 33677}

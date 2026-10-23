@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "RRL_STOCK_POOL_READ:PACKAGE BODY": "3C4BE33AD22ACCC12CCD4E4157A66508F7FC4914C04C3C94CB3577C23E29BE3B",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "35BFECEC73FB5D0CB4C7041D9D05623BA6079D0044899B86C0CAF78889F0A477",
+    "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "94B1F0CF2C0B5F693A3BF6E7CF75B56343850576DD27B8588730A28FC085E294"
+  },
+  "sources": [
+    {
+      "kind": "NEED",
+      "id": "N1",
+      "body": {
+        "available_quantity": "0",
+        "entity_type": "NEED",
+        "forecast_quantity": "5",
+        "period_from": "2026-10-22T17:24:47.051599Z",
+        "period_until": "2026-10-23T17:24:47.051599Z",
+        "received_in_available": true,
+        "recipient_id": "C1",
+        "recipient_version": 2,
+        "sku_id": "A",
+        "sku_version": 1,
+        "snapshot_at": "2026-10-22T17:24:47.051599Z",
+        "supplies": [
+          {
+            "confirmed": true,
+            "current_trip": true,
+            "expected_at": "2026-10-22T23:24:47.051599Z",
+            "quantity": "1",
+            "status": "PLANNED",
+            "supply_id": "MAIN1",
+            "uom": "BOX",
+            "version": 1
+          }
+        ],
+        "target_quantity": "0",
+        "uom": "BOX"
+      }
+    },
+    {
+      "kind": "ORDER",
+      "id": "O1",
+      "body": {
+        "cancelled": false,
+        "entity_type": "ORDER",
+        "lines": [
+          {
+            "line_id": "1",
+            "min_osg_days": 0,
+            "mrc": "200",
+            "quantity": "1",
+            "sku_id": "A",
+            "source_owner_id": "SNS",
+            "target_owner_id": "SNS",
+            "uom": "BOX"
+          }
+        ],
+        "order_kind": "OUTBOUND",
+        "parent_trip_id": null,
+        "planned_ship_at": "2026-10-22T23:24:47.051599Z",
+        "recipient_id": "C1"
+      }
+    },
+    {
+      "kind": "SKU",
+      "id": "A",
+      "body": {
+        "active": true,
+        "base_uom": "EA",
+        "entity_type": "SKU",
+        "permitted_mrc": [
+          "200"
+        ],
+        "title": "QA tobacco leaf units",
+        "units_per_box": 10,
+        "wms_article_id": "TC03089DDB36"
+      }
+    },
+    {
+      "kind": "TRIP",
+      "id": "T1",
+      "body": {
+        "cancelled": false,
+        "capacity_kg": "8000",
+        "capacity_m3": "0.6",
+        "entity_type": "TRIP",
+        "orders": [
+          {
+            "line_id": "1",
+            "order_id": "O1",
+            "quantity": "1"
+          },
+          {
+            "line_id": "1",
+            "order_id": "O2",
+            "quantity": "1"
+          }
+        ],
+        "planned_departure_at": "2026-10-22T23:24:47.051599Z",
+        "planning_source": "SAP",
+        "vehicle_id": "TP22.089ddb36"
+      }
+    }
+  ]
+}

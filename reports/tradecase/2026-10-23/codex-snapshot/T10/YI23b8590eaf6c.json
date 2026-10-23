@@ -1,0 +1,1365 @@
+{
+  "status": "PASS",
+  "tag": "YI23b8590eaf6c",
+  "basis": "Controlled accepted supply fixtures; actual yard API/native; no receipt/quantity commands",
+  "checks": [
+    "Inbound visit with two supplies, exact replay, payload conflict, duplicate supply and cross-warehouse vehicle exclusion",
+    "Two different inbound vehicles compete for one dock; one winner; departure releases dock and vehicle for the next visit",
+    "Every supply owner is checked: hidden BLC refuses mixed SNS/BLC visit; role-only access needs operate; changed source blocks arrival but not original receipt; owner/warehouse revocation denies read/replay"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.A",
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "vehicle": "YI23b8590eaf6c.A",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.A",
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "vehicle": "YI23b8590eaf6c.A",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.A",
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "vehicle": "OTHER",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.duplicate",
+        "supply_ids": [
+          "YI23b8590eaf6c.B",
+          "YI23b8590eaf6c.A1"
+        ],
+        "vehicle": "YI23b8590eaf6c.duplicate",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.B",
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "vehicle": "YI23b8590eaf6c.B",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.b1eeee",
+        "action": "ARRIVE",
+        "expected_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.11f05d",
+        "action": "ARRIVE",
+        "expected_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.OTHER",
+        "supply_ids": [
+          "YI23b8590eaf6c.OTHER"
+        ],
+        "vehicle": "YI23b8590eaf6c.A",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.f9c045",
+        "action": "ARRIVE",
+        "expected_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ASSIGN_DOCK.7f9a88",
+        "action": "ASSIGN_DOCK",
+        "expected_version": 2,
+        "dock": "B22D1161"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ASSIGN_DOCK.a2e21c",
+        "action": "ASSIGN_DOCK",
+        "expected_version": 2,
+        "dock": "B22D1161"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.START.2617fb",
+        "action": "START",
+        "expected_version": 3
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.FINISH.0e5d8c",
+        "action": "FINISH",
+        "expected_version": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.DEPART.d60166",
+        "action": "DEPART",
+        "expected_version": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ASSIGN_DOCK.6a6058",
+        "action": "ASSIGN_DOCK",
+        "expected_version": 2,
+        "dock": "B22D1161"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.START.6e6ce9",
+        "action": "START",
+        "expected_version": 3
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.FINISH.c57424",
+        "action": "FINISH",
+        "expected_version": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.DEPART.737d88",
+        "action": "DEPART",
+        "expected_version": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.d8099d",
+        "action": "ARRIVE",
+        "expected_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.CANCEL.947540",
+        "action": "CANCEL",
+        "expected_version": 2,
+        "reason": "End simulated yard acceptance"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.grant.0",
+        "expected_version": 0,
+        "username": "YI23b8590eaf6c.QA",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": false,
+        "reason": "Owned inbound yard acceptance"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.grant.1",
+        "expected_version": 1,
+        "username": "YI23b8590eaf6c.QA",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Owned inbound yard acceptance"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.mixed-owner",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE",
+          "YI23b8590eaf6c.MIXED"
+        ],
+        "vehicle": "YI23b8590eaf6c.mixed-owner",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/622/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.b6dbc1",
+        "action": "ARRIVE",
+        "expected_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.grant.2",
+        "expected_version": 2,
+        "username": "YI23b8590eaf6c.QA",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Owned inbound yard acceptance"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "vehicle": "YI23b8590eaf6c.SCOPE",
+        "planned_arrival_at": "2026-10-23T09:00:00+03:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/622/transitions",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.CANCEL.35c93a",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End simulated yard acceptance"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "YI23b8590eaf6c.grant.3",
+        "expected_version": 3,
+        "username": "YI23b8590eaf6c.QA",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Owned inbound yard acceptance"
+      }
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 161.43,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.A",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 258.46,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.A",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 408.52,
+      "result": {
+        "detail": {
+          "code": "YARD_OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 87.26,
+      "result": {
+        "detail": {
+          "code": "YARD_SUPPLY_VISIT_ACTIVE",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 78.65,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.B",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "status": 200,
+      "ms": 96.74,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.b1eeee",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "ARRIVED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 200,
+      "ms": 131.93,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.11f05d",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": null,
+        "state": "ARRIVED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits",
+      "status": 200,
+      "ms": 253.41,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.OTHER",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.OTHER"
+        ],
+        "visit_id": 621,
+        "warehouse_id": 210564699,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "status": 409,
+      "ms": 102.64,
+      "result": {
+        "detail": {
+          "code": "YARD_VEHICLE_OCCUPIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "status": 200,
+      "ms": 183.75,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.ASSIGN_DOCK.a2e21c",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": "B22D1161",
+        "state": "AT_DOCK",
+        "version": 3,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:16Z",
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 409,
+      "ms": 207.53,
+      "result": {
+        "detail": {
+          "code": "YARD_DOCK_OCCUPIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "status": 200,
+      "ms": 95.22,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.START.2617fb",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": "B22D1161",
+        "state": "WORKING",
+        "version": 4,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:16Z",
+        "work_started_at": "2026-10-23T00:33:16Z",
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "status": 200,
+      "ms": 80.08,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.FINISH.0e5d8c",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": "B22D1161",
+        "state": "WORK_DONE",
+        "version": 5,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:16Z",
+        "work_started_at": "2026-10-23T00:33:16Z",
+        "work_finished_at": "2026-10-23T00:33:17Z",
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/618/transitions",
+      "status": 200,
+      "ms": 74.51,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.DEPART.d60166",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.A1",
+          "YI23b8590eaf6c.A2"
+        ],
+        "visit_id": 618,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": "B22D1161",
+        "state": "DEPARTED",
+        "version": 6,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:16Z",
+        "work_started_at": "2026-10-23T00:33:16Z",
+        "work_finished_at": "2026-10-23T00:33:17Z",
+        "departed_at": "2026-10-23T00:33:17Z",
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 200,
+      "ms": 118.65,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.ASSIGN_DOCK.6a6058",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": "B22D1161",
+        "state": "AT_DOCK",
+        "version": 3,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:17Z",
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 200,
+      "ms": 138.1,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.START.6e6ce9",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": "B22D1161",
+        "state": "WORKING",
+        "version": 4,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:17Z",
+        "work_started_at": "2026-10-23T00:33:17Z",
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 200,
+      "ms": 190.06,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.FINISH.c57424",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": "B22D1161",
+        "state": "WORK_DONE",
+        "version": 5,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:17Z",
+        "work_started_at": "2026-10-23T00:33:17Z",
+        "work_finished_at": "2026-10-23T00:33:17Z",
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "status": 200,
+      "ms": 86.57,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.DEPART.737d88",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.B"
+        ],
+        "visit_id": 620,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.B",
+        "dock": "B22D1161",
+        "state": "DEPARTED",
+        "version": 6,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:16Z",
+        "docked_at": "2026-10-23T00:33:17Z",
+        "work_started_at": "2026-10-23T00:33:17Z",
+        "work_finished_at": "2026-10-23T00:33:17Z",
+        "departed_at": "2026-10-23T00:33:17Z",
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "status": 200,
+      "ms": 72.74,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.ARRIVE.d8099d",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.OTHER"
+        ],
+        "visit_id": 621,
+        "warehouse_id": 210564699,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "ARRIVED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:17Z",
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "status": 200,
+      "ms": 78.6,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.CANCEL.947540",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.OTHER"
+        ],
+        "visit_id": 621,
+        "warehouse_id": 210564699,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.A",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 3,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": "2026-10-23T00:33:17Z",
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T00:33:17Z",
+        "cancel_reason": "End simulated yard acceptance",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 141.77,
+      "result": {
+        "detail": {
+          "code": "YARD_SUPPLY_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "ms": 131.98,
+      "result": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "YI23b8590eaf6c.QA",
+        "warehouse_id": 220793322,
+        "operation_id": "YI23b8590eaf6c.grant.0",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 403,
+      "ms": 88.37,
+      "result": {
+        "detail": {
+          "code": "TRADE_OWNER_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "ms": 241.47,
+      "result": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "YI23b8590eaf6c.QA",
+        "warehouse_id": 220793322,
+        "operation_id": "YI23b8590eaf6c.grant.1",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 93.3,
+      "result": {
+        "detail": {
+          "code": "YARD_SUPPLY_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 84.8,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "visit_id": 622,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.SCOPE",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "YI23b8590eaf6c.QA",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 79.4,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "visit_id": 622,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.SCOPE",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "YI23b8590eaf6c.QA",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 86.32,
+      "result": {
+        "detail": {
+          "code": "YARD_OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/622/transitions",
+      "status": 409,
+      "ms": 109.17,
+      "result": {
+        "detail": {
+          "code": "YARD_SUPPLY_CHANGED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 109.68,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.expect.SCOPE",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "visit_id": 622,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.SCOPE",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "YI23b8590eaf6c.QA",
+        "replayed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "ms": 201.96,
+      "result": {
+        "version": 3,
+        "owner_id": "SNS",
+        "username": "YI23b8590eaf6c.QA",
+        "warehouse_id": 220793322,
+        "operation_id": "YI23b8590eaf6c.grant.2",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "ms": 115.2,
+      "result": {
+        "warehouse_id": 220793322,
+        "observed_at": "2026-10-23T00:33:19Z",
+        "visits": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "ms": 115.09,
+      "result": {
+        "detail": {
+          "code": "YARD_SUPPLY_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 403,
+      "ms": 87.33,
+      "result": {
+        "detail": {
+          "code": "YARD_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/622/transitions",
+      "status": 200,
+      "ms": 78.51,
+      "result": {
+        "operation_id": "YI23b8590eaf6c.CANCEL.35c93a",
+        "planned_dock": null,
+        "supply_ids": [
+          "YI23b8590eaf6c.SCOPE"
+        ],
+        "visit_id": 622,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "YI23B8590EAF6C.SCOPE",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T06:00:00Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T00:33:20Z",
+        "cancel_reason": "End simulated yard acceptance",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "ms": 96.32,
+      "result": {
+        "version": 4,
+        "owner_id": "SNS",
+        "username": "YI23b8590eaf6c.QA",
+        "warehouse_id": 220793322,
+        "operation_id": "YI23b8590eaf6c.grant.3",
+        "stock_changed": false,
+        "replayed": false
+      }
+    }
+  ],
+  "qa_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6405,
+      614,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,\n                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,\n                       NVL(A.STOL, 0) AS STOL,\n                       A.PRIM1,\n                       P.WARE_ID,\n                       MAX(P.NAPR) AS NAPR,\n                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,\n                       ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,\n                       ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,\n                       MIN(P.STDATE) AS STDATE,\n                       MIN(P.STDATE) AS DATE_LOAD,\n                       MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,\n                       MAX(P.ZONE) AS ZONE,\n                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,\n                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,\n                       NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1 THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,\n                       MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR\n                  FROM (select * from (select page_rows.*,rownum AS PAGE_ROW_NUMBER from (select H.ST_NUMBER,H.ADDR,H.WARE_ID from (select P.ST_NUMBER,P.ADDR,P.WARE_ID from RABAEV.RRL_SBORKA_PALLETS P left join RABAEV.RRL_ADDR A on A.ADDR=P.ADDR WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL and exists(select 1 from RABAEV.RRL_SBORKA_PALLET_ROWS R where R.PALLET_UID=P.PALLET_UID) group by P.ST_NUMBER,P.ADDR,P.WARE_ID) H left join RABAEV.RRL_ADDR PAGE_ADDR on PAGE_ADDR.ADDR=H.ADDR order by PAGE_ADDR.ORD NULLS LAST,NVL(PAGE_ADDR.REGION,H.ADDR),H.ST_NUMBER,H.WARE_ID,H.ADDR) page_rows where rownum<=:page_end) where PAGE_ROW_NUMBER>:page_offset order by PAGE_ROW_NUMBER) K JOIN RABAEV.RRL_SBORKA_PALLETS P ON (P.ST_NUMBER=K.ST_NUMBER OR (P.ST_NUMBER IS NULL AND K.ST_NUMBER IS NULL)) AND DECODE(P.ADDR,K.ADDR,1,0)=1 AND DECODE(P.WARE_ID,K.WARE_ID,1,0)=1\n                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID\n                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR\n                  WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL\n                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD,\n                          A.TRANSPORT_TYPE, A.STOL, A.PRIM1, P.WARE_ID\n                  \n                 ORDER BY A.ORD NULLS LAST, NVL(A.REGION, P.ADDR), P.ST_NUMBER, P.WARE_ID, P.ADDR"
+    ],
+    [
+      6409,
+      91,
+      "/api/tradecase/warehouses/220793322/yard/visits/620/transitions",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6406,
+      52,
+      "/api/tradecase/warehouses/220793322/yard/visits",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6410,
+      50,
+      "/api/tradecase/warehouses/220793322/yard/visits",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6415,
+      25,
+      "/api/tradecase/warehouses/220793322/yard/visits",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6407,
+      20,
+      "/api/tradecase/warehouses/220793322/yard/visits",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6414,
+      20,
+      "/api/tradecase/warehouses/220793322/yard/visits/622/transitions",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6408,
+      19,
+      "/api/tradecase/warehouses/210564699/yard/visits/621/transitions",
+      "TRADECASE yard visit command"
+    ]
+  ],
+  "visits": [
+    [
+      622,
+      220793322,
+      1,
+      "EXPECTED"
+    ],
+    [
+      621,
+      210564699,
+      3,
+      "CANCELLED"
+    ],
+    [
+      618,
+      220793322,
+      6,
+      "DEPARTED"
+    ],
+    [
+      620,
+      220793322,
+      6,
+      "DEPARTED"
+    ]
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "status": "FAIL",
+  "provider": "LIVE ROAD PROVIDER",
+  "checks": [],
+  "timings": [
+    20845.98
+  ],
+  "http": [
+    {
+      "status": 503,
+      "result": {
+        "detail": {
+          "code": "ROAD_PROVIDER_UNAVAILABLE",
+          "message": "Дорожный сервис не вернул расчёт. Повторите исходную команду"
+        }
+      }
+    }
+  ],
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6220,
+      1379,
+      "FETCH_ALL"
+    ],
+    [
+      6219,
+      1000,
+      "TRANSACTION"
+    ],
+    [
+      6218,
+      530,
+      "TRANSACTION"
+    ]
+  ],
+  "trip": 33669,
+  "warehouse": 245095341,
+  "tag": "RD2344b783fa06"
+}

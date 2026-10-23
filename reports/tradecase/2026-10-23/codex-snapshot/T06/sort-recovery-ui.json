@@ -1,0 +1,48 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "first": "conflict",
+      "check": "First uncertain/conflicting result keeps original command"
+    },
+    {
+      "width": 1440,
+      "first": "conflict",
+      "check": "Reload/403/exact retry/confirmed success; help, hints and width"
+    },
+    {
+      "width": 1440,
+      "first": "unknown",
+      "check": "First uncertain/conflicting result keeps original command"
+    },
+    {
+      "width": 1440,
+      "first": "unknown",
+      "check": "Reload/403/exact retry/confirmed success; help, hints and width"
+    },
+    {
+      "width": 390,
+      "first": "conflict",
+      "check": "First uncertain/conflicting result keeps original command"
+    },
+    {
+      "width": 390,
+      "first": "conflict",
+      "check": "Reload/403/exact retry/confirmed success; help, hints and width"
+    },
+    {
+      "width": 390,
+      "first": "unknown",
+      "check": "First uncertain/conflicting result keeps original command"
+    },
+    {
+      "width": 390,
+      "first": "unknown",
+      "check": "Reload/403/exact retry/confirmed success; help, hints and width"
+    }
+  ],
+  "errors": [],
+  "businessWrites": 0,
+  "backend": "Injected sort outcomes; real login/page",
+  "status": "PASS"
+}

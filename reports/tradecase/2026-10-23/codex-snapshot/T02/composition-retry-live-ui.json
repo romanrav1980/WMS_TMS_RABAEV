@@ -1,0 +1,90 @@
+{
+  "checks": [
+    "Real retry committed once; lost reply recovered by current snapshot read; SAP retained",
+    {
+      "width": 1440,
+      "name": "Real confirmed state, button hints, updated help and no overflow"
+    },
+    {
+      "width": 390,
+      "name": "Real confirmed state, button hints, updated help and no overflow"
+    }
+  ],
+  "errors": [],
+  "unexpectedWrites": [],
+  "command": {
+    "warehouse_id": 221164919,
+    "order_id": "FP21.221164919.ORDER",
+    "retry_system": "SKM",
+    "retry_of": 2
+  },
+  "retryResponse": {
+    "status": 200,
+    "value": {
+      "warehouse_id": 221164919,
+      "order_id": "FP21.221164919.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 3,
+      "signature": "d389021f571ae8b186621a5c6366257fa62a7bc5950f5553e193121d8f74f606",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "ACCEPTED",
+      "sap_reason": null,
+      "skm_status": "WAITING",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING"
+    }
+  },
+  "ackBody": {
+    "schema_version": 1,
+    "warehouse_id": 221164919,
+    "system_code": "SKM",
+    "sender_id": "TC03.SKM",
+    "event_id": "CRUI.e656d92f-8982-4cf2-8785-4dfb4d4a7604",
+    "order_id": "FP21.221164919.ORDER",
+    "composition_no": 3,
+    "signature": "d389021f571ae8b186621a5c6366257fa62a7bc5950f5553e193121d8f74f606",
+    "outcome": "ACCEPTED",
+    "occurred_at": "2026-10-23T10:59:38.044Z"
+  },
+  "ackResponse": {
+    "status": 200,
+    "value": {
+      "warehouse_id": 221164919,
+      "order_id": "FP21.221164919.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 3,
+      "signature": "d389021f571ae8b186621a5c6366257fa62a7bc5950f5553e193121d8f74f606",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "ACCEPTED",
+      "sap_reason": null,
+      "skm_status": "ACCEPTED",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "CONFIRMED",
+      "acknowledged_system": "SKM",
+      "external_event_id": "CRUI.e656d92f-8982-4cf2-8785-4dfb4d4a7604",
+      "stock_changed": false
+    }
+  },
+  "accepted": true,
+  "status": "PASS"
+}

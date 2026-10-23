@@ -1,0 +1,161 @@
+{
+  "status": "PASS",
+  "actor": "PV231ed93bfda8",
+  "checks": [
+    {
+      "case": "same current warehouse",
+      "value": 1,
+      "median_ms": {
+        "old": 443.43,
+        "new": 4.51
+      },
+      "samples_ms": {
+        "old": [
+          607.58,
+          328.26,
+          541.48,
+          345.38
+        ],
+        "new": [
+          6.49,
+          5.89,
+          3.13,
+          2.45
+        ]
+      }
+    },
+    {
+      "case": "explicit current warehouse",
+      "value": 1,
+      "median_ms": {
+        "old": 3.3049999999999997,
+        "new": 2.875
+      },
+      "samples_ms": {
+        "old": [
+          4.73,
+          3.23,
+          3.38,
+          3.02
+        ],
+        "new": [
+          3.02,
+          3.09,
+          2.73,
+          2.71
+        ]
+      }
+    },
+    {
+      "case": "different current warehouse fallback",
+      "value": 1,
+      "median_ms": {
+        "old": 517.61,
+        "new": 313.105
+      },
+      "samples_ms": {
+        "old": [
+          796.39,
+          626.14,
+          409.08,
+          260.86
+        ],
+        "new": [
+          317.64,
+          518.97,
+          267.08,
+          308.57
+        ]
+      }
+    },
+    {
+      "case": "no current warehouse fallback",
+      "value": 1,
+      "median_ms": {
+        "old": 349.545,
+        "new": 319.905
+      },
+      "samples_ms": {
+        "old": [
+          368.35,
+          273.7,
+          354.86,
+          344.23
+        ],
+        "new": [
+          298.71,
+          355.47,
+          260.48,
+          341.1
+        ]
+      }
+    },
+    {
+      "case": "foreign requested warehouse",
+      "value": 0,
+      "median_ms": {
+        "old": 4.275,
+        "new": 3.11
+      },
+      "samples_ms": {
+        "old": [
+          3.45,
+          5.1,
+          2.66,
+          6.09
+        ],
+        "new": [
+          3.71,
+          2.63,
+          3.59,
+          2.54
+        ]
+      }
+    },
+    {
+      "case": "revoked assignment",
+      "value": 0,
+      "median_ms": {
+        "old": 290.025,
+        "new": 282.455
+      },
+      "samples_ms": {
+        "old": [
+          319.03,
+          244.52,
+          328.37,
+          261.02
+        ],
+        "new": [
+          253.76,
+          311.15,
+          249.44,
+          442.74
+        ]
+      }
+    },
+    {
+      "case": "retired user",
+      "value": 0,
+      "median_ms": {
+        "old": 36.835,
+        "new": 1.755
+      },
+      "samples_ms": {
+        "old": [
+          38.67,
+          35.0,
+          34.32,
+          39.3
+        ],
+        "new": [
+          0.96,
+          2.32,
+          2.28,
+          1.23
+        ]
+      }
+    }
+  ],
+  "qa_retired": true
+}

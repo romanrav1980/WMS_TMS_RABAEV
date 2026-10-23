@@ -1,0 +1,2276 @@
+[
+ {
+  "id": 1,
+  "ms": 11498,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 4,
+   "CASE_PICK_TASK": 22
+  },
+  "unsched": 23,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2,
+  "s": 503,
+  "ms": 30258,
+  "code": "RESOURCE_TIMELINE_UNAVAILABLE"
+ },
+ {
+  "id": 3,
+  "ms": 203,
+  "tz": null,
+  "rk": {
+   "DOCK": 18
+  },
+  "av": {
+   "UNKNOWN": 18
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9104,
+  "ms": 344,
+  "tz": null,
+  "rk": {
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 3
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 4
+  },
+  "unsched": 2,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9807,
+  "ms": 472,
+  "tz": null,
+  "rk": {
+   "DOCK": 1,
+   "VEHICLE": 1
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {
+   "TRANSPORT_OPERATION": 12
+  },
+  "unsched": 12,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 206257,
+  "ms": 115,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 381877,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 387548,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 513261,
+  "ms": 265,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 752801,
+  "ms": 113,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 839054,
+  "ms": 106,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 883349,
+  "ms": 115,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 910818,
+  "ms": 113,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1032141,
+  "ms": 130,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1365792,
+  "ms": 115,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1664519,
+  "ms": 105,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1688851,
+  "ms": 114,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1702230,
+  "ms": 190,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 1773725,
+  "ms": 167,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2240547,
+  "ms": 118,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2318905,
+  "ms": 109,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2378876,
+  "ms": 130,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2725030,
+  "ms": 118,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2845050,
+  "ms": 105,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 2881805,
+  "ms": 107,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 3296799,
+  "ms": 147,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 3605482,
+  "ms": 124,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 3705179,
+  "ms": 116,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 3879289,
+  "ms": 113,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 3919286,
+  "ms": 114,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 4076713,
+  "ms": 117,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 4087945,
+  "ms": 119,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 4137433,
+  "ms": 177,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 5062399,
+  "ms": 102,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 5190750,
+  "ms": 96,
+  "tz": null,
+  "rk": {
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 3
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 5265051,
+  "ms": 100,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 5747578,
+  "ms": 182,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 6117778,
+  "ms": 100,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 6457356,
+  "ms": 97,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 6524567,
+  "ms": 102,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 6558233,
+  "ms": 107,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 6667491,
+  "ms": 196,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 4
+  },
+  "unsched": 2,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7065498,
+  "ms": 102,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7096290,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7357990,
+  "ms": 105,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7452638,
+  "ms": 178,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7596225,
+  "ms": 108,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7619421,
+  "ms": 115,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 7961722,
+  "ms": 109,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 8452713,
+  "ms": 106,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 1,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9280978,
+  "ms": 99,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9619048,
+  "ms": 104,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9620689,
+  "ms": 178,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9767921,
+  "ms": 133,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 9805049,
+  "ms": 108,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 10228015,
+  "ms": 110,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 10263663,
+  "ms": 102,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 10304031,
+  "ms": 99,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 10693618,
+  "ms": 106,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 11027346,
+  "ms": 109,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 11123418,
+  "ms": 106,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 11323734,
+  "ms": 154,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 11400018,
+  "ms": 132,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 12296656,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 12593400,
+  "ms": 105,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 12986959,
+  "ms": 210,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13040358,
+  "ms": 130,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13204646,
+  "ms": 200,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13250495,
+  "ms": 271,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13315020,
+  "ms": 105,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13583852,
+  "ms": 121,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 1,
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 2,
+   "CASE_PICK_TASK": 3
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13641631,
+  "ms": 121,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 13896309,
+  "ms": 101,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 14171737,
+  "ms": 123,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 14218561,
+  "ms": 103,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 14524201,
+  "ms": 93,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 14526684,
+  "ms": 97,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 15554656,
+  "ms": 129,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 15601967,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 15691543,
+  "ms": 105,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 15900642,
+  "ms": 100,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 16098231,
+  "ms": 185,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 16129953,
+  "ms": 492,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 16411779,
+  "ms": 112,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20033496,
+  "ms": 318,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20061923,
+  "ms": 106,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20137024,
+  "ms": 119,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20220394,
+  "ms": 120,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {
+   "CASE_PICK_TASK": 5
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20266481,
+  "ms": 129,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20382575,
+  "ms": 194,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20790457,
+  "ms": 215,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20846272,
+  "ms": 126,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20854558,
+  "ms": 119,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 20902283,
+  "ms": 125,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 30846272,
+  "ms": 656,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 31217707,
+  "ms": 183,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 31532354,
+  "ms": 204,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 31987650,
+  "ms": 182,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 34189220,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 34531274,
+  "ms": 105,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 35944973,
+  "ms": 118,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 37273370,
+  "ms": 157,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 38255845,
+  "ms": 107,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 38542432,
+  "ms": 119,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 39819118,
+  "ms": 114,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 40799215,
+  "ms": 271,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 4
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 41481657,
+  "ms": 118,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 42987529,
+  "ms": 149,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 44625920,
+  "ms": 101,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 50513261,
+  "ms": 120,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 50752801,
+  "ms": 121,
+  "tz": null,
+  "rk": {
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 3
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 50839054,
+  "ms": 120,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 50883349,
+  "ms": 179,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 50910818,
+  "ms": 134,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 51365792,
+  "ms": 131,
+  "tz": null,
+  "rk": {
+   "REACHTRUCK": 1,
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 4
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 51702230,
+  "ms": 114,
+  "tz": null,
+  "rk": {
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 3
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 52725030,
+  "ms": 121,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 53705179,
+  "ms": 131,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 54076713,
+  "ms": 130,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 54087945,
+  "ms": 134,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 55190750,
+  "ms": 203,
+  "tz": null,
+  "rk": {
+   "DOCK": 3
+  },
+  "av": {
+   "UNKNOWN": 3
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 55265051,
+  "ms": 116,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 56524567,
+  "ms": 122,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 57452638,
+  "ms": 100,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 59619048,
+  "ms": 125,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 59767921,
+  "ms": 111,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 60693618,
+  "ms": 103,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 61123418,
+  "ms": 140,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 61400018,
+  "ms": 161,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 63040358,
+  "ms": 113,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 63204646,
+  "ms": 114,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 64218561,
+  "ms": 108,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 65601967,
+  "ms": 116,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 65691543,
+  "ms": 150,
+  "tz": null,
+  "rk": {
+   "DOCK": 5
+  },
+  "av": {
+   "UNKNOWN": 5
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 103705179,
+  "ms": 134,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 211559882,
+  "ms": 115,
+  "tz": null,
+  "rk": {},
+  "av": {},
+  "ek": {
+   "WAREHOUSE_TASK": 1,
+   "CASE_PICK_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 215590763,
+  "ms": 120,
+  "tz": null,
+  "rk": {
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {
+   "CASE_PICK_TASK": 2
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 219023232,
+  "ms": 103,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 220639789,
+  "ms": 97,
+  "tz": null,
+  "rk": {
+   "REACHTRUCK": 1,
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 2
+  },
+  "ek": {
+   "WAREHOUSE_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 220793322,
+  "ms": 176,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 6,
+   "DOCK": 2
+  },
+  "av": {
+   "UNKNOWN": 8
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 221164919,
+  "ms": 173,
+  "tz": null,
+  "rk": {
+   "DOCK": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {},
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ },
+ {
+  "id": 222823304,
+  "ms": 118,
+  "tz": null,
+  "rk": {
+   "CASE_PICKER": 1
+  },
+  "av": {
+   "UNKNOWN": 1
+  },
+  "ek": {
+   "CASE_PICK_TASK": 1
+  },
+  "unsched": 0,
+  "multi": 0,
+  "overlaps": 0,
+  "bad": []
+ }
+]

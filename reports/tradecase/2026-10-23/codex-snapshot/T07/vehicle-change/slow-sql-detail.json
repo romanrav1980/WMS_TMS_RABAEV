@@ -1,0 +1,130 @@
+[
+  [
+    6815,
+    null,
+    4981,
+    "TRANSACTION",
+    "64b6a9071e3798c82340aaecad9929d9b4849d74845d2549421492d1c15d91e6",
+    "C-0164 inspect READ ONLY"
+  ],
+  [
+    6816,
+    null,
+    2976,
+    "TRANSACTION",
+    "64b6a9071e3798c82340aaecad9929d9b4849d74845d2549421492d1c15d91e6",
+    "C-0164 inspect READ ONLY"
+  ],
+  [
+    6813,
+    null,
+    1063,
+    "TRANSACTION",
+    "64b6a9071e3798c82340aaecad9929d9b4849d74845d2549421492d1c15d91e6",
+    "C-0164 inspect READ ONLY"
+  ],
+  [
+    6818,
+    "/api/admin/warehouses",
+    1030,
+    "FETCH_ALL",
+    "9cf9a877af1f9f875d8472dcb72860f20edec3c5a282c7b25773e016ff29d442",
+    "select *\n              from (\n                select ID,\n                       NAME,\n                       PREFIX,\n                       nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,\n                       nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,\n                       nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,\n                       nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,\n                       nvl(MES_ENABLED, 0) MES_ENABLED,\n                       DEFAULT_RECEIVE_CELL,\n                       DEFAULT_ISSUE_CELL,\n                       WARE_COMMENT,\n                       OVERFLOW_CELL_NAME,\n                       PARENT_WARE_ID,\n                       ORD2,\n                       (select count(*) from RRL_CELLS c where c.WARE_ID = w.ID) CELL_COUNT,\n                       (select count(distinct r.UID_POLETA)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) PALLET_COUNT,\n                       (select nvl(sum(r.REMAIN), 0)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) TOTAL_REMAIN\n                  from RRL_WARES w\n                  \n                 order by nvl(ORD2, ID), ID\n              )\n             where rownum <= :limit"
+  ],
+  [
+    6820,
+    "/api/admin/warehouses",
+    955,
+    "FETCH_ALL",
+    "9cf9a877af1f9f875d8472dcb72860f20edec3c5a282c7b25773e016ff29d442",
+    "select *\n              from (\n                select ID,\n                       NAME,\n                       PREFIX,\n                       nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,\n                       nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,\n                       nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,\n                       nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,\n                       nvl(MES_ENABLED, 0) MES_ENABLED,\n                       DEFAULT_RECEIVE_CELL,\n                       DEFAULT_ISSUE_CELL,\n                       WARE_COMMENT,\n                       OVERFLOW_CELL_NAME,\n                       PARENT_WARE_ID,\n                       ORD2,\n                       (select count(*) from RRL_CELLS c where c.WARE_ID = w.ID) CELL_COUNT,\n                       (select count(distinct r.UID_POLETA)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) PALLET_COUNT,\n                       (select nvl(sum(r.REMAIN), 0)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) TOTAL_REMAIN\n                  from RRL_WARES w\n                  \n                 order by nvl(ORD2, ID), ID\n              )\n             where rownum <= :limit"
+  ],
+  [
+    6822,
+    "/api/admin/warehouses",
+    909,
+    "FETCH_ALL",
+    "9cf9a877af1f9f875d8472dcb72860f20edec3c5a282c7b25773e016ff29d442",
+    "select *\n              from (\n                select ID,\n                       NAME,\n                       PREFIX,\n                       nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,\n                       nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,\n                       nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,\n                       nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,\n                       nvl(MES_ENABLED, 0) MES_ENABLED,\n                       DEFAULT_RECEIVE_CELL,\n                       DEFAULT_ISSUE_CELL,\n                       WARE_COMMENT,\n                       OVERFLOW_CELL_NAME,\n                       PARENT_WARE_ID,\n                       ORD2,\n                       (select count(*) from RRL_CELLS c where c.WARE_ID = w.ID) CELL_COUNT,\n                       (select count(distinct r.UID_POLETA)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) PALLET_COUNT,\n                       (select nvl(sum(r.REMAIN), 0)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) TOTAL_REMAIN\n                  from RRL_WARES w\n                  \n                 order by nvl(ORD2, ID), ID\n              )\n             where rownum <= :limit"
+  ],
+  [
+    6823,
+    "/api/outgoing-quality/FP21.ST.213059748",
+    866,
+    "TRANSACTION",
+    "f5d83609887a80ef15b12e4971b7183174e1037a609b0ed74e68b946a19a7559",
+    "Current warehouse QC status access"
+  ],
+  [
+    6821,
+    "/api/admin/warehouses",
+    805,
+    "FETCH_ALL",
+    "9cf9a877af1f9f875d8472dcb72860f20edec3c5a282c7b25773e016ff29d442",
+    "select *\n              from (\n                select ID,\n                       NAME,\n                       PREFIX,\n                       nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,\n                       nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,\n                       nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,\n                       nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,\n                       nvl(MES_ENABLED, 0) MES_ENABLED,\n                       DEFAULT_RECEIVE_CELL,\n                       DEFAULT_ISSUE_CELL,\n                       WARE_COMMENT,\n                       OVERFLOW_CELL_NAME,\n                       PARENT_WARE_ID,\n                       ORD2,\n                       (select count(*) from RRL_CELLS c where c.WARE_ID = w.ID) CELL_COUNT,\n                       (select count(distinct r.UID_POLETA)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) PALLET_COUNT,\n                       (select nvl(sum(r.REMAIN), 0)\n                          from RRL_CELLS c\n                          join RRL_REMAINS r on r.CELL = c.CELL\n                         where c.WARE_ID = w.ID) TOTAL_REMAIN\n                  from RRL_WARES w\n                  \n                 order by nvl(ORD2, ID), ID\n              )\n             where rownum <= :limit"
+  ],
+  [
+    6814,
+    null,
+    733,
+    "TRANSACTION",
+    "64b6a9071e3798c82340aaecad9929d9b4849d74845d2549421492d1c15d91e6",
+    "C-0164 inspect READ ONLY"
+  ],
+  [
+    6812,
+    "/api/picking/plans",
+    704,
+    "TRANSACTION",
+    "c13318cdd5472cc0e04fbfd55fe55d8df0e9914f62370863cd73f7c43c534f0c",
+    "Idempotent original pick plan creation"
+  ],
+  [
+    6825,
+    "/api/admin/transport/tasks/33677",
+    598,
+    "TRANSACTION",
+    "58d13e851148ffad11d0af2b6e0c23586d8528325a0ffae530827ae9bd5d8783",
+    "Shared validated transport plan edit"
+  ],
+  [
+    6819,
+    "/api/admin/transport/drivers",
+    590,
+    "FETCH_ALL",
+    "023adecd037e05f4864aee0bd084b1919bffc775200b768c7bc9162ffb846b62",
+    "SELECT ID,\n                       TRIM(F || ' ' || I || ' ' || O) AS FULL_NAME,\n                       F, I, O, TEL, TRANSPORT_NUM,\n                       SOBSTVENNYY, DOVERENNOST_OT\n                  FROM RABAEV.RRL_TR_VODITEL\n                  WHERE (DELETED IS NULL OR DELETED = 0)\n                 ORDER BY F, I"
+  ],
+  [
+    6817,
+    "/api/admin/transport/drivers",
+    564,
+    "FETCH_ALL",
+    "023adecd037e05f4864aee0bd084b1919bffc775200b768c7bc9162ffb846b62",
+    "SELECT ID,\n                       TRIM(F || ' ' || I || ' ' || O) AS FULL_NAME,\n                       F, I, O, TEL, TRANSPORT_NUM,\n                       SOBSTVENNYY, DOVERENNOST_OT\n                  FROM RABAEV.RRL_TR_VODITEL\n                  WHERE (DELETED IS NULL OR DELETED = 0)\n                 ORDER BY F, I"
+  ],
+  [
+    6826,
+    "/api/tradecase/order-compositions/acknowledgments",
+    72,
+    "TRANSACTION",
+    "e32036babd8a6d2de6e0f8da3114d95aa65921cbe250258791fdead2276b4f08",
+    "TRADECASE order composition acknowledge"
+  ],
+  [
+    6827,
+    "/api/admin/transport/tasks/33677",
+    27,
+    "TRANSACTION",
+    "58d13e851148ffad11d0af2b6e0c23586d8528325a0ffae530827ae9bd5d8783",
+    "Shared validated transport plan edit"
+  ],
+  [
+    6824,
+    "/api/admin/transport/tasks/33677",
+    17,
+    "TRANSACTION",
+    "58d13e851148ffad11d0af2b6e0c23586d8528325a0ffae530827ae9bd5d8783",
+    "Shared validated transport plan edit"
+  ]
+]

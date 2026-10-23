@@ -1,3 +1,17 @@
+# Возобновление после перезапуска — 23.10.2026
+
+Эта запись имеет приоритет над историческими разделами ниже.
+
+- Владелец поручил сохранить весь результат на GitHub и затем продолжать незавершённые спринты. Разрешение относится к этой публикации; будущие редакции автоматически не отправлять. SAP/SAP_INTEGRATION исключены.
+- Ветка feature/transport-dispatch-phase1; origin https://github.com/romanrav1980/WMS_TMS_RABAEV.git. Последний законченный checkpoint до публикации d77a24b9. Ссылку и SHA публикации читать из PUBLICATION_20261023.md и git log.
+- T01 завершён; T02–T12 частичны. Точная матрица: wiki/roadmap/tradecase_acceptance_20261021.md. Не создавать DONE complete. Реальных SAP/СКМ/L4, оборудования и акта пилота нет.
+- Владелец утвердил 120 минут вождения / 15 минут отдыха. Новый эталон: хаб11:00, филиал11:55, магазин12:55, разгрузка13:10, возврат14:10. Native READ ONLY MATCH, два отрицательных сценария прошли. Исходный mismatch сохранён. Упоминания pending owner question ниже устарели.
+- Локальные OSRM5000 и Valhalla8002 работают. Реальные дороги/API/Oracle проверены; свежесть графа не подтверждена. Общий HTTP-клиент ускорил тёплый OSRM с1339–1366 до14–22мс, матрицы равны; холодный запуск остаётся открытым. API8088 запущен через serv.bat с reload=0; frontend3000 asset index-Bo-JpOqP.
+- Claude: 32 зарегистрированных обращения. Последний фактический ответ K0164 — ACK C0170, не RELEASE. TASK.md разрешает guard/access BODY и требует продолжения. Первоначальный комплект db/migrations/2026-10-23_trade_short_guard NOT_APPLIED, найденные проблемы ещё не исправлены: owner до cached receipt, частично собранный CASE/carrier closure, точный READY source, безопасный rollback. Не применять. Не выдавать старый ACK за текущую активность. После нового ответа проверить файлы/хеши до OracleApply.
+- Следующий шаг Codex: прочитать ответ Claude; при отсутствии продолжить независимые доступные пункты T08/T09/T12, не редактируя зарезервированные BODY. Для C0170 ожидания записаны в wiki/requirements/tradecase_pick_shortage_20261023.md; fixture ещё не создавалась. Прямых CLI-запросов модели Claude0; CLI auth недоступен.
+- Текущие доказательства скопированы из runtime/test-evidence/tradecase/2026-10-23 в reports/tradecase/2026-10-23/codex-snapshot: исходные SHA и SHA копий в snapshot-manifest.json, секретные поля удалены, UTF16-логи переведены в UTF8. FAIL/неудачные первые прогоны сохранены рядом с успешными; снимок не закрывает спринты.
+- Защищённые данные и закрытые тестовые наборы перечислены ниже. Не открывать их заново. Oracle DSN127.0.0.1:1521/orcl, среда через stock_posting_environment; не печатать credentials. Перед новой mutation подтвердить ownership/cleanup. Native изменения только migration/rollback/wiki/database/live verify.
+
 # TRADECASE current context -- 2026-10-23 18:50 Europe/Moscow
 
 Owner: keep working jointly with Claude until all original TRADECASE SNS/BLC sprints are complete. Old19Oct18 stop lifted by later instructions. T01 complete; T02-T12 partial. Do not mark unavailable providers/hardware/pilot complete. No GitHub push/fetch/PR and no SAP publication. Read AGENTS/wiki index + focused pages. Prior complete context archived at coordination/tradecase-20261019/history/RESUME_before_20261023_185006.md.

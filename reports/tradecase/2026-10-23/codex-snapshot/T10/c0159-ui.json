@@ -1,0 +1,109 @@
+{
+  "base": "http://127.0.0.1:3000/",
+  "checks": [
+    {
+      "width": 1440,
+      "name": "LIVE 6667491: wave 395 unassigned tasks with the session fact (not a 'free resource')"
+    },
+    {
+      "width": 1440,
+      "name": "LIVE 6667491: approved plan of wave 395 finished in the past → deadline blocker by the server clock"
+    },
+    {
+      "width": 1440,
+      "name": "every risk/process button has title and help id"
+    },
+    {
+      "width": 1440,
+      "name": "no horizontal page scroll"
+    },
+    {
+      "width": 1440,
+      "name": "risk 'Волна' opens wave 395 card in place (wave_id in the URL), login kept"
+    },
+    {
+      "width": 1440,
+      "name": "LIVE 20220394: waves 571/573 boxes waiting for control"
+    },
+    {
+      "width": 1440,
+      "name": "FIXTURE 403 sessions: verification gap, unassigned impact 'not fully checked'"
+    },
+    {
+      "width": 1440,
+      "name": "FIXTURE 403 case tasks: control/assignment risks cleared, gap shown"
+    },
+    {
+      "width": 1440,
+      "name": "FIXTURE delayed tasks of the previous warehouse do not leak into the new warehouse's risks"
+    },
+    {
+      "width": 1440,
+      "name": "static help link of the shift bar answers 200: http://127.0.0.1:8088/help/shift-navigation.html"
+    },
+    {
+      "width": 390,
+      "name": "LIVE 6667491: wave 395 unassigned tasks with the session fact (not a 'free resource')"
+    },
+    {
+      "width": 390,
+      "name": "LIVE 6667491: approved plan of wave 395 finished in the past → deadline blocker by the server clock"
+    },
+    {
+      "width": 390,
+      "name": "every risk/process button has title and help id"
+    },
+    {
+      "width": 390,
+      "name": "no horizontal page scroll"
+    },
+    {
+      "width": 390,
+      "name": "risk 'Волна' opens wave 395 card in place (wave_id in the URL), login kept"
+    },
+    {
+      "width": 390,
+      "name": "LIVE 20220394: waves 571/573 boxes waiting for control"
+    },
+    {
+      "width": 390,
+      "name": "FIXTURE 403 sessions: verification gap, unassigned impact 'not fully checked'"
+    },
+    {
+      "width": 390,
+      "name": "FIXTURE 403 case tasks: control/assignment risks cleared, gap shown"
+    },
+    {
+      "width": 390,
+      "name": "FIXTURE delayed tasks of the previous warehouse do not leak into the new warehouse's risks"
+    },
+    {
+      "width": 390,
+      "name": "static help link of the shift bar answers 200: http://127.0.0.1:8088/help/shift-navigation.html"
+    }
+  ],
+  "writes": [],
+  "errors": [],
+  "fixtures": [
+    "sessions 403",
+    "case tasks 403",
+    "case tasks delayed 6667491",
+    "sessions 403",
+    "case tasks 403",
+    "case tasks delayed 6667491"
+  ],
+  "overview": 8,
+  "live": {
+    "6667491_1440": "Риски запуска\nвнимание Отбор волны не разрешён (released_at пуст)\nволна 396 · влияние: комплектовщики не получат задания этой волны · ответственный: не указан в источнике · источник: pick-readiness\nВолна\nвнимание Время волны не утверждено (NO_APPROVED_PLAN)\nволна 396 · влияние: нет утверждённого окна для расчёта загрузки людей и техники · ответственный: не указан в источнике · источник: time-context\nВолна\nЗагрузка ресурсов\nблокирует Открыта сборка (CASE_PICK, NEW)\nволна 395 · влияние: 2 шт. · ответственный: не указан в источнике · источник: readiness\nВолна\nУправление сборкой\nблокирует Утверждённое окончание волны прошло 18132 мин назад\nволна 395 · влияние: волна не завершена; утверждённое время её не покрывает · ответственный: не указан в источнике · источник: time-context\nВолна\nЗагрузка ресурсов\nвнимание Задания без исполнителя: 2\nволна 395 · влияние: открытых сессий комплектовщиков на складе нет · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой",
+    "deadline_1440": "APPROVED finish passed",
+    "20220394_1440": "Риски запуска\nПроверено не полностью — отсутствие риска не подтверждено:\nнедостачи: ещё читаются\nподробно не проверено волн: 2 (идёт чтение)\nвнимание Ждут контроля: 1 коробов\nволна 573 · влияние: волна не завершится, пока контроль не выполнен · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой\nвнимание Ждут контроля: 1 коробов\nволна 571 · влияние: волна не завершится, пока контроль не выполнен · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой",
+    "6667491_390": "Риски запуска\nвнимание Отбор волны не разрешён (released_at пуст)\nволна 396 · влияние: комплектовщики не получат задания этой волны · ответственный: не указан в источнике · источник: pick-readiness\nВолна\nвнимание Время волны не утверждено (NO_APPROVED_PLAN)\nволна 396 · влияние: нет утверждённого окна для расчёта загрузки людей и техники · ответственный: не указан в источнике · источник: time-context\nВолна\nЗагрузка ресурсов\nблокирует Открыта сборка (CASE_PICK, NEW)\nволна 395 · влияние: 2 шт. · ответственный: не указан в источнике · источник: readiness\nВолна\nУправление сборкой\nблокирует Утверждённое окончание волны прошло 18132 мин назад\nволна 395 · влияние: волна не завершена; утверждённое время её не покрывает · ответственный: не указан в источнике · источник: time-context\nВолна\nЗагрузка ресурсов\nвнимание Задания без исполнителя: 2\nволна 395 · влияние: открытых сессий комплектовщиков на складе нет · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой",
+    "deadline_390": "APPROVED finish passed",
+    "20220394_390": "Риски запуска\nПроверено не полностью — отсутствие риска не подтверждено:\nнедостачи: ещё читаются\nподробно не проверено волн: 2 (идёт чтение)\nвнимание Ждут контроля: 1 коробов\nволна 573 · влияние: волна не завершится, пока контроль не выполнен · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой\nвнимание Ждут контроля: 1 коробов\nволна 571 · влияние: волна не завершится, пока контроль не выполнен · ответственный: не указан в источнике · источник: case-pick/tasks\nВолна\nУправление сборкой"
+  },
+  "timings": {
+    "risks_6667491_1440": 3001,
+    "risks_6667491_390": 2087
+  },
+  "status": "PASS"
+}

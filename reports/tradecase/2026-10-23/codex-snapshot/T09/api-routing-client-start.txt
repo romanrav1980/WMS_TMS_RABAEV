@@ -1,0 +1,31 @@
+Checking port 8088...
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 44980
+Stopping process PID 44980 (python)...
+Process PID 50660 is not visible to Get-Process, trying taskkill tree...
+cmd : ERROR: The process "50660" not found.
+строка:2 знак:25
++ ... _RELOAD='0';cmd /d /c C:\projects\TMS\serv.bat > runtime/test-evidenc ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: The process "50660" not found.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 50660
+Process PID 50660 is not visible to Get-Process, trying taskkill tree...
+ERROR: The process "50660" not found.
+Checking port 8088...
+Starting WMS API server...
+  WMS_ORACLE_USER=RABAEV
+  WMS_ORACLE_DSN=127.0.0.1:1521/orcl
+  WMS_CORS_ORIGINS=*
+  WMS_API_AUDIT_ENABLED=1
+  WMS_ADMIN_AUTH_ENABLED=1
+  Admin users are read from Oracle RUSERS/USER_GROUP/RIGHTS
+  URL=http://127.0.0.1:8088/docs
+INFO:     Started server process [42312]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8088 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54083 - "POST /api/transport/preflight/road-refreshes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54087 - "POST /api/transport/preflight/road-refreshes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54088 - "POST /api/transport/preflight/road-refreshes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:54089 - "POST /api/transport/preflight/road-refreshes HTTP/1.1" 409 Conflict

@@ -1,0 +1,74 @@
+{
+  "variants": {
+    "before": [
+      {
+        "ms": 187.73,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 294.88,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 162.91,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 169.44,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 199.93,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 210.49,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ],
+    "after": [
+      {
+        "ms": 73.99,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 91.64,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 73.93,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 69.03,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 104.24,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 78.22,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ]
+  },
+  "cache": "First samples retained, medians exclude first; six interleaved queries per variant in one READ ONLY snapshot; 500 exact ordered rows",
+  "medians_ms": {
+    "before": 199.93,
+    "after": 78.22
+  },
+  "status": "PASS"
+}

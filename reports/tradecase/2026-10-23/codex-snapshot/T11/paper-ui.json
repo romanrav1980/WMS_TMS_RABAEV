@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "basis": "Actual native timeline/task reads; actual stale409; injected network failure/UI403; browser print stubbed; no physical printer/scanner",
+  "widths": [
+    {
+      "width": 1440,
+      "readMs": 263,
+      "overflow": false,
+      "input": {
+        "background": "rgb(17, 28, 48)",
+        "height": 44
+      },
+      "pdf": "C:\\projects\\TMS\\output\\pdf\\task-paper-1233-1440.pdf",
+      "checks": [
+        "actual task snapshot/barcode check",
+        "keyboard Enter/lowercase hex accepted at390",
+        "print version reread and PDF",
+        "native stale409 clears snapshot",
+        "injected network/403 clears snapshot",
+        "44px/help/local article"
+      ]
+    },
+    {
+      "width": 390,
+      "readMs": 343,
+      "overflow": false,
+      "input": {
+        "background": "rgb(17, 28, 48)",
+        "height": 44
+      },
+      "pdf": "C:\\projects\\TMS\\output\\pdf\\task-paper-1233-390.pdf",
+      "checks": [
+        "actual task snapshot/barcode check",
+        "keyboard Enter/lowercase hex accepted at390",
+        "print version reread and PDF",
+        "native stale409 clears snapshot",
+        "injected network/403 clears snapshot",
+        "44px/help/local article"
+      ]
+    }
+  ],
+  "errors": [],
+  "posts": []
+}

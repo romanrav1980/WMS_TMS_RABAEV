@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "name": "Partial authorized result shown without null total, despite403 on settings"
+    },
+    {
+      "width": 1440,
+      "name": "403 on retry retains unknown original intent and clears stale pool data"
+    },
+    {
+      "width": 1440,
+      "name": "Three identical bodies; only confirmed successful result clears intent"
+    },
+    {
+      "width": 1440,
+      "name": "First definitively denied command has no retained unknown outcome"
+    },
+    {
+      "width": 1440,
+      "name": "403 during refresh clears previous rows and total"
+    },
+    {
+      "width": 390,
+      "name": "Partial authorized result shown without null total, despite403 on settings"
+    },
+    {
+      "width": 390,
+      "name": "403 on retry retains unknown original intent and clears stale pool data"
+    },
+    {
+      "width": 390,
+      "name": "Three identical bodies; only confirmed successful result clears intent"
+    },
+    {
+      "width": 390,
+      "name": "First definitively denied command has no retained unknown outcome"
+    },
+    {
+      "width": 390,
+      "name": "403 during refresh clears previous rows and total"
+    }
+  ],
+  "backend": "FIXTURE",
+  "warehouseWrites": 0,
+  "status": "PASS"
+}

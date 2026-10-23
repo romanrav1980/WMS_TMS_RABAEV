@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "equal_six_cases": true,
+  "decision": "Accept one bounded CTE: large-list HTTP and SQL gain confirmed; retain measured small-list regression as absolute milliseconds, no second path/cache/index justified by this low-volume local sample. Driver rewrite rejected because slowdown not reproduced. V$SQL_PLAN unavailable; do not invent a plan or p95.",
+  "cases": {
+    "all500": {
+      "rows": 367,
+      "http_before": 586.2,
+      "http_after": 236.9,
+      "equal_hash": true
+    },
+    "default200": {
+      "rows": 200,
+      "http_before": 392.44,
+      "http_after": 149.19,
+      "equal_hash": true
+    },
+    "small5": {
+      "rows": 5,
+      "http_before": 93.97,
+      "http_after": 95.55,
+      "equal_hash": true
+    },
+    "role": {
+      "rows": 5,
+      "http_before": 110.82,
+      "http_after": 138.03,
+      "equal_hash": true
+    },
+    "mes1": {
+      "rows": 4,
+      "http_before": 66.2,
+      "http_after": 88.64,
+      "equal_hash": true
+    },
+    "mes0": {
+      "rows": 363,
+      "http_before": 524.95,
+      "http_after": 179.5,
+      "equal_hash": true
+    }
+  }
+}

@@ -1,0 +1,324 @@
+[
+  [
+    "BIN$NsKl8aF3VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aF3VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aFaVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aFaVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aFjVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    22,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aFjVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    7,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aFmVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    22,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aFmVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    7,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aGQVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aGQVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aH3VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    18,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aH3VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aHKVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    17,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aHKVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aIMVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aIMVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aIVVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    22,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aIVVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    7,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aIYVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    22,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aIYVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    7,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aIpVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aIpVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aJ8VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    17,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aJ8VyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aJCVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    10,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aJCVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NsKl8aKpVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    18,
+    "PL/SQL: ORA-02289: последовательность не существует"
+  ],
+  [
+    "BIN$NsKl8aKpVyjgYwEAAH9lTg==$0",
+    "TRIGGER",
+    6,
+    3,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$NxJE3MYnESjgYwEAAH+qjQ==$0",
+    "TRIGGER",
+    4,
+    11,
+    "PL/SQL: ORA-00942: таблица или представление пользователя не существует"
+  ],
+  [
+    "BIN$NxJE3MYnESjgYwEAAH+qjQ==$0",
+    "TRIGGER",
+    4,
+    4,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "BIN$XizyDdn+VoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    5,
+    "PLS-00201: идентификатор 'RRL_TRADE_STOCK_API.WRITES_ALLOWED' должен быть объявлен"
+  ],
+  [
+    "BIN$XizyDdn+VoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    2,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "BIN$XizyDdnOVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    5,
+    "PLS-00201: идентификатор 'RRL_TRADE_STOCK_API.WRITES_ALLOWED' должен быть объявлен"
+  ],
+  [
+    "BIN$XizyDdnOVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    2,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "BIN$XizyDdnbVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    5,
+    "PLS-00201: идентификатор 'RRL_TRADE_STOCK_API.WRITES_ALLOWED' должен быть объявлен"
+  ],
+  [
+    "BIN$XizyDdnbVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    2,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "BIN$XizyDdnoVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    5,
+    "PLS-00201: идентификатор 'RRL_TRADE_STOCK_API.WRITES_ALLOWED' должен быть объявлен"
+  ],
+  [
+    "BIN$XizyDdnoVoPgYw8CAAo8Pw==$0",
+    "TRIGGER",
+    2,
+    2,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    66,
+    6,
+    "PL/SQL: ORA-00984: употребление столбца здесь недопустимо"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    65,
+    12,
+    "PL/SQL: SQL Statement ignored"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    73,
+    15,
+    "PLS-00364: недопустимое использование циклической индексной переменной 'R'"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    73,
+    4,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    74,
+    27,
+    "PLS-00364: недопустимое использование циклической индексной переменной 'R'"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    74,
+    4,
+    "PL/SQL: Statement ignored"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    82,
+    7,
+    "PLS-00364: недопустимое использование циклической индексной переменной 'R'"
+  ],
+  [
+    "RRL_TRADE_COMPOSITION_API",
+    "PACKAGE BODY",
+    82,
+    4,
+    "PL/SQL: Statement ignored"
+  ]
+]

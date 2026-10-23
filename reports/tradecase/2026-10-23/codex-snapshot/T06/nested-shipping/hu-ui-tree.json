@@ -1,0 +1,94 @@
+{
+  "snapshot": {
+    "root": "NS23.57bdf1ab2.PALLET",
+    "warehouse": 222385707,
+    "cell": "T3Rbcfdabb6",
+    "nodes": [
+      {
+        "uid": "NS23.57bdf1ab2.PALLET",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 3,
+        "sscc": null,
+        "tare_weight_kg": "0.1",
+        "open_task_count": 0,
+        "cell": "T3Rbcfdabb6",
+        "depth": 0
+      },
+      {
+        "uid": "NS23.57bdf1ab2.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 6,
+        "sscc": null,
+        "tare_weight_kg": "0.1",
+        "packing_start": {
+          "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+          "content_version": 5,
+          "warehouse": 222385707,
+          "instant": "2026-10-23T07:41:51.026724-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "T3Rbcfdabb6",
+        "depth": 1
+      },
+      {
+        "uid": "690000000707411744",
+        "kind": "STOCK",
+        "type": null,
+        "version": 3,
+        "sscc": "690000000707411744",
+        "tare_weight_kg": "0",
+        "article": "TC03BCFDABB6",
+        "quantity": "10",
+        "hard_quantity": "10",
+        "base_uom": "EA",
+        "stock_version": 3,
+        "weight_kg": "10",
+        "open_task_count": 0,
+        "cell": "T3Rbcfdabb6",
+        "depth": 2
+      }
+    ],
+    "links": [
+      {
+        "id": 744,
+        "parent": "NS23.57bdf1ab2.PALLET",
+        "child": "NS23.57bdf1ab2.BOX",
+        "version": 0
+      },
+      {
+        "id": 743,
+        "parent": "NS23.57bdf1ab2.BOX",
+        "child": "690000000707411744",
+        "version": 0
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 10,
+    "leaf_count": 1,
+    "top_place_count": 1,
+    "status": "SHIPPED",
+    "departure_operation_id": "NS23.57bdf1ab2.load.tare_ready",
+    "historical_composition": true,
+    "quantities": [
+      {
+        "article": "TC03BCFDABB6",
+        "base_uom": "EA",
+        "quantity": "10"
+      }
+    ],
+    "gross_weight_kg": "10.2",
+    "unknown_weight_leaves": 0,
+    "unknown_tare_containers": 0,
+    "thermal_admission": {
+      "domain": "HU_THERMAL_ADMISSION",
+      "version": 1,
+      "status": "HISTORICAL_NOT_EVALUATED",
+      "allowed": null,
+      "policy_only": true,
+      "observed_temperature_c": null
+    },
+    "placement": null
+  }
+}

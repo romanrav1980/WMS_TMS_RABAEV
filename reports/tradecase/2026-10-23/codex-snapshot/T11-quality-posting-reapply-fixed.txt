@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\003_quality_case_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\002_effect_core_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\004_quality_writeoff.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\002_effect_core.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\006_regulatory_stock_outbox.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\005_trade_stock_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\007_stock_posting_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\recompile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\verify.sql
+Done. Statements=23; Errors=0; AbsentCleanup=0

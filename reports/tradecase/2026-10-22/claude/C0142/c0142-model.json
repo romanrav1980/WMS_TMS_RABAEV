@@ -1,0 +1,18 @@
+{
+ "checks": [
+  "actual CASE stage: open → PICKING, closed → AWAITING_SHIPMENT, all shipped → SHIPPED, unknown → null",
+  "wave 613 after real picking is not static CLEAR: CONTROLLED → PACKED; all SHIPPED → SHIPPED",
+  "blockers outrank case facts; open CASE without blocker still PICK; DONE stays ARCHIVE; PREVIEW stays PREP",
+  "unread preparation uses case fact if known, otherwise UNREAD (never CLEAR)",
+  "risk actions never loop back to the shift workplace itself",
+  "cancelled replenishment with its cancel reason is not a 'waiting' risk (live wave 613 row 1673)",
+  "failed sources and unread waves are gaps, not 'no risk'",
+  "closed waves without details are not gaps; truncated CASE list disables per-wave stage",
+  "assigned work without aware time stays attached to its resource (not 'no assignments'/'no resource')",
+  "search and exact wave filter see untimed assignments",
+  "event card details are plain language: time status and approval",
+  "one event on dock + vehicle + picker: three bars, counted once, conflict from server candidates only on the shared dock"
+ ],
+ "count": 12,
+ "network": false
+}

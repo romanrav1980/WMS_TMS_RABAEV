@@ -1,0 +1,157 @@
+{
+ "kind": "SYNTHETIC_INPUT_EXISTING_NATIVE_CALCULATOR",
+ "read_only": true,
+ "base": {
+  "status": "NO_EARLIEST_WINDOW_VIOLATION",
+  "return_at": "2026-11-02T14:10:00.000000+03:00",
+  "issues": [],
+  "stops": [
+   {
+    "address": "BRANCH",
+    "arrival_at": "2026-11-02T11:00:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:00:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "STORE",
+    "arrival_at": "2026-11-02T11:55:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "SHOP2",
+    "arrival_at": "2026-11-02T12:40:00.000000+03:00",
+    "service_start_at": "2026-11-02T12:40:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   }
+  ]
+ },
+ "reordered": {
+  "status": "INSUFFICIENT_EVIDENCE",
+  "return_at": "2026-11-02T15:35:00.000000+03:00",
+  "issues": [
+   "DELIVERY_HARD_WINDOW_MISSED",
+   "DELIVERY_HARD_WINDOW_MISSED",
+   "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE"
+  ],
+  "stops": [
+   {
+    "address": "STORE",
+    "arrival_at": "2026-11-02T11:05:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+    "wait_min": "49.99999999999999999999999999999999999997",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "BRANCH",
+    "arrival_at": "2026-11-02T12:50:00.000000+03:00",
+    "service_start_at": "2026-11-02T12:50:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "110",
+    "issues": [
+     "DELIVERY_HARD_WINDOW_MISSED"
+    ]
+   },
+   {
+    "address": "SHOP2",
+    "arrival_at": "2026-11-02T14:20:00.000000+03:00",
+    "service_start_at": "2026-11-02T14:20:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "69.99999999999999999999999999999999999998",
+    "issues": [
+     "DELIVERY_HARD_WINDOW_MISSED"
+    ]
+   }
+  ]
+ },
+ "detour_15": {
+  "status": "NO_EARLIEST_WINDOW_VIOLATION",
+  "return_at": "2026-11-02T14:25:00.000000+03:00",
+  "issues": [],
+  "stops": [
+   {
+    "address": "BRANCH",
+    "arrival_at": "2026-11-02T11:00:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:00:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "STORE",
+    "arrival_at": "2026-11-02T11:55:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "EXTRA",
+    "arrival_at": "2026-11-02T12:25:00.000000+03:00",
+    "service_start_at": "2026-11-02T12:25:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "SHOP2",
+    "arrival_at": "2026-11-02T12:55:00.000000+03:00",
+    "service_start_at": "2026-11-02T12:55:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   }
+  ]
+ },
+ "detour_45": {
+  "status": "INSUFFICIENT_EVIDENCE",
+  "return_at": "2026-11-02T14:55:00.000000+03:00",
+  "issues": [
+   "DELIVERY_HARD_WINDOW_MISSED",
+   "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE"
+  ],
+  "stops": [
+   {
+    "address": "BRANCH",
+    "arrival_at": "2026-11-02T11:00:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:00:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "STORE",
+    "arrival_at": "2026-11-02T11:55:00.000000+03:00",
+    "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "EXTRA",
+    "arrival_at": "2026-11-02T12:40:00.000000+03:00",
+    "service_start_at": "2026-11-02T12:40:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "0",
+    "issues": []
+   },
+   {
+    "address": "SHOP2",
+    "arrival_at": "2026-11-02T13:40:00.000000+03:00",
+    "service_start_at": "2026-11-02T13:40:00.000000+03:00",
+    "wait_min": "0",
+    "late_min": "29.99999999999999999999999999999999999995",
+    "issues": [
+     "DELIVERY_HARD_WINDOW_MISSED"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,15 @@
+# C0147 — производительность приёмки маркированной паллеты
+
+Этот запрос зарегистрирован по новому разрешению владельца чаще привлекать Claude. Выполняй ПОСЛЕ RELEASE C0146; не бросай начатую атомарную передачу резерва. Новые числовые лимиты владельцу не приписывай: партия2 выбрана Codex. Сначала отдельный ACK/ownership, потом RESULT/RELEASE.
+
+## Подтверждённый сбой
+Codex запустил точный40+40/60-набор с1000маркированными EA. На приёмке POST /api/receiving/supply-orders/{order}/pallets получил503 REQUEST_DEADLINE, operation_id=T3.receive.505b15a0. Evidence: runtime/test-evidence/tradecase/2026-10-22/T08/topup-live-215266197.json. Исходный запрос можно точно восстановить из tests/tradecase/live_stock_acceptance.py, fixture в evidence; units1..1000, quantity1000, код gtin+первые3символаtag+unit_id.zfill(4), прежний operation_id. Администратор в исходной операции, QA уже отключён.
+
+READ ONLY Oracle после ошибки подтвердил отсутствие RRL_STOCK_OPERATION по этому operation_id,0единиц RRL_WMS_RECEIPT_UNIT по UID_PALLET690000000481465926 и отсутствие физического RRL_REMAINS по складу215266197. Отчёт topup-exact-receipt-outcome.json. Slow log6092:TRANSACTION2034мс. APIdeadline30с. Подробное профилирование ещё не выполнено; не называй причину доказанной.
+
+Вероятные участки для исследования: inventory/infrastructure/receiving_marks.py.persist делает несколько SQL/native вызовов на единицу; receipt_commands.py/receipt_booking.py; native receipt compile/execute. Это гипотеза. Сначала измерь фазы и числоSQL на прежнем неизменном запросе/откатываемой диагностике, не создавай новую приёмку. Не повышай deadline вместо устранения подтверждённого узкого места. Не обходи StockPosting, маркировку/CRPT, уникальность кода, current policy, физические guards, транзакцию, владельца и исходный operation_id.
+
+## Результат
+Реализуй пакетное чтение/запись или bounded native вызов, если измерение покажет их пользу; сохрани прежние ошибки и эффекты. Доказательства должны сравнивать одинаковые данные/режимкэша до/после, числоSQL, времяAPI/SQL,1000точныхединиц/кодов, отсутствиеповтора/дубликатов/частичногоcommit, отзывправ иконфликт. Для повторного запуска только исходный immutablebody+operation_id. Не включай отключённую QA-роль, не принимай ещё1000EA другимID. Если изменишьnative — тольконовая additive migration/before/hash/rollback/verify, безapplyвзаблокированнойсреде; Codex проводит независимую приёмку. Не редактируй RRL_STOCK_POSTING_API по умолчанию: для такой необходимости сначала зафиксируй контракт и пересечение с C0146.
+
+Ownership: после RELEASE C0146 можешь взять receiving_marks.py и новые bounded helper/test, необходимость остальных перечисли в ACK. Root tests live_stock_acceptance.py/live_topup_proposal.py не меняй. Сам сценарий40+40/60 root продолжит после RELEASE кандидата. Ни публикации GitHub, ни SAP_INTEGRATION. При запрете среды не обходи его; передай точное действие/ошибку. C0147 не означает, что приёмка1000EA/весьT08 уже прошли.

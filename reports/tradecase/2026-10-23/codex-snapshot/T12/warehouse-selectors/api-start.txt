@@ -1,0 +1,198 @@
+Checking port 8088...
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 33168
+Stopping process PID 33168 (python)...
+Process PID 26252 is not visible to Get-Process, trying taskkill tree...
+cmd : ERROR: The process "26252" not found.
+строка:2 знак:25
++ ... _RELOAD='0';cmd /d /c C:\projects\TMS\serv.bat > runtime/test-evidenc ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: The process "26252" not found.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 26252
+Process PID 26252 is not visible to Get-Process, trying taskkill tree...
+ERROR: The process "26252" not found.
+Checking port 8088...
+Starting WMS API server...
+  WMS_ORACLE_USER=RABAEV
+  WMS_ORACLE_DSN=127.0.0.1:1521/orcl
+  WMS_CORS_ORIGINS=*
+  WMS_API_AUDIT_ENABLED=1
+  WMS_ADMIN_AUTH_ENABLED=1
+  Admin users are read from Oracle RUSERS/USER_GROUP/RIGHTS
+  URL=http://127.0.0.1:8088/docs
+INFO:     Started server process [50660]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8088 (Press CTRL+C to quit)
+INFO:     127.0.0.1:21378 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21380 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21383 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21385 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21386 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21387 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21388 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21389 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21390 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21391 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21392 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21393 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21394 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21395 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21396 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21397 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21398 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21399 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21400 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21401 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21402 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21403 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21404 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21405 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21741 - "GET /wms-admin/receiving.html HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21741 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21743 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21742 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21745 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21744 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21746 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21741 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21743 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21745 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21742 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21744 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21746 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21741 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21743 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21743 - "GET /api/admin/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21741 - "GET /api/integrations/sap/supply-orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21743 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21746 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21825 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21826 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /wms-admin/receiving.html?warehouse_id=225687965&order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21858 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21859 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21861 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21862 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21859 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21858 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21862 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21861 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /api/admin/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21860 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21857 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /wms-admin/receiving.html?warehouse_id=225687965&order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21865 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21868 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21867 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21869 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21865 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21868 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21869 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21867 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /api/admin/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21866 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21864 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46630 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46631 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46632 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46634 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46633 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46630 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46631 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46632 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46634 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46633 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46630 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46631 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46631 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46631 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46629 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46637 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46637 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46638 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46639 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46642 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46641 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46640 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46639 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46638 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46637 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46642 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46641 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46640 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46637 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46639 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46638 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46639 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46638 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46639 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46945 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46945 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46946 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46949 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46950 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46948 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46945 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46946 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46949 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46950 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46948 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46945 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46946 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46946 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46946 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46947 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46956 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46958 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46957 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46959 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46956 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46959 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46957 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46958 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46956 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46954 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46955 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+Server exited. You can close this window.
+Press any key to continue . . . 

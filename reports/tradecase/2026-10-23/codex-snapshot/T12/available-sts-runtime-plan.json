@@ -1,0 +1,23 @@
+{
+  "status": "CAPTURED",
+  "product_changed": false,
+  "ms": 389.08,
+  "rows": 100,
+  "cursors": [
+    {
+      "sql_id": "dqcrxtqwgzvxc",
+      "child_number": 0,
+      "plan_hash_value": 2581156339,
+      "executions": 1,
+      "buffer_gets": 12150,
+      "disk_reads": 0,
+      "cpu_time": 380206,
+      "elapsed_time": 379937,
+      "rows_processed": 100,
+      "runtime_plan": [
+        "User has no SELECT privilege on V$SQL_PLAN_STATISTICS_ALL"
+      ],
+      "plan_error": "ORA-00942: table or view does not exist\nHelp: https://docs.oracle.com/error-help/db/ora-00942/"
+    }
+  ]
+}

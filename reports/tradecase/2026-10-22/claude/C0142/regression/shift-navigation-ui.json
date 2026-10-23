@@ -1,0 +1,313 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "test": "same-session shift/Gantt and warehouse context",
+      "usefulScreenMs": 1216
+    },
+    {
+      "width": 1440,
+      "test": "back retains original TRADECASE warehouse/tab without new login"
+    },
+    {
+      "width": 1440,
+      "test": "yard summary explicitly all permitted warehouses, Gantt retains selected warehouse"
+    },
+    {
+      "width": 390,
+      "test": "same-session shift/Gantt and warehouse context",
+      "usefulScreenMs": 1089
+    },
+    {
+      "width": 390,
+      "test": "back retains original TRADECASE warehouse/tab without new login"
+    },
+    {
+      "width": 390,
+      "test": "yard summary explicitly all permitted warehouses, Gantt retains selected warehouse"
+    }
+  ],
+  "errors": [],
+  "http": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 80.918,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 486.218,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/219023232/site",
+      "ms": 554.368,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 555.61,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 555.073,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/219023232/stock/pallets?limit=50",
+      "ms": 602.922,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces",
+      "ms": 525.207,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/sessions?ware_id=219023232",
+      "ms": 630.452,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/case-pick/tasks?scope=all&limit=200&ware_id=219023232",
+      "ms": 631.061,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/picking/waves?status=PREVIEW&limit=50&ware_id=219023232",
+      "ms": 632.129,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/picking/waves?status=LAUNCHED&limit=100&ware_id=219023232",
+      "ms": 631.898,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3A00%2B00%3A00",
+      "ms": 694.709,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 786.848,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/inventory/recovery-shorts?limit=50&ware_id=219023232",
+      "ms": 817.501,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8088/api/picking/shift-overview",
+      "ms": 166.862,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/case-pick/shorts?ware_id=219023232",
+      "ms": 885.807,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/admin/transport/tasks?shipment_date=2026-10-22&include_readiness=true",
+      "ms": 1012.524,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces",
+      "ms": 1047.102,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/sessions",
+      "ms": 1045.156,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/admin/transport/vehicles/gantt?gantt_date=2026-10-22",
+      "ms": 1045.922,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3A00%2B00%3A00",
+      "ms": 1088.993,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 1123.163,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 167.473,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 174.185,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 223.867,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/219023232/site",
+      "ms": 224.945,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 225.893,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/219023232/stock/pallets?limit=50",
+      "ms": 239.331,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/picking/waves?status=PREVIEW&limit=50&ware_id=219023232",
+      "ms": 486.447,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces",
+      "ms": 669.078,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/picking/waves?status=LAUNCHED&limit=100&ware_id=219023232",
+      "ms": 667.103,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/case-pick/tasks?scope=all&limit=200&ware_id=219023232",
+      "ms": 666.904,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/sessions?ware_id=219023232",
+      "ms": 666.85,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3A00%2B00%3A00",
+      "ms": 724.815,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 809.662,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/inventory/recovery-shorts?limit=50&ware_id=219023232",
+      "ms": 826.737,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8088/api/picking/shift-overview",
+      "ms": 166.203,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/case-pick/shorts?ware_id=219023232",
+      "ms": 890.223,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 679.003,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces",
+      "ms": 760.615,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/admin/transport/vehicles/gantt?gantt_date=2026-10-22",
+      "ms": 758.965,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/admin/transport/tasks?shipment_date=2026-10-22&include_readiness=true",
+      "ms": 793.6,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/sessions",
+      "ms": 793.23,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3A00%2B00%3A00",
+      "ms": 809.354,
+      "status": 200
+    }
+  ],
+  "writes": [],
+  "readonlyOverview": [
+    {
+      "warehouse_id": 219023232,
+      "wave_ids": [
+        601
+      ]
+    },
+    {
+      "warehouse_id": 219023232,
+      "wave_ids": [
+        601
+      ]
+    }
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Identical ordered rows for existing admin, fresh global admin and warehouse-only role",
+    "Role revocation and retired global admin deny the next read without a stale authorization cache"
+  ],
+  "timings": [
+    {
+      "actor": "admin",
+      "ms": 185.71,
+      "rows": 500
+    },
+    {
+      "actor": "admin",
+      "ms": 116.65,
+      "rows": 500
+    },
+    {
+      "actor": "QA2320c1dc565aA",
+      "ms": 469.72,
+      "rows": 500
+    },
+    {
+      "actor": "QA2320c1dc565aA",
+      "ms": 204.03,
+      "rows": 500
+    },
+    {
+      "actor": "QA2320c1dc565a",
+      "ms": 620.11,
+      "rows": 1
+    },
+    {
+      "actor": "QA2320c1dc565a",
+      "ms": 484.32,
+      "rows": 1
+    },
+    {
+      "actor": "QA2320c1dc565a",
+      "ms": 312.17,
+      "rows": 0
+    },
+    {
+      "actor": "QA2320c1dc565a",
+      "ms": 326.31,
+      "rows": 0
+    },
+    {
+      "actor": "QA2320c1dc565aA",
+      "ms": 51.15,
+      "rows": 0
+    },
+    {
+      "actor": "QA2320c1dc565aA",
+      "ms": 97.87,
+      "rows": 0
+    }
+  ],
+  "qa_retired": true
+}

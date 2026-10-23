@@ -1,0 +1,247 @@
+{
+  "status": "PASS",
+  "fixture": "Own QA native trip, simulated arrival, real concurrent API/Oracle commands",
+  "checks": [
+    "Concurrent expectations: one active trip visit; exact winner replay",
+    "Concurrent assignments of one visit: one dock fact and one version; loser rejected, winner replays"
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 769.39,
+      "response": {
+        "operation_id": "YC235649bdfa4b.expect.0",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": null,
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 409,
+      "elapsed_ms": 855.16,
+      "response": {
+        "detail": {
+          "code": "YARD_TRIP_VISIT_ACTIVE",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 91.16,
+      "response": {
+        "operation_id": "YC235649bdfa4b.expect.0",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": null,
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "status": 200,
+      "elapsed_ms": 131.28,
+      "response": {
+        "operation_id": "YC235649bdfa4b.arrive",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": null,
+        "state": "ARRIVED",
+        "version": 2,
+        "planned_arrival_at": null,
+        "arrived_at": "2026-10-22T23:51:40Z",
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "status": 200,
+      "elapsed_ms": 180.98,
+      "response": {
+        "operation_id": "YC235649bdfa4b.dock.0",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": "B22D1161",
+        "state": "AT_DOCK",
+        "version": 3,
+        "planned_arrival_at": null,
+        "arrived_at": "2026-10-22T23:51:40Z",
+        "docked_at": "2026-10-22T23:51:40Z",
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "status": 409,
+      "elapsed_ms": 201.78,
+      "response": {
+        "detail": {
+          "code": "VERSION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "status": 200,
+      "elapsed_ms": 89.68,
+      "response": {
+        "operation_id": "YC235649bdfa4b.dock.0",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": "B22D1161",
+        "state": "AT_DOCK",
+        "version": 3,
+        "planned_arrival_at": null,
+        "arrived_at": "2026-10-22T23:51:40Z",
+        "docked_at": "2026-10-22T23:51:40Z",
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "status": 200,
+      "elapsed_ms": 165.55,
+      "response": {
+        "operation_id": "YC235649bdfa4b.cancel",
+        "planned_dock": "N22DA1168",
+        "visit_id": 5,
+        "warehouse_id": 220793322,
+        "visit_kind": "OUTBOUND",
+        "trip_id": "R1.1168",
+        "native_task_id": 33665,
+        "vehicle": "N22VA1168",
+        "dock": "B22D1161",
+        "state": "CANCELLED",
+        "version": 4,
+        "planned_arrival_at": null,
+        "arrived_at": "2026-10-22T23:51:40Z",
+        "docked_at": "2026-10-22T23:51:40Z",
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-22T23:51:41Z",
+        "cancel_reason": "End simulated QA yard concurrency",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    }
+  ],
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6343,
+      203,
+      "/api/tradecase/warehouses/220793322/yard/visits",
+      "TRADECASE yard visit command"
+    ],
+    [
+      6344,
+      74,
+      "/api/tradecase/warehouses/220793322/yard/visits/5/transitions",
+      "TRADECASE yard visit command"
+    ]
+  ],
+  "visit": 5
+}

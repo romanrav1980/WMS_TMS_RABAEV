@@ -1,0 +1,1 @@
+{"status": "VEHICLES_READY_UI_A_TO_B_PENDING", "warehouse": 213059748, "trip": 33677}

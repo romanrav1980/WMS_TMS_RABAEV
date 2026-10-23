@@ -1,0 +1,22 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_posting_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_trade_stock_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_regulatory_stock_outbox.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_effect_core_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_effect_core.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_trade_quality_case_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\rollback_verify.sql
+python : ERROR rollback_verify.sql:2: ORA-20999: ORA-20999: INVALID_OBJECTS
+строка:2 знак:44
++ ... 1521/orcl'; python scripts/stock_posting_apply.py db/migrations/2026- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR rollback_...INVALID_OBJECTS:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ORA-06512: на  line 18
+https://docs.oracle.com/error-help/db/ora-20999/
+SQL: declare s clob;n number;
+OracleApply stopped with ORA-20999: ORA-20999: INVALID_OBJECTS
+ORA-06512: на  line 18
+https://docs.oracle.com/error-help/db/ora-20999/
+No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.

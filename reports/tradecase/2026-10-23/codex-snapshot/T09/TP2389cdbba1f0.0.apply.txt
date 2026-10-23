@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_transport_scope_precheck\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_transport_scope_precheck\preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_transport_scope_precheck\001_scope.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_transport_scope_precheck\verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "case": "503/reload/wrong receipt preserves exact request; valid receipt clears it; help and no overflow",
+      "size": {
+        "viewport": 1440,
+        "document": 1440
+      }
+    },
+    {
+      "width": 390,
+      "case": "503/reload/wrong receipt preserves exact request; valid receipt clears it; help and no overflow",
+      "size": {
+        "viewport": 390,
+        "document": 390
+      }
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

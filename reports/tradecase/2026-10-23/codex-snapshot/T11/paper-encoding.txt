@@ -1,0 +1,1 @@
+Encoding check passed: UTF-8 text files have no common mojibake markers.

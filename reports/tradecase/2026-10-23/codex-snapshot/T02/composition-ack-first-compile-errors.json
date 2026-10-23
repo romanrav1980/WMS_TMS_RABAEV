@@ -1,0 +1,56 @@
+{
+  "invalid": [
+    [
+      "RRL_TRADE_ORDER_COMP_FROZEN",
+      "TRIGGER"
+    ],
+    [
+      "RRL_TRADE_COMPOSITION_API",
+      "PACKAGE BODY"
+    ]
+  ],
+  "errors": [
+    [
+      "RRL_TRADE_COMPOSITION_API",
+      "PACKAGE BODY",
+      105,
+      36,
+      "PLS-00204: функция или псевдостолбец \"DECODE\" могут быть использованы только внутри инструкции SQL"
+    ],
+    [
+      "RRL_TRADE_COMPOSITION_API",
+      "PACKAGE BODY",
+      103,
+      4,
+      "PL/SQL: Statement ignored"
+    ],
+    [
+      "RRL_TRADE_COMPOSITION_API",
+      "PACKAGE BODY",
+      129,
+      97,
+      "PLS-00204: функция или псевдостолбец \"DECODE\" могут быть использованы только внутри инструкции SQL"
+    ],
+    [
+      "RRL_TRADE_COMPOSITION_API",
+      "PACKAGE BODY",
+      129,
+      4,
+      "PL/SQL: Statement ignored"
+    ],
+    [
+      "RRL_TRADE_ORDER_COMP_FROZEN",
+      "TRIGGER",
+      5,
+      6,
+      "PLS-00204: функция или псевдостолбец \"DECODE\" могут быть использованы только внутри инструкции SQL"
+    ],
+    [
+      "RRL_TRADE_ORDER_COMP_FROZEN",
+      "TRIGGER",
+      2,
+      2,
+      "PL/SQL: Statement ignored"
+    ]
+  ]
+}

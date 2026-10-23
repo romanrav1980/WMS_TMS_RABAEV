@@ -1,0 +1,64 @@
+{
+  "checks": [
+    "390: paper prevents confirmation before version check and separate START",
+    "Real stale paper409 disables new confirmation",
+    "Injected403 clears version admission",
+    "Real current paper permits existing fact form",
+    "Real completion committed with printed signature; lost response retained",
+    "Reload and exact retry returned original receipt without another command body",
+    "390: panel fits viewport and check target >=44px",
+    "1440: panel fits viewport and check target >=44px",
+    "Raw screen help URL serves actual instructions"
+  ],
+  "posts": [
+    "{\"assigned_to\":\"admin\",\"updated_by\":\"admin\",\"fact_qty\":\"250\",\"scanned_pallet\":\"690000000445629982\",\"scanned_from_cell\":\"T3S089ddb36\",\"scanned_to_cell\":\"T3P089ddb36\",\"expected_task_signature\":\"E1636E9019CB55E4CAD4BE477CB8A89D51C1D627BA2C412E2E4119609A7EDE1C\",\"operation_id\":\"TASK.UI:fc0e8371-d626-4258-b9cb-125ebee33aea\"}",
+    "{\"assigned_to\":\"admin\",\"updated_by\":\"admin\",\"fact_qty\":\"250\",\"scanned_pallet\":\"690000000445629982\",\"scanned_from_cell\":\"T3S089ddb36\",\"scanned_to_cell\":\"T3P089ddb36\",\"expected_task_signature\":\"E1636E9019CB55E4CAD4BE477CB8A89D51C1D627BA2C412E2E4119609A7EDE1C\",\"operation_id\":\"TASK.UI:fc0e8371-d626-4258-b9cb-125ebee33aea\"}"
+  ],
+  "errors": [],
+  "timings": {
+    "completeWithResponseLoss": 1542,
+    "overflow390": 0,
+    "overflow1440": 0
+  },
+  "synthetic": [
+    "403 paper read",
+    "lost response after real commit"
+  ],
+  "receipt": {
+    "status": "ok",
+    "result": {
+      "operation_id": "TASK.UI:fc0e8371-d626-4258-b9cb-125ebee33aea",
+      "task_id": 1242,
+      "status": "DONE",
+      "pallet_identifier": "690000000445629982",
+      "source_pallet_identifier": "690000000445629982",
+      "cell": "T3P089ddb36",
+      "quantity": "250",
+      "base_quantity": "250",
+      "base_uom": "EA",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "movement_id": null,
+      "outbox_id": 6765
+    }
+  },
+  "replayed_receipt": {
+    "status": "ok",
+    "result": {
+      "operation_id": "TASK.UI:fc0e8371-d626-4258-b9cb-125ebee33aea",
+      "task_id": 1242,
+      "status": "DONE",
+      "pallet_identifier": "690000000445629982",
+      "source_pallet_identifier": "690000000445629982",
+      "cell": "T3P089ddb36",
+      "quantity": "250",
+      "base_quantity": "250",
+      "base_uom": "EA",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "movement_id": null,
+      "outbox_id": 6765
+    }
+  },
+  "status": "PASS"
+}

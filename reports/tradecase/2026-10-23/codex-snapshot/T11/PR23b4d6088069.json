@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Role-only own snapshot with exact quantity/warehouse/employee names; same printed version repeats, stale version409, foreign task404",
+    "Revocation removes paper snapshot access on the next request"
+  ],
+  "http": [
+    {
+      "task": 1231,
+      "status": 200,
+      "ms": 1131.32
+    },
+    {
+      "task": 1231,
+      "status": 200,
+      "ms": 442.26
+    },
+    {
+      "task": 1231,
+      "status": 409,
+      "ms": 482.92
+    },
+    {
+      "task": 1213,
+      "status": 404,
+      "ms": 394.63
+    },
+    {
+      "task": 1231,
+      "status": 403,
+      "ms": 345.88
+    }
+  ],
+  "snapshot_fields": {
+    "task_id": 1231,
+    "qty_exact": "2",
+    "assigned_to": "admin",
+    "assigned_to_name": "Global Administrator",
+    "from_warehouse_name": "TRADECASE QA 25cadbfc",
+    "to_warehouse_name": "TRADECASE QA 25cadbfc",
+    "task_signature": "6B2ED47967B338479F6596204218DF7D291ACC4F1945E36F5DFD269602959C88"
+  },
+  "qa_retired": true,
+  "slow_sql": [
+    [
+      6457,
+      626,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,\n                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,\n                       NVL(A.STOL, 0) AS STOL,\n                       A.PRIM1,\n                       P.WARE_ID,\n                       MAX(P.NAPR) AS NAPR,\n                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,\n                       ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,\n                       ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,\n                       MIN(P.STDATE) AS STDATE,\n                       MIN(P.STDATE) AS DATE_LOAD,\n                       MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,\n                       MAX(P.ZONE) AS ZONE,\n                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,\n                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,\n                       NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1 THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,\n                       MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR\n                  FROM (select * from (select page_rows.*,rownum AS PAGE_ROW_NUMBER from (select H.ST_NUMBER,H.ADDR,H.WARE_ID from (select P.ST_NUMBER,P.ADDR,P.WARE_ID from RABAEV.RRL_SBORKA_PALLETS P left join RABAEV.RRL_ADDR A on A.ADDR=P.ADDR WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL and exists(select 1 from RABAEV.RRL_SBORKA_PALLET_ROWS R where R.PALLET_UID=P.PALLET_UID) group by P.ST_NUMBER,P.ADDR,P.WARE_ID) H left join RABAEV.RRL_ADDR PAGE_ADDR on PAGE_ADDR.ADDR=H.ADDR order by PAGE_ADDR.ORD NULLS LAST,NVL(PAGE_ADDR.REGION,H.ADDR),H.ST_NUMBER,H.WARE_ID,H.ADDR) page_rows where rownum<=:page_end) where PAGE_ROW_NUMBER>:page_offset order by PAGE_ROW_NUMBER) K JOIN RABAEV.RRL_SBORKA_PALLETS P ON (P.ST_NUMBER=K.ST_NUMBER OR (P.ST_NUMBER IS NULL AND K.ST_NUMBER IS NULL)) AND DECODE(P.ADDR,K.ADDR,1,0)=1 AND DECODE(P.WARE_ID,K.WARE_ID,1,0)=1\n                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID\n                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR\n                  WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL\n                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD,\n                          A.TRANSPORT_TYPE, A.STOL, A.PRIM1, P.WARE_ID\n                  \n                 ORDER BY A.ORD NULLS LAST, NVL(A.REGION, P.ADDR), P.ST_NUMBER, P.WARE_ID, P.ADDR"
+    ],
+    [
+      6456,
+      594,
+      "/api/warehouse-tasks/1231/paper",
+      "Warehouse task detail native READ ONLY"
+    ],
+    [
+      6458,
+      322,
+      "/api/warehouse-tasks/1213/paper",
+      "Warehouse task detail native READ ONLY"
+    ],
+    [
+      6459,
+      245,
+      "/api/warehouse-tasks/1231/paper",
+      "Warehouse task detail native READ ONLY"
+    ]
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "basis": "Cumulative V$SQL, not a per-case delta or runtime plan",
+  "rows": [
+    [
+      "d7qxrbmc1n97d",
+      13,
+      285.28,
+      195.5,
+      3166.15,
+      70.85
+    ],
+    [
+      "admdtyprqxjhm",
+      2,
+      218.35,
+      217.46,
+      2742.5,
+      134
+    ]
+  ],
+  "decision": "Keep bounded retries/current locks; no index from statement aggregates; T12 retains native internal SQL/load acceptance"
+}

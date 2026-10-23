@@ -1,0 +1,10 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_posting_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_trade_stock_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_regulatory_stock_outbox.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_effect_core_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_stock_effect_core.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\before_rrl_trade_quality_case_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\recompile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_quality_posting\rollback_verify.sql
+Done. Statements=21; Errors=0; AbsentCleanup=0

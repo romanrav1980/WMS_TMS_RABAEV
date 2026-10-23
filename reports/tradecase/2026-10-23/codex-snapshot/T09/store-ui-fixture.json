@@ -1,0 +1,47 @@
+{
+  "address": "DU23e6c4c17ea2.STORE",
+  "profile": {
+    "store_addr": "DU23e6c4c17ea2.STORE",
+    "configured": true,
+    "version": 1,
+    "profile": {
+      "receiving_window_mode": "WEEKLY",
+      "timezone_region": "UTC",
+      "backroom_flag": null,
+      "backroom_pallets": null,
+      "backroom_rolls": null,
+      "unattended_drop_flag": null,
+      "storage_temp_class": null,
+      "ramp_flag": null,
+      "ramp_height_mm": null,
+      "max_vehicle_outer_height_mm": null,
+      "max_vehicle_outer_length_mm": null,
+      "default_unload_method": null,
+      "loader_required": null,
+      "access_note": null
+    },
+    "windows": [
+      {
+        "weekday": 5,
+        "from_minute": 660,
+        "to_minute": 720
+      }
+    ],
+    "delivery_rules": {
+      "status": "KNOWN",
+      "unload_norm_min": 31,
+      "window_strict": true,
+      "source_hash": "26d82c88c545a9b908c55397f0ec190f24d1a943d0b5b6ba199917d0ff3f2c65"
+    },
+    "updated_by": "admin",
+    "updated_at": "2026-10-22T17:52:31",
+    "operation_id": "DU23e6c4c17ea2.STORE.profile",
+    "stock_changed": false,
+    "installed": true
+  },
+  "duration_column": [
+    5,
+    0
+  ],
+  "retired": true
+}

@@ -1,0 +1,12 @@
+{
+  "bundle": "index-CyAZvAfh.js",
+  "files": {
+    "risks.ts": "9f0ef022b9cd25bd4be8fb0a225694ba893317a0865aadde664d2008213edd04",
+    "types.ts": "30d34f75f78de6bd2045a74dc3a99cc5df9b0a77cedade7a7331b6134fac5891",
+    "useShiftData.ts": "00f838a313065d5cc865e39bea4a3b309ffcd2c58eede07ebeef6bc267e4e9ce",
+    "useShiftRisks.ts": "436ea5776a67017098067d5dac384c994ed354bbfa2794c93376d042e879d6f9",
+    "ShiftSupervisorDesk.tsx": "35a01986fd00d0c4248e6bed4a41c5f0ac45b9485f25954f849683beeba96369",
+    "YardDockPlan.tsx": "02868f8ffd99224aba30df554bdf97bf79ae31e628d6468996314a3ee06e7747",
+    "yardCommands.ts": "83c6339a804d3bf0afbe2dd4af8b6c8a51a3802e2d0ca35bc067f987af01694e"
+  }
+}

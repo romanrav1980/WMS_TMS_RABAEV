@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\001_ctx_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\002_ctx_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\003_pool_read.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\004_pool_cmd.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\recompile.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_pool_eligibility\verify.sql
+Done. Statements=9; Errors=0; AbsentCleanup=0

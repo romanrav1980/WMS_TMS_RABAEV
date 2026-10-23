@@ -1,0 +1,204 @@
+{
+  "status": "PASS",
+  "warehouse": 213059748,
+  "trip": 33677,
+  "events": [
+    {
+      "operation": "VC23.e239ec51a.load.tare_ready",
+      "rows": [
+        [
+          -10
+        ]
+      ],
+      "applied": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "operation": "VC23.e239ec51a.unload.B",
+      "rows": [
+        [
+          10
+        ]
+      ],
+      "applied": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "operation": "VC23.e239ec51a.reload.C",
+      "rows": [
+        [
+          -10
+        ]
+      ],
+      "applied": [
+        [
+          1
+        ]
+      ]
+    }
+  ],
+  "stock": [
+    [
+      0,
+      0
+    ]
+  ],
+  "slow_marker": 6811,
+  "slow_sql": [
+    [
+      6815,
+      4981,
+      "TRANSACTION"
+    ],
+    [
+      6816,
+      2976,
+      "TRANSACTION"
+    ],
+    [
+      6813,
+      1063,
+      "TRANSACTION"
+    ],
+    [
+      6818,
+      1030,
+      "FETCH_ALL"
+    ],
+    [
+      6820,
+      955,
+      "FETCH_ALL"
+    ],
+    [
+      6822,
+      909,
+      "FETCH_ALL"
+    ],
+    [
+      6823,
+      866,
+      "TRANSACTION"
+    ],
+    [
+      6821,
+      805,
+      "FETCH_ALL"
+    ],
+    [
+      6814,
+      733,
+      "TRANSACTION"
+    ],
+    [
+      6812,
+      704,
+      "TRANSACTION"
+    ],
+    [
+      6825,
+      598,
+      "TRANSACTION"
+    ],
+    [
+      6819,
+      590,
+      "FETCH_ALL"
+    ],
+    [
+      6817,
+      564,
+      "FETCH_ALL"
+    ],
+    [
+      6826,
+      72,
+      "TRANSACTION"
+    ],
+    [
+      6827,
+      27,
+      "TRANSACTION"
+    ],
+    [
+      6824,
+      17,
+      "TRANSACTION"
+    ]
+  ],
+  "longest_http": [
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/624/launch",
+      "status": 200,
+      "elapsed_ms": 2104.3
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/07b0796a06ab471e8f6042a393c79968/pallets",
+      "status": 201,
+      "elapsed_ms": 1843.05
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "elapsed_ms": 1349.04
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "elapsed_ms": 1282.45
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/unload",
+      "status": 200,
+      "elapsed_ms": 1203.66
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1248/complete",
+      "status": 200,
+      "elapsed_ms": 1049.78
+    },
+    {
+      "method": "GET",
+      "path": "/api/outgoing-quality/FP21.ST.213059748",
+      "status": 200,
+      "elapsed_ms": 974.68
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/putaway/1247/complete",
+      "status": 200,
+      "elapsed_ms": 834.82
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/plans",
+      "status": 200,
+      "elapsed_ms": 787.48
+    },
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/artmas",
+      "status": 202,
+      "elapsed_ms": 737.1
+    }
+  ],
+  "invalid": [],
+  "limitations": [
+    "Only owned synthetic local vehicles/dimensions/ERP documents; no real road carrier or hardware",
+    "UI first runner committed then failed on re-authentication; exact captured pending intent recovered in new context, no second PATCH",
+    "GET403 in browser was injected, native current-owner403 already proven separately in inventory"
+  ],
+  "decision": "16 fresh rows reviewed in slow-sql-detail.json: five unrelated C0164 read-only diagnostics up to4981ms, selectors warehouse805-1030ms four times, drivers564/590ms, owned QC866ms, plan704ms, transport edit598ms then17/27ms. No index invented. Claude C0169 owns repeated selector baseline/equal-results rewrite; Codex T12 owns cold QC/plan/transport phase profiling and peak/concurrency. No throughput SLA."
+}

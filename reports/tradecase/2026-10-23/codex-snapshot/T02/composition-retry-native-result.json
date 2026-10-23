@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "RRL_TRADE_COMPOSITION_API:PACKAGE BODY": "F5ACF2084BB955531E093873DCC7E686C04B869131C83344F07D3605C2E51293"
+  },
+  "files": {
+    "000_preflight.sql": "ddd7787dc617393eb7b7d0494411391a310284709c2f1e0eb58ad1870b7ad8e2",
+    "001_body.sql": "6060d8f9c0124f932bf5fa4be1b3ae4ec8f5c1e9c79fe9a1b5b5dfe6bf074b3d",
+    "apply.sql": "eddd3a2fc8f5b234d079e7d67208f46ec2bae5736edbd5ea850ff4f8b4ca29c1",
+    "before_body.sql": "0235ac065b1dc58d216e5a6304ba7a7d09c8d3f804c36023a1eb81be257b4e9f",
+    "rollback.sql": "88a5338ed16f6959c7635d38f69e126b87cbf23443c2bc5d7a42cae02cec647a",
+    "rollback_verify.sql": "ddd7787dc617393eb7b7d0494411391a310284709c2f1e0eb58ad1870b7ad8e2",
+    "verify.sql": "6b0ce9e076dd482146cb7ff456ebc474e5639987d4d805f0b6e5e0b53b3500e5"
+  },
+  "target": [
+    "RABAEV",
+    "ORCL"
+  ],
+  "after": {
+    "RRL_TRADE_COMPOSITION_API:PACKAGE BODY": "DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378"
+  },
+  "status": "PASS"
+}

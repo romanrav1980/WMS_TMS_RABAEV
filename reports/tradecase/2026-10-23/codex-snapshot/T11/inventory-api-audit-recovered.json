@@ -1,0 +1,3106 @@
+{
+  "source": "RRL_API_CALL_LOG actual immutable rows; no headers/auth read",
+  "clock": "Oracle host -04:00, verified in T12/oracle-clock-c0165.json",
+  "calls": [
+    {
+      "api_call_id": 92239,
+      "request_id": "903f04a9-1990-4069-bb94-5dc539ef13b2",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 08:45:04",
+      "duration_ms": 446,
+      "request": {
+        "operation_id": "IF23.d9c359729.owner",
+        "expected_version": 0,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own marked inventory proof"
+      },
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.owner",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92240,
+      "request_id": "8b692c73-0f9f-4c55-affd-031fd7f1ddc0",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/revisions",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 08:45:05",
+      "duration_ms": 154,
+      "request": {
+        "warehouse_id": 210564699
+      },
+      "response": {
+        "revision_id": 418,
+        "warehouse_id": 210564699
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92241,
+      "request_id": "018e671a-cacf-4772-91a0-331f54769d88",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 08:45:05",
+      "duration_ms": 202,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92242,
+      "request_id": "5a68a33d-45e5-42d9-a434-730551854f28",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f1",
+      "status": 200,
+      "started_at": "2026-10-23 08:45:05",
+      "duration_ms": 80,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f1",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f1",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92243,
+      "request_id": "65f41347-d8eb-4822-83ac-22228b92b8b1",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=T3S089ddb36",
+      "status": 200,
+      "started_at": "2026-10-23 08:45:06",
+      "duration_ms": 72,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "T3S089ddb36",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "T3S089ddb36",
+            "physical_qty": "210",
+            "hard_qty": "0",
+            "stock_version": 19,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "690000000445629982",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92244,
+      "request_id": "ead84e85-8537-429d-b09d-97a21dd69f18",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 409,
+      "started_at": "2026-10-23 08:46:37",
+      "duration_ms": 252,
+      "request": {
+        "operation_id": "IF23.d9c359729.uncaptured.positive",
+        "revision_id": 418,
+        "reason": "Reject uncaptured marked inventory increase",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "21",
+            "expected_stock_version": 1,
+            "unit_keys": [
+              "139ed9872f3702cef8e5fd56061dcb9bc4649f8b7730c54928579ba7f2aa769b",
+              "13d715c8504d6fdb175502e01e6665ba8a6a91e23da2d20d9b463c2e57871952",
+              "1490533c256eae0eca4a375a42cfdcf59d964eb82db39f4beede8864f1793941",
+              "163120170af1ef217dd5153062c19c6de448b6fe27e02af095db70afdcebc476",
+              "1660509da020d5532f8c53e430ffee8ee212bc61f93e87ccb2511ecffdfb23a9",
+              "16d2abcc0291165d9b862f035336845c2b0cc70c719a14e574a78703383d0499",
+              "16e7b5af885c5835aaa8affb3a50df2fb11ef1dd58f3616b48f64d00194a151a",
+              "17dd325b1f50abde9f2cb99f1f7392ec8359b21899e5cf2853bbd77677b479a9",
+              "192b84f87d2b11d40a677ad52aea74fdd751e7e65684f5a45fba21e427a655a5",
+              "1c2e5e9dab7d706dea148b6ccee2f71ce9c77edf2727468fd46461a92ad8172e",
+              "1cf6ef3816b310e73e12c6bf729278c4863ce3016fcda97f3dbf97c13f741dfc",
+              "1e0a5fb6e3d644f8c406b1bb0be088c625b9f1ccd5a47e643a8a08fefe10eb70",
+              "1e28078291abf74c6a8755b017afce9a14d08d3503250f2d8a6ffe3ff3043457",
+              "1e3f7fe6af9f398a261896d5373ca91b334d1fd6df89971dc3290baea5fad93d",
+              "1e8709cd7441aede2eb7f817b140e51197c718f9812d6e9fedbf221b6b69da52",
+              "23be7a3d17fd4c6d099659a1266e92f36ddf7f62170075bc7c191bebc08c5998",
+              "241bb4f4af6e66fc5ccc80e362c108a654eb4fedf5b685504d765360e88b2e12",
+              "248542352d102b4bd817cba8be1fe3fb47bffc549cba9464ffff6fe8f1464b50",
+              "24e56e4a38fa9976b9b814e0f3c7f0441ce70a53f1914bdae38e5745449ae698",
+              "276e13dc51823e404f52a3029b668418a557b78bee87ee9ba3b5e5de4b720b27"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.uncaptured.positive",
+          "oracle_code": 20884,
+          "reason": "MARKED_INVENTORY_INCREASE_REQUIRES_CAPTURED_UNITS",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92245,
+      "request_id": "2b3b0207-6117-4841-8907-e7dcd95fb4a9",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/revisions",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 08:58:06",
+      "duration_ms": 75,
+      "request": {
+        "warehouse_id": 222385707
+      },
+      "response": {
+        "revision_id": 419,
+        "warehouse_id": 222385707
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92246,
+      "request_id": "c0910111-b999-4466-afcb-82715731e750",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 422,
+      "started_at": "2026-10-23 08:58:07",
+      "duration_ms": 151,
+      "request": {
+        "operation_id": "IF23.d9c359729.shipped_before_apply",
+        "revision_id": 419,
+        "reason": "Do not restore shipped stock as inventory found",
+        "counts": [
+          {
+            "uid": "690000000707411744",
+            "cell": "T3Rbcfdabb6",
+            "article": "TC03BCFDABB6",
+            "unit": "EA",
+            "quantity": "10",
+            "expected_stock_version": 4,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0006"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0005"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0004"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0007"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0003"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0010"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0002"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0009"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0001"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "COMMAND_INVALID",
+          "message": "Scanned units have no current physical composition"
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92247,
+      "request_id": "dec4d5ea-a419-4166-ae55-040cf579506e",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:26",
+      "duration_ms": 620,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": []
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92248,
+      "request_id": "0e81c08d-7f9a-4ba7-ba48-4ad0cfc2dad1",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:27",
+      "duration_ms": 1640,
+      "request": {
+        "operation_id": "IF23.d9c359729.loss_one",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "19",
+            "expected_stock_version": 1,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.loss_one",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "19",
+            "delta": "-1",
+            "event_id": 6447267,
+            "lost_units": 1,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6907
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92249,
+      "request_id": "f0f942a1-d357-4936-b716-957335acc1a2",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:28",
+      "duration_ms": 130,
+      "request": {
+        "operation_id": "IF23.d9c359729.loss_one",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "19",
+            "expected_stock_version": 1,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.loss_one",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "19",
+            "delta": "-1",
+            "event_id": 6447267,
+            "lost_units": 1,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6907
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92250,
+      "request_id": "6ab67f22-7780-4e0d-94b4-43b17563bd0a",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:28",
+      "duration_ms": 87,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "19",
+            "hard_qty": "0",
+            "stock_version": 2,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": [
+              "290014456299810890104"
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92251,
+      "request_id": "ac3e7fda-71c8-4114-b33b-21c4ae294dfd",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 409,
+      "started_at": "2026-10-23 09:02:29",
+      "duration_ms": 1398,
+      "request": {
+        "operation_id": "IF23.d9c359729.restore_one.racer",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 2,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.restore_one.racer",
+          "oracle_code": 20867,
+          "reason": "INVENTORY_SNAPSHOT_STALE",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92252,
+      "request_id": "e7a46d3e-46fa-47fa-aa35-c32d75194d45",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:29",
+      "duration_ms": 764,
+      "request": {
+        "operation_id": "IF23.d9c359729.restore_one",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 2,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.restore_one",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "19",
+            "after": "20",
+            "delta": "1",
+            "event_id": 6447269,
+            "lost_units": 0,
+            "found_units": 1
+          }
+        ],
+        "outbox_id": 6908
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92253,
+      "request_id": "4fdf1f79-dcea-4176-a480-e153c09ed6ae",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:30",
+      "duration_ms": 134,
+      "request": {
+        "operation_id": "IF23.d9c359729.restore_one",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 2,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.restore_one",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "19",
+            "after": "20",
+            "delta": "1",
+            "event_id": 6447269,
+            "lost_units": 0,
+            "found_units": 1
+          }
+        ],
+        "outbox_id": 6908
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92254,
+      "request_id": "e1da811d-a559-4918-84b9-64c0a4a93800",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:30",
+      "duration_ms": 112,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 3,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": []
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92255,
+      "request_id": "02bc92ff-ab26-44d6-a39c-45bdf97026b4",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:31",
+      "duration_ms": 471,
+      "request": {
+        "operation_id": "IF23.d9c359729.loss_again",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "19",
+            "expected_stock_version": 3,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.loss_again",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "19",
+            "delta": "-1",
+            "event_id": 6447271,
+            "lost_units": 1,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6909
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92256,
+      "request_id": "86f36a4f-19cd-4fdd-bd12-19be07e414fe",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:31",
+      "duration_ms": 62,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "19",
+            "hard_qty": "0",
+            "stock_version": 4,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": [
+              "290014456299810890104"
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92257,
+      "request_id": "7688aabe-5c14-443d-9a8c-f6206434627d",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:31",
+      "duration_ms": 317,
+      "request": {
+        "operation_id": "IF23.d9c359729.found_again",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 4,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.found_again",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "19",
+            "after": "20",
+            "delta": "1",
+            "event_id": 6447273,
+            "lost_units": 0,
+            "found_units": 1
+          }
+        ],
+        "outbox_id": 6910
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92258,
+      "request_id": "88c8dc14-1273-4d9f-9aee-5884e82249c0",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:32",
+      "duration_ms": 108,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 5,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": []
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92259,
+      "request_id": "b8af9eee-b2d2-4044-9f7e-588751cd8cbd",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:32",
+      "duration_ms": 238,
+      "request": {
+        "operation_id": "IF23.d9c359729.whole_lot_lost",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "0",
+            "expected_stock_version": 5,
+            "scans": []
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.whole_lot_lost",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "0",
+            "delta": "-20",
+            "event_id": 6447275,
+            "lost_units": 20,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6911
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92260,
+      "request_id": "89e1c9c7-feb7-48a2-b3d4-84ea21e813a6",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:02:33",
+      "duration_ms": 62,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "0",
+            "hard_qty": "0",
+            "stock_version": 6,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": [
+              "290014456299810890008",
+              "290014456299810890011",
+              "290014456299810890048",
+              "290014456299810890055",
+              "290014456299810890058",
+              "290014456299810890059",
+              "290014456299810890065",
+              "290014456299810890069",
+              "290014456299810890073",
+              "290014456299810890090",
+              "290014456299810890097",
+              "290014456299810890104",
+              "290014456299810890145",
+              "290014456299810890154",
+              "290014456299810890168",
+              "290014456299810890177",
+              "290014456299810890209",
+              "290014456299810890214",
+              "290014456299810890223",
+              "290014456299810890235"
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92261,
+      "request_id": "7f6279a5-c274-43c9-b9ae-95b63a70cb98",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:33",
+      "duration_ms": 201,
+      "request": {
+        "operation_id": "IF23.d9c359729.owner_view_only",
+        "expected_version": 1,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": false,
+        "reason": "Current inventory restoration authority"
+      },
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.owner_view_only",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92262,
+      "request_id": "3b55a85d-615d-4092-842e-79db6d2ee5d5",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:33",
+      "duration_ms": 187,
+      "request": {
+        "operation_id": "IF23.d9c359729.whole_lot_lost",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "0",
+            "expected_stock_version": 5,
+            "scans": []
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.whole_lot_lost",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "0",
+            "delta": "-20",
+            "event_id": 6447275,
+            "lost_units": 20,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6911
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92263,
+      "request_id": "225b1eeb-6482-4863-bf87-3ff3ef88e97d",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 403,
+      "started_at": "2026-10-23 09:02:33",
+      "duration_ms": 248,
+      "request": {
+        "operation_id": "IF23.d9c359729.whole_lot_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 6,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.whole_lot_found",
+          "oracle_code": 20882,
+          "reason": "TRADE_OWNER_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92264,
+      "request_id": "3649539f-90a0-42e1-b844-5fc7637a7e3c",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:33",
+      "duration_ms": 76,
+      "request": {
+        "operation_id": "IF23.d9c359729.owner_operate_restore",
+        "expected_version": 2,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Current inventory restoration authority"
+      },
+      "response": {
+        "version": 3,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.owner_operate_restore",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92265,
+      "request_id": "bdaa2aed-d8cd-4526-8953-d8d5938e67a8",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:34",
+      "duration_ms": 482,
+      "request": {
+        "operation_id": "IF23.d9c359729.whole_lot_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 6,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.whole_lot_found",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "0",
+            "after": "20",
+            "delta": "20",
+            "event_id": 6447277,
+            "lost_units": 0,
+            "found_units": 20
+          }
+        ],
+        "outbox_id": 6912
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92266,
+      "request_id": "7b6d1b79-b3d1-4e4c-bb1c-4296ad6eb336",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:02:34",
+      "duration_ms": 118,
+      "request": {
+        "operation_id": "IF23.d9c359729.whole_lot_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 6,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.whole_lot_found",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "0",
+            "after": "20",
+            "delta": "20",
+            "event_id": 6447277,
+            "lost_units": 0,
+            "found_units": 20
+          }
+        ],
+        "outbox_id": 6912
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92267,
+      "request_id": "2758de34-0bea-4917-89a1-4995185c6774",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:09:19",
+      "duration_ms": 83,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 7,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": []
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92268,
+      "request_id": "e2bc9881-5c10-4061-a14d-8369afc0423b",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:09:19",
+      "duration_ms": 315,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_loss",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "0",
+            "expected_stock_version": 7,
+            "scans": []
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.guard_loss",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "0",
+            "delta": "-20",
+            "event_id": 6447279,
+            "lost_units": 20,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6913
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92269,
+      "request_id": "1e15cf7a-e57d-4158-94e2-353ad7fe8205",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:09:20",
+      "duration_ms": 87,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "0",
+            "hard_qty": "0",
+            "stock_version": 8,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": [
+              "290014456299810890008",
+              "290014456299810890011",
+              "290014456299810890048",
+              "290014456299810890055",
+              "290014456299810890058",
+              "290014456299810890059",
+              "290014456299810890065",
+              "290014456299810890069",
+              "290014456299810890073",
+              "290014456299810890090",
+              "290014456299810890097",
+              "290014456299810890104",
+              "290014456299810890145",
+              "290014456299810890154",
+              "290014456299810890168",
+              "290014456299810890177",
+              "290014456299810890209",
+              "290014456299810890214",
+              "290014456299810890223",
+              "290014456299810890235"
+            ]
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92270,
+      "request_id": "d54c9a67-ac90-4eba-a8bd-c4574673a3cf",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:09:20",
+      "duration_ms": 80,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_view_only",
+        "expected_version": 3,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": false,
+        "reason": "Current inventory restoration authority"
+      },
+      "response": {
+        "version": 4,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.guard_view_only",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92271,
+      "request_id": "2c547a21-ff08-42fa-892b-5c57217fae1a",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:09:20",
+      "duration_ms": 113,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_loss",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "0",
+            "expected_stock_version": 7,
+            "scans": []
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.guard_loss",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "20",
+            "after": "0",
+            "delta": "-20",
+            "event_id": 6447279,
+            "lost_units": 20,
+            "found_units": 0
+          }
+        ],
+        "outbox_id": 6913
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92354,
+      "request_id": "fb930b3e-29d0-479f-9fc6-18db6d3fcb72",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 403,
+      "started_at": "2026-10-23 09:17:32",
+      "duration_ms": 119,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_loss",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "0",
+            "expected_stock_version": 7,
+            "scans": []
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.guard_loss",
+          "oracle_code": 20882,
+          "reason": "TRADE_OWNER_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92355,
+      "request_id": "1cd01cae-7462-4007-98cb-be530c031e49",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 403,
+      "started_at": "2026-10-23 09:17:33",
+      "duration_ms": 161,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 8,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.guard_found",
+          "oracle_code": 20882,
+          "reason": "TRADE_OWNER_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92356,
+      "request_id": "6ebaf30e-8225-4127-bb4e-075da74046d8",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:17:33",
+      "duration_ms": 141,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_operate_restored",
+        "expected_version": 4,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Current inventory restoration authority"
+      },
+      "response": {
+        "version": 5,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.guard_operate_restored",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92357,
+      "request_id": "dbdefe6b-4f1c-4697-9153-c9927c6c6dad",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:17:33",
+      "duration_ms": 438,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 8,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.guard_found",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "0",
+            "after": "20",
+            "delta": "20",
+            "event_id": 6447281,
+            "lost_units": 0,
+            "found_units": 20
+          }
+        ],
+        "outbox_id": 6914
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92358,
+      "request_id": "01df2626-e5a3-46c1-9740-be8a911dd61a",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:17:33",
+      "duration_ms": 197,
+      "request": {
+        "operation_id": "IF23.d9c359729.guard_found",
+        "revision_id": 418,
+        "reason": "Own physical loss/found acceptance",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "20",
+            "expected_stock_version": 8,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890104"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890069"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890055"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890048"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890154"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890214"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890011"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890235"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890168"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890073"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890223"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890177"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890059"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890058"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890209"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890145"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890097"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890090"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "290014456299810890065"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "operation_id": "IF23.d9c359729.guard_found",
+        "revision_id": 418,
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "base_uom": "EA",
+            "before": "0",
+            "after": "20",
+            "delta": "20",
+            "event_id": 6447281,
+            "lost_units": 0,
+            "found_units": 20
+          }
+        ],
+        "outbox_id": 6914
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92360,
+      "request_id": "62025377-b9d4-441c-85d6-ae3ecae9c877",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/revisions",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:17:34",
+      "duration_ms": 82,
+      "request": {
+        "warehouse_id": 222385707
+      },
+      "response": {
+        "revision_id": 420,
+        "warehouse_id": 222385707
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92361,
+      "request_id": "c88fed7b-2ed9-483e-a23e-b715eb04c062",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 422,
+      "started_at": "2026-10-23 09:17:35",
+      "duration_ms": 103,
+      "request": {
+        "operation_id": "IF23.d9c359729.shipped_after_apply",
+        "revision_id": 420,
+        "reason": "Do not restore shipped stock as inventory found",
+        "counts": [
+          {
+            "uid": "690000000707411744",
+            "cell": "T3Rbcfdabb6",
+            "article": "TC03BCFDABB6",
+            "unit": "EA",
+            "quantity": "10",
+            "expected_stock_version": 4,
+            "scans": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0006"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0005"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0004"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0007"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0008"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0003"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0010"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0002"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0009"
+              },
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO",
+                "code": "29031707411740bcf0001"
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "COMMAND_INVALID",
+          "message": "Scanned unit is no longer present in the counted pallet"
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92362,
+      "request_id": "59b6daa2-c72e-4b77-a25d-6f8b5efa2791",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/418/lots",
+      "query": "cell=ALS303760e2f0",
+      "status": 200,
+      "started_at": "2026-10-23 09:17:35",
+      "duration_ms": 69,
+      "request": null,
+      "response": {
+        "revision_id": 418,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 9,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "lost_codes": []
+          }
+        ]
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92363,
+      "request_id": "6b948dad-3ad0-4352-a76d-24e251c8ea8e",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "query": null,
+      "status": 409,
+      "started_at": "2026-10-23 09:17:36",
+      "duration_ms": 207,
+      "request": {
+        "operation_id": "IF23.d9c359729.uncaptured.after",
+        "revision_id": 418,
+        "reason": "Preserve rejection of uncaptured marked increase after apply",
+        "counts": [
+          {
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "cell": "ALS303760e2f0",
+            "article": "TC03089DDB36",
+            "unit": "EA",
+            "quantity": "21",
+            "expected_stock_version": 9,
+            "unit_keys": [
+              "139ed9872f3702cef8e5fd56061dcb9bc4649f8b7730c54928579ba7f2aa769b",
+              "13d715c8504d6fdb175502e01e6665ba8a6a91e23da2d20d9b463c2e57871952",
+              "1490533c256eae0eca4a375a42cfdcf59d964eb82db39f4beede8864f1793941",
+              "163120170af1ef217dd5153062c19c6de448b6fe27e02af095db70afdcebc476",
+              "1660509da020d5532f8c53e430ffee8ee212bc61f93e87ccb2511ecffdfb23a9",
+              "16d2abcc0291165d9b862f035336845c2b0cc70c719a14e574a78703383d0499",
+              "16e7b5af885c5835aaa8affb3a50df2fb11ef1dd58f3616b48f64d00194a151a",
+              "17dd325b1f50abde9f2cb99f1f7392ec8359b21899e5cf2853bbd77677b479a9",
+              "192b84f87d2b11d40a677ad52aea74fdd751e7e65684f5a45fba21e427a655a5",
+              "1c2e5e9dab7d706dea148b6ccee2f71ce9c77edf2727468fd46461a92ad8172e",
+              "1cf6ef3816b310e73e12c6bf729278c4863ce3016fcda97f3dbf97c13f741dfc",
+              "1e0a5fb6e3d644f8c406b1bb0be088c625b9f1ccd5a47e643a8a08fefe10eb70",
+              "1e28078291abf74c6a8755b017afce9a14d08d3503250f2d8a6ffe3ff3043457",
+              "1e3f7fe6af9f398a261896d5373ca91b334d1fd6df89971dc3290baea5fad93d",
+              "1e8709cd7441aede2eb7f817b140e51197c718f9812d6e9fedbf221b6b69da52",
+              "23be7a3d17fd4c6d099659a1266e92f36ddf7f62170075bc7c191bebc08c5998",
+              "241bb4f4af6e66fc5ccc80e362c108a654eb4fedf5b685504d765360e88b2e12",
+              "248542352d102b4bd817cba8be1fe3fb47bffc549cba9464ffff6fe8f1464b50",
+              "24e56e4a38fa9976b9b814e0f3c7f0441ce70a53f1914bdae38e5745449ae698",
+              "276e13dc51823e404f52a3029b668418a557b78bee87ee9ba3b5e5de4b720b27"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "IF23.d9c359729.uncaptured.after",
+          "oracle_code": 20884,
+          "reason": "MARKED_INVENTORY_INCREASE_REQUIRES_CAPTURED_UNITS",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    },
+    {
+      "api_call_id": 92385,
+      "request_id": "1e63005b-fef6-4d24-b689-72bef5de08e3",
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "query": null,
+      "status": 200,
+      "started_at": "2026-10-23 09:18:56",
+      "duration_ms": 125,
+      "request": {
+        "operation_id": "IF23.d9c359729.owner.retire",
+        "expected_version": 5,
+        "username": "IC47b4ff4c4244",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Finish owned inventory loss/found acceptance"
+      },
+      "response": {
+        "version": 6,
+        "owner_id": "SNS",
+        "username": "IC47b4ff4c4244",
+        "warehouse_id": 210564699,
+        "operation_id": "IF23.d9c359729.owner.retire",
+        "stock_changed": false,
+        "replayed": false
+      },
+      "request_truncated": 0,
+      "response_truncated": 0
+    }
+  ]
+}

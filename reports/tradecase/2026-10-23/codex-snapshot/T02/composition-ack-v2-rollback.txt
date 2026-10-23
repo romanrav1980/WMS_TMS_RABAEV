@@ -1,0 +1,3 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack_v2\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack_v2\rollback_verify.sql
+Done. Statements=8; Errors=0; AbsentCleanup=0

@@ -1,0 +1,1 @@
+{"status": "UNLOADED_CHANGED_C", "warehouse": 213059748, "trip": 33677}

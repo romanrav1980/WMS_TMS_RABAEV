@@ -1,0 +1,303 @@
+{
+  "queries": [
+    {
+      "case": "first",
+      "kind": "current",
+      "rows": 100,
+      "median_ms": 1884.17,
+      "samples": [
+        714.99,
+        564.19,
+        1884.17,
+        3676.4
+      ]
+    },
+    {
+      "case": "first",
+      "kind": "lateral",
+      "rows": 100,
+      "median_ms": 785.01,
+      "samples": [
+        1681.5,
+        612.56,
+        816.49,
+        785.01
+      ]
+    },
+    {
+      "case": "second",
+      "kind": "current",
+      "rows": 100,
+      "median_ms": 1839.58,
+      "samples": [
+        1069.73,
+        1960.41,
+        1839.58,
+        1777.42
+      ]
+    },
+    {
+      "case": "second",
+      "kind": "lateral",
+      "rows": 100,
+      "median_ms": 296.34,
+      "samples": [
+        297.29,
+        275.08,
+        296.34,
+        358.89
+      ]
+    },
+    {
+      "case": "own",
+      "kind": "current",
+      "rows": 0,
+      "median_ms": 1.66,
+      "samples": [
+        3.58,
+        1.63,
+        1.66,
+        1.85
+      ]
+    },
+    {
+      "case": "own",
+      "kind": "lateral",
+      "rows": 0,
+      "median_ms": 1.53,
+      "samples": [
+        42.78,
+        1.89,
+        1.23,
+        1.53
+      ]
+    }
+  ],
+  "metadata": {
+    "tables": [
+      [
+        "RRL_ADDR",
+        381,
+        "2026-10-15 01:01:14"
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        380734,
+        "2026-05-30 01:00:29"
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        394744,
+        "2026-10-11 13:10:39"
+      ]
+    ],
+    "indexes": [
+      [
+        "RRL_ADDR",
+        "BIN$UX1xZvTFS6/gYw8CAAo/Yg==$0",
+        "ADDR",
+        1
+      ],
+      [
+        "RRL_ADDR",
+        "BIN$UX1xZvTGS6/gYw8CAAo/Yg==$0",
+        "NAPR",
+        1
+      ],
+      [
+        "RRL_ADDR",
+        "BIN$UX1xZvTGS6/gYw8CAAo/Yg==$0",
+        "RAION",
+        2
+      ],
+      [
+        "RRL_ADDR",
+        "BIN$UX1xZvTGS6/gYw8CAAo/Yg==$0",
+        "REGION",
+        3
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTLS6/gYw8CAAo/Yg==$0",
+        "ADDR",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0",
+        "TRANSTASK_ID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0",
+        "STDATE",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0",
+        "CREATE_DATE",
+        3
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0",
+        "WARE_ID",
+        4
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0",
+        "ORD",
+        5
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTNS6/gYw8CAAo/Yg==$0",
+        "ZONE_TIME_PLAN_IN",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTNS6/gYw8CAAo/Yg==$0",
+        "ZONE_TIME_PLAN_OUT",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTOS6/gYw8CAAo/Yg==$0",
+        "ZONE",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTPS6/gYw8CAAo/Yg==$0",
+        "ID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTQS6/gYw8CAAo/Yg==$0",
+        "PALLET_UID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTRS6/gYw8CAAo/Yg==$0",
+        "ST_NUMBER",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTRS6/gYw8CAAo/Yg==$0",
+        "PALLET_NUMBER",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTSS6/gYw8CAAo/Yg==$0",
+        "STATE",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "BIN$UX1xZvTTS6/gYw8CAAo/Yg==$0",
+        "SBORSHIK",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_PAGE_KEYS_I",
+        "ST_NUMBER",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_PAGE_KEYS_I",
+        "ADDR",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_PAGE_KEYS_I",
+        "WARE_ID",
+        3
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_PAGE_KEYS_I",
+        "CONDITION",
+        4
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_PAGE_KEYS_I",
+        "PALLET_UID",
+        5
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_WARE_DAY_ID_I",
+        "WARE_ID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_WARE_DAY_ID_I",
+        "STDATE",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLETS",
+        "RRL_ST_WARE_DAY_ID_I",
+        "ID",
+        3
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "BIN$UX1xZvTWS6/gYw8CAAo/Yg==$0",
+        "PRIHOD_PALLET_UID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "BIN$UX1xZvTXS6/gYw8CAAo/Yg==$0",
+        "ID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0",
+        "PALLET_UID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0",
+        "ARTICUL",
+        2
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "BIN$UX1xZvTZS6/gYw8CAAo/Yg==$0",
+        "WARE_ID",
+        1
+      ],
+      [
+        "RRL_SBORKA_PALLET_ROWS",
+        "RRL_SB_PAL_ROWS_I_PROD_BATCH",
+        "PROD_BATCH_ID",
+        1
+      ]
+    ]
+  },
+  "plans": {
+    "first.current": "Plan hash value: 1313131030\n \n-----------------------------------------------------------------------------\n| Id  | Operation                          | Name                           |\n-----------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                   |                                |\n|   1 |  SORT ORDER BY                     |                                |\n|   2 |   SORT GROUP BY                    |                                |\n|   3 |    NESTED LOOPS                    |                                |\n|   4 |     NESTED LOOPS                   |                                |\n|   5 |      NESTED LOOPS OUTER            |                                |\n|*  6 |       HASH JOIN                    |                                |\n|*  7 |        VIEW                        |                                |\n|*  8 |         COUNT STOPKEY              |                                |\n|   9 |          VIEW                      |                                |\n|* 10 |           SORT ORDER BY STOPKEY    |                                |\n|* 11 |            HASH JOIN RIGHT OUTER   |                                |\n|  12 |             TABLE ACCESS FULL      | RRL_ADDR                       |\n|  13 |             VIEW                   |                                |\n|  14 |              HASH GROUP BY         |                                |\n|* 15 |               HASH JOIN SEMI       |                                |\n|* 16 |                TABLE ACCESS FULL   | RRL_SBORKA_PALLETS             |\n|  17 |                INDEX FAST FULL SCAN| BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|* 18 |        TABLE ACCESS FULL           | RRL_SBORKA_PALLETS             |\n|  19 |       TABLE ACCESS BY INDEX ROWID  | RRL_ADDR                       |\n|* 20 |        INDEX UNIQUE SCAN           | BIN$UX1xZvTFS6/gYw8CAAo/Yg==$0 |\n|* 21 |      INDEX RANGE SCAN              | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  22 |     TABLE ACCESS BY INDEX ROWID    | RRL_SBORKA_PALLET_ROWS         |\n-----------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   6 - access(SYS_OP_MAP_NONNULL(\"P\".\"ST_NUMBER\")=SYS_OP_MAP_NONNULL(\"fr\n              om$_subquery$_002\".\"ST_NUMBER\") AND \n              SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery$_002\".\n              \"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\"))\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  18 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  20 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n  21 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")",
+    "first.lateral": "Plan hash value: 2319030781\n \n---------------------------------------------------------------------------------------\n| Id  | Operation                                    | Name                           |\n---------------------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                             |                                |\n|   1 |  SORT ORDER BY                               |                                |\n|   2 |   SORT GROUP BY                              |                                |\n|   3 |    NESTED LOOPS                              |                                |\n|   4 |     NESTED LOOPS                             |                                |\n|*  5 |      HASH JOIN OUTER                         |                                |\n|   6 |       NESTED LOOPS                           |                                |\n|*  7 |        VIEW                                  |                                |\n|*  8 |         COUNT STOPKEY                        |                                |\n|   9 |          VIEW                                |                                |\n|* 10 |           SORT ORDER BY STOPKEY              |                                |\n|* 11 |            HASH JOIN RIGHT OUTER             |                                |\n|  12 |             TABLE ACCESS FULL                | RRL_ADDR                       |\n|  13 |             VIEW                             |                                |\n|  14 |              HASH GROUP BY                   |                                |\n|* 15 |               HASH JOIN SEMI                 |                                |\n|* 16 |                TABLE ACCESS FULL             | RRL_SBORKA_PALLETS             |\n|  17 |                INDEX FAST FULL SCAN          | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  18 |        VIEW                                  | VW_LAT_FB77062C                |\n|  19 |         UNION-ALL                            |                                |\n|* 20 |          TABLE ACCESS BY INDEX ROWID BATCHED | RRL_SBORKA_PALLETS             |\n|* 21 |           INDEX RANGE SCAN                   | RRL_ST_PAGE_KEYS_I             |\n|* 22 |          FILTER                              |                                |\n|* 23 |           TABLE ACCESS BY INDEX ROWID BATCHED| RRL_SBORKA_PALLETS             |\n|* 24 |            INDEX RANGE SCAN                  | RRL_ST_PAGE_KEYS_I             |\n|  25 |       TABLE ACCESS FULL                      | RRL_ADDR                       |\n|* 26 |      INDEX RANGE SCAN                        | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  27 |     TABLE ACCESS BY INDEX ROWID              | RRL_SBORKA_PALLET_ROWS         |\n---------------------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   5 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  20 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  21 - access(\"P\".\"ST_NUMBER\"=\"from$_subquery$_002\".\"ST_NUMBER\")\n       filter(SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery\n              $_002\".\"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\") AND \"P\".\"CONDITION\"<>2)\n  22 - filter(\"from$_subquery$_002\".\"ST_NUMBER\" IS NULL)\n  23 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  24 - access(\"P\".\"ST_NUMBER\" IS NULL)\n       filter(SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery\n              $_002\".\"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\") AND \"P\".\"CONDITION\"<>2)\n  26 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")",
+    "second.current": "Plan hash value: 1313131030\n \n-----------------------------------------------------------------------------\n| Id  | Operation                          | Name                           |\n-----------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                   |                                |\n|   1 |  SORT ORDER BY                     |                                |\n|   2 |   SORT GROUP BY                    |                                |\n|   3 |    NESTED LOOPS                    |                                |\n|   4 |     NESTED LOOPS                   |                                |\n|   5 |      NESTED LOOPS OUTER            |                                |\n|*  6 |       HASH JOIN                    |                                |\n|*  7 |        VIEW                        |                                |\n|*  8 |         COUNT STOPKEY              |                                |\n|   9 |          VIEW                      |                                |\n|* 10 |           SORT ORDER BY STOPKEY    |                                |\n|* 11 |            HASH JOIN RIGHT OUTER   |                                |\n|  12 |             TABLE ACCESS FULL      | RRL_ADDR                       |\n|  13 |             VIEW                   |                                |\n|  14 |              HASH GROUP BY         |                                |\n|* 15 |               HASH JOIN SEMI       |                                |\n|* 16 |                TABLE ACCESS FULL   | RRL_SBORKA_PALLETS             |\n|  17 |                INDEX FAST FULL SCAN| BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|* 18 |        TABLE ACCESS FULL           | RRL_SBORKA_PALLETS             |\n|  19 |       TABLE ACCESS BY INDEX ROWID  | RRL_ADDR                       |\n|* 20 |        INDEX UNIQUE SCAN           | BIN$UX1xZvTFS6/gYw8CAAo/Yg==$0 |\n|* 21 |      INDEX RANGE SCAN              | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  22 |     TABLE ACCESS BY INDEX ROWID    | RRL_SBORKA_PALLET_ROWS         |\n-----------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   6 - access(SYS_OP_MAP_NONNULL(\"P\".\"ST_NUMBER\")=SYS_OP_MAP_NONNULL(\"fr\n              om$_subquery$_002\".\"ST_NUMBER\") AND \n              SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery$_002\".\n              \"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\"))\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  18 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  20 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n  21 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")",
+    "second.lateral": "Plan hash value: 2319030781\n \n---------------------------------------------------------------------------------------\n| Id  | Operation                                    | Name                           |\n---------------------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                             |                                |\n|   1 |  SORT ORDER BY                               |                                |\n|   2 |   SORT GROUP BY                              |                                |\n|   3 |    NESTED LOOPS                              |                                |\n|   4 |     NESTED LOOPS                             |                                |\n|*  5 |      HASH JOIN OUTER                         |                                |\n|   6 |       NESTED LOOPS                           |                                |\n|*  7 |        VIEW                                  |                                |\n|*  8 |         COUNT STOPKEY                        |                                |\n|   9 |          VIEW                                |                                |\n|* 10 |           SORT ORDER BY STOPKEY              |                                |\n|* 11 |            HASH JOIN RIGHT OUTER             |                                |\n|  12 |             TABLE ACCESS FULL                | RRL_ADDR                       |\n|  13 |             VIEW                             |                                |\n|  14 |              HASH GROUP BY                   |                                |\n|* 15 |               HASH JOIN SEMI                 |                                |\n|* 16 |                TABLE ACCESS FULL             | RRL_SBORKA_PALLETS             |\n|  17 |                INDEX FAST FULL SCAN          | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  18 |        VIEW                                  | VW_LAT_FB77062C                |\n|  19 |         UNION-ALL                            |                                |\n|* 20 |          TABLE ACCESS BY INDEX ROWID BATCHED | RRL_SBORKA_PALLETS             |\n|* 21 |           INDEX RANGE SCAN                   | RRL_ST_PAGE_KEYS_I             |\n|* 22 |          FILTER                              |                                |\n|* 23 |           TABLE ACCESS BY INDEX ROWID BATCHED| RRL_SBORKA_PALLETS             |\n|* 24 |            INDEX RANGE SCAN                  | RRL_ST_PAGE_KEYS_I             |\n|  25 |       TABLE ACCESS FULL                      | RRL_ADDR                       |\n|* 26 |      INDEX RANGE SCAN                        | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  27 |     TABLE ACCESS BY INDEX ROWID              | RRL_SBORKA_PALLET_ROWS         |\n---------------------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   5 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"CONDITION\"<>2)\n  20 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  21 - access(\"P\".\"ST_NUMBER\"=\"from$_subquery$_002\".\"ST_NUMBER\")\n       filter(SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery\n              $_002\".\"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\") AND \"P\".\"CONDITION\"<>2)\n  22 - filter(\"from$_subquery$_002\".\"ST_NUMBER\" IS NULL)\n  23 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  24 - access(\"P\".\"ST_NUMBER\" IS NULL)\n       filter(SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery\n              $_002\".\"ADDR\") AND SYS_OP_MAP_NONNULL(\"P\".\"WARE_ID\")=SYS_OP_MAP_NONNULL(\"from$_\n              subquery$_002\".\"WARE_ID\") AND \"P\".\"CONDITION\"<>2)\n  26 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")",
+    "own.current": "Plan hash value: 2581156339\n \n--------------------------------------------------------------------------------------------\n| Id  | Operation                                         | Name                           |\n--------------------------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                                  |                                |\n|   1 |  SORT ORDER BY                                    |                                |\n|   2 |   SORT GROUP BY                                   |                                |\n|   3 |    NESTED LOOPS                                   |                                |\n|   4 |     NESTED LOOPS                                  |                                |\n|   5 |      NESTED LOOPS OUTER                           |                                |\n|*  6 |       HASH JOIN                                   |                                |\n|*  7 |        VIEW                                       |                                |\n|*  8 |         COUNT STOPKEY                             |                                |\n|   9 |          VIEW                                     |                                |\n|* 10 |           SORT ORDER BY STOPKEY                   |                                |\n|* 11 |            HASH JOIN RIGHT OUTER                  |                                |\n|  12 |             TABLE ACCESS FULL                     | RRL_ADDR                       |\n|  13 |             VIEW                                  |                                |\n|  14 |              HASH GROUP BY                        |                                |\n|* 15 |               HASH JOIN SEMI                      |                                |\n|* 16 |                TABLE ACCESS BY INDEX ROWID BATCHED| RRL_SBORKA_PALLETS             |\n|* 17 |                 INDEX RANGE SCAN                  | BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0 |\n|  18 |                INDEX FAST FULL SCAN               | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|* 19 |        TABLE ACCESS BY INDEX ROWID BATCHED        | RRL_SBORKA_PALLETS             |\n|* 20 |         INDEX RANGE SCAN                          | BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0 |\n|  21 |       TABLE ACCESS BY INDEX ROWID                 | RRL_ADDR                       |\n|* 22 |        INDEX UNIQUE SCAN                          | BIN$UX1xZvTFS6/gYw8CAAo/Yg==$0 |\n|* 23 |      INDEX RANGE SCAN                             | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  24 |     TABLE ACCESS BY INDEX ROWID                   | RRL_SBORKA_PALLET_ROWS         |\n--------------------------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   6 - access(SYS_OP_MAP_NONNULL(\"P\".\"ST_NUMBER\")=SYS_OP_MAP_NONNULL(\"from$_subquery\n              $_002\".\"ST_NUMBER\") AND SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_sub\n              query$_002\".\"ADDR\") AND \"P\".\"WARE_ID\"=\"from$_subquery$_002\".\"WARE_ID\")\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"CONDITION\"<>2)\n  17 - access(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"WARE_ID\"=:WID0)\n       filter(\"P\".\"WARE_ID\"=:WID0)\n  19 - filter(\"P\".\"CONDITION\"<>2)\n  20 - access(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"WARE_ID\"=:WID0)\n       filter(\"P\".\"WARE_ID\"=:WID0)\n  22 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n  23 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")",
+    "own.lateral": "Plan hash value: 2279929160\n \n--------------------------------------------------------------------------------------------\n| Id  | Operation                                         | Name                           |\n--------------------------------------------------------------------------------------------\n|   0 | SELECT STATEMENT                                  |                                |\n|   1 |  SORT ORDER BY                                    |                                |\n|   2 |   SORT GROUP BY                                   |                                |\n|   3 |    NESTED LOOPS                                   |                                |\n|   4 |     NESTED LOOPS                                  |                                |\n|*  5 |      HASH JOIN OUTER                              |                                |\n|   6 |       NESTED LOOPS                                |                                |\n|*  7 |        VIEW                                       |                                |\n|*  8 |         COUNT STOPKEY                             |                                |\n|   9 |          VIEW                                     |                                |\n|* 10 |           SORT ORDER BY STOPKEY                   |                                |\n|* 11 |            HASH JOIN RIGHT OUTER                  |                                |\n|  12 |             TABLE ACCESS FULL                     | RRL_ADDR                       |\n|  13 |             VIEW                                  |                                |\n|  14 |              HASH GROUP BY                        |                                |\n|* 15 |               HASH JOIN SEMI                      |                                |\n|* 16 |                TABLE ACCESS BY INDEX ROWID BATCHED| RRL_SBORKA_PALLETS             |\n|* 17 |                 INDEX RANGE SCAN                  | BIN$UX1xZvTMS6/gYw8CAAo/Yg==$0 |\n|  18 |                INDEX FAST FULL SCAN               | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  19 |        VIEW                                       | VW_LAT_FB77062C                |\n|  20 |         UNION-ALL                                 |                                |\n|* 21 |          TABLE ACCESS BY INDEX ROWID BATCHED      | RRL_SBORKA_PALLETS             |\n|* 22 |           INDEX RANGE SCAN                        | RRL_ST_PAGE_KEYS_I             |\n|* 23 |          FILTER                                   |                                |\n|* 24 |           TABLE ACCESS BY INDEX ROWID BATCHED     | RRL_SBORKA_PALLETS             |\n|* 25 |            INDEX RANGE SCAN                       | RRL_ST_PAGE_KEYS_I             |\n|  26 |       TABLE ACCESS FULL                           | RRL_ADDR                       |\n|* 27 |      INDEX RANGE SCAN                             | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |\n|  28 |     TABLE ACCESS BY INDEX ROWID                   | RRL_SBORKA_PALLET_ROWS         |\n--------------------------------------------------------------------------------------------\n \nPredicate Information (identified by operation id):\n---------------------------------------------------\n \n   5 - access(\"A\".\"ADDR\"(+)=\"P\".\"ADDR\")\n   7 - filter(\"PAGE_ROW_NUMBER\">:PAGE_OFFSET)\n   8 - filter(ROWNUM<=:PAGE_END)\n  10 - filter(ROWNUM<=:PAGE_END)\n  11 - access(\"PAGE_ADDR\".\"ADDR\"(+)=\"H\".\"ADDR\")\n  15 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")\n  16 - filter(\"P\".\"CONDITION\"<>2)\n  17 - access(\"P\".\"TRANSTASK_ID\" IS NULL AND \"P\".\"WARE_ID\"=:WID0)\n       filter(\"P\".\"WARE_ID\"=:WID0)\n  21 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  22 - access(\"P\".\"ST_NUMBER\"=\"from$_subquery$_002\".\"ST_NUMBER\" AND \n              \"P\".\"WARE_ID\"=:WID0)\n       filter(\"P\".\"WARE_ID\"=:WID0 AND \"P\".\"WARE_ID\"=\"from$_subquery$_002\".\"WARE_ID\" \n              AND SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery$_002\".\"ADDR\") \n              AND \"P\".\"CONDITION\"<>2)\n  23 - filter(\"from$_subquery$_002\".\"ST_NUMBER\" IS NULL)\n  24 - filter(\"P\".\"TRANSTASK_ID\" IS NULL)\n  25 - access(\"P\".\"ST_NUMBER\" IS NULL AND \"P\".\"WARE_ID\"=:WID0)\n       filter(\"P\".\"WARE_ID\"=:WID0 AND \"P\".\"WARE_ID\"=\"from$_subquery$_002\".\"WARE_ID\" \n              AND SYS_OP_MAP_NONNULL(\"P\".\"ADDR\")=SYS_OP_MAP_NONNULL(\"from$_subquery$_002\".\"ADDR\") \n              AND \"P\".\"CONDITION\"<>2)\n  27 - access(\"R\".\"PALLET_UID\"=\"P\".\"PALLET_UID\")"
+  }
+}

@@ -1,0 +1,22 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\002_supply_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\003_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\004_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\recompile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_inbound\verify.sql
+python : ERROR verify.sql:1: ORA-20999: ORA-20999: YARD_SOURCE_MISMATCH
+строка:2 знак:44
++ ... 1521/orcl'; python scripts/stock_posting_apply.py db/migrations/2026- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR verify.sq...SOURCE_MISMATCH:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ORA-06512: на  line 6
+https://docs.oracle.com/error-help/db/ora-20999/
+SQL: declare s clob;n number;begin
+OracleApply stopped with ORA-20999: ORA-20999: YARD_SOURCE_MISMATCH
+ORA-06512: на  line 6
+https://docs.oracle.com/error-help/db/ora-20999/
+No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.

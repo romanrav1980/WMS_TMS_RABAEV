@@ -1,0 +1,34 @@
+{
+  "status": "FAIL",
+  "posts": [
+    {
+      "body": {
+        "transport": "VC23B213059748"
+      },
+      "status": 200,
+      "response": {
+        "task_id": 33677
+      }
+    }
+  ],
+  "checks": [],
+  "errors": [],
+  "readback403": "UI fault injection only; current native authority unchanged",
+  "pending": {
+    "trip_id": 33677,
+    "body": {
+      "transport": "VC23B213059748"
+    },
+    "before": {
+      "transport": "NS23V213059748",
+      "voditel_id": 10027,
+      "dock": "NS23D213059748",
+      "transtype": "10",
+      "shipment_date": "2026-10-24T00:00:00",
+      "shipment_time": "2026-10-25T00:00:00",
+      "primechanie": "TRADECASE isolated QA1155, no real dispatch"
+    },
+    "saved_at": "2026-10-23T14:57:45.735Z",
+    "unknown": true
+  }
+}

@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\before_access_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\rollback_verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

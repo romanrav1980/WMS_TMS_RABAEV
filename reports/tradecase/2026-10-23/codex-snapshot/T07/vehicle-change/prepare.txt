@@ -1,0 +1,13 @@
+python : Traceback (most recent call last):
+строка:38 знак:1
++ python tests/tradecase/live_vehicle_change.py prepare > runtime/test- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\projects\TMS\tests\tradecase\live_vehicle_change.py", line 21, in <module>
+    nested.prepare();nested.pack();nested.prepare_transport()
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\projects\TMS\tests\tradecase\live_nested_shipping.py", line 84, in prepare_transport
+    from app.oracle_gateway import OracleGateway
+ModuleNotFoundError: No module named 'app'

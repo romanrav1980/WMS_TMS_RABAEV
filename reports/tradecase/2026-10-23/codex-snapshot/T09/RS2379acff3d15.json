@@ -1,0 +1,33 @@
+{
+  "status": "FAIL",
+  "warehouse": 241712811,
+  "fixture": "Synthetic warehouse/address, actual HTTP/native depot commands",
+  "http": [
+    {
+      "method": "GET",
+      "path": "/api/transport/warehouse-depots/241712811",
+      "status": 403,
+      "elapsed_ms": 228.03,
+      "response": {
+        "detail": "Permission required: warehouse_settings_edit"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/warehouse-depots",
+      "status": 200,
+      "elapsed_ms": 121.11,
+      "response": {
+        "operation_id": "RS2379acff3d15.clear",
+        "warehouse_id": 241712811,
+        "version": 1,
+        "depot_address": null,
+        "reason": "Clear synthetic acceptance setting",
+        "actor": "admin",
+        "stock_changed": false,
+        "physical_site_verified": false
+      }
+    }
+  ],
+  "qa_retired": true
+}

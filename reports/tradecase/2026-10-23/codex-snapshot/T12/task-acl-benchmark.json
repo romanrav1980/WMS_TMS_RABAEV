@@ -1,0 +1,74 @@
+{
+  "scope": "Current native ACL, identical arguments, one READ ONLY transaction; no cross-request authorization cache",
+  "variants": {
+    "before": [
+      {
+        "ms": 185.22,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 227.76,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 215.26,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 223.84,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 206.12,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 236.2,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ],
+    "after": [
+      {
+        "ms": 432.26,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 199.89,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 359.82,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 201.8,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 300.49,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 217.11,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ]
+  },
+  "medians_ms": {
+    "before": 223.84,
+    "after": 217.11
+  },
+  "status": "PASS"
+}

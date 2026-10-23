@@ -1,0 +1,151 @@
+{
+  "status": "PASS",
+  "provider": "LIVE ROAD PROVIDER",
+  "checks": [
+    "Actual native snapshot, atomic cache publication and exact replay without recomputation",
+    "Stale source rejected; no extra provider call; native read returns the two directed legs",
+    "Changed-body replay rejected; one durable receipt"
+  ],
+  "timings": [
+    6709.72,
+    179.75,
+    113.6,
+    120.91
+  ],
+  "http": [
+    {
+      "status": 200,
+      "result": {
+        "operation_id": "RD23fb7b6afe43.refresh",
+        "trip_id": 33678,
+        "updated_legs": 2,
+        "provider": "osrm",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "stock_changed": false,
+        "operational_admission": false
+      }
+    },
+    {
+      "status": 200,
+      "result": {
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "operation_id": "RD23fb7b6afe43.refresh",
+        "operational_admission": false,
+        "provider": "osrm",
+        "stock_changed": false,
+        "trip_id": 33678,
+        "updated_legs": 2
+      }
+    },
+    {
+      "status": 409,
+      "result": {
+        "detail": {
+          "code": "ROAD_REFRESH_SOURCE_CHANGED",
+          "message": "Рейс или дорожные данные изменились. Перечитайте маршрут"
+        }
+      }
+    },
+    {
+      "status": 409,
+      "result": {
+        "detail": {
+          "code": "ROAD_REFRESH_OPERATION_CONFLICT",
+          "message": "Номер операции уже связан с другим запросом"
+        }
+      }
+    }
+  ],
+  "road_result": {
+    "stops": [
+      "RD23fb7b6afe43.STORE"
+    ],
+    "legs": [
+      {
+        "from_address": "RD23fb7b6afe43.DEPOT",
+        "to_address": "RD23fb7b6afe43.STORE",
+        "duration_min": "5.98",
+        "distance_km": "3.65",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 12:39:14",
+        "unknown_reason": null
+      },
+      {
+        "from_address": "RD23fb7b6afe43.STORE",
+        "to_address": "RD23fb7b6afe43.DEPOT",
+        "duration_min": "4.4",
+        "distance_km": "2.73",
+        "duration_basis": "ROAD_PROFILE_ESTIMATE",
+        "provider": "osrm",
+        "legacy_updated_at": "2026-10-23 12:39:14",
+        "unknown_reason": null
+      }
+    ],
+    "source_issues": [],
+    "unknown_leg_count": 0,
+    "status": "ROAD_PROFILE_ESTIMATE_AVAILABLE",
+    "drive_min": 6,
+    "drive_back_min": 5,
+    "time_window_admission": false,
+    "physical_capacity_verified": false,
+    "operational_admission": false,
+    "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+    "warehouse_origin": {
+      "warehouse_id": 244160825,
+      "version": 1,
+      "depot_address": "RD23fb7b6afe43.DEPOT",
+      "latitude": 56.8389,
+      "longitude": 60.5975,
+      "configured": true,
+      "status": "CONFIGURED_REFERENCE",
+      "physical_site_verified": false
+    },
+    "trip_id": 33678,
+    "depot_address": "RD23fb7b6afe43.DEPOT",
+    "source_hash": "783973df5205e9e9e6501931b038c63ad61c3f46438c7515ee5744f338be6fae",
+    "route_input_version": 0,
+    "maximum_cache_age_hours": 24,
+    "consistent_snapshot": true,
+    "stock_changed": false,
+    "road_snapshot_signature": "8f2d720b745b1b8aacc33c8f823837c55d0835caecbffc37427640672162ac56"
+  },
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6841,
+      39,
+      "TRANSACTION"
+    ],
+    [
+      6840,
+      30,
+      "TRANSACTION"
+    ]
+  ],
+  "trip": 33678,
+  "warehouse": 244160825,
+  "tag": "RD23fb7b6afe43"
+}

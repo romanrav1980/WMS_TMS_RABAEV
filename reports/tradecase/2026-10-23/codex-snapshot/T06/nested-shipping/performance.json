@@ -1,0 +1,62 @@
+{
+  "main_http_calls": 113,
+  "subprocess_http_calls": 19,
+  "main_max_ms": 2236.32,
+  "subprocess_max_ms": 444.8,
+  "slow_sql": [
+    [
+      6721,
+      766,
+      "/api/outgoing-quality/FP21.ST.222385707",
+      "Current warehouse QC status access"
+    ],
+    [
+      6718,
+      688,
+      "/api/picking/plans",
+      "Idempotent original pick plan creation"
+    ],
+    [
+      6725,
+      270,
+      "/api/transport/driver-bindings/10026",
+      "Explicit authenticated driver binding"
+    ],
+    [
+      6723,
+      106,
+      null,
+      "Owned nested shipping demand metadata"
+    ],
+    [
+      6720,
+      58,
+      "/api/outgoing-quality/NS23.57bdf1ab2.PALLET",
+      "Current warehouse QC status access"
+    ],
+    [
+      6726,
+      57,
+      "/api/tradecase/warehouses/222385707/trips/R1.641560/transport-document",
+      "TRADECASE transport TRANSPORT_RESULT"
+    ],
+    [
+      6724,
+      42,
+      "/api/inventory/pallet-floor-types",
+      "Read current scoped full-pallet normative type"
+    ],
+    [
+      6722,
+      33,
+      "/api/inventory/pallet-floor-types",
+      "Read current scoped full-pallet normative type"
+    ],
+    [
+      6719,
+      8,
+      "/api/resources/sessions/92/logout",
+      "End resource shift after physical step or handover"
+    ]
+  ]
+}

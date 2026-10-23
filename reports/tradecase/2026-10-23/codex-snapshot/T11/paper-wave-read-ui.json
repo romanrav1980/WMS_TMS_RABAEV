@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "replenishmentBindingHidden": true,
+      "realFullPickingShown": true,
+      "pendingFixtureRetained": true,
+      "overflow": 0
+    },
+    {
+      "width": 1440,
+      "replenishmentBindingHidden": true,
+      "realFullPickingShown": true,
+      "pendingFixtureRetained": true,
+      "overflow": 0
+    }
+  ],
+  "posts": 0,
+  "queueReads": 0,
+  "errors": [],
+  "fixtures": [
+    "pending full-pallet browser record; never sent"
+  ],
+  "status": "PASS"
+}

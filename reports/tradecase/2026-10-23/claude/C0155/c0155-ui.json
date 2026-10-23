@@ -111,8 +111,8 @@
   }
  },
  "timings": {
-  "queue_1440": 1386,
-  "queue_390": 1848
+  "queue_1440": 1784,
+  "queue_390": 1300
  },
  "status": "PASS"
 }

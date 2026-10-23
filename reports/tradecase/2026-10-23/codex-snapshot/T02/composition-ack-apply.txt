@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack\002_composition_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_ack\verify.sql
+ERROR verify.sql:1: ORA-20999: ORA-20999: INVALID_OBJECTS
+ORA-06512: на  line 19
+https://docs.oracle.com/error-help/db/ora-20999/
+SQL: declare s clob;n number;
+OracleApply stopped with ORA-20999: ORA-20999: INVALID_OBJECTS
+ORA-06512: на  line 19
+https://docs.oracle.com/error-help/db/ora-20999/
+No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.

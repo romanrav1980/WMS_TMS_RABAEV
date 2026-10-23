@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "acceptedLine": "1\tTC03EF611DBE\tTRADECASE QA ef611dbe\t10\t10\t0\tУкажите укладку\tВыбрать",
+      "pageFits": true
+    },
+    {
+      "width": 390,
+      "acceptedLine": "1\tTC03EF611DBE\tTRADECASE QA ef611dbe\t10\t10\t0\tУкажите укладку\tВыбрать",
+      "pageFits": true
+    }
+  ],
+  "writes": [],
+  "errors": []
+}

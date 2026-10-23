@@ -1,0 +1,164 @@
+{
+  "status": "PASS",
+  "comparisons": [
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100
+      },
+      "rows": 100,
+      "sha": "de01f4eb5cd601d4c8b2dfa6d6f2ded6abb136e2d87a8106e3b65d54dfa264a1",
+      "median_ms": {
+        "old": 527.685,
+        "new": 530.485
+      },
+      "samples_ms": {
+        "old": [
+          1312.82,
+          478.4,
+          576.97,
+          449.92
+        ],
+        "new": [
+          1319.84,
+          604.08,
+          365.3,
+          456.89
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 100
+      },
+      "rows": 100,
+      "sha": "ff037a9e5eeab09eeb089231c2e5ec69ef4b7462b094a28a9b07d81f8794d377",
+      "median_ms": {
+        "old": 1140.98,
+        "new": 1313.005
+      },
+      "samples_ms": {
+        "old": [
+          1487.27,
+          2233.29,
+          692.87,
+          794.69
+        ],
+        "new": [
+          1477.69,
+          1456.17,
+          818.33,
+          1169.84
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 3,
+        "page_size": 20
+      },
+      "rows": 20,
+      "sha": "ffab4a6bd60bdcb1397cdc0668ba9315e9defa340da784e7ca7aa97dc911e757",
+      "median_ms": {
+        "old": 1274.72,
+        "new": 1614.505
+      },
+      "samples_ms": {
+        "old": [
+          1575.88,
+          1764.45,
+          973.56,
+          944.35
+        ],
+        "new": [
+          1587.42,
+          2081.73,
+          1641.59,
+          1147.95
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 100,
+      "sha": "cd24accf4a5f75e143b7ee5612e7a5aa827f5997394039a7c94de85d0ff6774c",
+      "median_ms": {
+        "old": 397.24,
+        "new": 4789.145
+      },
+      "samples_ms": {
+        "old": [
+          453.28,
+          341.2,
+          331.99,
+          494.61
+        ],
+        "new": [
+          4606.08,
+          6107.68,
+          4737.98,
+          4840.31
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 20,
+        "unassigned_only": false
+      },
+      "rows": 20,
+      "sha": "316bac63da33c5cfdec12272afc5e31a09c6a581c5dff36e0e90ed63263c3ee9",
+      "median_ms": {
+        "old": 3661.45,
+        "new": 2261.7
+      },
+      "samples_ms": {
+        "old": [
+          874.19,
+          965.04,
+          6357.86,
+          6626.2
+        ],
+        "new": [
+          3188.09,
+          757.3,
+          1335.31,
+          4957.97
+        ]
+      }
+    }
+  ],
+  "fixture_checks": [
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100
+      },
+      "rows": 5,
+      "match": true
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 2
+      },
+      "rows": 2,
+      "match": true
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 2,
+      "match": true
+    }
+  ]
+}

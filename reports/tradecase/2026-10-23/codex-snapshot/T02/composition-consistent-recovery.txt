@@ -1,0 +1,2 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read\before_body.sql
+Done. Statements=1; Errors=0; AbsentCleanup=0

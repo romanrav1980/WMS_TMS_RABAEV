@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\before_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\rollback_verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

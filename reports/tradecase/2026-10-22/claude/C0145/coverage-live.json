@@ -1,0 +1,170 @@
+{
+ "215590763/R1.1155": {
+  "status": "OK",
+  "ms": 492,
+  "result": {
+   "warehouse_id": 215590763,
+   "trip_id": "R1.1155",
+   "trip_version": 1,
+   "planned_departure_at": "2026-11-01T10:00:00+03:00",
+   "native_task_id": 33660,
+   "binding_trip_version": 1,
+   "lines": [
+    {
+     "order_id": "AFTER",
+     "line_id": "1",
+     "order_kind": "OUTBOUND",
+     "recipient_id": "C.AFTER",
+     "order_cancelled": false,
+     "native_error": null,
+     "sku_id": "A",
+     "source_owner_id": "SNS",
+     "mrc": "200",
+     "uom": "EA",
+     "units_per_box": 10,
+     "ordered_base": "100",
+     "native_row_id": 3672,
+     "binding_current": true,
+     "requested_base": "100",
+     "reserved_base": "0",
+     "picked_base": "100",
+     "unallocated_base": "0",
+     "loaded_base": "0",
+     "departed_base": "100",
+     "released_base": "0"
+    }
+   ],
+   "owner_scope_filtered": false,
+   "unattributed_loads": 0,
+   "quantity_unit": "BASE",
+   "route_source": "NATIVE_TRANSPORT_ROUTE_CONTEXT",
+   "route_executed": false
+  }
+ },
+ "215590763/R1.1156": {
+  "status": "OK",
+  "ms": 43,
+  "result": {
+   "warehouse_id": 215590763,
+   "trip_id": "R1.1156",
+   "trip_version": 1,
+   "planned_departure_at": "2026-11-01T10:00:00+03:00",
+   "native_task_id": 33661,
+   "binding_trip_version": 1,
+   "lines": [
+    {
+     "order_id": "TRANSIT",
+     "line_id": "1",
+     "order_kind": "OUTBOUND",
+     "recipient_id": "C.TRANSIT",
+     "order_cancelled": false,
+     "native_error": null,
+     "sku_id": "A",
+     "source_owner_id": "SNS",
+     "mrc": "200",
+     "uom": "EA",
+     "units_per_box": 10,
+     "ordered_base": "40",
+     "native_row_id": 3673,
+     "binding_current": true,
+     "requested_base": "40",
+     "reserved_base": "0",
+     "picked_base": "40",
+     "unallocated_base": "0",
+     "loaded_base": "0",
+     "departed_base": "40",
+     "released_base": "0"
+    }
+   ],
+   "owner_scope_filtered": false,
+   "unattributed_loads": 0,
+   "quantity_unit": "BASE",
+   "route_source": "NATIVE_TRANSPORT_ROUTE_CONTEXT",
+   "route_executed": false
+  }
+ },
+ "220793322/R1.1168": {
+  "status": "OK",
+  "ms": 36,
+  "result": {
+   "warehouse_id": 220793322,
+   "trip_id": "R1.1168",
+   "trip_version": 1,
+   "planned_departure_at": "2026-10-22T10:00:00+03:00",
+   "native_task_id": 33665,
+   "binding_trip_version": 1,
+   "lines": [
+    {
+     "order_id": "NB22.A.220793322.ORDER",
+     "line_id": "1",
+     "order_kind": "OUTBOUND",
+     "recipient_id": "MT22.220793322.RECIPIENT",
+     "order_cancelled": false,
+     "native_error": null,
+     "sku_id": "A",
+     "source_owner_id": "SNS",
+     "mrc": "200",
+     "uom": "EA",
+     "units_per_box": 10,
+     "ordered_base": "1",
+     "native_row_id": 3684,
+     "binding_current": true,
+     "requested_base": "1",
+     "reserved_base": "0",
+     "picked_base": "1",
+     "unallocated_base": "0",
+     "loaded_base": "0",
+     "departed_base": "1",
+     "released_base": "0"
+    }
+   ],
+   "owner_scope_filtered": false,
+   "unattributed_loads": 0,
+   "quantity_unit": "BASE",
+   "route_source": "NATIVE_TRANSPORT_ROUTE_CONTEXT",
+   "route_executed": false
+  }
+ },
+ "220639789/R1.1221": {
+  "status": "OK",
+  "ms": 27,
+  "result": {
+   "warehouse_id": 220639789,
+   "trip_id": "R1.1221",
+   "trip_version": 1,
+   "planned_departure_at": "2026-11-01T10:00:00+03:00",
+   "native_task_id": 33662,
+   "binding_trip_version": 1,
+   "lines": [
+    {
+     "order_id": "FP21.220639789.ORDER",
+     "line_id": "1",
+     "order_kind": "OUTBOUND",
+     "recipient_id": "FP21.220639789.RECIPIENT",
+     "order_cancelled": false,
+     "native_error": null,
+     "sku_id": "A",
+     "source_owner_id": "SNS",
+     "mrc": "200",
+     "uom": "EA",
+     "units_per_box": 10,
+     "ordered_base": "10",
+     "native_row_id": 3679,
+     "binding_current": true,
+     "requested_base": "10",
+     "reserved_base": "0",
+     "picked_base": "10",
+     "unallocated_base": "0",
+     "loaded_base": "0",
+     "departed_base": "10",
+     "released_base": "0"
+    }
+   ],
+   "owner_scope_filtered": false,
+   "unattributed_loads": 0,
+   "quantity_unit": "BASE",
+   "route_source": "NATIVE_TRANSPORT_ROUTE_CONTEXT",
+   "route_executed": false
+  }
+ }
+}

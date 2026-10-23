@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "warehouse": 219023232,
+  "quantitative_commands_expected": 0,
+  "fresh_slow_sql": [],
+  "result": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "SORT23.REJECT.3ae15c18ed314b02aeb609a5d7eb3b09",
+      "oracle_code": 20886,
+      "reason": "TRADE_SORT_CELL_WAREHOUSE_CONFLICT",
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false,
+      "operation_id_conflict": false
+    }
+  },
+  "stock": [
+    [
+      "690000000099475270",
+      "T3P89af0087",
+      2,
+      0,
+      6
+    ],
+    [
+      "690000000099475270",
+      "T3R89af0087",
+      0,
+      0,
+      2
+    ],
+    [
+      "690000000099475270",
+      "T3S89af0087",
+      0,
+      0,
+      4
+    ],
+    [
+      "CASELOT:01C86DBDCD7A591BE7BB3599CF23F0905684B4:1",
+      "CPT_219023232",
+      0,
+      0,
+      3
+    ],
+    [
+      "CASELOT:01C86DBDCD7A591BE7BB3599CF23F0905684B4:1",
+      "T3P89af0087",
+      2,
+      0,
+      3
+    ],
+    [
+      "CASELOT:22E23CCC28017C0F540D152E69DD88751BD87A:1",
+      "CPT_219023232",
+      0,
+      0,
+      3
+    ],
+    [
+      "CASELOT:22E23CCC28017C0F540D152E69DD88751BD87A:1",
+      "T3P89af0087",
+      2,
+      0,
+      1
+    ],
+    [
+      "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+      "CPT_219023232",
+      0,
+      0,
+      3
+    ],
+    [
+      "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+      "T3P89af0087",
+      1,
+      0,
+      1
+    ],
+    [
+      "PART:gmv36t-nqLkOcG52o-z9qaBzJEQsRgyWHNS42A0LNGY",
+      "T3R89af0087",
+      3,
+      0,
+      5
+    ]
+  ],
+  "units_unchanged": 10,
+  "limitation": "Actual native denial only; uncertain and post-commit connection errors are ASGI injected, not induced in Oracle.",
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/219023232/stock/sort",
+      "status": 409,
+      "elapsed_ms": 870.47,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "SORT23.REJECT.3ae15c18ed314b02aeb609a5d7eb3b09",
+          "oracle_code": 20886,
+          "reason": "TRADE_SORT_CELL_WAREHOUSE_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      }
+    }
+  ]
+}

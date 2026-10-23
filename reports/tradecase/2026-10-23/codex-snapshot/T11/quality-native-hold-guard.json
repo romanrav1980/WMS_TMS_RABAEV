@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "scope": "Direct native guard on own issued pallet; temporary generic hold is fully rolled back; not a new physical move",
+  "refused": "QUALITY_HOLD_ACTIVE",
+  "temporary_hold_rolled_back": true
+}

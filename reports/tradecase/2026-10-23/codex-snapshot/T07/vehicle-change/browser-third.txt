@@ -1,0 +1,13 @@
+node : locator.waitFor: Timeout 60000ms exceeded.
+строка:10 знак:1
++ node tests/tradecase/vehicle_change_live_ui.cjs > runtime/test-eviden ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (locator.waitFor...000ms exceeded.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Call log:
+[2m  - waiting for getByText('Заявки', { exact: true }).first() to be visible[22m
+
+    at C:\projects\TMS\tests\tradecase\vehicle_change_live_ui.cjs:44:69 {
+  name: 'TimeoutError'
+}

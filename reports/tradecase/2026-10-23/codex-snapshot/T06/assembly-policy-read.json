@@ -1,0 +1,28 @@
+{
+  "status": "PASS_READ_ONLY",
+  "source": [
+    {
+      "line": 74,
+      "text": "  select greatest(nvl((select max(SERIALIZED_WEIGHT_BOXES)from RRL_SKU_RECEIPT_POLICY where ARTICUL=p_article),0),\r\n"
+    },
+    {
+      "line": 75,
+      "text": "   nvl((select max(MARKING_REQUIRED)from RRL_SKU_RECEIPT_POLICY where ARTICUL=p_article),0),\r\n"
+    },
+    {
+      "line": 78,
+      "text": "  if flags!=0 then raise_application_error(-20886,'ASSEMBLY_UNMARKED_UNSERIALIZED_SKU_REQUIRED');end if;\r\n"
+    },
+    {
+      "line": 365,
+      "text": "   or d.get_array('units').get_size!=0 then raise_application_error(-20886,'ASSEMBLY_POST_SOURCE_POLICY_CONFLICT');end if;\r\n"
+    }
+  ],
+  "owned_sku_policy": [
+    1,
+    0
+  ],
+  "invalid": 0,
+  "elapsed_ms": 447.92,
+  "decision": "ASM intentionally requires unmarked unserialized EA. Do not weaken this guard or treat old RETAILCASE mixed proof as TRADECASE. Original mixed flow remains in access/knowledge work; revision27 does not specify marked ASM."
+}

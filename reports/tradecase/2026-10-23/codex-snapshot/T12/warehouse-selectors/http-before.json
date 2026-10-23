@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "cases": {
+    "all500": {
+      "rows": 367,
+      "first_ms": 743.94,
+      "warm_ms": [
+        599.93,
+        455.91,
+        586.2
+      ],
+      "warm_median_ms": 586.2,
+      "result_hash": "f639523a83e12cd44754653254f67517a1a3307ee2b06ce69e37206afc515128"
+    },
+    "default200": {
+      "rows": 200,
+      "first_ms": 400.63,
+      "warm_ms": [
+        455.29,
+        392.44,
+        329.91
+      ],
+      "warm_median_ms": 392.44,
+      "result_hash": "ba1e12c67f8c50963b57190817331e2880584965da5ba57fbb5207e5b27d00a6"
+    },
+    "small5": {
+      "rows": 5,
+      "first_ms": 277.23,
+      "warm_ms": [
+        109.77,
+        93.46,
+        93.97
+      ],
+      "warm_median_ms": 93.97,
+      "result_hash": "498a9f1ff63ece3ee14dd28dc7620b4841a7f61cba0b4afe44599c0f2c12f327"
+    },
+    "role": {
+      "rows": 5,
+      "first_ms": 126.13,
+      "warm_ms": [
+        110.23,
+        110.82,
+        157.34
+      ],
+      "warm_median_ms": 110.82,
+      "result_hash": "8a3c9a6f8f88d045133f90d7e8ad2af5541b66135be4633233e1a8e0e4e78e49"
+    },
+    "mes1": {
+      "rows": 4,
+      "first_ms": 174.61,
+      "warm_ms": [
+        75.17,
+        66.2,
+        58.07
+      ],
+      "warm_median_ms": 66.2,
+      "result_hash": "1e798e8b7afd1f0de2df7616c7c36db0405fbb490fab05c284b80e8cac8683f2"
+    },
+    "mes0": {
+      "rows": 363,
+      "first_ms": 440.21,
+      "warm_ms": [
+        596.59,
+        435.38,
+        524.95
+      ],
+      "warm_median_ms": 524.95,
+      "result_hash": "aa826470a60db20e33c1d137ef45257a022bd50eb6cf4acbc53b773ba55169c8"
+    }
+  }
+}

@@ -1,0 +1,1159 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Actual marked receipt2 and native putaway/quarantine",
+    "Controller decision and approval do not write stock off",
+    "Active case refuses release",
+    "Native write-off consumes2 exact units and releases hold",
+    "One outgoing document and exact replay"
+  ],
+  "fixture": {
+    "tag": "25cadbfc",
+    "warehouse_id": 212476763,
+    "article": "TC0325CADBFC",
+    "receive": "T3R25cadbfc",
+    "storage": "T3S25cadbfc",
+    "pick": "T3P25cadbfc",
+    "gtin": "29006340515803",
+    "pallet": "690000000340515809",
+    "actor": "TC0325cadbfc",
+    "role": "TC0325cadbfc",
+    "slow_marker": 6236
+  },
+  "site": {
+    "warehouse_id": 212476763,
+    "version": 1,
+    "replayed": false,
+    "stock_changed": false
+  },
+  "SNS": {
+    "warehouse_id": 212476763,
+    "document_id": "SNS",
+    "entity_type": "OWNER",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "Q23.25cadbfcSNS",
+    "correlation_id": "Q23.25cadbfcSNS",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-22T18:38:11.258-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6424
+  },
+  "A": {
+    "warehouse_id": 212476763,
+    "document_id": "A",
+    "entity_type": "SKU",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "Q23.25cadbfcA",
+    "correlation_id": "Q23.25cadbfcA",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-22T18:38:11.419-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6425
+  },
+  "cell.T3R25cadbfc": {
+    "cell": "T3R25cadbfc",
+    "version": 1,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.cell.T3R25cadbfc",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "cell.T3S25cadbfc": {
+    "cell": "T3S25cadbfc",
+    "version": 1,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.cell.T3S25cadbfc",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "cell.T3P25cadbfc": {
+    "cell": "T3P25cadbfc",
+    "version": 1,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.cell.T3P25cadbfc",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "supply": {
+    "status": "APPLIED",
+    "order_id": "1863105af7c8418fb71c5b7c585a5fe4",
+    "incoming_document_id": 25257,
+    "revision": 1,
+    "warehouse_id": 212476763,
+    "gateway_contract_version": 1,
+    "lines": 1,
+    "inventory_booked": false,
+    "idempotent": false
+  },
+  "receipt": {
+    "status": "RECEIVED",
+    "operation_id": "Q23.receive.25cadbfc",
+    "pallet_identifier": "690000000340515809",
+    "sscc": "690000000340515809",
+    "quantity": "2",
+    "base_quantity": "2",
+    "base_uom": "EA",
+    "sap_order_number": "Q23.25cadbfc",
+    "sap_sender": "TC03.QA.SAP",
+    "order_revision": 1,
+    "line_number": "1",
+    "material": "TC0325CADBFC",
+    "unit": "EA",
+    "supplier_batch": "Q23.25cadbfc",
+    "expiry_date": "2030-01-01",
+    "produced_date": null,
+    "warehouse_id": 212476763,
+    "physical_measurements": {
+      "gross_weight": "2",
+      "pallet_height": null,
+      "pallet_height_m": null,
+      "volume_m3": null
+    },
+    "receive_cell": "T3R25cadbfc",
+    "putaway_cell": "T3S25cadbfc",
+    "placement": {
+      "cell": "T3S25cadbfc",
+      "slot_id": null,
+      "score": "0.0",
+      "basis": "COORDINATE_DISTANCE",
+      "metric": "DISTANCE"
+    },
+    "marking_units": 2,
+    "marking_policy_version": 1,
+    "regulatory_validation": "NOT_PERFORMED",
+    "idempotent": false,
+    "task_id": 1231,
+    "outbox_id": 6426
+  },
+  "SUPPLY": {
+    "warehouse_id": 212476763,
+    "document_id": "SUPPLY",
+    "entity_type": "SUPPLY",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "Q23.25cadbfcSUPPLY",
+    "correlation_id": "Q23.25cadbfcSUPPLY",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-22T18:38:15.233-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6427
+  },
+  "bind": {
+    "supply_id": "SUPPLY",
+    "owner_id": "SNS",
+    "bound_units": 2,
+    "pallet_identifier": "690000000340515809",
+    "mark_state": "PENDING",
+    "attributes_bound": true,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.bind.25cadbfc",
+    "stock_changed": false,
+    "replayed": false,
+    "outbox_id": 6428
+  },
+  "putaway": {
+    "operation_id": "TASK.COMPLETE:1231",
+    "task_id": 1231,
+    "status": "DONE",
+    "pallet_identifier": "690000000340515809",
+    "source_pallet_identifier": "690000000340515809",
+    "cell": "T3S25cadbfc",
+    "quantity": "2",
+    "base_quantity": "2",
+    "base_uom": "EA",
+    "remaining_quantity": "0",
+    "residual_task_id": null,
+    "movement_id": null,
+    "order_id": "1863105af7c8418fb71c5b7c585a5fe4",
+    "line_number": "1",
+    "article": "TC0325CADBFC",
+    "outbox_id": 6429
+  },
+  "quarantine_cell": "Q23.25cadbfc",
+  "cell.Q": {
+    "cell": "Q23.25cadbfc",
+    "version": 1,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.policy.25cadbfc",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "slow_sql": [
+    [
+      6244,
+      995,
+      "TRANSACTION"
+    ],
+    [
+      6238,
+      857,
+      "FETCH_ALL"
+    ],
+    [
+      6237,
+      746,
+      "TRANSACTION"
+    ],
+    [
+      6245,
+      704,
+      "FETCH_ALL"
+    ],
+    [
+      6240,
+      669,
+      "FETCH_ALL"
+    ],
+    [
+      6243,
+      633,
+      "TRANSACTION"
+    ],
+    [
+      6239,
+      614,
+      "TRANSACTION"
+    ],
+    [
+      6242,
+      533,
+      "TRANSACTION"
+    ]
+  ],
+  "qa_retired": true,
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/artmas",
+      "status": 202,
+      "elapsed_ms": 506.9,
+      "response": {
+        "inbox_id": "ad08b499e29d41f0917eb74a90519727",
+        "status": "APPLIED",
+        "articles_applied": true,
+        "materials": [
+          "TC0325CADBFC"
+        ],
+        "older_skipped": [],
+        "idempotent": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/finished-goods/skus/TC0325CADBFC/receiving-policy",
+      "status": 200,
+      "elapsed_ms": 152.98,
+      "response": {
+        "articul": "TC0325CADBFC",
+        "version": 1,
+        "configured": true,
+        "marking_required": true,
+        "serialized_weight_boxes": false,
+        "order_weight_tolerance_pct": "15",
+        "stack_stage": "MAIN",
+        "profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "profile_version": "TC03",
+            "scan_mode": "UNIT"
+          }
+        ],
+        "legacy_mismatch": false,
+        "unmarked_scan_modes": [
+          "ITEM_BARCODE",
+          "BOX_BARCODE"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/site",
+      "status": 200,
+      "elapsed_ms": 161.22,
+      "response": {
+        "warehouse_id": 212476763,
+        "version": 1,
+        "replayed": false,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 182.63,
+      "response": {
+        "warehouse_id": 212476763,
+        "document_id": "SNS",
+        "entity_type": "OWNER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "Q23.25cadbfcSNS",
+        "correlation_id": "Q23.25cadbfcSNS",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-22T18:38:11.258-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6424
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 99.57,
+      "response": {
+        "warehouse_id": 212476763,
+        "document_id": "A",
+        "entity_type": "SKU",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "Q23.25cadbfcA",
+        "correlation_id": "Q23.25cadbfcA",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-22T18:38:11.419-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6425
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/cells/T3R25cadbfc",
+      "status": 200,
+      "elapsed_ms": 192.31,
+      "response": {
+        "cell": "T3R25cadbfc",
+        "version": 1,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.cell.T3R25cadbfc",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/cells/T3S25cadbfc",
+      "status": 200,
+      "elapsed_ms": 111.15,
+      "response": {
+        "cell": "T3S25cadbfc",
+        "version": 1,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.cell.T3S25cadbfc",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/cells/T3P25cadbfc",
+      "status": 200,
+      "elapsed_ms": 119.31,
+      "response": {
+        "cell": "T3P25cadbfc",
+        "version": 1,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.cell.T3P25cadbfc",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/supply-orders",
+      "status": 202,
+      "elapsed_ms": 325.1,
+      "response": {
+        "status": "APPLIED",
+        "order_id": "1863105af7c8418fb71c5b7c585a5fe4",
+        "incoming_document_id": 25257,
+        "revision": 1,
+        "warehouse_id": 212476763,
+        "gateway_contract_version": 1,
+        "lines": 1,
+        "inventory_booked": false,
+        "idempotent": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1863105af7c8418fb71c5b7c585a5fe4/pallets",
+      "status": 201,
+      "elapsed_ms": 2955.29,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "Q23.receive.25cadbfc",
+        "pallet_identifier": "690000000340515809",
+        "sscc": "690000000340515809",
+        "quantity": "2",
+        "base_quantity": "2",
+        "base_uom": "EA",
+        "sap_order_number": "Q23.25cadbfc",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC0325CADBFC",
+        "unit": "EA",
+        "supplier_batch": "Q23.25cadbfc",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 212476763,
+        "physical_measurements": {
+          "gross_weight": "2",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3R25cadbfc",
+        "putaway_cell": "T3S25cadbfc",
+        "placement": {
+          "cell": "T3S25cadbfc",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 2,
+        "marking_policy_version": 1,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1231,
+        "outbox_id": 6426
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 180.9,
+      "response": {
+        "warehouse_id": 212476763,
+        "document_id": "SUPPLY",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "Q23.25cadbfcSUPPLY",
+        "correlation_id": "Q23.25cadbfcSUPPLY",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-22T18:38:15.233-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6427
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/stock/bind",
+      "status": 200,
+      "elapsed_ms": 311.62,
+      "response": {
+        "supply_id": "SUPPLY",
+        "owner_id": "SNS",
+        "bound_units": 2,
+        "pallet_identifier": "690000000340515809",
+        "mark_state": "PENDING",
+        "attributes_bound": true,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.bind.25cadbfc",
+        "stock_changed": false,
+        "replayed": false,
+        "outbox_id": 6428
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/putaway/1231/complete",
+      "status": 200,
+      "elapsed_ms": 755.43,
+      "response": {
+        "operation_id": "TASK.COMPLETE:1231",
+        "task_id": 1231,
+        "status": "DONE",
+        "pallet_identifier": "690000000340515809",
+        "source_pallet_identifier": "690000000340515809",
+        "cell": "T3S25cadbfc",
+        "quantity": "2",
+        "base_quantity": "2",
+        "base_uom": "EA",
+        "remaining_quantity": "0",
+        "residual_task_id": null,
+        "movement_id": null,
+        "order_id": "1863105af7c8418fb71c5b7c585a5fe4",
+        "line_number": "1",
+        "article": "TC0325CADBFC",
+        "outbox_id": 6429
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/cells/Q23.25cadbfc",
+      "status": 200,
+      "elapsed_ms": 116.75,
+      "response": {
+        "cell": "Q23.25cadbfc",
+        "version": 1,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.policy.25cadbfc",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 500,
+      "elapsed_ms": 169.24,
+      "response": {
+        "raw_response": "Internal Server Error"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 200,
+      "elapsed_ms": 673.55,
+      "response": {
+        "operation_id": "Q23.move.25cadbfc",
+        "status": "APPLIED",
+        "source_uid": "690000000340515809",
+        "uid": "690000000340515809",
+        "from_cell": "T3S25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "base_quantity": "2",
+        "base_uom": "EA",
+        "outbox_id": 6430
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 266.91,
+      "response": {
+        "operation_id": "Q23.open.25cadbfc",
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "OPEN",
+        "version": 1,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": null,
+        "approval_note": null,
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": null,
+        "decided_at": null,
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 96.69,
+      "response": {
+        "operation_id": "Q23.open.25cadbfc",
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "OPEN",
+        "version": 1,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": null,
+        "approval_note": null,
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": null,
+        "decided_at": null,
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 409,
+      "elapsed_ms": 98.82,
+      "response": {
+        "detail": {
+          "code": "QUALITY_CASE_BLOCKS_RELEASE",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 155.83,
+      "response": {
+        "operation_id": "Q23.defect.25cadbfc",
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "DEFECT",
+        "version": 2,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": "Own quality acceptance",
+        "approval_note": null,
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T22:40:11Z",
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 110.95,
+      "response": {
+        "operation_id": "Q23.approve.25cadbfc",
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "WAITING_POSTING",
+        "version": 3,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": "Own quality acceptance",
+        "approval_note": "Own quality acceptance",
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T22:40:11Z",
+        "approved_by": "admin",
+        "approved_at": "2026-10-22T22:40:11Z",
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": "WAITING_NATIVE_POSTING",
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 503,
+      "elapsed_ms": 331.16,
+      "response": {
+        "detail": {
+          "code": "QUALITY_RESULT_UNKNOWN",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 299.68,
+      "response": {
+        "operation_id": "Q23.open.25cadbfc",
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "OPEN",
+        "version": 1,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": null,
+        "approval_note": null,
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": null,
+        "decided_at": null,
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 409,
+      "elapsed_ms": 89.83,
+      "response": {
+        "detail": {
+          "code": "QUALITY_CASE_BLOCKS_RELEASE",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 200,
+      "elapsed_ms": 235.21,
+      "response": {
+        "operation_id": "Q23.post.25cadbfc",
+        "status": "POSTED",
+        "case_id": 1,
+        "pallet_identifier": "690000000340515809",
+        "quantity": "2",
+        "base_uom": "EA",
+        "physical_unit_count": 2,
+        "external_sap_ack": false,
+        "regulatory_event_ids": [
+          6433
+        ],
+        "regulatory_status": "PENDING",
+        "external_regulatory_ack": false,
+        "outbox_id": 6434
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 200,
+      "elapsed_ms": 115.85,
+      "response": {
+        "operation_id": "Q23.post.25cadbfc",
+        "status": "POSTED",
+        "case_id": 1,
+        "pallet_identifier": "690000000340515809",
+        "quantity": "2",
+        "base_uom": "EA",
+        "physical_unit_count": 2,
+        "external_sap_ack": false,
+        "regulatory_event_ids": [
+          6433
+        ],
+        "regulatory_status": "PENDING",
+        "external_regulatory_ack": false,
+        "outbox_id": 6434
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "status": 200,
+      "elapsed_ms": 213.58,
+      "response": {
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "POSTED",
+        "version": 4,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": "Own quality acceptance",
+        "approval_note": "Own quality acceptance",
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T22:40:11Z",
+        "approved_by": "admin",
+        "approved_at": "2026-10-22T22:40:11Z",
+        "posted_by": "admin",
+        "posted_at": "2026-10-22T22:41:57Z",
+        "post_operation_id": "Q23.post.25cadbfc",
+        "posting_status": "POSTED",
+        "external_status": "PENDING",
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "units": [
+          {
+            "unit_key": "3c7a57d82b67609b37b9338da52dac466f366c52be9d87011ff1806321b99723",
+            "sku_id": "A",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "owner_id": "SNS",
+            "unchanged": false
+          },
+          {
+            "unit_key": "9198470178347c3671d1a2f41d89f8e5e1f998747a5e3556b8cf1bb42e5755a8",
+            "sku_id": "A",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "owner_id": "SNS",
+            "unchanged": false
+          }
+        ],
+        "events": [
+          {
+            "action": "OPEN",
+            "from_state": null,
+            "to_state": "OPEN",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:10Z"
+          },
+          {
+            "action": "DECIDE",
+            "from_state": "OPEN",
+            "to_state": "DEFECT",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:11Z"
+          },
+          {
+            "action": "APPROVE",
+            "from_state": "DEFECT",
+            "to_state": "WAITING_POSTING",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:11Z"
+          },
+          {
+            "action": "POST",
+            "from_state": "WAITING_POSTING",
+            "to_state": "POSTED",
+            "actor": "admin",
+            "at": "2026-10-22T22:41:57Z",
+            "operation_id": "Q23.post.25cadbfc"
+          }
+        ]
+      }
+    }
+  ],
+  "quarantine": {
+    "operation_id": "Q23.move.25cadbfc",
+    "status": "APPLIED",
+    "source_uid": "690000000340515809",
+    "uid": "690000000340515809",
+    "from_cell": "T3S25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "base_quantity": "2",
+    "base_uom": "EA",
+    "outbox_id": 6430
+  },
+  "open": {
+    "operation_id": "Q23.open.25cadbfc",
+    "case_id": 1,
+    "warehouse_id": 212476763,
+    "pallet_uid": "690000000340515809",
+    "cell": "Q23.25cadbfc",
+    "state": "OPEN",
+    "version": 1,
+    "quality_hold_id": 2,
+    "reason": "Own quality acceptance",
+    "decision_note": null,
+    "approval_note": null,
+    "opened_by": "admin",
+    "opened_at": "2026-10-22T22:40:10Z",
+    "decided_by": null,
+    "decided_at": null,
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "2",
+        "units": 2
+      }
+    ],
+    "replayed": false
+  },
+  "blocked_release": {
+    "detail": {
+      "code": "QUALITY_CASE_BLOCKS_RELEASE",
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "defect": {
+    "operation_id": "Q23.defect.25cadbfc",
+    "case_id": 1,
+    "warehouse_id": 212476763,
+    "pallet_uid": "690000000340515809",
+    "cell": "Q23.25cadbfc",
+    "state": "DEFECT",
+    "version": 2,
+    "quality_hold_id": 2,
+    "reason": "Own quality acceptance",
+    "decision_note": "Own quality acceptance",
+    "approval_note": null,
+    "opened_by": "admin",
+    "opened_at": "2026-10-22T22:40:10Z",
+    "decided_by": "admin",
+    "decided_at": "2026-10-22T22:40:11Z",
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "2",
+        "units": 2
+      }
+    ],
+    "replayed": false
+  },
+  "approved": {
+    "operation_id": "Q23.approve.25cadbfc",
+    "case_id": 1,
+    "warehouse_id": 212476763,
+    "pallet_uid": "690000000340515809",
+    "cell": "Q23.25cadbfc",
+    "state": "WAITING_POSTING",
+    "version": 3,
+    "quality_hold_id": 2,
+    "reason": "Own quality acceptance",
+    "decision_note": "Own quality acceptance",
+    "approval_note": "Own quality acceptance",
+    "opened_by": "admin",
+    "opened_at": "2026-10-22T22:40:10Z",
+    "decided_by": "admin",
+    "decided_at": "2026-10-22T22:40:11Z",
+    "approved_by": "admin",
+    "approved_at": "2026-10-22T22:40:11Z",
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": "WAITING_NATIVE_POSTING",
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "2",
+        "units": 2
+      }
+    ],
+    "replayed": false
+  },
+  "posted": {
+    "operation_id": "Q23.post.25cadbfc",
+    "status": "POSTED",
+    "case_id": 1,
+    "pallet_identifier": "690000000340515809",
+    "quantity": "2",
+    "base_uom": "EA",
+    "physical_unit_count": 2,
+    "external_sap_ack": false,
+    "regulatory_event_ids": [
+      6433
+    ],
+    "regulatory_status": "PENDING",
+    "external_regulatory_ack": false,
+    "outbox_id": 6434
+  },
+  "units_after": [
+    [
+      "ISSUED",
+      2
+    ]
+  ],
+  "hold_after": "RELEASED",
+  "detail_after": {
+    "case_id": 1,
+    "warehouse_id": 212476763,
+    "pallet_uid": "690000000340515809",
+    "cell": "Q23.25cadbfc",
+    "state": "POSTED",
+    "version": 4,
+    "quality_hold_id": 2,
+    "reason": "Own quality acceptance",
+    "decision_note": "Own quality acceptance",
+    "approval_note": "Own quality acceptance",
+    "opened_by": "admin",
+    "opened_at": "2026-10-22T22:40:10Z",
+    "decided_by": "admin",
+    "decided_at": "2026-10-22T22:40:11Z",
+    "approved_by": "admin",
+    "approved_at": "2026-10-22T22:40:11Z",
+    "posted_by": "admin",
+    "posted_at": "2026-10-22T22:41:57Z",
+    "post_operation_id": "Q23.post.25cadbfc",
+    "posting_status": "POSTED",
+    "external_status": "PENDING",
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "2",
+        "units": 2
+      }
+    ],
+    "units": [
+      {
+        "unit_key": "3c7a57d82b67609b37b9338da52dac466f366c52be9d87011ff1806321b99723",
+        "sku_id": "A",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "owner_id": "SNS",
+        "unchanged": false
+      },
+      {
+        "unit_key": "9198470178347c3671d1a2f41d89f8e5e1f998747a5e3556b8cf1bb42e5755a8",
+        "sku_id": "A",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "owner_id": "SNS",
+        "unchanged": false
+      }
+    ],
+    "events": [
+      {
+        "action": "OPEN",
+        "from_state": null,
+        "to_state": "OPEN",
+        "actor": "admin",
+        "at": "2026-10-22T22:40:10Z"
+      },
+      {
+        "action": "DECIDE",
+        "from_state": "OPEN",
+        "to_state": "DEFECT",
+        "actor": "admin",
+        "at": "2026-10-22T22:40:11Z"
+      },
+      {
+        "action": "APPROVE",
+        "from_state": "DEFECT",
+        "to_state": "WAITING_POSTING",
+        "actor": "admin",
+        "at": "2026-10-22T22:40:11Z"
+      },
+      {
+        "action": "POST",
+        "from_state": "WAITING_POSTING",
+        "to_state": "POSTED",
+        "actor": "admin",
+        "at": "2026-10-22T22:41:57Z",
+        "operation_id": "Q23.post.25cadbfc"
+      }
+    ]
+  }
+}

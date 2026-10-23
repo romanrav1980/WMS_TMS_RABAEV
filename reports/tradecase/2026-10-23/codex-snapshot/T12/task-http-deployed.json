@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "samples": 6,
+  "rows": 500,
+  "median_warm_ms": 304.82,
+  "calls": [
+    {
+      "status": 200,
+      "ms": 496.65
+    },
+    {
+      "status": 200,
+      "ms": 232.53
+    },
+    {
+      "status": 200,
+      "ms": 719.77
+    },
+    {
+      "status": 200,
+      "ms": 244.03
+    },
+    {
+      "status": 200,
+      "ms": 399.39
+    },
+    {
+      "status": 200,
+      "ms": 304.82
+    }
+  ],
+  "note": "Real HTTP after deployed task predicate; cold first retained, not a matched before/after HTTP baseline"
+}

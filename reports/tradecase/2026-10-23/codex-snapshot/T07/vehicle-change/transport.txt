@@ -1,0 +1,1 @@
+{"status": "PACKED_TRANSPORT_PREPARED", "warehouse": 213059748, "trip": 33677}

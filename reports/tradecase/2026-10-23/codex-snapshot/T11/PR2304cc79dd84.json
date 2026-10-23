@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Role-only own snapshot with exact quantity/warehouse/employee names; same printed version repeats, stale version409, foreign task404",
+    "Revocation removes paper snapshot access on the next request"
+  ],
+  "http": [
+    {
+      "task": 1231,
+      "status": 200,
+      "ms": 135.14
+    },
+    {
+      "task": 1231,
+      "status": 200,
+      "ms": 116.84
+    },
+    {
+      "task": 1231,
+      "status": 409,
+      "ms": 106.56
+    },
+    {
+      "task": 1213,
+      "status": 404,
+      "ms": 143.75
+    },
+    {
+      "task": 1231,
+      "status": 403,
+      "ms": 266.42
+    }
+  ],
+  "snapshot_fields": {
+    "task_id": 1231,
+    "qty_exact": "2",
+    "assigned_to": "admin",
+    "assigned_to_name": "Global Administrator",
+    "from_warehouse_name": "TRADECASE QA 25cadbfc",
+    "to_warehouse_name": "TRADECASE QA 25cadbfc",
+    "task_signature": "6B2ED47967B338479F6596204218DF7D291ACC4F1945E36F5DFD269602959C88"
+  },
+  "qa_retired": true,
+  "slow_sql": [
+    [
+      6530,
+      126,
+      "/api/warehouse-tasks/1231/paper",
+      "Warehouse task detail native READ ONLY"
+    ],
+    [
+      6529,
+      24,
+      "/api/warehouse-tasks/1213/paper",
+      "Warehouse task detail native READ ONLY"
+    ]
+  ]
+}

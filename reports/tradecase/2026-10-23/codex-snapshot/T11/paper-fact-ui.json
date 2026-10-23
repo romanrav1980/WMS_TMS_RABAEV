@@ -1,0 +1,64 @@
+{
+  "checks": [
+    "390: paper prevents confirmation before version check and separate START",
+    "Real stale paper409 disables new confirmation",
+    "Injected403 clears version admission",
+    "Real current paper permits existing fact form",
+    "Real completion committed with printed signature; lost response retained",
+    "Reload and exact retry returned original receipt without another command body",
+    "390: panel fits viewport and check target >=44px",
+    "1440: panel fits viewport and check target >=44px",
+    "Raw screen help URL serves actual instructions"
+  ],
+  "posts": [
+    "{\"assigned_to\":\"admin\",\"updated_by\":\"admin\",\"fact_qty\":\"1\",\"scanned_pallet\":\"PH23.68eb5dba.HU\",\"scanned_from_cell\":\"PH23.68eb5dba.A\",\"scanned_to_cell\":\"PH23.68eb5dba.B\",\"expected_task_signature\":\"84CD937F088F5E83DA44F035718EA1B68ADDC198307E680B54D96CC88CBB12BB\",\"operation_id\":\"TASK.UI:e66c8840-8384-4d60-8d0f-5d512c5e756b\"}",
+    "{\"assigned_to\":\"admin\",\"updated_by\":\"admin\",\"fact_qty\":\"1\",\"scanned_pallet\":\"PH23.68eb5dba.HU\",\"scanned_from_cell\":\"PH23.68eb5dba.A\",\"scanned_to_cell\":\"PH23.68eb5dba.B\",\"expected_task_signature\":\"84CD937F088F5E83DA44F035718EA1B68ADDC198307E680B54D96CC88CBB12BB\",\"operation_id\":\"TASK.UI:e66c8840-8384-4d60-8d0f-5d512c5e756b\"}"
+  ],
+  "errors": [],
+  "timings": {
+    "completeWithResponseLoss": 445,
+    "overflow390": 0,
+    "overflow1440": 0
+  },
+  "synthetic": [
+    "403 paper read",
+    "lost response after real commit"
+  ],
+  "receipt": {
+    "status": "ok",
+    "result": {
+      "root": "PH23.68eb5dba.HU",
+      "warehouse": 212476763,
+      "cell": "PH23.68eb5dba.B",
+      "nodes": [
+        {
+          "uid": "PH23.68eb5dba.HU",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 3,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "open_task_count": 0,
+          "cell": "PH23.68eb5dba.B",
+          "depth": 0
+        }
+      ],
+      "links": [],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 0,
+      "top_place_count": 1,
+      "operation_id": "TASK.UI:e66c8840-8384-4d60-8d0f-5d512c5e756b",
+      "task_id": 1235,
+      "status": "DONE",
+      "pallet_identifier": "PH23.68eb5dba.HU",
+      "source_pallet_identifier": "PH23.68eb5dba.HU",
+      "quantity": "1",
+      "unit_code": "HU",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "outbox_id": 6450
+    }
+  },
+  "status": "PASS"
+}

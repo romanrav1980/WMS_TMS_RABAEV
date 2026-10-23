@@ -1,0 +1,147 @@
+{
+ "base": "http://127.0.0.1:3000/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE native route context: stop order/address from current basis, depot unconfigured and duration unverified stated",
+   "ms": 2236
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE(real read-model output) coverage row: ordered/reserved/picked/departed in base units, order link"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE late response of previous trip does not replace current trip"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 on route and coverage: no data shown, explicit reasons"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE unbound trip: route unknown (no native route read)"
+  },
+  {
+   "width": 390,
+   "name": "LIVE native route context: stop order/address from current basis, depot unconfigured and duration unverified stated",
+   "ms": 2206
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE(real read-model output) coverage row: ordered/reserved/picked/departed in base units, order link"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE late response of previous trip does not replace current trip"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 on route and coverage: no data shown, explicit reasons"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE unbound trip: route unknown (no native route read)"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "http": [
+  "1440 200 /api/access/me",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/tradecase/warehouses/215590763/site",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 200 /api/access/workspaces?capability=tradecase",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "1440 404 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 200 /api/transport/preflight/trips/33660/route-context",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1156",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1156/coverage",
+  "1440 404 /api/tradecase/warehouses/215590763/trips/R1.1156/topup-proposals",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1156/execution",
+  "1440 200 /api/transport/preflight/trips/33661/route-context",
+  "1440 200 /api/access/me",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/tradecase/warehouses/215590763/site",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 200 /api/access/workspaces?capability=tradecase",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 403 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "1440 404 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 403 /api/transport/preflight/trips/33660/route-context",
+  "1440 200 /api/access/me",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/access/navigation",
+  "1440 200 /api/tradecase/warehouses/215590763/site",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 200 /api/access/workspaces?capability=tradecase",
+  "1440 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 200 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "1440 404 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 200 /api/access/me",
+  "390 200 /api/access/navigation",
+  "390 200 /api/access/workspaces?capability=tradecase",
+  "390 200 /api/tradecase/warehouses/215590763/site",
+  "390 200 /api/access/navigation",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "390 404 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 200 /api/transport/preflight/trips/33660/route-context",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1156",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1156/coverage",
+  "390 404 /api/tradecase/warehouses/215590763/trips/R1.1156/topup-proposals",
+  "390 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1156/execution",
+  "390 200 /api/transport/preflight/trips/33661/route-context",
+  "390 200 /api/access/me",
+  "390 200 /api/access/navigation",
+  "390 200 /api/access/navigation",
+  "390 200 /api/tradecase/warehouses/215590763/site",
+  "390 200 /api/access/workspaces?capability=tradecase",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 403 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "390 404 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 403 /api/transport/preflight/trips/33660/route-context",
+  "390 200 /api/access/me",
+  "390 200 /api/access/navigation",
+  "390 200 /api/access/workspaces?capability=tradecase",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 200 /api/access/navigation",
+  "390 200 /api/tradecase/warehouses/215590763/site",
+  "390 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 200 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "390 404 /api/tradecase/warehouses/215590763/trips/R1.1155/execution"
+ ],
+ "timings": {
+  "useful_1440": 2236,
+  "useful_390": 2206
+ },
+ "status": "PASS",
+ "asset": "assets/index-BmlpD63t.js",
+ "counts": {
+  "checks": 10,
+  "http": 84,
+  "liveWrites": 0,
+  "jsErrors": 0
+ }
+}

@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trip_road_refresh\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trip_road_refresh\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trip_road_refresh\verify.sql
+Done. Statements=6; Errors=0; AbsentCleanup=0

@@ -1,0 +1,875 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Role-only worker with zero legacy move rights moves the whole pallet into quarantine",
+    "Scoped controller releases a good pallet and worker moves it back",
+    "Role-only posted write-off and same-actor exact replay; own extra unit consumed"
+  ],
+  "supply": {
+    "status": "APPLIED",
+    "order_id": "f2aca83294fc48f6a65fe042bede2ebd",
+    "incoming_document_id": 25258,
+    "revision": 1,
+    "warehouse_id": 212476763,
+    "gateway_contract_version": 1,
+    "lines": 1,
+    "inventory_booked": false,
+    "idempotent": false
+  },
+  "receipt": {
+    "status": "RECEIVED",
+    "operation_id": "Q23.GOOD.25cadbfc.receive",
+    "pallet_identifier": "Q23.GOOD.25cadbfc",
+    "sscc": null,
+    "quantity": "1",
+    "base_quantity": "1",
+    "base_uom": "EA",
+    "sap_order_number": "Q23.GOOD.25cadbfc",
+    "sap_sender": "TC03.QA.SAP",
+    "order_revision": 1,
+    "line_number": "1",
+    "material": "TC0325CADBFC",
+    "unit": "EA",
+    "supplier_batch": "Q23.GOOD.25cadbfc",
+    "expiry_date": "2030-01-01",
+    "produced_date": null,
+    "warehouse_id": 212476763,
+    "physical_measurements": {
+      "gross_weight": "1",
+      "pallet_height": null,
+      "pallet_height_m": null,
+      "volume_m3": null
+    },
+    "receive_cell": "T3R25cadbfc",
+    "putaway_cell": "T3S25cadbfc",
+    "placement": {
+      "cell": "T3S25cadbfc",
+      "slot_id": null,
+      "score": "0.0",
+      "basis": "COORDINATE_DISTANCE",
+      "metric": "DISTANCE"
+    },
+    "marking_units": 1,
+    "marking_policy_version": 1,
+    "regulatory_validation": "NOT_PERFORMED",
+    "idempotent": false,
+    "task_id": 1232,
+    "outbox_id": 6435
+  },
+  "attributes": {
+    "warehouse_id": 212476763,
+    "document_id": "GOODSUPPLY",
+    "entity_type": "SUPPLY",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "Q23.GOOD.25cadbfc.attributes",
+    "correlation_id": "Q23.GOOD.25cadbfc.attributes",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-22T19:01:22.735-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6436
+  },
+  "bound": {
+    "supply_id": "GOODSUPPLY",
+    "owner_id": "SNS",
+    "bound_units": 1,
+    "pallet_identifier": "Q23.GOOD.25cadbfc",
+    "mark_state": "PENDING",
+    "attributes_bound": true,
+    "warehouse_id": 212476763,
+    "operation_id": "Q23.GOOD.25cadbfc.bind",
+    "stock_changed": false,
+    "replayed": false,
+    "outbox_id": 6437
+  },
+  "putaway": {
+    "operation_id": "TASK.COMPLETE:1232",
+    "task_id": 1232,
+    "status": "DONE",
+    "pallet_identifier": "Q23.GOOD.25cadbfc",
+    "source_pallet_identifier": "Q23.GOOD.25cadbfc",
+    "cell": "T3S25cadbfc",
+    "quantity": "1",
+    "base_quantity": "1",
+    "base_uom": "EA",
+    "remaining_quantity": "0",
+    "residual_task_id": null,
+    "movement_id": null,
+    "order_id": "f2aca83294fc48f6a65fe042bede2ebd",
+    "line_number": "1",
+    "article": "TC0325CADBFC",
+    "outbox_id": 6438
+  },
+  "qa_retired": true,
+  "last_actor": "QG23bb3c3e9480",
+  "pallet_uid": "Q23.GOOD.25cadbfc",
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/supply-orders",
+      "status": 202,
+      "elapsed_ms": 633.26,
+      "response": {
+        "status": "APPLIED",
+        "order_id": "f2aca83294fc48f6a65fe042bede2ebd",
+        "incoming_document_id": 25258,
+        "revision": 1,
+        "warehouse_id": 212476763,
+        "gateway_contract_version": 1,
+        "lines": 1,
+        "inventory_booked": false,
+        "idempotent": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/f2aca83294fc48f6a65fe042bede2ebd/pallets",
+      "status": 201,
+      "elapsed_ms": 1539.99,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "Q23.GOOD.25cadbfc.receive",
+        "pallet_identifier": "Q23.GOOD.25cadbfc",
+        "sscc": null,
+        "quantity": "1",
+        "base_quantity": "1",
+        "base_uom": "EA",
+        "sap_order_number": "Q23.GOOD.25cadbfc",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC0325CADBFC",
+        "unit": "EA",
+        "supplier_batch": "Q23.GOOD.25cadbfc",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 212476763,
+        "physical_measurements": {
+          "gross_weight": "1",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3R25cadbfc",
+        "putaway_cell": "T3S25cadbfc",
+        "placement": {
+          "cell": "T3S25cadbfc",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 1,
+        "marking_policy_version": 1,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1232,
+        "outbox_id": 6435
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 120.27,
+      "response": {
+        "warehouse_id": 212476763,
+        "document_id": "GOODSUPPLY",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "Q23.GOOD.25cadbfc.attributes",
+        "correlation_id": "Q23.GOOD.25cadbfc.attributes",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-22T19:01:22.735-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6436
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/stock/bind",
+      "status": 200,
+      "elapsed_ms": 223.62,
+      "response": {
+        "supply_id": "GOODSUPPLY",
+        "owner_id": "SNS",
+        "bound_units": 1,
+        "pallet_identifier": "Q23.GOOD.25cadbfc",
+        "mark_state": "PENDING",
+        "attributes_bound": true,
+        "warehouse_id": 212476763,
+        "operation_id": "Q23.GOOD.25cadbfc.bind",
+        "stock_changed": false,
+        "replayed": false,
+        "outbox_id": 6437
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/putaway/1232/complete",
+      "status": 200,
+      "elapsed_ms": 724.67,
+      "response": {
+        "operation_id": "TASK.COMPLETE:1232",
+        "task_id": 1232,
+        "status": "DONE",
+        "pallet_identifier": "Q23.GOOD.25cadbfc",
+        "source_pallet_identifier": "Q23.GOOD.25cadbfc",
+        "cell": "T3S25cadbfc",
+        "quantity": "1",
+        "base_quantity": "1",
+        "base_uom": "EA",
+        "remaining_quantity": "0",
+        "residual_task_id": null,
+        "movement_id": null,
+        "order_id": "f2aca83294fc48f6a65fe042bede2ebd",
+        "line_number": "1",
+        "article": "TC0325CADBFC",
+        "outbox_id": 6438
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 224.89,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "QG232fea7820e3",
+        "warehouse_id": 212476763,
+        "operation_id": "QG232fea7820e3.grant",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 403,
+      "elapsed_ms": 188.73,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 116.55,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "QG232fea7820e3",
+        "warehouse_id": 212476763,
+        "operation_id": "QG232fea7820e3.revoke",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 339.9,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "QG237941b03812",
+        "warehouse_id": 212476763,
+        "operation_id": "QG237941b03812.grant",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 403,
+      "elapsed_ms": 528.67,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 156.57,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "QG237941b03812",
+        "warehouse_id": 212476763,
+        "operation_id": "QG237941b03812.revoke",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 326.34,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "QG23bb3c3e9480",
+        "warehouse_id": 212476763,
+        "operation_id": "QG23bb3c3e9480.grant",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 200,
+      "elapsed_ms": 544.43,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.quarantine",
+        "status": "APPLIED",
+        "source_uid": "Q23.GOOD.25cadbfc",
+        "uid": "Q23.GOOD.25cadbfc",
+        "from_cell": "T3S25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "base_quantity": "1",
+        "base_uom": "EA",
+        "outbox_id": 6439
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 184.8,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.good_open",
+        "case_id": 2,
+        "warehouse_id": 212476763,
+        "pallet_uid": "Q23.GOOD.25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "state": "OPEN",
+        "version": 1,
+        "quality_hold_id": 4,
+        "reason": "Own release scope QA",
+        "decision_note": null,
+        "approval_note": null,
+        "opened_by": "QG23bb3c3e9480",
+        "opened_at": "2026-10-22T23:06:24Z",
+        "decided_by": null,
+        "decided_at": null,
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "units": 1
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 148.01,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.good_release",
+        "case_id": 2,
+        "warehouse_id": 212476763,
+        "pallet_uid": "Q23.GOOD.25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "state": "RELEASED",
+        "version": 2,
+        "quality_hold_id": 4,
+        "reason": "Own release scope QA",
+        "decision_note": "Own release scope QA",
+        "approval_note": null,
+        "opened_by": "QG23bb3c3e9480",
+        "opened_at": "2026-10-22T23:06:24Z",
+        "decided_by": "QG23bb3c3e9480",
+        "decided_at": "2026-10-22T23:06:24Z",
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "units": 1
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 200,
+      "elapsed_ms": 319.89,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.released_move",
+        "status": "APPLIED",
+        "source_uid": "Q23.GOOD.25cadbfc",
+        "uid": "Q23.GOOD.25cadbfc",
+        "from_cell": "Q23.25cadbfc",
+        "cell": "T3S25cadbfc",
+        "base_quantity": "1",
+        "base_uom": "EA",
+        "outbox_id": 6440
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "status": 200,
+      "elapsed_ms": 380.46,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.cleanup_quarantine",
+        "status": "APPLIED",
+        "source_uid": "Q23.GOOD.25cadbfc",
+        "uid": "Q23.GOOD.25cadbfc",
+        "from_cell": "T3S25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "base_quantity": "1",
+        "base_uom": "EA",
+        "outbox_id": 6441
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 96.17,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.cleanup_open",
+        "case_id": 3,
+        "warehouse_id": 212476763,
+        "pallet_uid": "Q23.GOOD.25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "state": "OPEN",
+        "version": 1,
+        "quality_hold_id": 5,
+        "reason": "Dispose own synthetic QA unit",
+        "decision_note": null,
+        "approval_note": null,
+        "opened_by": "QG23bb3c3e9480",
+        "opened_at": "2026-10-22T23:06:25Z",
+        "decided_by": null,
+        "decided_at": null,
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "units": 1
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 99.06,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.cleanup_defect",
+        "case_id": 3,
+        "warehouse_id": 212476763,
+        "pallet_uid": "Q23.GOOD.25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "state": "DEFECT",
+        "version": 2,
+        "quality_hold_id": 5,
+        "reason": "Dispose own synthetic QA unit",
+        "decision_note": "Own release scope QA",
+        "approval_note": null,
+        "opened_by": "QG23bb3c3e9480",
+        "opened_at": "2026-10-22T23:06:25Z",
+        "decided_by": "QG23bb3c3e9480",
+        "decided_at": "2026-10-22T23:06:25Z",
+        "approved_by": null,
+        "approved_at": null,
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": null,
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "units": 1
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases",
+      "status": 200,
+      "elapsed_ms": 99.11,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.cleanup_approve",
+        "case_id": 3,
+        "warehouse_id": 212476763,
+        "pallet_uid": "Q23.GOOD.25cadbfc",
+        "cell": "Q23.25cadbfc",
+        "state": "WAITING_POSTING",
+        "version": 3,
+        "quality_hold_id": 5,
+        "reason": "Dispose own synthetic QA unit",
+        "decision_note": "Own release scope QA",
+        "approval_note": "Own release scope QA",
+        "opened_by": "QG23bb3c3e9480",
+        "opened_at": "2026-10-22T23:06:25Z",
+        "decided_by": "QG23bb3c3e9480",
+        "decided_at": "2026-10-22T23:06:25Z",
+        "approved_by": "QG23bb3c3e9480",
+        "approved_at": "2026-10-22T23:06:26Z",
+        "posted_by": null,
+        "posted_at": null,
+        "post_operation_id": null,
+        "posting_status": "WAITING_NATIVE_POSTING",
+        "external_status": null,
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "units": 1
+          }
+        ],
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 200,
+      "elapsed_ms": 380.65,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.writeoff",
+        "status": "POSTED",
+        "case_id": 3,
+        "pallet_identifier": "Q23.GOOD.25cadbfc",
+        "quantity": "1",
+        "base_uom": "EA",
+        "physical_unit_count": 1,
+        "external_sap_ack": false,
+        "regulatory_event_ids": [
+          6442
+        ],
+        "regulatory_status": "PENDING",
+        "external_regulatory_ack": false,
+        "outbox_id": 6443
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 200,
+      "elapsed_ms": 211.62,
+      "response": {
+        "operation_id": "QG23bb3c3e9480.writeoff",
+        "status": "POSTED",
+        "case_id": 3,
+        "pallet_identifier": "Q23.GOOD.25cadbfc",
+        "quantity": "1",
+        "base_uom": "EA",
+        "physical_unit_count": 1,
+        "external_sap_ack": false,
+        "regulatory_event_ids": [
+          6442
+        ],
+        "regulatory_status": "PENDING",
+        "external_regulatory_ack": false,
+        "outbox_id": 6443
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 120.03,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "QG23bb3c3e9480",
+        "warehouse_id": 212476763,
+        "operation_id": "QG23bb3c3e9480.revoke",
+        "stock_changed": false,
+        "replayed": false
+      }
+    }
+  ],
+  "quarantine": {
+    "operation_id": "QG23bb3c3e9480.quarantine",
+    "status": "APPLIED",
+    "source_uid": "Q23.GOOD.25cadbfc",
+    "uid": "Q23.GOOD.25cadbfc",
+    "from_cell": "T3S25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "base_quantity": "1",
+    "base_uom": "EA",
+    "outbox_id": 6439
+  },
+  "good_open": {
+    "operation_id": "QG23bb3c3e9480.good_open",
+    "case_id": 2,
+    "warehouse_id": 212476763,
+    "pallet_uid": "Q23.GOOD.25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "state": "OPEN",
+    "version": 1,
+    "quality_hold_id": 4,
+    "reason": "Own release scope QA",
+    "decision_note": null,
+    "approval_note": null,
+    "opened_by": "QG23bb3c3e9480",
+    "opened_at": "2026-10-22T23:06:24Z",
+    "decided_by": null,
+    "decided_at": null,
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "units": 1
+      }
+    ],
+    "replayed": false
+  },
+  "good_release": {
+    "operation_id": "QG23bb3c3e9480.good_release",
+    "case_id": 2,
+    "warehouse_id": 212476763,
+    "pallet_uid": "Q23.GOOD.25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "state": "RELEASED",
+    "version": 2,
+    "quality_hold_id": 4,
+    "reason": "Own release scope QA",
+    "decision_note": "Own release scope QA",
+    "approval_note": null,
+    "opened_by": "QG23bb3c3e9480",
+    "opened_at": "2026-10-22T23:06:24Z",
+    "decided_by": "QG23bb3c3e9480",
+    "decided_at": "2026-10-22T23:06:24Z",
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "units": 1
+      }
+    ],
+    "replayed": false
+  },
+  "released_move": {
+    "operation_id": "QG23bb3c3e9480.released_move",
+    "status": "APPLIED",
+    "source_uid": "Q23.GOOD.25cadbfc",
+    "uid": "Q23.GOOD.25cadbfc",
+    "from_cell": "Q23.25cadbfc",
+    "cell": "T3S25cadbfc",
+    "base_quantity": "1",
+    "base_uom": "EA",
+    "outbox_id": 6440
+  },
+  "cleanup_quarantine": {
+    "operation_id": "QG23bb3c3e9480.cleanup_quarantine",
+    "status": "APPLIED",
+    "source_uid": "Q23.GOOD.25cadbfc",
+    "uid": "Q23.GOOD.25cadbfc",
+    "from_cell": "T3S25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "base_quantity": "1",
+    "base_uom": "EA",
+    "outbox_id": 6441
+  },
+  "cleanup_open": {
+    "operation_id": "QG23bb3c3e9480.cleanup_open",
+    "case_id": 3,
+    "warehouse_id": 212476763,
+    "pallet_uid": "Q23.GOOD.25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "state": "OPEN",
+    "version": 1,
+    "quality_hold_id": 5,
+    "reason": "Dispose own synthetic QA unit",
+    "decision_note": null,
+    "approval_note": null,
+    "opened_by": "QG23bb3c3e9480",
+    "opened_at": "2026-10-22T23:06:25Z",
+    "decided_by": null,
+    "decided_at": null,
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "units": 1
+      }
+    ],
+    "replayed": false
+  },
+  "cleanup_defect": {
+    "operation_id": "QG23bb3c3e9480.cleanup_defect",
+    "case_id": 3,
+    "warehouse_id": 212476763,
+    "pallet_uid": "Q23.GOOD.25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "state": "DEFECT",
+    "version": 2,
+    "quality_hold_id": 5,
+    "reason": "Dispose own synthetic QA unit",
+    "decision_note": "Own release scope QA",
+    "approval_note": null,
+    "opened_by": "QG23bb3c3e9480",
+    "opened_at": "2026-10-22T23:06:25Z",
+    "decided_by": "QG23bb3c3e9480",
+    "decided_at": "2026-10-22T23:06:25Z",
+    "approved_by": null,
+    "approved_at": null,
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": null,
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "units": 1
+      }
+    ],
+    "replayed": false
+  },
+  "cleanup_approve": {
+    "operation_id": "QG23bb3c3e9480.cleanup_approve",
+    "case_id": 3,
+    "warehouse_id": 212476763,
+    "pallet_uid": "Q23.GOOD.25cadbfc",
+    "cell": "Q23.25cadbfc",
+    "state": "WAITING_POSTING",
+    "version": 3,
+    "quality_hold_id": 5,
+    "reason": "Dispose own synthetic QA unit",
+    "decision_note": "Own release scope QA",
+    "approval_note": "Own release scope QA",
+    "opened_by": "QG23bb3c3e9480",
+    "opened_at": "2026-10-22T23:06:25Z",
+    "decided_by": "QG23bb3c3e9480",
+    "decided_at": "2026-10-22T23:06:25Z",
+    "approved_by": "QG23bb3c3e9480",
+    "approved_at": "2026-10-22T23:06:26Z",
+    "posted_by": null,
+    "posted_at": null,
+    "post_operation_id": null,
+    "posting_status": "WAITING_NATIVE_POSTING",
+    "external_status": null,
+    "composition": [
+      {
+        "sku_id": "A",
+        "owner_id": "SNS",
+        "base_uom": "EA",
+        "base_qty": "1",
+        "units": 1
+      }
+    ],
+    "replayed": false
+  },
+  "cleanup_post": {
+    "operation_id": "QG23bb3c3e9480.writeoff",
+    "status": "POSTED",
+    "case_id": 3,
+    "pallet_identifier": "Q23.GOOD.25cadbfc",
+    "quantity": "1",
+    "base_uom": "EA",
+    "physical_unit_count": 1,
+    "external_sap_ack": false,
+    "regulatory_event_ids": [
+      6442
+    ],
+    "regulatory_status": "PENDING",
+    "external_regulatory_ack": false,
+    "outbox_id": 6443
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "case": "503/reload, wrong receipt retained, exact body retried three times"
+    },
+    {
+      "width": 1440,
+      "case": "Duration uses existing command, current source hash and version"
+    },
+    {
+      "width": 1440,
+      "case": "403 clears depot data; save disabled; no horizontal overflow",
+      "size": {
+        "viewport": 1440,
+        "document": 1440
+      }
+    },
+    {
+      "width": 390,
+      "case": "503/reload, wrong receipt retained, exact body retried three times"
+    },
+    {
+      "width": 390,
+      "case": "Duration uses existing command, current source hash and version"
+    },
+    {
+      "width": 390,
+      "case": "403 clears depot data; save disabled; no horizontal overflow",
+      "size": {
+        "viewport": 390,
+        "document": 390
+      }
+    }
+  ],
+  "errors": [],
+  "businessWrites": []
+}

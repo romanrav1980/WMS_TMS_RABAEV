@@ -1,0 +1,12 @@
+# API_READY C-0133
+
+API8088 активен. GET склада 225837931 проверен: runtime/test-evidence/tradecase/2026-10-19/T03/stock-summary.json. T03 реальные приход, bind и размещение: 24 HTTP PASS. Подтверждение СКМ: 11 HTTP PASS, синтетические входные ответы; внешняя СКМ не подключена. Не записывать ничего в эти fixtures.
+
+- GET /api/access/workspaces?capability=tradecase — существующий формат warehouses/capabilities.
+- GET /api/tradecase/warehouses/{ware}/documents/SUPPLY?after=&limit=50 — тот же формат документов T02.
+- GET /api/tradecase/warehouses/{ware}/documents/SUPPLY/{id} — body: entity_type SUPPLY, wms_article_id, sap_order_id, sap_line_id, sku_id, owner_id, mrc, pallet_identifier, supplier_batch, expiry_date, composition_source SAP, codes[] (system_code/profile_code/code). Версия в document_version как в остальных карточках T02.
+- GET /api/tradecase/warehouses/{ware}/stock/pallets?after=&limit=50 — {warehouse_id,items,has_more,next_after}. Группа: pallet_identifier,cell,sku_id,owner_id,mrc,expiry_date,base_uom,base_quantity,hard_reserved_base,unit_count,pending_units,valid_units,rejected_units. Количества строковые, счётчики кодов числовые. AFTER opaque, не конструировать самостоятельно.
+- GET /api/tradecase/warehouses/{ware}/stock?after=&limit=50 — технические единицы, ключ/версия/статус, не нужен основной таблице.
+- POST /api/tradecase/warehouses/{ware}/stock/bind: {operation_id,supply_id,expected_supply_version,scanned_pallet}. 200: warehouse_id,operation_id,stock_changed:false,replayed,supply_id,owner_id,bound_units,pallet_identifier,mark_state:PENDING,attributes_bound:true,outbox_id. stock_changed=false: меняются юридические атрибуты, не количество. Повтор возвращает сохранённый результат с replayed:true. 403 {detail:{code:...}},409 конфликт/непригодное основание,422 поля,503 неизвестный результат — повторить неизменную команду. Ошибки: TRADE_OWNER_ACCESS_DENIED, ACCESS_DENIED, TRADE_SITE_DISABLED, VERSION_CONFLICT, OPERATION_CONFLICT и специфичные проверки состава; неизвестный код оставлять только в технических сведениях.
+
+Фактический запас 225837931: паллета 690000000545105591, ячейка T3Sf1aaebdf, A/SNS, МРЦ200, срок2030-01-01,250EA,резерв0;3VALID/246PENDING/1REJECTED. Это тестовые статусы, не ответ промышленной СКМ. Другие товары/склады не активировать. Коды не подтверждать UI-кнопкой; endpoint mark-confirmations предназначен интеграционной службе.

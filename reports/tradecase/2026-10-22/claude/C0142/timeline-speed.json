@@ -1,0 +1,26 @@
+[
+ {
+  "warehouse": 1,
+  "path": "/api/resources/timeline?warehouse_id=1&start_at=2026-10-15T00:00:00%2B03:00&finish_at=2026-10-22T00:00:00%2B03:00",
+  "status": 200,
+  "ms": 218,
+  "headers": {},
+  "bytes": 11617
+ },
+ {
+  "warehouse": 2,
+  "path": "/api/resources/timeline?warehouse_id=2&start_at=2026-10-15T00:00:00%2B03:00&finish_at=2026-10-22T00:00:00%2B03:00",
+  "status": 200,
+  "ms": 119,
+  "headers": {},
+  "bytes": 1269
+ },
+ {
+  "warehouse": 220793322,
+  "path": "/api/resources/timeline?warehouse_id=220793322&start_at=2026-10-15T00:00:00%2B03:00&finish_at=2026-10-22T00:00:00%2B03:00",
+  "status": 200,
+  "ms": 139,
+  "headers": {},
+  "bytes": 3142
+ }
+]

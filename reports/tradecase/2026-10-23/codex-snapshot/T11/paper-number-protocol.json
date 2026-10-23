@@ -1,0 +1,14 @@
+{
+  "basis": "Observed Oracle TM9 vectors; isolated UI model, no quantity commands",
+  "status": "PASS",
+  "rows": [
+    {
+      "oracle_tm9": ".5",
+      "printed": "0.5 кг"
+    },
+    {
+      "oracle_tm9": ".000000001",
+      "printed": "0.000000001 кг"
+    }
+  ]
+}

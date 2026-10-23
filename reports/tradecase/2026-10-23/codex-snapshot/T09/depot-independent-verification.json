@@ -1,0 +1,66 @@
+{
+  "legacy_metadata_fence": "PASS",
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "top_sql": [
+    [
+      "dkdaabdvqp1mq",
+      3,
+      58.15,
+      5577
+    ],
+    [
+      "82zqgk5pyczvm",
+      1,
+      54.23,
+      1525
+    ],
+    [
+      "1rpy8adr84nbv",
+      1,
+      48.27,
+      696
+    ],
+    [
+      "1pb62ws305gjn",
+      3,
+      48.23,
+      5583
+    ],
+    [
+      "9a3pn60x0g94u",
+      12,
+      28.81,
+      185
+    ],
+    [
+      "82zqgk5pyczvm",
+      8,
+      24.82,
+      6694
+    ]
+  ],
+  "http_count": 10,
+  "max_http_ms": 254.0,
+  "decision": "Keep bounded metadata lookup; no observed cost justifies an index. Two-body scope lock-order fix is required for correctness, not claimed as throughput optimization."
+}

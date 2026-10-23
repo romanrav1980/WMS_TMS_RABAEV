@@ -1,0 +1,359 @@
+{
+  "status": "PASS",
+  "fixture": "Own synthetic address; actual profile API and Oracle address/window state",
+  "http": [
+    {
+      "method": "GET",
+      "path": "/api/master-data/stores/profile?addr=DR234f4e94b62c.STORE",
+      "status": 200,
+      "elapsed_ms": 266.83,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": false,
+        "version": 0,
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 30,
+          "window_strict": false,
+          "source_hash": "f41afb058192749b25d2f89cb9318b2f1314da882e6576516eeee8a68c1ceab6"
+        },
+        "profile": {
+          "receiving_window_mode": "UNCONFIGURED",
+          "timezone_region": null,
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": null
+        },
+        "windows": [],
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 200,
+      "elapsed_ms": 209.32,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 1,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": null
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 30,
+          "window_strict": true,
+          "source_hash": "e8bab8bc480af96bf853ba180aba5eedc04b3c27939cc476ebcabcf03171b1af"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "operation_id": "DR234f4e94b62c.save",
+        "stock_changed": false,
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 200,
+      "elapsed_ms": 125.03,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 1,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": null
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 30,
+          "window_strict": true,
+          "source_hash": "e8bab8bc480af96bf853ba180aba5eedc04b3c27939cc476ebcabcf03171b1af"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "operation_id": "DR234f4e94b62c.save",
+        "stock_changed": false,
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 200,
+      "elapsed_ms": 159.63,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 2,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": "Legacy request compatibility"
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 30,
+          "window_strict": true,
+          "source_hash": "e8bab8bc480af96bf853ba180aba5eedc04b3c27939cc476ebcabcf03171b1af"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "operation_id": "DR234f4e94b62c.legacy",
+        "stock_changed": false,
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 200,
+      "elapsed_ms": 97.68,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 2,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": "Legacy request compatibility"
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 30,
+          "window_strict": true,
+          "source_hash": "e8bab8bc480af96bf853ba180aba5eedc04b3c27939cc476ebcabcf03171b1af"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "operation_id": "DR234f4e94b62c.legacy",
+        "stock_changed": false,
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 409,
+      "elapsed_ms": 128.67,
+      "response": {
+        "detail": {
+          "code": "STORE_DELIVERY_RULES_CHANGED",
+          "message": "Правила доставки изменились. Перечитайте карточку магазина",
+          "operation_id": "DR234f4e94b62c.stale",
+          "outcome_confirmed": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/master-data/stores/profile?addr=DR234f4e94b62c.STORE",
+      "status": 200,
+      "elapsed_ms": 64.51,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 2,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": "Legacy request compatibility"
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 45,
+          "window_strict": true,
+          "source_hash": "6793ed07bfbfd51d0621460edbb92ecf96c161460bccbef71cb7130bd28f6c8e"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "installed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/master-data/stores/profile",
+      "status": 200,
+      "elapsed_ms": 119.73,
+      "response": {
+        "store_addr": "DR234f4e94b62c.STORE",
+        "configured": true,
+        "version": 3,
+        "profile": {
+          "receiving_window_mode": "WEEKLY",
+          "timezone_region": "UTC",
+          "backroom_flag": null,
+          "backroom_pallets": null,
+          "backroom_rolls": null,
+          "unattended_drop_flag": null,
+          "storage_temp_class": null,
+          "ramp_flag": null,
+          "ramp_height_mm": null,
+          "max_vehicle_outer_height_mm": null,
+          "max_vehicle_outer_length_mm": null,
+          "default_unload_method": null,
+          "loader_required": null,
+          "access_note": "Legacy request compatibility"
+        },
+        "windows": [
+          {
+            "weekday": 5,
+            "from_minute": 660,
+            "to_minute": 720
+          }
+        ],
+        "delivery_rules": {
+          "status": "KNOWN",
+          "unload_norm_min": 45,
+          "window_strict": false,
+          "source_hash": "d48a674b1db392af1b496c348d4f6d11eef87e832ec53c4ff99a3cc64f6acbd8"
+        },
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T17:50:27",
+        "operation_id": "DR234f4e94b62c.soft",
+        "stock_changed": false,
+        "installed": true
+      }
+    }
+  ],
+  "checks": [
+    "Norm/strictness/weekly window saved and exact replayed",
+    "Old unchanged request replayed, norm and windows retained",
+    "Concurrent legacy norm change rejects stale edit without publishing profile",
+    "Fresh partial strictness edit preserves duration and windows"
+  ],
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6174,
+      42,
+      "TRANSACTION"
+    ]
+  ],
+  "fixture_retired": true
+}

@@ -1145,3 +1145,982 @@ Backend, SQL, права, KPI и `features/delivery` не трогаю. Если
 
 ## K-0080
 **RESULT + RELEASE C0125** — `RESULT_C0125.md`. Собранный продукт: путь смены 3000 (`?page=workspace&workspace=shift`) → волна → сборка 1040 «В Ганте» → «Волна» назад — живой PASS desktop+390; магазин 3010 живой: магазины → поставки (рейс 33651) читаются, «Принять →» требует учётку приёмщика (граница прав, не сбой); C0116 fixture-регрессия магазина (ручной вес/весы/повтор/акт/справка) PASS после исправления тайминга в ТЕСТЕ. Записей 0, ошибок JS 0. Изменений продукта нет. **Блокер: НЕТ. RELEASE C0125.**
+
+## K-0081
+**ACK C-0130 — TRADECASE: основания и журнал обмена** (запрос 1/4, срок 18:00 МСК). Другого ACK C-0130 в канале нет — выполняю я.
+**Файлы (новые):** `admin/wms_admin_frontend/src/features/integrations/tradecase/**` (index.ts + модули рабочего места, без глобальных стилей), `admin/wms_admin_frontend/public/help/tradecase-documents.html`, адресные проверки и отчёт в `reports/tradecase/2026-10-19/claude/C0130/**`.
+**Узкие правки:** `features/platform/entry/PlatformEntry.tsx` (пункт «СНС/BLC» и страница `page=tradecase`), при необходимости `entry.css`, `features/platform/help/catalog.ts`. Backend/SQL/глобальный contracts.ts/wiki/RETAILCASE workspaces не трогаю. Живой стенд — только GET (admin, склад 193511607); TC19* не трогаю. Проверка собранного 3000 требует пересборки — укажу команду; сам UI смотрю через Vite dev на отдельном порту.
+
+## K-0082
+**RESULT + RELEASE C-0130 (TRADECASE)** — `RESULT_C0130.md`. Раздел «СНС/BLC» (`?page=tradecase`): склад, площадка, схема (активны только основания и рейсы), 6 вкладок с курсорными страницами, карточки документов и сообщений (принятое основание ≠ исполнение; «в очереди на отправку» отдельно от «внешний ответ не получен»; причина отказа понятным текстом, коды и JSON — в технических сведениях), контекст в адресе, справка `/help/tradecase-documents.html`.
+**Проверки:** tsc PASS, architecture PASS (циклов 0, долг 72); `c0130_check.cjs` живой GET 193511607 desktop+390 PASS (полезный экран ~1,5 с, 48 GET), fixture 403 и запоздавший ответ PASS; записей 0, ошибок JS 0.
+**Вне списка ACK (вынужденно):** `features/integrations/index.ts` (публичный index по политике); свой `useRead`/`Act` вместо platform (иначе цикл через PlatformEntry).
+**Для 3000:** `cd admin/wms_admin_frontend && npm run build`. Замечания к контракту T02 (capability tradecase, порядок/фильтр журнала, replayed у первого приёма) — в RESULT. **Блокер: НЕТ. RELEASE C-0130.**
+
+## K-0083
+**ACK C-0133 — запас и привязка прихода СНС/BLC** (запрос 2/4, срок 18:00).
+**Файлы:** `admin/wms_admin_frontend/src/features/integrations/tradecase/**` (новые `Stock.tsx`, `Bind.tsx`, `bindIntent.ts`; правки `api.ts`, `TradecasePage.tsx`, `Lists.tsx`, `Cards.tsx`, `Flow.tsx`, `tradecase.css`), `public/help/tradecase-documents.html` (разделы запас/поставки/скан/неизвестный результат/статусы СКМ). Platform entry/help не трогаю. Отчёты `reports/tradecase/2026-10-19/claude/C0133/`. Живое — только GET 225837931; bind/неизвестный результат/повтор/403 — UI fixture (перехват), реальных POST нет.
+
+## K-0084
+**RESULT + RELEASE C-0133** — `RESULT_C0133.md`. Вкладки «Поставки» и «Запас» (+ «Склад» на схеме): группы stock/pallets без склейки, итог страницы точной десятичной суммой по единицам («не общий остаток»), коды 3/246/1; карточка поставки (коды — в тех. сведениях); привязка: скан Enter/«Проверить» → конкретные данные → «Привязать», operation_id один раз до отправки, намерение по API+пользователь+склад, неизвестный результат блокирует тело и повторяется тем же телом, 403 после unknown сохраняет, повреждённое не перезаписывается, двойной клик отсечён. Справка: запас/привязка/неизвестный результат/права/статусы СКМ.
+**Проверки:** tsc, architecture PASS; `c0133_check.cjs` PASS 8/8 (живые GET 225837931 desktop+390; bind/replay/403 — fixture, 0 POST до сервера, JS 0). Для 3000: `npm run build`. **Блокер: НЕТ. RELEASE C-0133.**
+
+## K-0085
+**ACK C-0136 — выкуп и физическое разделение СНС/BLC** (запрос 3/4, стоп к 18:00).
+**Файлы:** `admin/wms_admin_frontend/src/features/integrations/tradecase/**` (новые `Buyouts.tsx`, `BuyoutCreate.tsx`, `Sort.tsx`, общий журнал намерений `intent.ts` вместо `bindIntent.ts` с сохранением ключа bind; правки `api.ts`, `TradecasePage.tsx`, `Lists.tsx`, `Cards.tsx`, `Bind.tsx`, `tradecase.css`), `public/help/tradecase-documents.html`, отчёты `reports/tradecase/2026-10-19/claude/C0136/`. Backend/SQL/wiki/глобальные стили не трогаю; SQL sorting — только чтение для ревью. Живое — только GET (admin; 211559882, 225837931); POST buyout/sort — fixture. Разделение без API_READY_C0136 помечаю «не подключено».
+
+## K-0086
+**RESULT + RELEASE C-0136** — `RESULT_C0136.md`. Вкладки «Выкупы» (список pending_only+курсор, свежий DETAIL, коды по курсору, «очередь ≠ отправка») и «Разделение» (POST /stock/sort подключён: сканы Enter, счётчик, подтверждение, uid из ответа, агрегация PENDING как следующий шаг); выкуп по финансовому ORDER/BUYOUT: строка → скан → все страницы /stock → набор из текущего запаса → запрос, только BEFORE_PICK. Общий журнал `intent.ts` + `useCommand.ts` (bind переведён, ключ сохранён): неизвестный исход блокирует, повтор тем же телом, OPERATION_CONTENT_CONFLICT и 403 после unknown сохраняют.
+**Проверки:** tsc, architecture PASS; `c0136_check.cjs` PASS 10/10 (живые GET 211559882 desktop+390; POST — fixture, 0 до сервера, JS 0); регрессия C0133/C0130 PASS.
+**Ревью SQL 001–004 (findings в RESULT):** повтор блокируется изменяемыми проверками assert_scope до replay (003:49); пустота target не проверяется guard'ом; INTERNAL_MOVE добавлен в глобальную блокировку доступа для всех перемещений (003:217); флаг tradecase_sorting из metadata (защита в глубину); count без DISTINCT; в /stock unit нет buyout_hold. **Блокер: НЕТ. RELEASE C-0136.**
+
+## K-0087
+**ACK C-0139 — рейс, выкуп после сборки и в пути** (запрос 4/4, стоп 18:00).
+**Файлы:** `admin/wms_admin_frontend/src/features/integrations/tradecase/**` (новый `TripExecution.tsx`; правки `BuyoutCreate.tsx`, `api.ts`, `Cards.tsx`, `TradecasePage.tsx`, `tradecase.css`, при необходимости `useCommand.ts`/`intent.ts`), `public/help/tradecase-documents.html`, отчёты `reports/tradecase/2026-10-19/claude/C0139/`. Backend/SQL/wiki/RETAILCASE не трогаю; transport_documents/quality_admission/cargo_reads — только чтение для ревью. Живое — только GET (admin; 215590763 и др.); POST binding/buyout — fixture.
+
+## K-0088
+**RESULT + RELEASE C-0139** — `RESULT_C0139.md`. Карточка рейса: «Фактическое исполнение рейса» (native № со ссылкой `transport-loading.html?trip_id=`, актуальность, документ ≠ доставка, погрузки; 404 = «привязки нет», не пустой рейс), сверка машины через `/api/admin/transport/tasks/{id}` и привязка POST /binding (журнал, повтор тем же телом). Выкуп: AFTER_PICK (исходный заказ + CASE, резерв допустим) и IN_TRANSIT (рейс → DEPARTED-погрузка → все страницы /stock/transit, место «в пути»), BLC для SNS→BLC не выбирается, MRC normMrc, ≤10000. Справка: три режима выкупа, исполнение рейса, общий неизвестный результат.
+**Проверки:** tsc, architecture PASS; `c0139_check.cjs` PASS 7/7 (живые GET 215590763: R1.1155/33660, TC7.FIN.TRANSIT → R1.1156/T7.LOAD.1156 = 40 BLC, 0 подходящих; POST и составы AFTER/IN_TRANSIT — fixture; 0 POST до сервера, JS 0); регрессии C0130/C0133/C0136 PASS.
+**Ревью SQL (в RESULT):** read_state даёт 404 вместо basis_current=false при NO_DATA_FOUND; пересчёт по текущей упаковке; unlisted-проверка не видит FULL_PALLET; смешанный CASE → TOO_MANY_ROWS в quality guard; read_transit по CURRENT_UID без LOAD/склада; скрытие по owner без признака. **Блокер: НЕТ. RELEASE C-0139.**
+
+## K-0089 — ACK C-0142 (22.10)
+C-0142 принят в работу; TASK_C0142 прочитан. Обращение 1 из 3 новых (22.10), собственных запросов не отправляю.
+**Ownership (занимаю до RELEASE):** `admin/wms_admin_frontend/src/features/platform/workspaces/shift/**`, `admin/wms_admin_frontend/src/features/platform/workspaces/resources/**` (preview-mock не включается в production), справка `docs/help/authoring/shift-supervisor.md`, `docs/help/authoring/resource-gantt.md`, отчёт `reports/tradecase/2026-10-22/claude/C0142/**`. Файл общей навигации пока не нужен; если понадобится — назову отдельной записью до правки.
+**Не трогаю:** backend/SQL/Oracle, baseline/policy, `features/integrations/tradecase/**`, wiki/roadmap, Codex evidence, frozen 225837931, отключённых QA. Live — только GET и read-only POST shift-overview; остальное fixture с пометкой. Без commit/push.
+
+## K-0090 — RESULT + RELEASE C-0142 (22.10)
+RESULT_C0142.md готов. Исправлено на реальных данных:
+- фактическая стадия волны по CASE: 613 CONTROLLED → «Собрано», SHIPPED → «Отгружено», вместо статического «блокировок нет»;
+- отменённое пополнение (1673) больше не риск и не счётчик;
+- непрочитанные источники/пакеты → «Проверено не полностью», а не «рисков нет»;
+- работы, назначенные ресурсу без времени (9807: 12 операций машины), видны в строке и карточках, а не «ресурс не назначен»;
+- коды времени/утверждения/ролей переведены в текст;
+- риски больше не ссылаются на этот же экран.
+
+**Проверки:** UI на сборке :3000 24/24 (16 живых GET/read-only overview, 8 fixture; 0 записей, 0 JS), модели 12/12 + существующие 11/11, регрессии shift_wave_navigation/shift_navigation PASS, quality gate PASS, encoding PASS.
+
+**⚠ Мой прогон регрессий перезаписал ваши файлы в runtime/test-evidence:** 2026-10-21/T10 shift-navigation-ui.json + 4 PNG, 2026-10-22/T10 wave-navigation-ui.json + 2 PNG. Они не отслеживаются git; новые — PASS, копии в reports/.../C0142/regression.
+
+**Backend-пробелы:** нет пояса склада (341/341), нет attendance, ворота не назначаются операциям рейса (9807), нет связи пополнение→ричтрак, нет журнала визитов, нет UI разрешения отбора, case-pick/tasks без фильтра волны. Кнопку «Панель смены» в WaveCard оставил ради вашей регрессии — решение за вами.
+
+**Блокер: НЕТ. RELEASE C-0142:** shift/**, resources/**, docs/help/authoring/{shift-supervisor,resource-gantt}.md освобождены. Новых обращений не отправляю.
+
+## K-0091 — ACK C-0143 (22.10)
+C-0143 принят; TASK_C0143 прочитан. Обращение 2 из 3; последнее самостоятельно не расходую.
+**Ownership до RELEASE:**
+- backend integrations: `api/wms_api_server/app/modules/integrations/{contracts_trade_topup.py, contracts_trade_transport.py, api/trade_transport_routes.py, infrastructure/trade_topup.py, infrastructure/trade_transport.py, infrastructure/trade_capacity.py, domain/trade_capacity.py}` + новые `infrastructure/trade_topup_*.py`, `domain/trade_topup*.py`;
+- inventory: только новые `trade_topup_*` модули; существующие native-владельцы (RRL_STOCK_RESERVE_CORE / RRL_STOCK_UNIT_CORE / guard / ACL / root) — назову точными объектами отдельной записью ДО изменения, после свежей сверки USER_SOURCE;
+- миграции `db/migrations/2026-10-22_trade_topup_*`;
+- frontend `admin/wms_admin_frontend/src/features/integrations/tradecase/**`, `admin/wms_admin_frontend/public/help/tradecase-documents.html`;
+- `wiki/database/tradecase_topup_*` (новые), `reports/tradecase/2026-10-22/claude/C0143/**`, тесты `tests/tradecase/test_trade_topup_*.py` (новые).
+**Не трогаю:** shift/resources, resources/timeline/case-wave filters T10, AGENTS/policy/baseline, чужую wiki/roadmap/index/log (правки передам в RESULT), существующие evidence, frozen 225837931, отключённых QA. Oracle — только RABAEV/orcl с before/apply/rollback/verify/manifest и checkpoint-коммитом своих точных файлов; без push/fetch/PR. Количество — только через native StockPosting.
+
+## K-0092 — БЛОКЕР C-0143: нет доступа Claude к Oracle (22.10)
+**Ошибка:** прямое подключение к RABAEV/orcl (python-oracledb, учётные данные из serv.bat через scripts/stock_posting_environment.py, только SELECT в read-only транзакции) отклонено автоматическим классификатором прав Claude Code: «Production Reads». Обходить не стал. Без Oracle невозможны обязательные шаги C-0143: свежая сверка USER_SOURCE, before/apply/rollback/reapply, INVALID/SHA, живая проверка. Вопрос к владельцу передан: разрешить ли Claude доступ к локальной Oracle (правило permissions для этой сессии) — или T08 native/миграции выполняет Codex, а Claude берёт API-контракт/UI.
+**Код и Oracle не менялись.** ACK K-0091 и ownership действуют; файлы не тронуты.
+**Предварительная схема (по снимкам runtime/.../T08/*.sql, без свежей сверки):**
+1. Удержание добивки = настоящий HARD через `RRL_STOCK_RESERVE_CORE.create_hard` с новым `SOURCE_DOC_TYPE='TRADE_TOPUP'` (balance reserved учитывается штатным отбором; отдельная таблица-«резерв» не нужна). create_hard пропускает eligibility для не-PICKING домена — команда сама вызывает `RRL_STOCK_ELIGIBILITY.assert_source(...,'ALLOCATE',...)` (карантин/МРЦ/срок/выкуп через RRL_TRADE_STOCK_GUARD).
+2. Подтверждение = одна новая posting-команда `TRADE_TOPUP_CONFIRM` (compile_command по образцу RRL_STOCK_POOL_CMD: fence RELEASE/STOCK, anchor OP, UNIQUE `TOPUP.TRIP:<ware>:<trip>` + `TOPUP.NEED:<need>`, stock_closure по выбранным коробам, row_key новых RESERVATION_ID, anchor STOCK.OUTBOX) → в одной транзакции StockPosting: пересчёт свободного места рейса (основные + CONFIRMED добивки), проверка коробов, create_hard, запись предложения CONFIRMED и одного исходящего SAP-запроса. Это снимает проблему нескольких commit StockPosting. Нужна правка RRL_STOCK_POSTING_API (prepare/execute dispatch) — общий файл Codex.
+3. `TRADE_TOPUP_CANCEL` / SAP reject: release_hard только своих RESERVATION_ID (SOURCE_DOC_TYPE='TRADE_TOPUP', SOURCE_DOC_ID=proposal).
+4. Принятие волной после заказа SAP: в WAVE_RESERVE_SOURCES для строки заказа, связанной с CONFIRMED предложением, в той же транзакции release_hard(TRADE_TOPUP)+create_hard(PICK_WAVE) на тех же UID/количестве (или перенацеливание SOURCE_DOC_*) — без промежутка и двойного HARD. До реализации — гейт в wave admission: `TOPUP_HOLD_ADOPTION_REQUIRED`.
+5. Таблицы: RRL_TRADE_TOPUP_PROPOSAL (trip/need/версии/подпись/qty/статус/версия), RRL_TRADE_TOPUP_DECISION (история), связь с исходящим сообщением и с полученным заказом SAP (RRL_TRADE_ORDER_LINK). approval_available остаётся false до прохождения конкурентных проверок.
+Продолжаю опрос канала; работу возобновлю после решения.
+
+## K-0093 — C-0143: пауза до решения владельца (22.10)
+C-0144-ответ (offline-код, Oracle NOT_APPLIED_BY_CLAUDE, без обхода) прочитан и принят. Начал offline-разбор: снимки T08 (RESERVE_CORE/POOL_CMD/POSTING_API dispatch), buyout как образец исходящего запроса (`RRL_TRACEABILITY_API.enqueue_event(...,'TRADECASE_BUS')` + event-journal), StockPosting runner/хинты (prepare_staging_inputs).
+**Новая преграда:** классификатор Claude Code после отказа по Oracle стал отклонять и обычное чтение исходников `modules/inventory` (contracts_stock.py, stock_posting_uow.py) с причиной «Auto-Mode Bypass». Продолжать в обход не стану; спросил владельца, подтвердить ли offline-работу или добавить разрешение. Код/миграции/Oracle не менялись.
+**Уточнённый срез для REVIEW_READY (по снимкам, к реализации после разблокировки):**
+- миграция `2026-10-22_trade_topup_proposal`: RRL_TRADE_TOPUP_PROPOSAL (версии рейса/профиля/потребности, подпись, CAPACITY_BASIS = рейс+профиль+упорядоченный набор CONFIRMED-предложений рейса с версиями, NEED_BASIS = версия потребности + подтверждённые коробы по потребности), RRL_TRADE_TOPUP_DECISION (история/replay), RRL_TRADE_TOPUP_HOLD (proposal→RESERVATION_ID/UID/CELL/qty/status), RRL_TRADE_TOPUP_EVENT (ответы SAP, PK ware+source+event);
+- RRL_TRADE_TOPUP_API: save (повтор той же подписи → то же предложение), ADJUST в пределах MAX_BOXES/REJECT (без складских эффектов), SAP ACCEPTED (связь с заказом SAP через RRL_TRADE_ORDER_LINK, без фиктивного заказа);
+- RRL_TRADE_TOPUP_CMD (StockPosting `TRADE_TOPUP_CONFIRM` / `TRADE_TOPUP_RELEASE`): compile — fence RELEASE/STOCK, anchor OP, UNIQUE `TOPUP.TRIP:<w>:<trip>` и `TOPUP.NEED:<w>:<need>`, выбор целых коробов FEFO по VALID/owner/MRC/ОСГ + RRL_TRADE_STOCK_GUARD, ограничение RRL_STOCK_POOL_READ.available (основные заказы не вытесняются), stock_closure, row_key новых RESERVATION_ID, anchor STOCK.OUTBOX; execute — повторная сверка CAPACITY_BASIS/NEED_BASIS под якорями (иначе CLOSURE_CHANGED → пересчёт: 40+40 при 60 не проходит), ELIGIBILITY ALLOCATE, create_hard(`TRADE_TOPUP`, proposal), CONFIRMED + один enqueue_event `TRADECASE_TOPUP_REQUESTED`; RELEASE — release_hard только своих HOLD;
+- патч RRL_STOCK_POSTING_API: access assert + compile/execute ветки; `contracts_stock.py`: допустить команды без строк (общий файл inventory — объявляю его);
+- гейт WAVE_RESERVE_SOURCES `TOPUP_HOLD_ADOPTION_REQUIRED` до атомарного принятия; approval_available=false.
+
+## K-0094 — C-0143 возобновлён: владелец разрешил Claude доступ к локальной Oracle (22.10)
+Владелец в чате выбрал «дополнительно разрешить доступ к локальной Oracle». Пакет возобновляю; K-0091 ownership обновляю с учётом вашей интеграции:
+- backend integrations: `contracts_trade_topup.py`, `contracts_trade_transport.py`, `api/trade_transport_routes.py`, `infrastructure/trade_topup.py`, `infrastructure/trade_transport.py` + новые `infrastructure/trade_topup_*.py`, `domain/trade_topup*.py`;
+- inventory: `contracts_stock.py` (только допуск команд TRADE_TOPUP_* без строк) — общий, сообщу точный diff в REVIEW_READY;
+- native (объявляю ДО правки, свежая сверка USER_SOURCE перед изменением): новые RRL_TRADE_TOPUP_API, RRL_TRADE_TOPUP_CMD, таблицы RRL_TRADE_TOPUP_*; правка RRL_STOCK_POSTING_API (две ветки dispatch + access) и гейт в RRL_STOCK_WAVE_CMD (WAVE_RESERVE_SOURCES) — если вы уже держите эти пакеты в интеграции, скажите, отдам как кандидат-файлы без apply;
+- миграции `db/migrations/2026-10-22_trade_topup_*`; frontend `features/integrations/tradecase/**` + help tradecase-documents.html; `reports/tradecase/2026-10-22/claude/C0143/**`; новые tests/tradecase/test_trade_topup_*.
+Не трогаю resources/timeline/case_pick routers и shift/resources. Oracle: только RABAEV/orcl, сначала read-only сверка; apply только после checkpoint-коммита своих файлов, с before/rollback/verify/manifest.
+
+## K-0095 — REVIEW_READY C-0143 (22.10)
+REVIEW_READY_C0143.md готов: миграция `2026-10-22_trade_topup_proposal` (новые RRL_TRADE_TOPUP_* + минимальные патчи POSTING_API dispatch, TRADE_STOCK_GUARD whitelist, TRADE_PICK_CONTEXT гейт, ACCESSIBLE BY RESERVE_CORE/UNIT_CORE; before/after SHA в manifest), Python API (save/decide/confirm/release/sap-reply), checkpoint-коммит `9f62fcb8` (только мои файлы, без push).
+**Oracle: NOT_APPLIED_BY_CLAUDE.** Чтение разрешено и выполнено (снимки T08 = live). Apply отклонён классификатором Claude Code («Modify Shared Resources») — не обходил. Вопрос: применяете ли вы apply.sql сами после проверки дрейфа, или ждём разрешения владельца Claude? Пока продолжаю offline: тесты моделей/контрактов и UI на fixture. approval_available=false.
+
+## K-0096 — RESULT + RELEASE C-0143 (22.10)
+RESULT_C0143.md готов. Native/API кандидат (коммит 9f62fcb8, миграция NOT_APPLIED_BY_CLAUDE) + UI согласования (TopupProposals, сохранение из расчёта, долговечные решения, approval_available=false блокирует подтверждение) + справка #topup.decide. Офлайн 14 PASS, UI fixture 18/18 на index-g5PbXs94.js (0 POST до сервера, 0 JS), gate PASS, encoding PASS. T08 НЕ закрыт: apply/живая приёмка, атомарное принятие волной, после-LOAD сценарии, SAP-подключение — в RESULT.
+**RELEASE C-0143:** T08-файлы (integrations topup/transport, contracts_stock-строка, миграция, tradecase/** UI, help) освобождены; миграцию применяете вы после ревью. Перехожу к C-0145 — ACK отдельной записью.
+
+## K-0097 — ACK C-0145 (22.10)
+C-0145 принят; TASK прочитан. Обращение 3 из 3, новых не будет.
+**Ownership до RELEASE:** backend `api/wms_api_server/app/modules/integrations/{api/trade_transport_routes.py, contracts_trade_transport.py, infrastructure/trade_transport.py}` (только новые маршрут/обеспеченность) + новые `infrastructure/trade_route.py`, `contracts_trade_route.py`; frontend `admin/wms_admin_frontend/src/features/integrations/tradecase/**` (новый `TripRoute.tsx`, подключение в `TripExecution.tsx`, `api.ts`), `admin/wms_admin_frontend/public/help/tradecase-documents.html`; `tests/tradecase/test_trade_route*.py` (новые); `reports/tradecase/2026-10-22/claude/C0145/**`.
+**Не трогаю:** tradecase_documents.py, tradecase_routes.py, integrations public.py, main.py, inventory, SQL-миграции (если понадобится JOIN без подтверждённой схемы — запрошу контракт), shift/resources, чужой runtime evidence. Oracle — только чтение (разрешено владельцем), без apply.
+
+## K-0098 — RESULT + RELEASE C-0145 (22.10)
+RESULT_C0145.md готов. Маршрут — существующий native route-context (порядок/адрес/окно из текущего основания, план ≠ исполнение, depot NOT_CONFIGURED, время NO_INPUT, без фиктивной карты). Обеспеченность — новый READ ONLY `/trips/{trip}/coverage` (одна транзакция; owner до агрегатов, скрытое без чисел; заказано/резерв сейчас/собрано/не обеспечено из line_snapshot_json; погружено/выехало из RRL_TT_HU_LOAD_FACT через CASE или FULL_PALLET; неизвестное=null). Живое Oracle READ ONLY: R1.1155/1156/1168 (CASE) и R1.1221 (FULL_PALLET) — заказано=собрано=выехало, 27–492 мс. Тесты 17 PASS, UI 10/10 (+C0143 18/18) на index-BmlpD63t.js, gate/encoding PASS. `/coverage` на :8088 не выкачен (сервер не перезапускал). T09 не закрыт: связь точки↔получатель (нужен контракт), окна/время/депо, вложенный состав погрузки.
+**RELEASE C-0145:** файлы освобождены. Новых обращений нет (3/3). Без commit/push (кроме ранее сообщённого checkpoint 9f62fcb8).
+
+## K-0099 — ACK C-0146 (22.10)
+C-0146 принят; TASK прочитан. Работаю от актуального кода (root до 89da7d31), не от 9f62fcb8; общие пакеты сверяю свежим read-only чтением и SHA. Apply не выполняю.
+**Ownership до RELEASE:** новая миграция `db/migrations/2026-10-22_trade_topup_wave_adoption/**` (новые native helpers + точечные патчи общих объектов — точный список объектов назову отдельной записью после сверки RRL_PICKING_API.create_plan / RRL_PICK_PLAN_CREATE_API / RRL_STOCK_WAVE_LAUNCH_CMD / RRL_STOCK_RESERVE_CORE / RRL_STOCK_UNIT_CORE / RRL_STOCK_POOL_READ, до правки); `api/wms_api_server/app/modules/integrations/infrastructure/trade_topup.py` (двойной учёт вместимости); новые тесты `tests/tradecase/test_trade_topup_adoption*.py`; `wiki/database/tradecase_topup_wave_adoption_20261022.md` (новый); `reports/tradecase/2026-10-22/claude/C0146/**`.
+**Не трогаю:** применённую миграцию 2026-10-22_trade_topup_proposal, root tests live_stock_acceptance.py / live_topup_proposal.py / тест 40+40/60, UI/маршрут, физические наборы и QA, permissions, публикацию.
+
+## K-0100 — C-0146: точные native объекты до правки (22.10)
+Свежий read-only USER_SOURCE прочитан (RRL_PICKING_API 858 строк, RRL_STOCK_WAVE_LAUNCH_CMD 189, RRL_PICK_PLAN_CREATE_API, RESERVE/UNIT_CORE, POOL_READ, TRADE_PICK_CONTEXT, TRADE_TOPUP_*). Миграция `2026-10-22_trade_topup_wave_adoption` изменит:
+- RRL_PICKING_API body (create_plan): строка своего SAP-заказа добивки видит ТОЛЬКО свой неперенесённый HOLD на его UID/ячейке — `ELIGIBILITY.reason(...,p_owner_reservation=>hold RID)` и +hold к свободному для этой строки; кандидаты сужены до источников удержания; глобального увеличения свободного нет;
+- RRL_STOCK_WAVE_LAUNCH_CMD body: compile объявляет row_key предложения для удержанных строк волны; execute для проекции удержанной строки вместо create_hard+reserve_units — assert_source(owner_reservation=hold) + перепривязка своего HARD (полный: тот же RID; частичный: move_coverage на том же UID/ячейке в заранее объявленный новый RID + перенос точных UNIT ключей release_units/reserve_units в одной TX);
+- RRL_STOCK_RESERVE_CORE spec+body: новая узкая `relink_topup` (только HARD SOURCE_DOC_TYPE='TRADE_TOPUP' того же предложения → PICK_WAVE/план/строка/задание; баланс не меняется; ACCESSIBLE BY без расширения — вызывает WAVE_LAUNCH_CMD);
+- RRL_TRADE_PICK_CONTEXT body: гейт HOLD_ADOPTION_REQUIRED сохраняется для всех, кроме своей валидной строки на источнике её удержания;
+- НОВОЕ: RRL_TRADE_TOPUP_ADOPT (проверки заказ+обновлённый TRIP+склад/источник/получатель/SKU/МРЦ/собственник/единицы, hold-запросы, mark_adopted), таблица RRL_TRADE_TOPUP_ADOPTION (история и связь с волной/задачей).
+Python: `integrations/infrastructure/trade_topup.py` — учёт пересечения SAP_ACCEPTED с TRIP по количеству. Применение — Codex.
+
+## K-0101 — RESULT + RELEASE C-0146 (22.10)
+RESULT_C0146.md готов. Кандидат `2026-10-22_trade_topup_wave_adoption` (коммит 143a37c6, NOT_APPLIED_BY_CLAUDE): RRL_TRADE_TOPUP_ADOPT + RRL_TRADE_TOPUP_ADOPTION, RESERVE_CORE.relink_topup (только TRADE_TOPUP того же предложения, баланс/RID/units неизменны), create_plan видит только свой HOLD через owner_reservation, WAVE_LAUNCH переносит HARD (полный — тот же RID; частичный — move_coverage + точные UNIT ключи в одной TX), гейт pick-context пропускает только свою валидную строку на её источниках. Условия: SAP_ACCEPTED (отменённое → блок), заказ TOPUP + обновлённый TRIP с ним, источник/склад/рейс/получатель/SKU/МРЦ/собственники/штуки. Python: SAP-заказ внутри TRIP не вычитается дважды (по количеству). Before-SHA пяти объектов = live, INVALID 0. Офлайн 7 PASS (29 с соседними), gate/encoding PASS. PL/SQL не компилировался — нужен ваш apply и живая приёмка (сценарии перечислены в RESULT). Ограничения: SHIP_FROM_STOCK отклоняется явно, после LOAD блок, CASE_PICK вместо FULL_PALLET.
+**RELEASE C-0146:** файлы освобождены.
+
+## K-0102 — ACK C-0147 (22.10)
+C-0147 принят после RELEASE C-0146. Ownership до RELEASE: `api/wms_api_server/app/modules/inventory/infrastructure/receiving_marks.py` + новые bounded helpers рядом (`inventory/infrastructure/receiving_marks_batch*.py` при необходимости) и новые тесты `tests/inventory/test_receiving_marks_batch*.py` / `tests/tradecase/test_receiving_marks_batch*.py`; отчёт `reports/tradecase/2026-10-22/claude/C0147/**`. receipt_commands.py / receipt_booking.py / native receipt — только чтение; если понадобится правка, назову отдельной записью до неё. RRL_STOCK_POSTING_API не трогаю. Root live_stock_acceptance.py/live_topup_proposal.py не меняю.
+**Граница среды:** живой повтор приёмки и откатываемая диагностика — запись в БД; моя среда запрещает изменение БД (классификатор), поэтому замеры фаз сделаю офлайн (счётчик SQL/вызовов на неизменном теле запроса через фейковый курсор и read-only проверки данных), а живой замер до/после с исходным operation_id T3.receive.505b15a0 — за Codex.
+
+## K-0103 — RESULT + RELEASE C-0147 (22.10)
+RESULT_C0147.md готов (коммит fe93fb8f). READ ONLY замер исходного тела T3.receive.505b15a0: persist делал 6002 обращения (1000 вставок единиц, 2000 проверок дублей, 1000 вставок кодов, 1000 ADD_CRPT_CODE, 1000 ADD_AGGREGATION_ITEM), одно обращение 1.43–1.49 мс на live → ≥8.6 с только на RTT в stage_receipt (бюджет 30 с); set-based проверки дублей 123/43 мс против 2852 мс. Изменено только receiving_marks.persist: executemany единиц/кодов, две set-проверки дублей, один PL/SQL блок с теми же native ADD_CRPT_CODE/ADD_AGGREGATION_ITEM по порядку → 7 обращений. Эффекты идентичны прежней версии на 1000 ед. (тест эквивалентности), прежние отказы сохранены; 7+19 PASS, gate/encoding PASS. Native/POSTING_API не трогал; deadline не повышал. Живой повтор исходного тела/operation_id после выката 8088 — за вами. Наблюдение: compile SAP_RECEIPT ~2000 named locks (UNIT+MARK) и O(n²) count в ADD_AGGREGATION_ITEM — серверная часть, не мерил.
+**RELEASE C-0147:** файлы освобождены.
+
+## K-0104 — ACK C-0148 (22.10)
+C-0148 принят; TASK прочитан. Ownership до RELEASE: `integrations/infrastructure/trade_route.py` (новый блок маршрута, `_LOADS` coverage SQL не трогаю), НОВЫЕ `integrations/infrastructure/trade_route_plan.py`, `integrations/contracts_trade_route.py`, маршрут в `api/trade_transport_routes.py` + порт `contracts_trade_transport.py` + делегирование `infrastructure/trade_transport.py` (только новые методы); frontend `features/integrations/tradecase/{TripRoute.tsx, api.ts}`, при необходимости `TripExecution.tsx`; `public/help/tradecase-documents.html`; `tests/tradecase/test_trade_route*.py` + новый живой read-only runner; `reports/tradecase/2026-10-22/claude/C0148/**`. Если понадобится сохраняемая привязка — новая миграция `2026-10-22_trade_route_*` (назову до правки), без apply.
+Не трогаю trade_topup*.py, receiving_marks.py, native stock core, coverage `_LOADS`, замороженные составы; Oracle — только чтение.
+
+## K-0105 — RESULT + RELEASE C-0148 (22.10)
+RESULT_C0148.md готов (без коммита; миграций нет). Новый READ ONLY `/trips/{trip}/route-points`: точка (RRL_SBORKA_PALLETS привязанного рейса) → получатель только по ключам (CASE LEGACY_SBORKA_PALLET_ID или FULL_PALLET задание → заказ → trade link), статусы LINKED/UNLINKED/AMBIGUOUS/HIDDEN/OTHER_WAREHOUSE, проверки клиента и адреса (RRL_CUSTOMER_ADDRESS), 404/403. План — существующий delivery-windows (RRL_TT_ROUTE_SCHEDULE), без нового планировщика; RoutePlan в TripRoute с текстами причин и пометкой «план ≠ выезд». Live: R1.1155/1156/1168 LINKED (адрес не в адресах клиента), R1.1221 FULL_PALLET UNLINKED (нет ссылки паллеты сборки); live окна везде INSUFFICIENT_EVIDENCE (нет депо/плеч/правил) — пример 11:00/11:55/12:40 на реальных данных не проверялся. SYNTHETIC вход нативному расчёту: порядок и заезд 15/45 меняют результат (15 OK, 45 — HARD_WINDOW_MISSED). Тесты 3 (+36 соседних) PASS, UI 8/8 1440/390, gate/encoding PASS. /route-points на 8088 не выкачен.
+**RELEASE C-0148:** файлы освобождены.
+
+## K-0106 — ACK C-0149 (22.10)
+C-0149 принят. Исследование: отдельного реестра двора/визитов нет; ворота рейса пишет legacy `services/transport_service.py`, факты этапов — `PATCH /api/admin/transport/operations/{id}/fact` (RRL_TT_OPERATION_PLAN_API.write_fact) без operation_id/конфликтов/exact retry; RRL_DELIVERY_ARRIVAL — приезд в магазин, не двор. Значит нужен новый bounded домен визита (без складских эффектов), опирающийся на существующий рейс (RRL_TRANSPORT_TASK), ворота (RRL_TT_DOCK) и TRADECASE-привязку (RRL_TRADE_TRIP_LINK).
+**Ownership до RELEASE:**
+- native: НОВАЯ миграция `db/migrations/2026-10-22_yard_visit/**` — новые RRL_YARD_VISIT, RRL_YARD_VISIT_EVENT, пакет RRL_YARD_VISIT_API (версионные команды, уникальность активного занятия ворот/машины, operation_id/hash, права склад+owner). Общие native объекты не меняю; без apply;
+- backend: новые `modules/resources/contracts_yard.py`, `modules/resources/infrastructure/yard_visits.py`, `modules/resources/api/yard_routes.py`; регистрация роутера — точечная строка в `modules/resources/public.py` (+ место подключения роутеров, назову при правке); события визитов в Ганте — точечно `modules/resources/infrastructure/resource_timeline.py`/`timeline_projection.py` (если вы их сейчас держите — отдам кандидатом);
+- frontend: `admin/wms_admin_frontend/src/features/platform/workspaces/shift/**` (новая панель двора), `.../workspaces/resources/**` (визиты в Ганте), help `docs/help/authoring/shift-supervisor.md`/`resource-gantt.md`;
+- тесты `tests/tradecase/test_yard_visit*.py`, отчёт `reports/tradecase/2026-10-22/claude/C0149/**`.
+Не трогаю integrations/trade_route*/trade_topup*/receiving_marks, stock core/wave/guard, picking, fixtures. Живые Oracle-записи (fixture, переходы) в моей среде запрещены — офлайн + план живой проверки для Codex.
+
+## K-0107 — RESULT + RELEASE C-0149 (22.10)
+C-0149 кандидат готов, **NOT_APPLIED** (native apply в моей среде запрещён, не обходил). Подробно: `RESULT_C0149.md`. Локальный checkpoint `699ef716` (только мои файлы, без push).
+- Native `db/migrations/2026-10-22_yard_visit/**`: RRL_YARD_VISIT(+SQ), RRL_YARD_VISIT_EVENT + триггер append-only, пакет RRL_YARD_VISIT_API. Ваши критерии «native перед RELEASE» учтены: get_* только в PL/SQL-переменные (тест); tradecase_yard_operate (allowed→alive, удалённый RUSERS=0) и owner текущего момента — до раскрытия cached replay (сначала склад, owner, потом hash); занятость ворот и машины проверяется до UPDATE под блокировкой ACCESS_REV share → TRADE_SITE FOR UPDATE → визит (как у других TRADECASE-писателей), уникальные индексы — последний страж; скрытый owner получает ответ «не найдено» (YARD_TRIP_REQUIRED/YARD_VISIT_NOT_FOUND), в visits() пропускается целиком. manifest sha256 пересчитаны по LF-копии.
+- Backend: contracts_yard / yard_visits / yard_routes; регистрация в resources/public.py и **app/case_resource_composition.py** (в ACK не называл — сообщаю). Гант: источник `yard` в resource_timeline/timeline_projection; до apply живой 8088 отдаёт `yard=NOT_MAPPED`, Гант не падает.
+- Frontend: shift/YardPanel+yardModel+yardCommands (журнал operation_id), процесс «Двор и ворота» у старшего смены; resources adapter/card; help shift-supervisor/resource-gantt.
+- Проверки: pytest 34 passed; UI 26/26 при 1440/390 (fixture /yard/**, живые только GET); quality gate PASS (debt 72), encoding PASS, tsc PASS.
+- **Нужно до живой проверки:** `tradecase_yard_operate` не выдано ни одной роли (live READ ONLY) — выдать ролью своему изолированному QA. План живой проверки (параллельные назначения, exact retry, changed request, отзыв склада/owner, append-only, без изменения stock) — в RESULT.
+- Замечание владельцу роли «Двор и ворота» (`workspaces/RoleDesks.tsx`, не моя): текст «нет журнала прибытия машин» устареет после apply.
+
+**RELEASE C-0149:** освобождаю ownership K-0106 (миграция yard_visit, resources yard/timeline файлы, shift/**, resources/** (визиты), help shift-supervisor/resource-gantt, tests/tradecase/test_yard_visit.py, reports/.../C0149/**). Жду следующее поручение.
+
+## K-0108 — ACK C-0150 (22.10)
+C-0150 принят. Признаю: в K-0107 не учтены сообщения root «C0149 native review root» и «ещё два контракта интеграции» — исправляю единым пакетом, все 8 пунктов.
+**Ownership до RELEASE** (тот же кандидат, NOT_APPLIED): `db/migrations/2026-10-22_yard_visit/**`; `modules/resources/{contracts_yard.py,infrastructure/yard_visits.py,api/yard_routes.py}`; источник yard в `modules/resources/infrastructure/{resource_timeline.py,timeline_projection.py}` (+ при необходимости новый `infrastructure/yard_timeline.py`); frontend `workspaces/shift/{YardPanel.tsx,yardModel.ts,yardCommands.ts,help.ts}`, `workspaces/resources/{timelineAdapter.ts,ResourceCard.tsx}`; `tests/tradecase/test_yard_visit*.py`; `reports/tradecase/2026-10-22/claude/C0150/**`; wiki-кандидат `wiki/database/tradecase_yard_visit_20261022.md`. Без apply/permissions/stock/route/receiving.
+
+## K-0109 — RESULT + RELEASE C-0150 (22.10)
+Все 8 блокеров исправлены кодом, кандидат **NOT_APPLIED**, checkpoint `4d9bbed0`. Таблица «блокер → изменение → доказательство» — `RESULT_C0150.md`. Коротко: owners из ORDER `lines[].source_owner_id` по строкам TRIP (fail closed); replay: право → locks → право → owner → ACTOR+hash; deleted RUSERS закрывает уже `allowed()→alive()` (источник прочитан live READ ONLY); ARRIVE перечитывает привязку/машину, INBOUND отказ; глобальный нормализованный VEHICLE_UK; operation_id в каждой квитанции + проверка в адаптере и UI; owner-фильтр `trip_visible()` до FETCH FIRST; Гант через `history` по окну с EVENT_AT: машина ARRIVE→DEPART/CANCEL, каждые ворота отдельным событием (синтетика 10:00/10:30/11:00/12:00 → 10–12, A 10:30–11, B 11–12).
+Проверки: pytest 42, UI 34/34 (1440/390), gate/encoding/tsc PASS. PL/SQL не компилировался в моей среде — покажет verify при apply. Живая проверка (A/B машина, 200 hidden+visible, replay другим автором, несвязанный ORDER) — план в RESULT.
+**RELEASE C-0150:** освобождаю ownership K-0108. Новых пакетов вне C-0150 не начинал (уточнение владельца о скорости учтено).
+
+## K-0110 — ACK C-0151 (22.10), исследование; реализация не начата
+C-0151 принят. **Ownership до RELEASE:** `integrations/infrastructure/trade_route_plan.py`, новые bounded route helper/contracts/api рядом (пути назову при создании), frontend `tradecase/TripRoute.tsx`, `tradecase/RoutePlan.tsx` + targeted route controls, help `#route`, `tests/tradecase/test_trade_route*.py`, `reports/tradecase/2026-10-22/claude/C0151/**`. yard/resources/shift/topup/stock/receiving не трогаю.
+Исследование (live READ ONLY `C0151/scripts/time_context_live.py`, рейс 33665: context 69 мс, calculate 24 мс) — чего не хватает и чем это задаётся существующими командами:
+1. Депо: `WAREHOUSE_DEPOT_NOT_CONFIGURED` → есть `POST /api/transport/warehouse-depots` (warehouse_settings_edit, operation_id+expected_version).
+2. Плечи склад→точка→склад: `ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED` (RRL_ADDR_DISTANCE_MATRIX, свежесть 24 ч); есть `POST /api/transport/preflight/route-inputs` (drive_min/drive_back_min + source_hash/версия) — проверяю, закрывает ли он плечи для RRL_TT_ROUTE_SCHEDULE.
+3. Окна: ST без окон, профиль магазина отсутствует → есть `PUT /api/master-data/store-profile` (WEEKLY окна, пояс).
+4. `DESTINATION_RULE_INVALID` (destination_rules пусто) и `ROUTE_DEPARTURE_STAGE_UNKNOWN` (operations пусто) — ищу существующий писатель; если его нет, предложу additive контракт отдельным сообщением до кода.
+Состояние: код не менялся. Лимит сессии исчерпан — продолжу с п.2–4 в следующей сессии.
+
+## K-0111 — ACK C-0152 (23.10)
+Сессия возобновлена; C-0151 route paths не трогаю (передан root). C-0152 принят.
+**Что уже есть (live READ ONLY, `reports/tradecase/2026-10-23/claude/C0152/scripts/*_live.py`):** пересчёт/расхождение — `INVENTORY_COUNT` + RRL_INVENTORY_TASK + API `/api/inventory/stock-posting/inventory/{revisions,lots,counts}` (экран восстановления недостач); карантин — native `MOVE_QUARANTINE` (целая паллета в/из ячейки `BLOCKED_FOR_REMAINS=1`, legacy право QUARANTINE_MOVE, owner через RRL_TRADE_STOCK_GUARD), **но HTTP-маршрута и экрана нет**; брак/решение контролёра и проведённое списание товара — **нет** (только TARE_WRITE_OFF; RRL_QUALITY_HOLD пуст и ядром не читается).
+**План (без изменения stock core):**
+1. Карантин: bounded маршрут поверх существующего `MOVE_QUARANTINE` (тот же posting runner/журнал/RESULT_UNCERTAIN).
+2. Новый additive native `RRL_TRADE_QUALITY_CASE_API` (+ CASE/UNIT/EVENT, append-only): контролёр открывает дело на паллету в карантине с замороженным составом (единицы, артикул, количество, owner из RRL_TRADE_STOCK_ATTR) → решение DEFECT/RELEASED; руководство проводит списание DEFECT → WRITE_OFF_POSTED, внешний этап SAP/СКМ = `EXTERNAL_PENDING` (не подменяю). Перед решением/проведением состав сверяется с текущим остатком (иначе конфликт). Остаток не меняется до внешнего ответа — вне пакета.
+3. Расхождения: чтение задач пересчёта с отклонением и переход в существующий экран.
+4. Рабочее место «Исключения» с составом, состоянием, действиями, help.
+**Граница:** выпуск паллеты из карантина при деле DEFECT/POSTED блокирую в моём маршруте/пакете; native-запрет в RRL_TRADE_STOCK_GUARD для `MOVE_QUARANTINE` — общий файл root, предложу отдельным сообщением, не правлю.
+**Ownership до RELEASE:** `db/migrations/2026-10-23_trade_quality_case/**`; `api/.../modules/inventory/{contracts_quality_case.py,infrastructure/quality_cases.py,api/quality_case_routes.py}` + строки регистрации в `modules/inventory/public.py` и месте подключения роутеров (назову); frontend новый `admin/.../features/platform/workspaces/exceptions/**` + одна строка роли в `workspaces/WorkplaceHome.tsx`; help `docs/help/authoring/exceptions.md`; `tests/tradecase/test_quality_case*.py`; `reports/tradecase/2026-10-23/claude/C0152/**`. Новые права `tradecase_quality_control` / `tradecase_quality_post` никому не выдаю.
+
+## K-0112 — RESULT + RELEASE C-0152 (23.10)
+Пакет сдан, native **NOT_APPLIED**, checkpoint `c4a2f0b8`; подробно `RESULT_C0152.md`. Ваши замечания K0111 учтены кодом: состояние после руководства — `WAITING_POSTING` (`posting_status=WAITING_NATIVE_POSTING`), не POSTED, т.к. штатного владельца списания товара нет; удержание — существующая `RRL_QUALITY_HOLD` через RRL_TRACEABILITY_API; дело хранит только ключи кодов (без количества — не второй ledger); интерфейсная предпроверка выпуска явно названа предпроверкой, native-запрет — кандидат root `reports/tradecase/2026-10-23/claude/C0152/root_candidate_trade_stock_guard.md` (точное место в assert_command_stock + точки применения). Карантин — существующий `MOVE_QUARANTINE` (блокировка подбора/волн/отгрузки уже native по BLOCKED_FOR_REMAINS, источники перечислены).
+Проверки: pytest 47, UI 34/34 (1440/390, fixtures), gate/encoding/tsc PASS; live только READ ONLY. Находка: на торговых площадках нет карантинных ячеек — нужна в fixture root. PL/SQL не компилировался в моей среде.
+Регистрация: `app/quality_case_composition.py` + 2 строки в `app/main.py`, экспорт в `modules/inventory/public.py`, роль в `WorkplaceHome.tsx` (файлы сохранены синтаксически готовыми, routes проверены импортом app.main).
+**RELEASE C-0152:** освобождаю ownership K-0111.
+
+## K-0113 — ACK C-0153 (23.10)
+C-0153 принят. Исследование (live READ ONLY): штатное списание товара из карантина уже есть у `STORE_RETURN_DISPOSE` — `RRL_STOCK_EFFECT_CORE.consume(..., p_disposal_receipt)` + `RRL_SAP_RECEIPT_OUTBOX` в той же TX под posting runner; consume из карантинной ячейки допускается только с явным параметром-исключением. Guard `RRL_TRADE_STOCK_GUARD.assert_command_stock` вызывается dispatcher'ом в `execute_prepared` **после** захвата STOCK-блокировок (rank 50) для каждой паллеты — место для native-удержания. Лок паллеты = `dbms_lock` по `RRL_STOCK_LOCK_API.resource_lock_id(50,resource_key('STOCK',uid))`.
+**План:** новый posting kind `TRADE_QUALITY_WRITE_OFF`, владелец — новый пакет `RRL_STOCK_QUALITY_WRITEOFF` (assert_scope/compile/execute/validate_consume по образцу disposal): права/склад/owner, дело `WAITING_POSTING` той же версии, неизменный замороженный состав, нет HARD-резерва/HU-связи/погрузки, `consume` точных кодов, дело → `POSTED`, удержание снимается, исходящий документ в `RRL_SAP_RECEIPT_OUTBOX` (`external_sap_ack=false`) — всё одна TX. Native hold в guard: активное `RRL_QUALITY_HOLD` на паллете запрещает любую posting-команду, кроме INVENTORY_COUNT/INVENTORY_REGISTER_LOT и `TRADE_QUALITY_WRITE_OFF` именно этого дела. Команды дела берут тот же STOCK-лок паллеты (гонка открытия/решения с перемещением). Экран: «Провести списание» для WAITING_POSTING; POSTED + «ждёт ответа SAP» раздельно.
+**Ownership до RELEASE:** новая миграция `db/migrations/2026-10-23_trade_quality_posting/**` с fresh before-SHA и restore-копиями для общих объектов: **`RRL_STOCK_EFFECT_CORE` (spec+body: параметр `p_quality_case` + accessible by)**, **`RRL_STOCK_POSTING_API` body (минимальная регистрация kind в scope/compile/execute)**, **`RRL_TRADE_STOCK_GUARD` body (hold-check)**, `RRL_TRADE_QUALITY_CASE_API` body + ALTER `RRL_TRADE_QUALITY_CASE` (POSTED; мой C0152-кандидат — исходник C0152 не меняю, новая версия только в этой миграции); новый пакет `RRL_STOCK_QUALITY_WRITEOFF`. Backend: `modules/inventory/{contracts_quality_case.py,infrastructure/quality_cases.py,api/quality_case_routes.py}`, **одна строка kind в `modules/inventory/contracts_stock.py`** (набор команд без строк). Frontend `workspaces/exceptions/**`, help `exceptions.md`, тесты `tests/tradecase/test_quality_*.py`, отчёт `reports/tradecase/2026-10-23/claude/C0153/**`. Route/depot/store не трогаю; apply не делаю.
+
+## K-0114 — C-0153 уточнение ownership
+99.9% кодов TRADECASE маркированы (RRL_TRADE_STOCK_ATTR.MARK_STATE VALID/PENDING), а `RRL_REGULATORY_STOCK_OUTBOX.enqueue_events` принимает только STORE_RETURN_DISPOSE/LOAD_SHIPMENT. Чтобы списание маркированного брака ставило штатное событие выбытия (`MARKED_GOODS_DISPOSED`, как у утилизации возврата) в той же TX, беру ещё **`RRL_REGULATORY_STOCK_OUTBOX` body** — одна ветка `elsif` для `TRADE_QUALITY_WRITE_OFF` (fresh before-SHA в той же миграции). Ответ ЧЗ/SAP остаётся внешним PENDING. Если не согласны — напишите, сделаю fail closed для маркированных кодов.
+
+## K-0115 — RESULT + RELEASE C-0153 (23.10)
+Пакет сдан, **NOT_APPLIED, PL/SQL у меня не компилировался**; checkpoint `7b076874`; подробно `RESULT_C0153.md`. Новый kind `TRADE_QUALITY_WRITE_OFF` (пакет `RRL_STOCK_QUALITY_WRITEOFF`): права/owner, неизменный замороженный состав, без резерва/HU, `EFFECT_CORE.consume` точных кодов, дело POSTED, снятие удержания, выбытие маркировки и `RRL_SAP_RECEIPT_OUTBOX` — одна TX runner'а. Native удержание в `assert_command_stock` после STOCK-блокировок (исключения: пересчёт и проводка своего дела); покрытие обосновано triggers write guard. Команды дела берут тот же STOCK dbms_lock до чтения состава; `cell_visible` fail closed. Before-SHA fresh (C0152 — установленная root версия, совпала с исходником). Тесты 35 PASS (5 MES replay — предсуществующие), UI 42/42, gate/encoding/tsc PASS.
+**RELEASE C-0153:** освобождаю ownership K-0113/K-0114.
+
+## K-0116 — ACK C-0154 (23.10)
+C-0154 принят. Правило (program.txt, раздел 12): дополнительный заезд с обслуживанием **предлагается на согласование, если укладывается в остаток до предельного времени основной доставки** (пример: остаток 30, заезд 15 → предложить; 45 → отклонить), с показом изменения времени и пробега; после подтверждения — заказ SAP и новая точка; при запрете новых точек не предлагается. 15 мин — пример, не лимит: остаток берётся из настоящего пересчёта.
+**Что есть:** депо, оценка рейса через route-inputs (она же пересоздаёт плановые операции → момент выезда/конец ресурса для `calculate`), нормы/строгость окна в профиле адреса, обновление плеч (провайдеры сейчас недоступны). Решения о заезде и запрета новых точек нет нигде.
+**План:** новый native пакет `RRL_TRADE_EXTRA_STOP_API` (additive, общие TT-пакеты не меняю): `evaluate` READ ONLY — `RRL_TT_TIME_API.context` → BEFORE `RRL_TT_ROUTE_SCHEDULE.calculate`; для каждой позиции вставки адреса строит AFTER-источник штатными `RRL_TT_ROUTE_SCHEDULE.material` + `RRL_STORE_WINDOW_RULES.material` + правило адреса из RRL_ADDR (как context) и считает тем же `calculate`; решение PROPOSE (лучшая выполнимая позиция) / REJECT (полные данные, но нарушение строгого окна/конца ресурса) / UNKNOWN (нет плеч/правил/неполный BEFORE — обещать нельзя) / FORBIDDEN (запрет новых точек); delta приезда/ожидания/опоздания/возврата/пробега (км из кэша плеч или «нет данных»). `command`: согласование/отклонение диспетчером (`transport_dispatch_edit`) с повторной оценкой в той же TX, source_hash+version контекста, operation_id/автор/хеш, append-only журнал; согласованное → «ждёт заказ SAP» (SAP недоступен — не выдумываю); смена source_hash → решение устарело, нужно новое. Запрет новых точек — версионная настройка рейса той же командой.
+**Ownership до RELEASE:** новая миграция `db/migrations/2026-10-23_trade_extra_stop/**`; backend новые `modules/transport/{contracts_extra_stop.py,infrastructure/extra_stop.py,api/extra_stop_routes.py}` + регистрация в `app/transport_preflight_composition.py`; frontend новый `features/integrations/tradecase/ExtraStop.tsx` + встраивание в `RoutePlan.tsx`/`TripRoute.tsx`, help `#route` (`help/tradecase-documents.html`/исходник справки маршрута — уточню путь при правке); тесты `tests/tradecase/test_trade_extra_stop*.py`; отчёт `reports/tradecase/2026-10-23/claude/C0154/**`. Store master data/depot/road refresh/stock/quality/yard не меняю; apply не делаю.
+
+## K-0117 — RESULT + RELEASE C-0154 (23.10)
+Пакет сдан, native **NOT_APPLIED**, checkpoint `693406f8`; подробно `RESULT_C0154.md`. Правило — раздел 12 программы как «заезд укладывается в остаток до предельного времени» по пересчёту штатным `RRL_TT_ROUTE_SCHEDULE.calculate` (15/45 не зашиты). Новый `RRL_TRADE_EXTRA_STOP_API`: evaluate по всем позициям вставки (штатные material/window rules), PROPOSE/REJECT/UNKNOWN/FORBIDDEN, изменения приезда/ожидания/опоздания/возврата/пробега; command APPROVE (повторный пересчёт в TX, source_hash+version, позиция) / DECLINE / SET_POLICY, append-only, → WAITING_SAP_ORDER; устаревание решения при смене маршрута. PURE+evaluate выполнены read-only анонимным блоком на живой БД: пример программы 30 мин остатка → 15 PROPOSE (остаток 15, +15), 45 REJECT; реальные рейсы UNKNOWN с native причинами. Писатели всех входов расчёта уже есть (route-inputs создаёт DRIVE/DRIVE_BACK через OPERATION_PLAN.generate) — добавлены подсказки «Что сделать». Находка: native перерыв 15 мин после 120 мин вождения сдвигает пример раздела 10 (12:55/14:10 вместо 12:40/13:55). Тесты 22 PASS, UI 28/28, gate/encoding/tsc PASS. Общие правки: 2 строки main.py, экспорт transport/public.py, 1 строка кода в tradecase/useRead.ts.
+**RELEASE C-0154:** освобождаю ownership K-0116.
+
+## K-0118 — C-0154: замечания review учтены (дополнение к RELEASE K-0117)
+Ваш review пришёл одновременно с K-0117; учтено кодом до приёмки: private helpers из SQL не вызываются, JSON-методы вне SQL; `evaluate_source` сделан private, evaluate/command затирают присланные extra_rule/ban — решают только RRL_ADDR, таблица запрета и штатный material; стоимость измерена live (вариант ≈320 мс на 51-точечном рейсе 5977 → полный перебор ≈17 с) → перебор всех позиций только до 20 точек, длиннее — позиция от диспетчера (1 вариант). Тесты 11, UI 28/28, gate PASS. RESULT_C0154 дополнен разделом «Ревизия». RELEASE C-0154 в силе.
+
+## K-0119 — ACK C-0154 REVIEW (C-0155 в очереди)
+Принято, исправляю целым пакетом в том же неприменённом кандидате. Ownership: `db/migrations/2026-10-23_trade_extra_stop/**` (001 схема: колонка отпечатка; 002 пакет), `modules/transport/{contracts_extra_stop.py,infrastructure/extra_stop.py}`, `tradecase/ExtraStop.tsx`, `tests/tradecase/test_trade_extra_stop.py`, `reports/tradecase/2026-10-23/claude/C0154/**`. План: (1) `RRL_ACCESS_REV` share до row lock рейса, права до/после; (2) `proposal_fingerprint` = sha полного AFTER-источника выбранного варианта (плечи с updated_at, правила/профиль адреса, окна, операции) + базовый hash; APPROVE требует тот же отпечаток; список: CURRENT только при совпадении базы и (для согласованных, не более 5 последних, одна позиция) отпечатка, иначе STALE_INPUTS_CHANGED; (3) перед окончательной оценкой в APPROVE — штатный `RRL_TT_ROUTE_SCHEDULE.lock_material` на AFTER-источник (RRL_ADDR + плечи FOR UPDATE), затем повторная оценка; явный отказ при NULL позиции; (4) под lock рейса — отказ `EXTRA_STOP_ALREADY_APPROVED`, если действующее согласование того же адреса с той же базой и отпечатком уже есть.
+
+## K-0120 — RESULT + RELEASE исправленного C-0154 (ревью K-0119)
+Все 4 пункта исправлены кодом в том же кандидате, checkpoint `7f15288c`, подробно — RESULT_C0154 «Ревизия 2»: ACCESS_REV fence до строки рейса; APPROVE привязан к `proposal_fingerprint` (база + полный AFTER-источник штатных material) и отказывает при изменении, список различает STALE_INPUTS_CHANGED (не более 5 пересчётов по одному варианту); перед окончательной оценкой `RRL_TT_ROUTE_SCHEDULE.lock_material` на AFTER-источник; NULL позиции/отпечатка — отказ; повторное согласование того же адреса на той же базе — `EXTRA_STOP_ALREADY_APPROVED`. Тесты 13, UI 28/28, gate PASS; live read-only — отпечаток стабилен и меняется со входами. command/decisions компилирует root.
+**RELEASE C-0154** (исправленный). Перехожу к C-0155 после вашего подтверждения/по TASK.
+
+## K-0121 — ACK C-0155 (остаток после распределения root)
+Сессия снова активна. API_READY_C0155_READ и распределение прочитаны; файлы root (`resources/TaskPaperPanel.tsx`, `taskPaperModel.ts`, `taskPaper.css`, вставка в `ResourceCard.tsx`, `public/help/warehouse-task-paper.html`) **не меняю**, только импортирую панель. Ownership до RELEASE:
+- новый `admin/wms_admin_frontend/src/features/platform/workspaces/paper/**` — рабочее место «Бумажные задания»: склад → ограниченная scoped очередь (`GET /api/warehouse-tasks?ware_id&assigned_to&limit≤100`, только незавершённые), у строки — панель бланка root; вход по штрихкоду `WTASK:<id>:<sig>` → сверка через `GET …/paper?expected_signature` и открытие той же панели; 403/404 очищают, поздний ответ игнорируется;
+- одна строка роли в `workspaces/WorkplaceHome.tsx`;
+- справка `docs/help/authoring/paper-tasks.md`;
+- review печати 1440/390/PDF бланка root (playwright, отчёт с находками для root, без правок его файлов);
+- тесты/отчёт `reports/tradecase/2026-10-23/claude/C0155/**`.
+Внесение факта не делаю и не объявляю готовым (у root). Backend/native/fixtures не трогаю.
+
+## K-0122 — RESULT + RELEASE C-0155 (моя часть)
+Checkpoint `a2322314`, подробно `RESULT_C0155.md`. Рабочее место «Бумажные задания»: scoped очередь склада (≤100, только незавершённые) → панель бланка root без изменений; вход по штрихкоду `WTASK:` через ваш `/paper?expected_signature` (актуален → то же задание; 409 → устарел). Справка `paper-tasks.md`. UI 19/19 при 1440/390 на живых GET склада 9104 (настоящий 409, PDF один лист A4, поля не обрезаны, штрихкод в странице); fixture только 403. Находки по вашему бланку: «-» вместо «не назначен», пустой «Со склада», ширина модуля штрихкода зависит от формата (нужна проверка принтером/сканером), MES-тип как «Складская работа». Внесение факта не делал. gate/encoding/tsc PASS.
+**RELEASE C-0155:** освобождаю `workspaces/paper/**`, строку в WorkplaceHome, `paper-tasks.md`, отчёт C0155.
+
+## K-0123 — ACK C-0156 (бумажная сборка CASE)
+Исследование (live READ ONLY): `CASE_PICK_CONFIRM` (owner `RRL_STOCK_CASE_PICK_CMD`) — накопительный `fact_qty`, operation_id/канонический запрос (точный replay), актор = назначенный или `case_pick_manage` (`CASE_TASK_ACTOR_CONFLICT`), `CONTENT_VERSION` сверяется только между compile/execute; **версии печатного бланка нет** — устаревшую бумагу натив не отличит. Маркированные строки требуют `unit_scans`/`unit_keys` (бумага их не заменит).
+**План:** идентичность `CPICK:<task>:<line>:<sig>` (по строке: подтверждение одной строки меняет CONTENT_VERSION задания, поэтому подпись — по строке: задание/статус/исполнитель/ASSIGNMENT_VERSION + строка/ячейка/товар/план/факт/статус/режим скана). NOT_APPLIED native кандидат: новый пакет `RRL_CASE_PICK_PAPER` (line_signature, assert_expected → -20886 `CASE_PAPER_LINE_CHANGED`, не retry-класс) + минимальный hook в `RRL_STOCK_CASE_PICK_CMD` (compile и execute после блокировок, только если передан `expected_case_signature`; replay без изменений) — свежий before SHA, rollback/verify.
+**Ownership до RELEASE:** `db/migrations/2026-10-23_case_pick_paper/**`; backend: новые `modules/inventory/{domain/case_paper.py (свой Code128 для CPICK на общих PATTERNS sscc_label), infrastructure/case_paper.py, api/case_paper_routes.py}` + экспорт в `modules/inventory/public.py` + регистрация (назову место); точечно поле `expected_case_signature` в `schemas.py:CasePickLineConfirmRequest` и передача в metadata в `modules/inventory/infrastructure/case_pick_commands.py`; frontend: `workspaces/paper/**` (раздел CASE + `CasePaperPanel`), help `docs/help/authoring/paper-tasks.md`; тесты `tests/tradecase/test_case_paper*.py`; отчёт `reports/tradecase/2026-10-23/claude/C0156/**`. Файлы root (resources TaskPaper*, inventory/domain/task_paper.py, generic warehouse-task paper/fact) не трогаю; POSTING_API не меняю; frontend dist не собираю (dev :3021).
+
+## K-0124
+C-0156 RESULT + RELEASE. Checkpoint `ac0bfde0` (локально, без push). Отчёт: `RESULT_C0156.md`.
+Native `db/migrations/2026-10-23_case_pick_paper/` NOT_APPLIED: пакет `RRL_CASE_PICK_PAPER` и одна строка `assert_expected` в execute RRL_STOCK_CASE_PICK_CMD, после canonical locks и actor check, до сканов и update; в compile проверки нет. Подпись только строки (assignee, carrier, cell, article, plan, picked, line status, scan mode, SKU receipt POLICY_VERSION). Без ASSIGNMENT_VERSION: триггер RRL_CASE_ASSIGN_VERSION_GUARD поднимает её на каждом start/status. Exact replay идёт через ветку v_exists в POSTING_API до compile. Before/after hashes лежат в manifest и verify.
+Ревью root учтено: проекция маркировки и веса — одна SQL на все уникальные артикулы, в бланке всего 5 SQL; масштаб 200 не заявлен (в БД максимум 2 строки, см. `C0156/sql-report.md`); весовой товар без этикетки оставлен на ручных весах, маркировка и весовая этикетка только через ТСД.
+Проверки: pytest test_case_paper 10/10, replay/boundary PASS; UI 35/35 при 1440/390 (LIVE GET очереди; `/paper` — fixture transport из живых строк; POST — fixture); C0155 19/19; gate PASS (debt 72); tsc PASS; encoding PASS.
+Для root: apply → verify → общий restart, затем живой native-отказ и подтверждение на QA-задании (это запись, её делаю не я).
+RELEASE: `api/wms_api_server/app/{case_paper_composition.py, main.py (2 строки), schemas.py (поле), modules/inventory/{contracts_case_paper.py, public.py (3 строки), api/case_paper_routes.py, domain/case_paper.py, infrastructure/case_paper.py, infrastructure/case_pick_commands.py}}`; `admin/wms_admin_frontend/src/features/platform/workspaces/paper/**`; `docs/help/authoring/paper-tasks.md`; `db/migrations/2026-10-23_case_pick_paper/**`; `tests/tradecase/test_case_paper.py`; `reports/tradecase/2026-10-23/claude/C0156/**`.
+
+## K-0125
+C-0156 NATIVE_READY + BACKEND READY (checkpoint `ac0bfde0`).
+- NATIVE_READY: `db/migrations/2026-10-23_case_pick_paper/**`, CANDIDATE_NOT_APPLIED. Before body RRL_STOCK_CASE_PICK_CMD `528383B6901231C39FF47D1BCAD2BC35E778E3A0F1A268ABE9F9CBF3FA000489`. After: CMD body `53EA97ECEF44BC34CEBEAC464F6A131D0F31D51A3C27221CB2715740485E735F`, RRL_CASE_PICK_PAPER spec `CFA6B9FF605C009EC8960270808152865A809D4675CB73DEB153CF60591BD688`, body `E7B8B94A53DEBC472A6B28D3423D957BC838745362969FA14A86FFBE4C3CE6CD`. Порядок apply.sql: preflight → 001 → 002 → verify; откат: rollback.sql → rollback_verify. Файлы и SHA — manifest.json.
+- BACKEND READY для общего restart: `app/case_paper_composition.py`, `main.py` (+2), `schemas.py` (expected_case_signature), `modules/inventory/{contracts_case_paper.py, public.py, api/case_paper_routes.py, domain/case_paper.py, infrastructure/case_paper.py, infrastructure/case_pick_commands.py}`. Без apply пакета `/paper` отвечает 503 CASE_PAPER_NOT_AVAILABLE. Confirm без подписи работает как раньше.
+- Фикстуры root (CASE1172/line1174, WARE219023232) не трогаю. Дальше делаю только UI `workspaces/paper/**`: ввод кодов маркировки HID-сканером через существующие unit_scans. Backend и native не меняю; изменения сообщу отдельно.
+
+## K-0126
+C-0156 UI: маркированные строки CASE теперь вносятся с бумаги. Checkpoint `9d73f60a`. Изменения только UI `workspaces/paper/**` и help `docs/help/authoring/paper-tasks.md`; backend и native не менялись, BACKEND/NATIVE READY из K-0125 в силе.
+- Для строки MARKING_SCAN_REQUIRED коды сканируются HID-сканером в поле (Enter после каждого кода, повторный код не добавляется). Профиль берётся из существующего `GET …/lines/{l}/marking-policy`; если профилей несколько — выбор. Коды уходят как существующие `unit_scans` вместе с expected_case_signature. Скан товара при этом не нужен (native: CASE_PRODUCT_SCAN_CONFLICT только без units). Количество и принадлежность единиц проверяет native.
+- Весовая этикетка (WEIGHT_LABEL_SCAN_REQUIRED) по-прежнему блокируется — только ТСД.
+- UI 37/37 при 1440/390: добавлены маркированная строка (fixture: marking-policy и ack; 2 кода, дубль отброшен, тело с unit_scans CRPT/WATER, scan_product=null) и блок весовой этикетки. Gate PASS, tsc PASS, encoding PASS.
+- Не проверено: передачу GS-разделителей реальным HID-сканером в браузер. Это стоит проверить на фикстуре root CASE1172/line1174.
+RELEASE: `admin/wms_admin_frontend/src/features/platform/workspaces/paper/**`, `docs/help/authoring/paper-tasks.md`, `reports/tradecase/2026-10-23/claude/C0156/**`.
+
+## K-0127
+ACK по доведению C0156 UI: `admin/wms_admin_frontend/src/features/platform/workspaces/paper/{casePaper.ts,CasePaperPanel.tsx,help.ts,paper.css}`, `docs/help/authoring/paper-tasks.md`, `reports/tradecase/2026-10-23/claude/C0156/**` (UI-тест). Backend и native не трогаю. Пункт 1 (unit_scans: реальные коды HID через marking-policy; весовая этикетка не блокирует обычные коды) уже сделан в K-0126 `9d73f60a`. Сейчас делаю пункты 2 (scope до и после сети) и 3 (снятие журнала только по своему подтверждённому отказу) и читабельные отказы.
+
+## K-0128
+C-0156 guards: RESULT + полный RELEASE UI. Checkpoint `8743cb7c` (поверх `9d73f60a`, `ac0bfde0`; локально, без push).
+1. unit_scans (K-0126): реальные коды HID; профиль из существующего marking-policy; коды лежат в неизменяемом wire. Блокируется только WEIGHT_LABEL, обычные коды маркировки (в т.ч. TOBACCO) не блокируются.
+2. Scope:
+   - перед сетью `sendCasePending` сверяет scope входа и точную сохранённую запись (тот же ключ, путь и байты); чужая запись не отправляется;
+   - если вход сменился, пока ждали ответ, результат не показывается и запись прежнего входа остаётся;
+   - форма читает журнал на каждом рендере, поэтому после смены входа показывает состояние уже нового входа.
+3. Снятие записи из журнала:
+   - только квитанция с тем же operation_id;
+   - или 409 с outcome_confirmed=true, тем же operation_id, без read_before_retry и без CONTENT_CONFLICT;
+   - или 422 проверки формы (CASE_COMMAND_INVALID или ошибка валидации: проведения не было).
+   - 401, 403, 503, сеть, конфликт содержимого и чужой operation_id оставляют запись.
+   - Отказы показываются читабельным текстом; внутренний код — мелкой строкой «код: …».
+4. Найден и исправлен двойной submit: React переиспользовал одну кнопку, и «Повторить» (type=button) после перерисовки становилась «Внести факт» (type=submit). Теперь у кнопок разные key.
+- UI `C0156/scripts/c0156_ui.cjs` **47/47** при 1440/390:
+  - добавлены: подтверждённый отказ с чужим operation_id (запись остаётся); конфликт содержимого (остаётся, текст читабельный); смена входа до повтора (POST не ушёл); возврат на свой вход (те же байты, ack); поздний ответ после смены входа (результат скрыт, запись своего входа цела, затем точный повтор и ack).
+  - Смена входа выполнена через тот же модуль api.ts приложения. Все POST — fixture; живых записей 0.
+- Gate PASS, tsc PASS, encoding PASS.
+RELEASE: `admin/wms_admin_frontend/src/features/platform/workspaces/paper/**`, `docs/help/authoring/paper-tasks.md`, `reports/tradecase/2026-10-23/claude/C0156/**`. Dist не собирал. Перехожу к C0157 и пришлю ACK путей.
+
+## K-0129
+ACK C-0157 (добивка в общий пул). Прочитал READ ONLY живые исходники: RRL_TRADE_TOPUP_ADOPT, RRL_STOCK_POOL_CMD, RRL_STOCK_POOL_READ, RRL_PICKING_API, RRL_STOCK_WAVE_LAUNCH_CMD, RRL_TRADE_TOPUP_CMD/READ.
+Находка: планирование (`create_plan`) пул не использует. Двойное обещание возникает в двух местах:
+- (а) `RRL_STOCK_POOL_READ.snapshot_json` считает потребность строки добивки полной: её HARD-удержание не привязано к строке плана;
+- (б) `RRL_STOCK_POOL_CMD.compile_wave_pool` требует для строки пуловое SOFT-распределение.
+Подтверждение добивки уже защищает открытую потребность основных заказов (`protected_units` через `line_snapshot_json`), его не меняю. `line_snapshot_json` тоже не меняю: им пользуется `create_plan`, и иначе строка добивки перестала бы планироваться на своё удержание.
+План: отдельный NOT_APPLIED комплект `db/migrations/2026-10-23_trade_topup_common_pool/**` (preflight с before SHA, apply, verify, rollback, rollback_verify, manifest). Затрагивает общие тела пакетов:
+- `RRL_STOCK_POOL_READ` body: в пуловом снимке у строки добивки вычитается её ACTIVE-удержание; у заблокированной строки (line_proposal=-1) потребность 0;
+- `RRL_STOCK_POOL_CMD` body: в `compile_wave_pool` строка с line_proposal>0 не требует пула — её обслуживает своё удержание через существующий `adopt_hold`;
+- `RRL_TRADE_TOPUP_ADOPT` body (T08): `TRADE_TOPUP_COMMON_POOL_UNSUPPORTED` заменяется явным отказом, если у строки добивки осталось активное пуловое SOFT (нужен пересчёт пула).
+Spec не меняю, `RRL_STOCK_RESERVE_CORE` / `RRL_PICKING_API` / `RRL_STOCK_WAVE_LAUNCH_CMD` не меняю.
+UI/help: `admin/wms_admin_frontend/src/features/integrations/tradecase/TopupProposals.tsx` (только тексты кодов), `admin/wms_admin_frontend/public/help/tradecase-documents.html` (раздел добивки).
+Тесты и отчёт: `tests/tradecase/test_trade_topup_common_pool.py`, `reports/tradecase/2026-10-23/claude/C0157/**`.
+`approval_available` не включаю. Fixture DML не делаю. RRL_STOCK_CASE_PICK_CMD, CASE paper, generic task и count handlers не трогаю.
+
+## K-0130
+C-0157 RESULT + NATIVE_READY + RELEASE. Checkpoint `d28e2e6a` (локально, без push). Отчёт: `RESULT_C0157.md` (= `reports/tradecase/2026-10-23/claude/C0157/README.md`).
+- NATIVE_READY `db/migrations/2026-10-23_trade_topup_common_pool/**`, CANDIDATE_NOT_APPLIED; меняются только тела, spec нет:
+  - `RRL_STOCK_POOL_READ`: before `3C4BE33A…29BE3B` → after `761B51CA…A126C1`. В `snapshot_json` у строки добивки вычитается её ACTIVE-удержание, у заблокированной (-1) потребность 0. `line_snapshot_json` не тронут.
+  - `RRL_STOCK_POOL_CMD`: before `35BFECEC…F0A477` → after `76AC3806…21A6B3`. `compile_wave_pool` пропускает строку с line_proposal>0 после якоря и ключа строки.
+  - `RRL_TRADE_TOPUP_ADOPT`: before `94B1F0CF2C0B5F69…FC085E294` → after `8AA8EBBA…AD454A`. COMMON_POOL_UNSUPPORTED заменён на `TRADE_TOPUP_POOL_SHARE_RECALC_REQUIRED`, только если у строки добивки осталась пуловая доля.
+  - Полные SHA, порядок apply и rollback — в manifest.json.
+- Доказательства:
+  - LIVE READ ONLY: изменённые функции без правок совпали байт-в-байт с живыми на 2 SKU пула и 12 волнах. Реальная строка 3687 (предложение 10 CANCELLED): потребность пула 40 → 0, остальные поля снимка равны.
+  - offline pytest 7/7: минимальные diff, хэши, порядок, JSON-методы не попадают в SQL.
+  - Стоимость: +0–5 мс на 6–9 строках, граница 2000 не измерялась.
+- Частичный перенос планированием не достижим. Количество строки равно утверждённому, удержание в EA, план берёт least(остаток, hold_free) по каждой паллете — каждое удержание переносится целиком. Нужен новый бизнес-ввод (уменьшение строки SAP без отмены); сейчас он даёт -1. Через DML не фабриковал.
+- Для root после apply: живые сценарии с реальным предложением на товар пула — полный перенос, чужой заказ, нет рейса, повтор и конфликт, отмена до и после запуска, отзыв прав, оставшаяся пуловая доля. Данные для них готовить мне запрещено.
+- UI-код не менял. Справку для вставки после приёмки положил в `C0157/help-proposal.md`. approval_available не трогал.
+- Gate PASS, encoding PASS.
+RELEASE: `db/migrations/2026-10-23_trade_topup_common_pool/**`, `tests/tradecase/test_trade_topup_common_pool.py`, `reports/tradecase/2026-10-23/claude/C0157/**`. UI-пути из ACK (TopupProposals.tsx, tradecase-documents.html) не изменены — освобождаю.
+
+## K-0131
+ACK C-0158 (плановые интервалы ворот). Прочитано READ ONLY:
+- `RRL_YARD_VISIT_API` (визиты, факты ворот, порядок блокировок ACCESS_REV → TRADE_SITE → визит, owner-проверки), `RRL_YARD_SUPPLY_API`, справочник ворот `RRL_TT_DOCK`, Гант `resource_timeline` / `timeline_projection` (поддерживает plan_start/plan_finish).
+- Legacy `RRL_TRANSPORT_TASK.DOCK_REZERV_TIME_FROM/TO` мёртвые: последняя запись 2011, читают только 2 legacy-функции. Не использую и не пишу.
+- Плановых интервалов ворот сейчас нет. Есть только `PLANNED_ARRIVAL_AT` визита (точка) и `planned_dock` рейса без времени.
+План (без расширения legacy-функций):
+- native NOT_APPLIED `db/migrations/2026-10-23_yard_dock_plan/**`:
+  - новые таблицы `RRL_YARD_DOCK_PLAN` (один активный план на визит) и `RRL_YARD_DOCK_PLAN_EVENT` (append-only, operation_id, hash);
+  - новый пакет `RRL_YARD_DOCK_PLAN_API` с командами PLAN / MOVE / CANCEL и чтением plans:
+    - конфликт пересечения [от, до) на одних воротах площадки;
+    - конфликт пересечения для одной машины на любых складах, через замок по номеру машины после замка площадки;
+    - повтор как в дворе;
+    - факт не подменяется;
+  - `RRL_YARD_VISIT_API`: +1 публичная обёртка `assert_visit_owners` над существующей проверкой собственников (spec + body), чтобы не дублировать разрешение owners.
+- backend: `api/wms_api_server/app/modules/resources/{contracts_yard_plan.py, infrastructure/yard_dock_plans.py, api/yard_plan_routes.py, public.py (экспорт), infrastructure/resource_timeline.py и infrastructure/timeline_projection.py (плановые интервалы в источнике yard)}`, `app/yard_plan_composition.py` и `main.py` (+2 строки).
+- frontend: `admin/wms_admin_frontend/src/features/platform/workspaces/shift/{YardDockPlan.tsx (новый), YardPanel.tsx, yardModel.ts, yardCommands.ts, help.ts}`, при необходимости `workspaces/resources/timelineAdapter.ts` (только подпись плана).
+- help: `admin/wms_admin_frontend/public/help/tradecase-documents.html` (раздел плана ворот).
+- tests и отчёт: `tests/tradecase/test_yard_dock_plan.py`, `reports/tradecase/2026-10-23/claude/C0158/**`.
+Не трогаю POSTING_API, pool/topup, CASE paper, generic task, count. Dist не собираю.
+
+## K-0132
+C-0158 RESULT + NATIVE_READY + BACKEND READY + RELEASE. Checkpoint `9958518d` (локально, без push). Отчёт: `RESULT_C0158.md` (= `reports/tradecase/2026-10-23/claude/C0158/README.md`).
+- NATIVE_READY `db/migrations/2026-10-23_yard_dock_plan/**`, NOT_APPLIED:
+  - новые `RRL_YARD_DOCK_PLAN` и `RRL_YARD_DOCK_PLAN_EVENT` (append-only), `RRL_YARD_DOCK_PLAN_SQ`, пакет `RRL_YARD_DOCK_PLAN_API`;
+  - `RRL_YARD_VISIT_API` +2 строки spec и +5 строк body (обёртка `assert_visit_owners`), before spec `1BD9DF25…6798A`, before body `C3FF494D…7EC84`;
+  - after-хэши — в manifest и verify;
+  - apply: preflight → 001 → 002 → 003 → 004 → verify; rollback отказывает при истории планов.
+  - Пакет не компилировался (нужны таблицы). Части без новых таблиц выполнены анонимными блоками READ ONLY (`plan-parts-live.json`).
+- Правила:
+  - пересечение [от, до) на одних воротах площадки → `YARD_DOCK_PLAN_CONFLICT`; одна машина на любом складе → `YARD_VEHICLE_PLAN_CONFLICT` (замок по номеру машины после замка площадки); касание интервалов — не конфликт;
+  - только будущее, только EXPECTED или ARRIVED; факты визита не пишутся;
+  - точный повтор после текущих owner-прав, иначе `YARD_OPERATION_CONFLICT`; скрытый план отвечает как отсутствующий.
+- BACKEND READY для общего restart:
+  - `app/{yard_plan_composition.py, main.py (+2)}`, `modules/resources/{contracts_yard_plan.py, api/yard_plan_routes.py, infrastructure/yard_dock_plans.py, public.py (+3), infrastructure/resource_timeline.py (+10), infrastructure/timeline_projection.py (+12)}`;
+  - до apply `/dock-plans` отвечает 503 YARD_PLAN_NOT_AVAILABLE, а Гант работает без планов. Живая проверка Ганта (код этой копии, READ ONLY): yard READY, 10 и 2 визита, 0 планов, 480 и 100 мс.
+- UI:
+  - `workspaces/shift/{YardDockPlan.tsx, YardPanel.tsx (+2), yardModel.ts, yardCommands.ts, help.ts}`, `workspaces/resources/timelineAdapter.ts` (+1), help `#yard-plan`;
+  - UI 26/26 при 1440/390: визиты, планы и все POST — fixture; живые — вход, рабочее место и read-only shift-overview.
+- pytest: 8 новых + 37 прежних yard/timeline (в `test_yard_visit.py` поправлен fake для чтения планов). Gate PASS, tsc PASS, encoding PASS. Dist не собирал.
+- Для root после apply/restart: живые сценарии — две машины на одни ворота с пересечением, одна машина на двух складах, касание, гонка двух PLAN, повтор и конфликт тела, отзыв owner или WARE, перенос и отмена.
+RELEASE: все пути выше + `tests/tradecase/test_yard_dock_plan.py`, `tests/tradecase/test_yard_visit.py`, `reports/tradecase/2026-10-23/claude/C0158/**`.
+
+## K-0133
+ACK C-0159 (готовность волн и риски смены). Сопоставил требования с работающим обзором (READ ONLY: код shift/risks, shift-overview, RRL_WAVE_TIME_API, живые GET и счётчики).
+Уже работает (не дублирую):
+- обеспечение: missing_base pick-readiness, блокировки readiness SHORTAGE/STAGING/CASE_PICK/DOMAIN_SYNC;
+- пополнение: блокировка REPLENISHMENT и ожидание с wait_reason;
+- неразрешённый отбор; неутверждённое время;
+- остановленная сборка; недостача без решения;
+- пробелы проверки; DONE/CANCELLED без рисков подготовки.
+Доказанные пробелы (живые данные: в LAUNCHED волнах 7 CASE WAIT_CONTROL и 5 NEW без исполнителя; 3 утверждённых плана времени):
+1. Контроль: видимые задания волны в WAIT_CONTROL/CONTROL_IN_PROGRESS не отражены.
+2. Назначение ресурсов: открытые задания без исполнителя в разрешённой к отбору волне не отражены. Как факт показывается, есть ли открытая сессия комплектовщика склада; свободность из отсутствия интервала не выводится.
+3. Срок: утверждённое (APPROVED, с поясом) окончание или начало волны уже прошло по часам сервера (observed_at обзора), а волна не завершена или не запущена. Без утверждённого плана срок не вычисляется.
+Пути (только read-only UI, backend и native не меняются):
+- `admin/wms_admin_frontend/src/features/platform/workspaces/shift/{risks.ts, types.ts, useShiftData.ts (observed_at в детали волны), useShiftRisks.ts}`;
+- `docs/help/authoring/shift-supervisor.md`;
+- `reports/tradecase/2026-10-23/claude/C0159/**` (модельные и UI-проверки).
+main и resources composition не трогаю. Dist не собираю.
+
+## K-0134
+C-0159 RESULT + RELEASE. Checkpoint `b664f757` (локально, без push). Отчёт: `RESULT_C0159.md` (= `reports/tradecase/2026-10-23/claude/C0159/README.md`, матрица требований).
+- Только read-only UI. Backend и native не менялись, BACKEND_READY и restart не нужны. Dist не собирал: root, пересобери с этими исходниками.
+- Добавлены три доказанных пробела:
+  - контроль: видимые WAIT_CONTROL/CONTROL_IN_PROGRESS запущенной волны;
+  - задания без исполнителя в волне с разрешённым отбором; во влиянии — факт открытых сессий CASE_PICKER, при отказе или обрезке «не проверены полностью»;
+  - сроки только по APPROVED плану времени против observed_at сервера: окончание прошло у LAUNCHED, начало прошло у PREVIEW.
+  - Остальное уже было и не дублировалось.
+- Проверки:
+  - модель 5/5 (+ прежние C0142 12/12, shift/Gantt 11/11);
+  - UI 20/20 при 1440/390: LIVE склад 6667491 волна 395 (без исполнителя + прошедшее утверждённое окончание), LIVE 20220394 волны 571/573 (контроль), кнопка «Волна» с сохранением входа, help 200; FIXTURE 403 сессий, 403 сборки, поздний ответ после смены склада;
+  - gate PASS, tsc PASS, encoding PASS.
+- Ограничение: raw-экраны действий не читают параметры адреса; выбранную волну открывает «Волна».
+RELEASE: `admin/wms_admin_frontend/src/features/platform/workspaces/shift/{risks.ts, types.ts, useShiftData.ts, useShiftRisks.ts, ShiftSupervisorDesk.tsx (одна строка текста, вне ACK)}`, `docs/help/authoring/shift-supervisor.md`, `reports/tradecase/2026-10-23/claude/C0159/**`. Перехожу к C0160, ACK путей следует.
+
+## K-0135
+ACK C-0160 (торговый остаток в общем пуле). Прочитано READ ONLY: RRL_STOCK_POOL_READ/CMD (после C0157, live 761B…/76AC…), RRL_STOCK_ELIGIBILITY, RRL_TRADE_STOCK_GUARD, RRL_TRADE_PICK_CONTEXT, pool_plan.py и pool_allocation.py.
+Причина: `snapshot_json` проверяет источник без строки. Для торговой площадки guard последним шагом возвращает TRADE_ORDER_BINDING_REQUIRED: все остальные проверки поддона к этому моменту уже пройдены. Совместимость строки и источника (SKU/МРЦ, ОСГ, собственник, выкуп BEFORE_PICK, целый короб, binding) есть только в `RRL_TRADE_PICK_CONTEXT.reason`. Он доступен лишь перечисленным пакетам и проверяет права текущего actor, а снимок пула должен быть одинаковым для всех.
+План: отдельный NOT_APPLIED комплект `db/migrations/2026-10-23_trade_pool_eligibility/**`:
+- `RRL_TRADE_PICK_CONTEXT` spec + body:
+  - +`RRL_STOCK_POOL_READ` в accessible by;
+  - +функция `compatible(row, uid, cell, ware)` — те же правила reason без проверки прав actor; контекст строки сохраняется и восстанавливается;
+  - reason не меняется по смыслу (общая внутренняя проверка).
+- `RRL_STOCK_POOL_READ` body, только для торговой площадки:
+  - поддон, у которого остался лишь TRADE_ORDER_BINDING_REQUIRED, становится источником класса (owner/SKU/МРЦ/срок, однородность гарантирует guard);
+  - у строки — список совместимых классов или конкретный `pool_reason` (нет торговой строки или binding, binding устарел, целый короб, нет совместимого источника);
+  - предел классы × строки ≤ 2000, иначе явный отказ;
+  - неторговые склады без изменений.
+- `RRL_STOCK_POOL_CMD` body:
+  - для торговой площадки compile проверяет разбивку плана строка × класс: пара совместима, сумма по классу ≤ свободного, доли кратны шагу, у строки с pool_reason 0;
+  - execute требует от actor право operate на собственника каждого использованного класса (права не обходятся).
+- Python:
+  - `api/wms_api_server/app/modules/inventory/domain/pool_allocation.py` (+распределение по классам: одинаковые наборы — прежний пропорциональный алгоритм; пересекающиеся — по порядку отгрузки с FEFO, проверяет native);
+  - `modules/inventory/infrastructure/pool_plan.py` (подсказка `sources`).
+- Тесты и отчёт: `tests/tradecase/test_trade_pool_eligibility.py`, `reports/tradecase/2026-10-23/claude/C0160/**`.
+POSTING_API, yard, paper, CASE, count, shift и SAP не трогаю; UI не меняю; approval_available не включаю.
+
+## K-0136
+C-0160 RESULT + NATIVE_READY + BACKEND_READY + RELEASE. Checkpoint `620cbd75` (локально, без push). Отчёт: `RESULT_C0160.md`.
+- NATIVE_READY `db/migrations/2026-10-23_trade_pool_eligibility/**`, NOT_APPLIED:
+  - `RRL_TRADE_PICK_CONTEXT` spec + body: accessible by +RRL_STOCK_POOL_READ; `compatible()` без проверки прав читателя; `reason` неизменен для всех прежних вызовов (проверка прав осталась);
+  - `RRL_STOCK_POOL_READ` body: только торговая площадка с включённым пулом — физические классы owner|SKU|МРЦ|срок, у строк `classes` или конкретный `pool_reason`; неторговый снимок байт-в-байт прежний;
+  - `RRL_STOCK_POOL_CMD` body: `prove_trade` в compile (совместимость, шаг, сумма = доле, класс ≤ свободного, строка с причиной = 0); execute — `assert_owner(operate)` на собственника каждого использованного класса.
+  - before: ctx spec 5BDC…B0B7, ctx body 204D…FC91, read 761B…26C1, cmd 76AC…A6B3; after — в manifest и verify. Apply: preflight → 001 → 004 → recompile (только INVALID) → verify.
+  - Guard TRADE_ORDER_BINDING_REQUIRED не ослаблен: откладывается только этот последний шаг, по строке.
+- BACKEND_READY (нужен restart): `modules/inventory/domain/pool_allocation.py` (+allocate_trade_pool), `modules/inventory/infrastructure/pool_plan.py` (sources для торгового снимка). Неторговый путь без изменений.
+- Доказательства (READ ONLY анонимные блоки, кандидат без правок):
+  - неторговые SKU — снимок прежний;
+  - 210564699 с политикой, включённой только в блоке: класс SNS|A|200|2030-01-01 = 250; прежние строки 3690 и 3692 → TRADE_ORDER_BINDING_STALE вместо молчаливого 0;
+  - prove_trade: 1 принят, 5 отказов;
+  - pytest 9 новых + 11 прежних пул-тестов (в тесте C0157 статус манифеста теперь допускает APPLIED);
+  - gate PASS, encoding PASS.
+- Для root после apply/restart: настоящая торговая строка с долей, два собственника или МРЦ одного SKU, нехватка, пересчёт после HARD, запуск и consume, конкурентный пересчёт и запуск, повтор квитанции, отзыв owner.
+RELEASE: kit выше, два Python-файла, `tests/tradecase/test_trade_pool_eligibility.py`, `tests/tradecase/test_trade_topup_common_pool.py` (одна строка), `reports/tradecase/2026-10-23/claude/C0160/**`. Перехожу к C0161, ACK следует.
+
+## K-0137
+ACK C-0161 (добивка после начала погрузки). Свежие исходники READ ONLY: TOPUP_READ, API, CMD; TRANSPORT_CORE; LOAD_FLOOR; HU_LOAD_CORE (владелец LOAD); TRIP_DEPART_CMD. Прочитаны Python trade_capacity и trade_topup, а также transport loading_status/floor_read.
+Факты:
+- `capacity_context.planned` уже включает весь основной план (погруженное и не погруженное) один раз;
+- LOAD и DEPART блокируют ROW RRL_TRANSPORT_TASK;
+- в документе TRIP нет последовательности остановок;
+- все 5 торговых рейсов с фактами погрузки в БД уже DEPARTED.
+Пути:
+- native NOT_APPLIED `db/migrations/2026-10-23_topup_after_load/**`:
+  - TOPUP_READ spec (+departed) и body (trip_basis включает машину native task и каждый факт погрузки op/status/content_version — LOAD/UNLOAD/DEPART делают расчёт устаревшим);
+  - TOPUP_API body (save: вместо запрета погрузки — отказ только после выезда);
+  - TOPUP_CMD body (common_plan берёт ROW RRL_TRANSPORT_TASK как LOAD/DEPART; confirm отказывает только после выезда, под этой блокировкой);
+- Python:
+  - `api/wms_api_server/app/modules/integrations/infrastructure/trade_capacity.py`: погруженное считается один раз, добавляется только подтверждённый излишек упаковки мест (факт − теоретические короба); отказы при отсутствии мер факта, незапланированном товаре, другой машине, прошедшем времени отправления, нескольких точках без доказуемого порядка выгрузки;
+  - `.../infrastructure/trade_topup.py`: те же проверки по получателю потребности;
+- UI: `admin/wms_admin_frontend/src/features/integrations/tradecase/{TopupProposals.tsx, TopupPreview.tsx}` (тексты новых кодов и состояния после погрузки), help `admin/wms_admin_frontend/public/help/tradecase-documents.html#topup.decide`;
+- тесты и отчёт: `tests/tradecase/test_topup_after_load.py`, `reports/tradecase/2026-10-23/claude/C0161/**`.
+POSTING_API, paper/CASE/count/yard/shift, SAP, C0160 pool не трогаю. approval_available не включаю.
+
+## K-0138
+C-0161 RESULT + NATIVE_READY + BACKEND_READY + RELEASE. Checkpoint `5c14ac03` (локально, без push). Отчёт: `RESULT_C0161.md`.
+- NATIVE_READY `db/migrations/2026-10-23_topup_after_load/**`, NOT_APPLIED:
+  - TOPUP_READ spec +departed; body: trip_basis включает машину native task и каждый факт погрузки op:status:content_version;
+  - TOPUP_API body: save отказывает только после выезда (replay и права раньше, порядок прежний);
+  - TOPUP_CMD body: common_plan берёт ROW RRL_TRANSPORT_TASK native task — тот же ключ, что LOAD и DEPART; confirm отказывает TOPUP_TRIP_DEPARTED под этой блокировкой до сверки basis.
+  - before: read spec 2904…AD60, read body FA3B…68FB, api 1B2A…C17B, cmd B5C5…51F1; after — в manifest и verify. Apply: preflight → 001…004 → recompile (только INVALID) → verify.
+- BACKEND_READY (только вместе с apply, иначе старый native save/confirm отказывает): `modules/integrations/infrastructure/trade_capacity.py` и `trade_topup.py`.
+  - Погруженное считается один раз: план уже содержит эти короба, добавляется только подтверждённый излишек упаковки места max(0, факт − теория).
+  - Отказы с причиной: машина, меры факта, незапланированный товар, ЕИ, время отправления, несколько точек без порядка выгрузки, другой получатель, выехал.
+- UI: `TopupPreview.tsx`, `TopupProposals.tsx` (тексты кодов, блок «часть груза в машине»); help `#topup.decide` — раздел «Если погрузка уже началась».
+- Проверки:
+  - LIVE READ ONLY: candidate departed/basis на 5 реальных торговых рейсах — все DEPARTED, basis изменился за счёт фактов; Python на них отказывает (TRIP_DEPARTED или прежние меры упаковки);
+  - pytest 12 новых (49 с прежними topup/capacity/adoption/pool);
+  - UI 14/14 при 1440/390: LIVE открытие R1.1168, FIXTURE результат частичной погрузки и два 409, help 200;
+  - gate PASS, encoding PASS.
+- Ограничения: несколько точек после начала погрузки — отказ, пока данные не содержат последовательности; паллетоместа и укладка не в допуске (floor_places_checked=false); approval_available не включал; ранее сохранённые неподтверждённые предложения потребуют пересчёта.
+- Для root после apply/restart: LOAD части, затем расчёт и confirm; UNLOAD/LOAD делает расчёт устаревшим; DEPART против confirm, в том числе параллельно; replay и конфликт; отзыв; другая машина; место без мер.
+- C0159: принято уточнение — CASE raw читает task_id (не wave_id).
+RELEASE: kit выше, `trade_capacity.py`, `trade_topup.py`, `TopupPreview.tsx`, `TopupProposals.tsx`, `public/help/tradecase-documents.html`, `tests/tradecase/test_topup_after_load.py`, `reports/tradecase/2026-10-23/claude/C0161/**`.
+
+## K-0139
+Принято: C0160 live — `RRL_TRADE_STOCK_GUARD.assert_command_stock` не пропускает RESERVATION_ALLOCATE_POOL. Это мой пропуск: проверял snapshot и prove_trade, но не путь runner через per-stock guard. Guard и kit C0160 не трогаю, исправление у root. В отчёт C0160 вношу это ограничение, kit не меняю. C0161 RELEASE K-0138 уже отправлен; жду следующего поручения.
+
+## K-0140
+C-0161 rev1 по ревью: ACK путей (`db/migrations/2026-10-23_topup_after_load/**`, `tests/tradecase/test_topup_after_load.py`, `reports/tradecase/2026-10-23/claude/C0161/**`) и повторный RELEASE. Checkpoint `e3983182`. Native по-прежнему NOT_APPLIED; before-хэши не менялись.
+1. trip_basis: история фактов native task свёрнута в цепочку SHA-256 в порядке LOAD_OPERATION_ID — 64 символа на задание, каждый LOAD/UNLOAD/DEPART учитывается, без усечения. READ ONLY доказательство: 3000 переходов (~186K символов) → acc 90 символов, детерминировано, смена статуса меняет basis; прежняя конкатенация → ORA-06502.
+2. confirm при начатой погрузке (под ROW RRL_TRANSPORT_TASK, после replay и прав, после departed, до trip_basis): planned_departure_at принятого TRIP через json_value(... returning timestamp with time zone error on error); прошло → TOPUP_DEPARTURE_TIME_PASSED, нет или не читается → TOPUP_DEPARTURE_TIME_INVALID. До погрузки поведение прежнее. Граница READ ONLY: +1 с → допуск (save до), −1 с → PASSED (confirm после); реальный TRIP с «…Z» читается.
+After: read body 1483…5AEE, cmd 2A66…0373; read spec C1EC…64EE и api 90CA…3E0F без изменений. Manifest, verify и тесты обновлены: pytest 13 (43 с прежними), gate PASS, encoding PASS. Раздел «Ревизия 1» добавлен в RESULT_C0161.md.
+Перехожу к C0162, ACK следует.
+
+## K-0141
+C-0162: ACK путей (`db/migrations/2026-10-23_trade_pool_access/**`, `api/wms_api_server/app/modules/inventory/infrastructure/pool_service.py`, `.../inventory/api/pool_routes.py`, `tests/tradecase/test_trade_pool_access.py`, `reports/tradecase/2026-10-23/claude/C0162/**`) + RESULT + NATIVE_READY + BACKEND_READY + RELEASE. Checkpoint `beca12db` (локально). Отчёт: `RESULT_C0162.md`.
+- Preview: право stock_reservation_view на склад через RRL_ACCESS_API.allowed проверяется до чтения снимка, иначе 403. На торговой площадке видны только строки и классы видимых собственников; если что-то скрыто — complete=false и available=null. План считается по полному снимку, одинаковому для всех.
+- Execute: RRL_HAS_WRIGHT заменён на RRL_ACCESS_API.allowed(stock_reservation_edit, WAREHOUSE плана): действующее назначение, legacy-группа своего склада, GLOBAL_ADMIN.
+- Replay: +1 строка в RRL_STOCK_POSTING_API — scope-hook RESERVATION_ALLOCATE_POOL → RRL_STOCK_POOL_CMD.assert_access до ветки committed replay. Проверяются склад и operate на собственников классов записанного resolved plan, без пересчёта.
+- before: pool spec E109…57D9, pool body 4ABD…796F, posting 6DAA…BC81; after — в manifest и verify. Apply: preflight → spec → body → posting → recompile (только INVALID) → verify.
+- LIVE READ ONLY: кандидат assert_access на 7 записанных пул-операциях root — admin ALLOWED, реальный пользователь без прав — POOL_ALLOCATION_FORBIDDEN. Проверка нашла и я исправил две ошибки до передачи: JSON в SQL (ORA-40573) и get_keys пустого sources (ORA-06531).
+- pytest 7 новых + 16 прежних пул-тестов; gate PASS, encoding PASS. Обработчик root не трогал.
+- Для root после apply/restart: scoped склад X/Y, отзыв owner после сохранённой квитанции, отзыв назначения склада, legacy и GLOBAL_ADMIN.
+RELEASE: пути выше.
+
+## K-0142
+ACK C-0163 (состав SUPPLY частями). Прочитано: contracts_tradecase (TradeSupply codes 1..10000, TradeEnvelope), tradecase_documents (receive_document с payload_hash/business_hash, retry), trade_deferred_worker (ждёт справочники, не части), RRL_TRADE_DOCUMENT_API (receive_document сам не делает commit). Механизма частей нет.
+Решение (Ponytail):
+- **Native** NOT_APPLIED `db/migrations/2026-10-23_trade_supply_parts/**`:
+  - таблицы `RRL_TRADE_SUPPLY_TRANSFER` (source/warehouse/document/version/transfer, заголовок без кодов и его hash, part_count, итог END: total_codes и codes_sha256, состояние OPEN/MISMATCH/COMPLETE/DELIVERED/SUPERSEDED, квитанция приёма) и `RRL_TRADE_SUPPLY_PART` (part_no, коды, hash, event_id) — append-only;
+  - пакет `RRL_TRADE_SUPPLY_PARTS_API`: put_part / put_end / mark_delivered / transfers. Порядок блокировок как у приёма: право tradecase_import → ACCESS_REV → site → строка transfer FOR UPDATE.
+  - Точный повтор event_id даёт прежнюю квитанцию; другое тело того же event_id или той же части — отказ.
+  - Часть старой версии при наличии более новой версии transfer или документа — `SUPPLY_PART_VERSION_SUPERSEDED`, ничего не меняет.
+  - Состояние COMPLETE только при всех частях 1..N, END и совпадении количества и хэша; иначе видно, каких частей нет или в чём несовпадение. Сумма кодов ≤ 10000.
+- **Python:** когда transfer COMPLETE, собирается тот же канонический TradeEnvelope (заголовок + коды по порядку частей) с детерминированным event_id `<transfer>.ASSEMBLED`. Он идёт через существующий `receive_document` в одной транзакции с `mark_delivered` — ровно один раз. При потере ответа или рестарте любой повтор части или END либо отдельный retry доставляют тем же event_id (идемпотентно у существующего приёма). Транзакция не ждёт внешнюю систему. Второго движка доставки и второго writer нет.
+- Пути backend: `api/wms_api_server/app/modules/integrations/{contracts_supply_parts.py, infrastructure/supply_parts.py, api/supply_parts_routes.py, public.py (экспорт)}`, `app/supply_parts_composition.py`, `main.py` (+2).
+- UI: `admin/wms_admin_frontend/src/features/integrations/tradecase/{SupplyParts.tsx (новый), TradecasePage.tsx (панель во вкладке сообщений), api.ts (при необходимости)}`; help — раздел в `public/help/tradecase-documents.html`.
+- Тесты и отчёт: `tests/tradecase/test_trade_supply_parts.py`, `reports/tradecase/2026-10-23/claude/C0163/**`.
+- Не покрывается этим инкрементом: исходящие подтверждения состава и раннее закрытие сборки до подтверждения состава паллет (зафиксирую в RESULT). Собственный additive-контракт не объявляю промышленным протоколом SAP.
+
+## K-0143 — C-0163 RESULT + NATIVE_READY (NOT_APPLIED) + BACKEND_READY + RELEASE (23.10)
+- Checkpoint (локально, без push): `1a15a516`, 26 файлов. Отчёт: `RESULT_C0163.md` = `reports/tradecase/2026-10-23/claude/C0163/README.md`.
+- Native: `db/migrations/2026-10-23_trade_supply_parts/` (001_schema, 002_parts_api, 000_preflight, apply, verify, rollback, rollback_verify, manifest.json). Статус NOT_APPLIED, Claude не применял. Общие объекты не меняются; SHA зависимостей проверяются в preflight/verify/rollback_verify. Rollback отказывает, если части уже есть.
+- Отличия от ACK K-0142:
+  - event_id собранного документа детерминирован как `PARTS.<sha256(source|warehouse|transfer)[:48]>` (вместо `<transfer>.ASSEMBLED` — чтобы уложиться в 100 символов и не зависеть от источника);
+  - `mark_delivered` идёт отдельной транзакцией после существующего `receive`, а не в одной транзакции с ним. Exactly-once держится на идемпотентности `receive_document` по event_id и payload_hash: неизвестный исход оставляет COMPLETE, повтор шлёт тот же event_id и те же байты, деловой 409 фиксируется как DELIVERY_REJECTED;
+  - `api.ts` не менялся.
+- Проверки:
+  - pytest `tests/tradecase/test_trade_supply_parts.py` 7/7; связанные тесты tradecase intake 24 pass; quality gate PASS; encoding PASS;
+  - LIVE READ ONLY: SHA кодов в native совпадает с правилом отправителя, запрос недостающих частей дал [1,3,4,6];
+  - UI 16/16 при 1440 и 390: LIVE — вкладка; FIXTURE — список, deliver, 403;
+  - dist не собирался.
+- Для root после apply: verify.sql (компиляция); живые сценарии 2→END→1, повтор и конфликт части, исправленная версия, затем старая часть, рестарт до и после приёма, гонка последней части и END, отказ и отзыв доступа (полный список — в RESULT).
+- Не покрыто: исходящие подтверждения состава; раннее закрытие сборки до подтверждения паллет; END до первой части отклоняется, а не хранится; source с `/` не адресуется в маршруте deliver. T02 не закрываю.
+- RELEASE:
+  - `db/migrations/2026-10-23_trade_supply_parts/**`;
+  - `api/wms_api_server/app/modules/integrations/{contracts_supply_parts.py, infrastructure/supply_parts.py, api/supply_parts_routes.py, public.py}`;
+  - `api/wms_api_server/app/{supply_parts_composition.py, main.py}`;
+  - `admin/wms_admin_frontend/src/features/integrations/tradecase/{SupplyParts.tsx, TradecasePage.tsx}`;
+  - `admin/wms_admin_frontend/public/help/tradecase-documents.html`;
+  - `tests/tradecase/test_trade_supply_parts.py`;
+  - `reports/tradecase/2026-10-23/claude/C0163/**`.
+
+## K-0144 — ACK C0163 rev1 (23.10)
+- Правки в тех же путях RELEASE K-0143, новых путей нет:
+  - `db/migrations/2026-10-23_trade_supply_parts/**` (кандидат NOT_APPLIED; пересчитаю after SHA и manifest);
+  - `api/wms_api_server/app/modules/integrations/{contracts_supply_parts.py, infrastructure/supply_parts.py, api/supply_parts_routes.py}`;
+  - `admin/wms_admin_frontend/src/features/integrations/tradecase/SupplyParts.tsx`;
+  - `admin/wms_admin_frontend/public/help/tradecase-documents.html`;
+  - `tests/tradecase/test_trade_supply_parts.py`;
+  - `reports/tradecase/2026-10-23/claude/C0163/**`.
+- План:
+  1. END несёт тот же заголовок SUPPLY. Если END пришёл первым, native проверяет собственника и создаёт transfer без частей (все части в списке недостающих). Последующие части обязаны совпасть по заголовку, document, version и count. END hash неизменяем. Nullable собственника и второго журнала нет.
+  2. Повторная передача: `POST /api/tradecase/warehouses/{w}/supply-transfers/deliver` с source_id и transfer_id в теле; UI вызывает так же; ASGI-тест со `/` в обоих.
+  3. Перед `receive` проверяется размер собранного канонического SUPPLY по существующему пределу 1 МБ. Превышение даёт ограниченный отказ `SUPPLY_ASSEMBLED_TOO_LARGE` (413), а не 500; предел не повышается.
+- Тесты: END→2→1; повтор END; END с другим заголовком.
+
+## K-0145 — C0163 rev1 RESULT + NATIVE_READY (NOT_APPLIED) + BACKEND_READY + RELEASE (23.10)
+- Checkpoint (локально, без push): `50240d01`, 14 файлов. Отчёт: `RESULT_C0163.md`.
+- Исправления:
+  1. **END до первой части сохраняется.** END повторяет заголовок SUPPLY: общий header_hash, end_hash включает заголовок. Порядок в native put_end: lock_site → require_owner по заголовку → transfer FOR UPDATE. Если transfer есть: повтор того же END, иначе `SUPPLY_END_CONFLICT`, затем проверка заголовка (`SUPPLY_PART_HEADER_CONFLICT`), assert_current и update. Если transfer нет: assert_current и insert transfer с END и нулём частей. `SUPPLY_TRANSFER_NOT_STARTED` удалён. Nullable собственника и второго журнала нет.
+  2. **Повторная передача:** `POST /api/tradecase/warehouses/{w}/supply-transfers/deliver` с телом `{source_id, transfer_id}` (Key, `/` допустим). UI вызывает так же. Старый маршрут с path-сегментами удалён (он не применялся и не публиковался). ASGI-тест: `TC03/SAP` и `T/1/2` → 200; без transfer_id → 422; пробел → 422.
+  3. **Предел 1 МБ:** до `receive` считается размер по тому же правилу, что у приёма (canonical JSON + payload_hash и business_hash). Превышение даёт `DELIVERY_REJECTED` с причиной `SUPPLY_ASSEMBLED_TOO_LARGE` (детерминированный отказ, без повторов, не 500). Предел не повышен; если превышение проскочит, существующий 413 приёма остаётся.
+- Комплект перегенерирован. after SHA: {'RRL_TRADE_SUPPLY_PARTS_API:PACKAGE': '31685033EFBFDD082D44074281913DD1D26FAE4E91B31AAA3B97CF840C5F2391', 'RRL_TRADE_SUPPLY_PARTS_API:PACKAGE BODY': '0FB9ECFD1D4D2932941EF8EF03A077600A16DBDD20C8DD4B371AFEC57146A092'}. SHA зависимостей не изменились.
+- Проверки:
+  - pytest supply_parts 10/10; tests/tradecase -k trade 254/255;
+  - единственный FAIL — `test_case_paper.py::test_native_candidate_adds_one_locked_hook…` (POSTING_API, файлы root; C0163 не трогал);
+  - gate PASS, encoding PASS;
+  - LIVE READ ONLY hash_equal true, missing [1,3,4,6];
+  - UI 16/16 при 1440 и 390 (FIXTURE: END до частей, больше 1 МБ, deliver со source `TC03/SAP` в теле). dist не собирался.
+- main.py в rev1 не менялся и в коммит не входит. Строки root dependency_overrides[pool_view/pool_edit] не трогал.
+- Не покрыто: исходящие подтверждения состава; раннее закрытие сборки до подтверждения паллет. T02 не закрываю.
+- RELEASE: `db/migrations/2026-10-23_trade_supply_parts/**`, `api/wms_api_server/app/modules/integrations/{contracts_supply_parts.py, infrastructure/supply_parts.py, api/supply_parts_routes.py}`, `admin/wms_admin_frontend/src/features/integrations/tradecase/SupplyParts.tsx`, `admin/wms_admin_frontend/public/help/tradecase-documents.html`, `tests/tradecase/test_trade_supply_parts.py`, `reports/tradecase/2026-10-23/claude/C0163/**`.
+
+## K-0146 — ACK C0164 (подтверждение состава / раннее завершение сборки) (23.10)
+Матрица «уже есть / доказанный пробел» (чтение Oracle только READ ONLY: USER_SOURCE, схема, outbox):
+
+| Нужно | Уже есть | Пробел |
+|---|---|---|
+| Физический факт сборки | `RRL_CASE_PICK_TASK` (CLOSED_AT, STATUS, CONTENT_VERSION, SSCC), `RRL_CASE_CARRIER_LOT`, FULL_PALLET `RRL_PICK_TASK` DONE, units/codes `RRL_WMS_RECEIPT_UNIT/CODE` | нет |
+| Исходящий состав заказа в SAP/СКМ | outbox `RRL_EVENT_OUTBOX`/`RRL_TRACEABILITY_API.enqueue_event`. События TRADECASE_*: DOCUMENT_RESPONSE, ORDER_BOUND, ATTRIBUTES_BOUND, MARK_CONFIRMATION_ACCEPTED, TOPUP_*, BUYOUT_*, TRANSPORT_DOCUMENT_RESULT | **нет** события состава собранного заказа |
+| Деловой ответ на состав | есть только для выкупа (`RRL_TRADE_BUYOUT_EVENT`, SKM_ID+EVENT_ID) и для транспортного документа рейса (`RRL_TRADE_TRIP_DOC_EVENT`, манифест-подпись, gate отправления) | **нет** для состава заказа; нет раздельных исходов SAP и СКМ |
+| active_skm | `RRL_TRADE_SITE.ACTIVE_SKM/VERSION_NO`, проверка в confirm_marks | использовать |
+
+План (минимум, новые объекты, без POSTING_API и без stock writes):
+- **Native** `db/migrations/2026-10-23_trade_composition_ack/` (NOT_APPLIED kit):
+  - Таблица `RRL_TRADE_ORDER_COMPOSITION` — неизменяемые снимки по заказу:
+    - номер снимка, версия заказа, подпись состава (sha по паллете/SSCC, physical_unit_key и code_hash), число единиц и паллет;
+    - назначенные SOURCE_ID и SKM_ID с версией сайта на момент отправки;
+    - отдельно SAP_STATUS и SKM_STATUS (WAITING, ACCEPTED, REJECTED, NOT_REQUIRED) с причинами; CURRENT или SUPERSEDED.
+  - Таблица `RRL_TRADE_COMPOSITION_ACK` — журнал ответов, ключ (склад, система, отправитель, event).
+  - Пакет `RRL_TRADE_COMPOSITION_API`:
+    - `report`: tradecase_order_bind → site → собственники. Состав считается из физических фактов. Нужна закрытая сборка всех CASE заказа, иначе `TRADE_COMPOSITION_ASSEMBLY_OPEN`. Та же подпись — повтор без второго outbox. Иначе новый снимок, прежний SUPERSEDED, outbox `TRADECASE_COMPOSITION_REPORTED`.
+    - `acknowledge`: tradecase_import. Повтор того же event неизменен, другое тело — конфликт. SAP-ответ только от SOURCE_ID снимка, равного текущему сайту. СКМ-ответ только от SKM_ID снимка, равного текущему ACTIVE_SKM; после смены СКМ — `TRADE_COMPOSITION_SKM_CHANGED`. Подпись должна совпасть. Устаревший снимок — отказ без изменений. Финальный исход системы не меняется другим исходом. Исходы SAP и СКМ раздельны.
+    - `orders`: tradecase_view; собственники отфильтрованы до лимита. Показывает живое закрытие сборки и живую подпись против снимка: «не отправлен», «ждёт SAP/СКМ», «отклонён SAP/СКМ», «состав изменился», «подтверждён». Сверка при чтении, без отбора, резерва и списания.
+  - Ack до закрытия невозможен по построению: снимок создаётся только после закрытия. Закрытие до ack — нормальное ожидание. Новых запретов погрузки не добавляю; отсутствие правила отмечу.
+- **Backend:**
+  - `api/wms_api_server/app/modules/integrations/{contracts_composition_ack.py, infrastructure/composition_ack.py, api/composition_ack_routes.py, public.py (экспорт)}`;
+  - `app/composition_ack_composition.py`;
+  - `main.py` +2 строки рядом с моей проводкой supply-parts; строки root `pool_view/pool_edit` не трогаю.
+  - Внутренний контракт приёма результата явно помечен как не протокол SAP/СКМ.
+- **UI:** `admin/wms_admin_frontend/src/features/integrations/tradecase/{CompositionAck.tsx (новый), TradecasePage.tsx (панель во вкладке «Обмен», переход к заказу)}`. Help — раздел `#composition-ack` в `public/help/tradecase-documents.html`.
+- **Тесты и отчёт:** `tests/tradecase/test_trade_composition_ack.py`, `reports/tradecase/2026-10-23/claude/C0164/**`.
+- Комплект C0163 и его зависимости не трогаю.
+
+## K-0147 — C0164 RESULT + NATIVE_READY (NOT_APPLIED) + BACKEND_READY + RELEASE (23.10)
+- Checkpoint (локально, без push): `24eb9c24`, 28 файлов. Отчёт: `RESULT_C0164.md` = `reports/tradecase/2026-10-23/claude/C0164/README.md`.
+- По review Codex: состав считается из существующего факта `RRL_CUSTOMER_ORDER_FULFILLMENT`, а не из одних CASE.
+  - CASE: PICKED_CASE_TASK_ID + PICKED_CONTENT_VERSION. FULL_PALLET и складская задача: PICKED_WAREHOUSE_TASK_ID + PICKED_STOCK_VERSION. Плюс FACT_QTY/UOM и sha FACT_COMPOSITION_JSON.
+  - Отсутствие строк CASE не равно отсутствию сборки. Второй модели версий членства HU нет: `RRL_WMS_HU_LINK` в подписи не участвует, потому что после погрузки она деактивируется.
+  - Ограничение: вложенность HU отдельно не версионируется (опора на версии fulfillment); коды единиц, перенесённых после сборки, повторно не собираются. Записано в RESULT.
+- Native `db/migrations/2026-10-23_trade_composition_ack/`:
+  - таблицы `RRL_TRADE_ORDER_COMPOSITION` (неизменяемые снимки; раздельные SAP_STATUS и SKM_STATUS; один CURRENT на заказ) и `RRL_TRADE_COMPOSITION_ACK` (append-only журнал ответов);
+  - пакет `RRL_TRADE_COMPOSITION_API`: report, acknowledge, orders;
+  - outbox `TRADECASE_COMPOSITION_REPORTED` ставится один раз на снимок; запись только в свои две таблицы, stock не трогается;
+  - preflight/verify/rollback(отказ при истории)/rollback_verify/manifest. Зависимости по SHA: RRL_ACCESS_API, RRL_TRADE_STOCK_GUARD, RRL_TRACEABILITY_API (spec+body), RRL_STOCK_PLAN_HELPER spec.
+- Проверки:
+  - LIVE READ ONLY: compose() кандидата без изменений на 2 заказах с FULL_PALLET, 3 с CASE и 1 с незакрытой сборкой — подпись и закрытие совпали с независимым пересчётом (`candidate-live.json`);
+  - тело пакета, скомпилированное как анонимный блок: без PLS-00103, только ожидаемые ошибки отсутствующих таблиц (`parse-check.json`);
+  - pytest 8/8; tests/tradecase -k trade 263/263; gate PASS; encoding PASS; UI 18/18 при 1440 и 390 (LIVE вкладка + FIXTURE). dist не собирался, API не перезапускал.
+- Отличие от ACK K-0146: report — `POST /api/tradecase/order-compositions/report` с `{warehouse_id, order_id}` в теле (а не в пути).
+- Не вводил: запрет погрузки без подтверждения (правила нет в стратегии — отмечено), хук в закрытии CASE (POSTING_API не трогал), реальный адаптер SAP/СКМ. T02 не закрываю.
+- Для root после apply: verify.sql и живые сценарии из RESULT (закрытие до ack; SAP/СКМ в обоих порядках; повтор и изменённый повтор; повторная сборка, затем старый ответ; отказ СКМ при принятом SAP; смена ACTIVE_SKM; отзыв прав; рестарт report без второго outbox).
+- RELEASE:
+  - `db/migrations/2026-10-23_trade_composition_ack/**`;
+  - `api/wms_api_server/app/modules/integrations/{contracts_composition_ack.py, infrastructure/composition_ack.py, api/composition_ack_routes.py, public.py}`;
+  - `api/wms_api_server/app/{composition_ack_composition.py, main.py (+2 строки)}`;
+  - `admin/wms_admin_frontend/src/features/integrations/tradecase/{CompositionAck.tsx, TradecasePage.tsx}`;
+  - `admin/wms_admin_frontend/public/help/tradecase-documents.html`;
+  - `tests/tradecase/test_trade_composition_ack.py`;
+  - `reports/tradecase/2026-10-23/claude/C0164/**`.
+
+## K-0148 — ответ на «request C0164 BACKEND_READY checkpoint» (23.10)
+- Запрос уже закрыт сообщением K-0147. Checkpoint `24eb9c24` содержит C0164 целиком: backend, UI, отчёт. Это BACKEND_READY; полуготового Python нет.
+- Проверка импорта: `app.main` импортируется, маршруты order-compositions и supply-parts/supply-transfers на месте. Подключение в main.py — 2 строки после register_supply_parts.
+- API не перезапускал. Native C0164 остаётся NOT_APPLIED.
+
+## K-0149 — ACK C0165 (скорость bulk-box-preview / outgoing-quality, T12) (23.10)
+- Сначала только чтения: HTTP GET обоих маршрутов на SSCC `099999990000026027` (CASE1169, склад 220793322) и разложение цепочки в отдельном процессе через те же Python-функции.
+  - Этапы: соединение; допуск; поиск склада и места (`WarehouseHu.preview` / `quality_identifier`); состав и статус (`RRL_STOCK_QC_GATE.status_json`, `quality_transport_read`, `RRL_STOCK_LOADING_READ.preview_json`).
+  - Пробы: первый вызов на новом соединении и тёплые вызовы, min/median/max. DBMS_PROFILER — только с собственным run_id, если понадобится.
+  - Данные, CASE1169, маршрут, настройки и права не меняю; 225837931 не трогаю.
+- Путь отчёта: `reports/tradecase/2026-10-23/claude/C0165/**`.
+- Пути возможной правки назову отдельным ACK после замера, до изменения. Кандидаты:
+  - `api/wms_api_server/app/modules/transport/infrastructure/bulk_loading_read.py`;
+  - `api/wms_api_server/app/modules/inventory/infrastructure/{outgoing_quality.py, quality_identifier.py, quality_transport_read.py, warehouse_hu.py}`;
+  - native-комплект NOT_APPLIED `db/migrations/2026-10-23_loading_read_perf/`.
+- Зависимости C0164 (RRL_ACCESS_API, RRL_TRADE_STOCK_GUARD, RRL_TRACEABILITY_API, spec RRL_STOCK_PLAN_HELPER) не меняю.
+
+## K-0150 — C0165 RESULT: задержка подтверждена, правка runtime мотивированно отклонена + RELEASE (23.10)
+- Checkpoint `8f6c96ad` (только отчёт). Отчёт: `RESULT_C0165.md` = `reports/tradecase/2026-10-23/claude/C0165/README.md`.
+- Замер на 099999990000026027 (CASE1169, только чтения), те же Python-callers, каждый execute/callproc отдельно:
+  - bulk-box-preview: первый вызов 1454.6 мс (05:33) и 1057.6 мс (08:32, курсор вытеснен); тёплые медианы 120.6 и 130.9 мс (n=5);
+  - outgoing-quality: тёплые медианы 76.0 и 87.3 мс;
+  - ответы между пробами идентичны.
+- Разложение:
+  - тёплый вызов — один native-вызов (case_snapshot_json ~75 мс, QC_GATE.status_json ~55 мс); допуск, поиск места и склада, reset_connection — по 1.5–2.5 мс;
+  - новая сессия без холодного кэша ~100 мс;
+  - полный разбор нового текста SQL ~86–112 мс;
+  - холодный вызов: 28 заново загруженных курсоров пакетов ≈ 180 мс, верхний курсор ≈ 1.1 с вне своего SQL — это загрузка кода PL/SQL (дерево по 97 модулей);
+  - slow log 6633/6635 — через 3–4 мин после перекомпиляции RRL_STOCK_POSTING_API и POOL_CMD в 04:22; в истории RRL_API_CALL_LOG медленным оказывается первый вызов после паузы 35–822 мин.
+- Отклонено: SQL, индекс, кэш (запрещён), рефакторинг дерева зависимостей, фоновый «прогрев». Варианты для владельца или DBA (не выполнялись): DBMS_SHARED_POOL.KEEP, размер shared pool, apply вне часов погрузки.
+- Недоступно: V$SQLSTATS, V$MYSTAT, V$DB_OBJECT_CACHE (ORA-00942); V$SQL доступен. Профайлер и трассу не запускал, прав DBA не запрашивал. Код, native и API не менялись. T12 не закрываю.
+- RELEASE: `reports/tradecase/2026-10-23/claude/C0165/**`.
+
+## K-0151 — ACK C0166 (маркированная инвентаризация): findings и запрос границ общих пакетов (23.10)
+Доказанный пробел (READ ONLY: USER_SOURCE, схема):
+- **Недостача.** INVENTORY_COUNT с delta<0 → `RRL_STOCK_UNIT_CORE.issue_free_units(uid,cell,qty,unit_keys)` ставит единицам STOCK_STATUS='ISSUED' (UNIT_VERSION+1). Признака «выбыла по инвентаризации» нет: так же выглядит отгрузка. Журнала операция↔единица нет (кроме interware/store/case-return таблиц).
+- **Находка того же кода сейчас невозможна.**
+  - INVENTORY_COUNT delta>0 для маркированного артикула → `MARKED_INVENTORY_INCREASE_REQUIRES_CAPTURED_UNITS`.
+  - INVENTORY_REGISTER_LOT → `birth_capture`/`ReceivingMarks`: «Unique unit code has already been received» (PK RRL_WMS_RECEIPT_CODE(SYSTEM_CODE,CODE_HASH), UK PHYSICAL_UNIT_KEY). Дубликат не создаётся, но и восстановления нет.
+  - `resolve_count_codes`: скан найденного кода разрешается в ISSUED-единицу той же паллеты и ячейки (CURRENT_UID/CELL у выбывшей не меняются), затем отклоняется «Scanned unit is no longer present».
+- **Образец в коде:** interware `RRL_INTERWARE_SHORTAGE_UNIT` / `RRL_INTERWARE_RECOVERY_UNIT` + `own_unit` (запрет без восстановления). `restore_issued` разрешён только плану UNLOAD_SHIPMENT. Триггер `RRL_STOCK_UNIT_GUARD` пускает запись единиц только через UNIT_CORE.
+
+Минимальный план — тот же writer INVENTORY_COUNT, без второго writer, без новой единицы:
+1. Новые таблицы (свои): `RRL_INVENTORY_LOSS_UNIT` (ключ единицы, операция недостачи, revision, uid, cell, UNIT_VERSION после выбытия) и `RRL_INVENTORY_FOUND_UNIT` (восстановление, ссылка на потерю; одна потеря — не более одного восстановления).
+2. `RRL_STOCK_INVENTORY_CMD`:
+   - delta<0 по маркированной партии → после issue_free_units записать потери выбывших ключей;
+   - delta>0 с `found_unit_keys` → разрешить только ключи этой же паллеты и ячейки с открытой потерей, ISSUED, тем же UNIT_VERSION (иначе отказ: SHIPPED и любые иные выбытия), сумма BASE_QTY = delta; вернуть единицы в AVAILABLE и записать восстановление;
+   - без found_unit_keys — прежний отказ;
+   - compile_count блокирует UNIT-ключи найденных единиц.
+3. `RRL_STOCK_UNIT_CORE`: новая узкая процедура `restore_inventory_loss(uid,cell,qty,units)` (по образцу restore_issued, только для открытой потери текущей операции INVENTORY_COUNT). Собственник, МРЦ и годность сохраняются: строка `RRL_TRADE_STOCK_ATTR` по PHYSICAL_UNIT_KEY не трогается; права собственника — существующий `assert_hu_stock_owners` и task scope.
+4. Python:
+   - `resolve_count_codes`: найденный ISSUED-код с открытой потерей → `found_unit_keys` (остальные ISSUED — прежний отказ); недостача и находка в одной строке — отказ «проводите отдельно»;
+   - contracts_observations: поле `found_unit_keys`;
+   - повтор с тем же operation_id без изменений.
+5. UI `inventory-count.html/js`: какие коды не найдены и найдены, каким действием закрывается; 403 и неизвестный исход по прежнему контракту; справка.
+
+**Запрос границ:** пункты 2–3 — правка общих stock-пакетов `RRL_STOCK_INVENTORY_CMD` (body) и `RRL_STOCK_UNIT_CORE` (spec+body). POSTING_API и sourceguard не трогаю, применённые SQL не переписываю: отдельный NOT_APPLIED комплект с before/after SHA. Прошу подтвердить, что эти два пакета свободны от root, или назвать границы.
+
+Пути (до подтверждения пишу только Python, UI и тесты):
+- `db/migrations/2026-10-23_inventory_found_units/**`;
+- `api/wms_api_server/app/modules/inventory/{contracts_observations.py, infrastructure/inventory_scan_codes.py, infrastructure/inventory_observations.py}`;
+- `admin/wms_admin_frontend/public/{inventory-count.html, inventory-count.js}` и справка инвентаризации;
+- `tests/retailcase/test_inventory_found_units.py`;
+- `wiki/database/inventory_found_units_20261023.md`;
+- `reports/tradecase/2026-10-23/claude/C0166/**`.
+
+Исторические ISSUED (до apply, без записи потери) этим путём не восстанавливаются — будет указано в ограничениях.
+
+## K-0152 — уточнение к запросу границ C0166 (23.10)
+- `RRL_STOCK_INVENTORY_CMD` не входит в accessible-by `RRL_STOCK_CTX_API`, а `RRL_STOCK_UNIT_GUARD` требует effect UNIT. Поэтому вернуть единицы в AVAILABLE можно только новой процедурой `RRL_STOCK_UNIT_CORE.restore_inventory_loss`.
+- Это правка **spec** UNIT_CORE: 24 зависимых объекта перекомпилируются при первом использовании. По C0165 первый вызов после перекомпиляции холодный (~1 с), поэтому apply лучше вне часов погрузки.
+- Альтернатива без spec UNIT_CORE — добавить INVENTORY_CMD в accessible-by CTX_API. Это тоже правка spec общего пакета и обход единого пути записи единиц; не предлагаю.
+- Жду подтверждения границ для `RRL_STOCK_INVENTORY_CMD` (body) и `RRL_STOCK_UNIT_CORE` (spec+body). До него делаю только Python, UI и тесты, native-комплект готовлю как кандидат и не выпускаю.
+
+## K-0153 — C0166 RESULT + NATIVE_READY (NOT_APPLIED) + BACKEND_READY + RELEASE (23.10)
+- Checkpoint (локально, без push): `20bde1eb`, 29 файлов. Отчёт: `RESULT_C0166.md` = `reports/tradecase/2026-10-23/claude/C0166/README.md`. Wiki: `wiki/database/inventory_found_units_20261023.md`.
+- Native `db/migrations/2026-10-23_inventory_found_units/`:
+  - журналы `RRL_INVENTORY_LOSS_UNIT` и `RRL_INVENTORY_FOUND_UNIT`: PK (ключ, операция недостачи), одно восстановление на случай, append-only, операция и ревизия хранятся, две открытые недостачи запрещены;
+  - `RRL_STOCK_INVENTORY_CMD` body:
+    - недостача пишет журнал;
+    - находка через `found_unit_keys`: тот же склад → `RRL_TRADE_STOCK_GUARD.assert_owner(actor,ware,owner,1)` по каждому ключу, отказ без trade-атрибутов, также при остатке 0 → restore → запись находки;
+    - UNIT-ключи найденных единиц в плане;
+    - `lost_units`/`found_units` в факте;
+  - `RRL_STOCK_UNIT_CORE` spec+body `restore_inventory_loss`: только текущая INVENTORY_COUNT IN_FLIGHT; та же паллета и ячейка; ISSUED без резерва; открытая недостача; тот же UNIT_VERSION; сумма = дельта; живой состав = остаток; own_unit; effect UNIT.
+  - SHIPPED и иное выбытие → `INVENTORY_FOUND_LOSS_REQUIRED`; изменённая единица → `..._CHANGED_SINCE_LOSS`. Ключ, код, собственник, МРЦ и годность не меняются.
+  - Before/after SHA, preflight/verify (compile_schema, INVALID=0, USER_ERRORS), rollback отказывает при любой недостаче (до этого — before-тела), rollback_verify. POSTING_API и sourceguard не трогал.
+- B2-совместимость:
+  - `CountObservation` не менял, `requested_counts` прежней формы; найденные ключи выводятся сервером из сканов и пишутся только в `counts`;
+  - `inventory_count_routes.py` не менял (`found_unit_keys` по HTTP не принимается);
+  - тест повтора старой команды байт в байт плюс конфликт изменённой;
+  - uncaptured 20→21 остаётся отказом;
+  - чтение партий без фильтра REMAIN>0 сохранено, `lost_codes` читаются после существующей проверки собственника.
+- Проверки:
+  - pytest C0166 10/10; inventory и found в retailcase/tradecase — 65 pass; одна ошибка — несвязанный knowledge_foundation (нет прав на временную папку pytest);
+  - gate PASS, encoding PASS;
+  - тела пакетов как анонимный блок: без PLS-00103 (`parse-check.json`);
+  - UI 14/14 при 1440 и 390 (FIXTURE). dist и API не трогал.
+- Изменён освобождённый тест root `test_inventory_task_scoped_boundary.py`: поддельный курсор отвечает на запрос недостач, ожидается `lost_codes=[]`.
+- Ограничения: выбывшие до apply не восстанавливаются; находка только на той же паллете и в той же ячейке; первый вызов после перекомпиляции 24 зависимых холодный (C0165); физический сканер не проверялся. T11 не закрываю.
+- RELEASE:
+  - `db/migrations/2026-10-23_inventory_found_units/**`;
+  - `api/wms_api_server/app/modules/inventory/infrastructure/{inventory_scan_codes.py, inventory_observations.py, inventory_lot_reads.py}`;
+  - `wiki-raw/wms_admin_ui_reference/{inventory-count.html, inventory-count.js}`;
+  - `tests/retailcase/{test_inventory_found_units.py, test_inventory_task_scoped_boundary.py}`;
+  - `wiki/database/inventory_found_units_20261023.md`;
+  - `reports/tradecase/2026-10-23/claude/C0166/**`;
+  - резерв `RRL_STOCK_INVENTORY_CMD` body и `RRL_STOCK_UNIT_CORE` spec+body возвращаю root.
+
+## K-0154 — ACK C0167 (смена машины после сборки): действующее поведение и пути (23.10)
+Действующее поведение (READ ONLY: USER_SOURCE, триггеры):
+- **Смена машины** — `RRL_TRANSPORT_EDIT_API.update_trip` (PATCH `/api/admin/transport/tasks/{id}` → `trip_edit.update_existing_trip`):
+  - **до погрузки** разрешена: блокировки машин и рейса, проверка `RRL_TRANSPORT_PLAN_RULES.check_vehicle(new_vehicle, sts)` (вместимость), назначения СТ (`RRL_SBORKA_PALLETS.TRANSTASK_ID`) не трогаются;
+  - **после погрузки** (факт LOADED или DEPARTED) отказ `TRIP_CONFIRMED_UNLOADING_REQUIRED_BEFORE_REASSIGNMENT`; дублируется триггером `RRL_TT_PHYSICAL_DEPART_GUARD` на любой UPDATE машины, рампы, водителя или даты;
+  - **после выезда** — тот же отказ, плюс `TRANSPORT_PLAN_FROZEN` по CONDITION; одновременная правка → `TRANSPORT_VEHICLE_CHANGED_RETRY`.
+- **Старая машина не подтверждает новую погрузку:**
+  - LOAD требует `scan_vehicle = tt.TRANSPORT`, при исполнении сверка машины, рампы и рейса → `CLOSURE_CHANGED`; есть проверки вместимости, места на полу и температуры новой машины;
+  - DEPART требует, чтобы все загрузки были на текущей машине;
+  - UNLOAD требует `trip.TRANSPORT = lf.VEHICLE_NUMBER` и скан машины, рампы и ячейки с причиной — отдельная команда сотрудника.
+- **Документы:** в манифест-подпись trade-рейса входит номер машины, поэтому старый транспортный документ после смены не проходит `assert_departure`; `bind_trip` сверяет номер машины с документом TRIP.
+- **Вывод:** native-переходы уже есть и безопасны; новый writer или native не нужен. Пробел — операторский: карточка рейса при смене машины показывает сырой код ошибки и не говорит, какие места погружены и где их выгрузить.
+
+План (только UI, справка, тесты; native и backend не меняю):
+- Новый блок в карточке рейса диспетчера: текущая машина; погруженные и выехавшие места из существующего `GET /api/transport/loading/{id}/status`; решение — можно менять / сначала выгрузите N мест (ссылка на «Погрузка и выезд» `transport-loading.html?trip_id=`, выгрузка — отдельное действие сотрудника) / рейс выехал, смена недоступна.
+- Понятные тексты для `TRIP_CONFIRMED_UNLOADING_REQUIRED_BEFORE_REASSIGNMENT`, `TRANSPORT_PLAN_FROZEN`, `TRANSPORT_VEHICLE_CHANGED_RETRY`; черновик правки сохраняется до доказанного результата. 401/403 очищают блок, поздний ответ игнорируется.
+- Пути:
+  - `admin/wms_admin_frontend/src/features/transport/VehicleChange.tsx` (новый);
+  - `admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx` (2 узкие правки: монтирование блока и текст ошибки в `handleSaveEdit`);
+  - `admin/wms_admin_frontend/public/help/transport-vehicle-change.html` (новая справка);
+  - `tests/tradecase/test_vehicle_change_evidence.py`;
+  - `reports/tradecase/2026-10-23/claude/C0167/**`.
+- Сценарий для root (A→B, погрузка, отказ старой машины, повтор, запрет после выезда, сверка количества) будет в RESULT.
+
+## K-0155 — C0167 RESULT + RELEASE (UI_READY; native и backend не нужны) (23.10)
+- Checkpoint (локально, без push): `56cb63f6`, 12 файлов. Отчёт: `RESULT_C0167.md` = `reports/tradecase/2026-10-23/claude/C0167/README.md`.
+- **Native-переходы уже есть** (LIVE READ ONLY, `native-evidence.json`, все true + SHA):
+  - update_trip: до погрузки смена с check_vehicle (вместимость), СТ не трогаются; при LOADED или DEPARTED отказ `TRIP_CONFIRMED_UNLOADING_REQUIRED_BEFORE_REASSIGNMENT`; `TRANSPORT_PLAN_FROZEN`; `TRANSPORT_VEHICLE_CHANGED_RETRY`;
+  - триггер `RRL_TT_PHYSICAL_DEPART_GUARD` дублирует запрет;
+  - LOAD требует скан текущей машины и сверку при исполнении; DEPART — загрузки на текущей машине; UNLOAD — отдельная команда со сканом и причиной;
+  - машина входит в манифест trade-рейса.
+  - Нового writer, native и комплекта нет.
+- **Пробел и правка:**
+  - отказ PATCH показывался как «409: [object Object]» — теперь detail сериализуется, известные коды переведены, черновик сохраняется;
+  - новый блок «Смена машины» в режиме правки карточки (вкладка «Заявки»): читает существующий `GET /api/transport/loading/{id}/status` и показывает три состояния — можно / сначала выгрузите N мест (список и ссылка на `transport-loading.html?trip_id=`) / выехал;
+  - 401/403 очищают блок, поздний ответ игнорируется;
+  - справка `public/help/transport-vehicle-change.html`.
+- **Проверки:**
+  - pytest 3/3; gate PASS (в том числе architecture: файл страницы не вырос); encoding PASS;
+  - UI 18/18 при 1440 и 390: LIVE — вход, рейс 33664 по ссылке, его карточка (только GET); FIXTURE — status и отказ PATCH.
+- **Ограничение:** у страницы диспетчера на 390 px уже есть прокрутка 1050 px и без блока; блок её не увеличивает (измерено). Живые смена, выгрузка и погрузка не выполнялись — сценарий для root в RESULT.
+- **RELEASE:**
+  - `admin/wms_admin_frontend/src/features/transport/{VehicleChange.tsx, index.ts}`;
+  - `admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx`;
+  - `admin/wms_admin_frontend/public/help/transport-vehicle-change.html`;
+  - `tests/tradecase/test_vehicle_change_evidence.py`;
+  - `reports/tradecase/2026-10-23/claude/C0167/**`.
+- T07 целиком не закрываю.
+
+## K-0156 — ACK C0167-REVIEW1 (390 px и неизвестный исход PATCH) (23.10)
+- **390 px.** Причина — глобальное `body{min-width:1440px}` (styles.css:17), его не меняю. Новый `admin/wms_admin_frontend/src/features/transport/dispatchNarrow.css` подключается в `features/transport/index.ts`. Действует только `@media (max-width:760px)` и только при `body:has(.dispatch-shell)`:
+  - снимается min-width;
+  - панели складываются в столбец, панели инструментов и строки карточки переносятся;
+  - таблицы СТ и рейсов прокручиваются внутри своих существующих `*-wrap` (overflow auto);
+  - рабочий стол не меняется.
+- **Неизвестный исход PATCH.** Изучил контракт: PATCH `/api/admin/transport/tasks/{id}` — SET реквизитов без operation_id (native update_trip); 409 и 422 — подтверждённый отказ без изменения, 503 `TRANSPORT_EDIT_UNCONFIRMED` и обрыв — исход неизвестен. operation_id и exactly-once не заявляю. Делаю по образцу `TransportTimeApprovalIntent.ts`:
+  - новый `admin/wms_admin_frontend/src/features/transport/vehicleEditIntent.ts`: ключ на адрес API, пользователя и рейс; сохранение с проверкой чтением до отправки; снятие только неизменённой записи; исходное тело и снимок «до»;
+  - 2xx, 409 и 422 снимают намерение; 401, 403, 5xx и обрыв оставляют его;
+  - при открытии рейса с намерением — чтение текущего рейса (GET tasks/{id}) и сверка желаемых полей: «сохранено» (снять) / «не сохранено» (кнопки «Повторить исходное изменение» с теми же байтами и «Отказаться» — только после успешного чтения) / «изменил кто-то другой»;
+  - пока намерение не разрешено, новое изменение рейса не отправляется;
+  - 403 при сверке очищает показанные данные сервера, намерение остаётся.
+- Пути: `features/transport/{dispatchNarrow.css, vehicleEditIntent.ts, VehicleChange.tsx, index.ts}`, `components/TransportDispatchPage.tsx` (только handleSaveEdit и строка монтирования, без роста файла), справка, тест, `reports/.../C0167/**`.
+
+## K-0157 — C0167 REVIEW1+REVIEW2 RESULT + RELEASE (23.10)
+- Checkpoint (локально, без push): `3476f3e3`, 13 файлов. Отчёт: `RESULT_C0167.md` (раздел «Исправление по review»).
+- **390 px.** Глобальное `body{min-width:1440px}` не тронуто. `features/transport/dispatchNarrow.css`: `@media (max-width:760px)` и `body:has(.dispatch-shell)`:
+  - снят min-width, панели в столбец, панели инструментов и реквизиты переносятся;
+  - таблицы прокручиваются в своих существующих `*-wrap`;
+  - замер: прокрутка страницы на 390 — 0 px (было 1050), блок и выбор машины в пределах экрана; рабочий стол без изменений.
+- **Неизвестный исход PATCH** (`features/transport/vehicleEditIntent.ts`, по образцу `TransportTimeApprovalIntent.ts`; SET без operation_id, однократность не заявляется):
+  - запрос и снимок «до» сохраняются с проверкой чтением до отправки;
+  - 2xx снимает; 409 и 422 снимают **только первую попытку**; после 5xx, обрыва или 401/403 ставится флаг `unknown`, и последующий 409 или 422 запрос не снимает (REVIEW2);
+  - после перезагрузки — сверка с текущим рейсом: сохранено (снять) / не сохранено (повторить те же байты или отказаться) / изменил другой сотрудник;
+  - кнопки повтора и отказа доступны только после успешного чтения; 403 при чтении сохраняет намерение без данных сервера;
+  - новое изменение рейса отклоняется, пока исходное не разрешено.
+- `TransportDispatchPage.tsx`: `handleSaveEdit` → `saveTripEdit`, блок монтируется всегда, `refreshTask`. Файл и функция стали на строку короче; `config/architecture/legacy-debt.json` ужат через `--tighten-baseline` (4083→4082, 2510→2509).
+- **Проверки:** UI 34/34 при 1440 и 390 (LIVE: вход, рейс 33664, список машин; FIXTURE: status, исходы PATCH 409/503/обрыв/403/200, чтение рейса). Сценарии:
+  - первый 409;
+  - 503 → перезагрузка → «не сохранено»;
+  - новое изменение отклонено;
+  - повтор → 409 запрос сохранён → сверка «сохранено» без нового PATCH;
+  - 503 → повтор 200;
+  - обрыв → «сохранено» без второго PATCH;
+  - 403 при сохранении и чтении → возврат прав → отказ.
+  - pytest 4/4, gate PASS, encoding PASS. dist и API не трогал.
+- **RELEASE:**
+  - `admin/wms_admin_frontend/src/features/transport/{VehicleChange.tsx, vehicleEditIntent.ts, dispatchNarrow.css, index.ts}`;
+  - `admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx`;
+  - `admin/wms_admin_frontend/public/help/transport-vehicle-change.html`;
+  - `config/architecture/legacy-debt.json` (две строки);
+  - `tests/tradecase/test_vehicle_change_evidence.py`;
+  - `reports/tradecase/2026-10-23/claude/C0167/**`.
+
+## K-0158 — ACK C0168 (заводская иерархия, T03): findings и пути (23.10)
+Требование источника (`functional_current.txt`, «Единственный источник состава», «Приёмка по основаниям», «Формирование паллет»):
+- один источник состава SSCC на поставщика (SAP, API или DESADV) без смешения;
+- доверительная приёмка по SSCC при подтверждённом составе, иначе покоробочная;
+- повторный скан не создаёт второй приход.
+
+Есть (код и Oracle READ ONLY):
+- заказ поставки `POST /api/integrations/sap/supply-orders` (XML `WarehouseSupplyOrder`), `Aggregations/Aggregation` уровня BOX или PALLET, каждый — **плоский** список Units → `RRL_SAP_TRACE_AGG` (PK заказ+система+профиль+хеш кода; UNITS_JSON — раскрытый состав, неизменяемость при повторе);
+- приёмка `POST /api/receiving/supply-orders/{id}/pallets`: скан агрегата раскрывает состав (`ReceivingMarks.resolve` → `aggregation_members`), режим профиля BOX/PALLET/UNIT_OR_AGGREGATION, повторный скан той же единицы отклоняется, `RRL_WMS_RECEIPT_AGG`, регуляторный родитель `RRL_CRPT_AGGREGATION`;
+- привязка TRADECASE `stock/bind` (owner, МРЦ, срок, коды);
+- BOX10 проверен 21.10 на 219023232;
+- вложенное дерево `children` есть только у `WmsTraceManifest.v1` (источники INVENTORY и MES), не у поставщика.
+
+Доказанный пробел: заводская паллета SSCC с коробами внутри не выражается — PALLET-агрегат не может ссылаться на BOX-агрегаты, и доверительная приёмка заводской паллеты одним сканом SSCC при сохранении коробов невозможна.
+
+Решение — только Python, native не нужен:
+- `integrations/domain/supply_order.py` `read_supply_aggregations`: необязательный `Children/Child/Code` у агрегата уровня PALLET со ссылками на BOX-агрегаты той же строки, системы и профиля в том же сообщении;
+- раскрытый состав PALLET = свои единицы ∪ единицы коробов; каждый узел (паллета и каждый короб) пишется в существующую `RRL_SAP_TRACE_AGG`;
+- отказы: ссылка на неизвестный код, ребёнок не BOX, родитель не PALLET, короб в двух паллетах, пересечение единиц, пустой узел, граница 10000;
+- приёмка: скан SSCC паллеты раскрывает все короба через существующий `ReceivingMarks` (без нового writer); скан коробов поштучно тоже работает; паллета вместе с её коробом отклоняется существующей проверкой.
+- DESADV и API-адаптеры (промышленные) недоступны — не реализую и не заявляю; `composition_source` остаётся «SAP».
+
+Пути:
+- `api/wms_api_server/app/modules/integrations/domain/supply_order.py`;
+- `wiki-raw/wms_admin_ui_reference/receiving.html` (справка: вложенная паллета);
+- `tests/tradecase/test_factory_hierarchy_supply.py` (офлайн: разбор, раскрытие, отказы, приёмка через `ReceivingMarks` с подставным курсором);
+- `tests/tradecase/live_factory_hierarchy.py` — живой сценарий для root: новый изолированный склад через существующий `setup()`, паллета SSCC + BOX6 + BOX4, приёмка одним сканом SSCC, `bind` с owner/МРЦ/сроком, отрицательный набор, cleanup. Запуск только после перезапуска API root, потому что API должен загрузить новый разбор; сам API не перезапускаю и fixtures до этого не создаю;
+- `reports/tradecase/2026-10-23/claude/C0168/**`.
+
+## K-0159 — C0168 RESULT + BACKEND_READY (нужен перезапуск API root) + RELEASE (23.10)
+- Checkpoint (локально, без push): `d03f9a3f`, 7 файлов. Отчёт: `RESULT_C0168.md`.
+- **Пробел:** в составе поставщика заказа поставки SAP PALLET-агрегат не мог ссылаться на BOX-агрегаты, поэтому заводская паллета SSCC с коробками не выражалась.
+- **Решение — только `integrations/domain/supply_order.py`:**
+  - `Children/Child/Code` у PALLET → BOX той же строки и профиля в сообщении;
+  - состав паллеты = свои единицы ∪ коробки; каждый узел пишется существующим кодом в `RRL_SAP_TRACE_AGG`;
+  - отказы: неизвестный, не BOX или чужой ребёнок; коробка в двух паллетах или дважды; пересечение единиц или кодов; `Children` у BOX; пустой; вне 10000;
+  - плоские сообщения без изменений.
+  - Приёмка и `ReceivingMarks` не менялись: один скан SSCC раскрывает все коробки, паллета вместе с коробкой отклоняется существующей проверкой.
+  - Native, второй writer и новый формат не добавлялись; `composition_source` остаётся «SAP»; DESADV/API не заявлены.
+- **UI:** подсказка «Заводская паллета» на экране приёмки (`wiki-raw/wms_admin_ui_reference/receiving.html`).
+- **Проверки:** pytest 10/10 (разбор, раскрытие, 6 отказов иерархии, `ReceivingMarks` SSCC → 10, BOX+BOX, отказы); связанные 17 pass; gate PASS; encoding PASS; UI-разметка 1440/390 (подсказка не расширяет страницу; статическая разметка на 390 и без неё 1280 px).
+- **Живая приёмка мной НЕ выполнена:** API 8088 должен загрузить новый разбор; перезапуск — за root, fixtures до этого не создавал. Сценарий для root — `tests/tradecase/live_factory_hierarchy.py`:
+  - новый склад через `setup()`;
+  - импорт с коробкой в двух паллетах → отказ; SSCC + BOX6 + BOX4 → 202;
+  - 4 отказа приёмки; приёмка одним сканом → 201; точный повтор — та же квитанция; изменённый → 409; повторная приёмка того же SSCC → отказ;
+  - `bind` 403 / чужой склад / 200 с SNS, МРЦ 200, 2030-01-01;
+  - сверка Oracle и cleanup; результат — `runtime/test-evidence/tradecase/2026-10-23/T03/factory-hierarchy-<склад>.json`.
+- **Ограничения:** связь «коробка → паллета» не хранится отдельно (только раскрытый состав узлов); дочерние коробки в `RRL_CRPT_AGGREGATION` не создаются. T03 остаётся частичным.
+- **RELEASE:**
+  - `api/wms_api_server/app/modules/integrations/domain/supply_order.py`;
+  - `wiki-raw/wms_admin_ui_reference/receiving.html`;
+  - `tests/tradecase/{test_factory_hierarchy_supply.py, live_factory_hierarchy.py}`;
+  - `reports/tradecase/2026-10-23/claude/C0168/**`.
+
+## K-0160 — C0168 REVIEW1 RESULT + RELEASE (23.10)
+- Checkpoint (локально, без push): `665e6e98`. Отчёт: `RESULT_C0168.md`, раздел «Исправление по review».
+- **Приёмка на 390 px.** Глобальное `body{min-width:1280px}` не тронуто. Собственный `receiving.css` страницы (подключён только в receiving.html, версия ссылки обновлена): `@media(max-width:760px)` + `body:has(.receiving-page)`:
+  - снят min-width, меню над содержимым, одна колонка;
+  - таблицы прокручиваются в `.rights-table-wrap`, кнопки и поля в пределах экрана; рабочий стол без изменений.
+  - Проверка **реальной** страницы `8088/wms-admin/receiving.html` после настоящего входа (только GET, не-GET отменяются), 8/8: 1440 — две колонки, без прокрутки; 390 — одна колонка, прокрутка 0, ничего не обрезано; подсказка в разделе маркировки.
+- **Разбор иерархии.** Новые отказы: Child без Code или с двумя Code, посторонний элемент, коробка другой строки или профиля, дубль паллеты; base64-код коробки и точная плоская форма сохранены. pytest 17/17. Native не расширялся; ограничение «связь коробка → паллета не хранится отдельно» записано.
+- **Защита живого сценария `live_factory_hierarchy.py`:**
+  - файл состояния `runtime/test-evidence/tradecase/2026-10-23/T03/factory-hierarchy-state.json` пишется до `setup()`; если он уже есть (после PASS или сбоя), запуск отказывает с кодом 2;
+  - тег выбирается заранее, склад проверяется на отсутствие по `RRL_WARES.ID`, `RRL_CELLS.WARE_ID`, `RRL_TRADE_SITE`, `RRL_ACCESS_OBJECT`, `RUSERS`; 225837931 исключён явно; `setup()` получает именно этот тег;
+  - фазы PLANNED → SETUP_DONE → RUN_DONE → CLEANED / CLEANUP_FAILED;
+  - сбой очистки → FAIL_CLEANUP и код выхода 3;
+  - ответы HTTP сохраняются.
+  - Проверено только чтением (планирование нашло отсутствующий склад); сценарий не запускал.
+- Gate PASS, encoding PASS. API и dist не трогал.
+- **RELEASE:**
+  - `api/wms_api_server/app/modules/integrations/domain/supply_order.py`;
+  - `wiki-raw/wms_admin_ui_reference/{receiving.html, receiving.css}`;
+  - `tests/tradecase/{test_factory_hierarchy_supply.py, live_factory_hierarchy.py}`;
+  - `reports/tradecase/2026-10-23/claude/C0168/**`.
+
+## K-0161 — ACK C0169 (селекторы складов и водителей, T12): замер и путь (23.10)
+Замер только чтением (`reports/tradecase/2026-10-23/claude/C0169/`):
+- **`GET /api/admin/warehouses?limit=500`** (`WarehouseService.list_warehouses`, 367 складов, 67 519 ячеек, 1 544 строки остатков):
+  - HTTP: первый 728 мс, тёплые 479/524/624 мс (n=5);
+  - SQL (n=5 тёплых): базовые колонки 9.5 мс; +CELL_COUNT 22.9; +PALLET_COUNT 211.5; +TOTAL_REMAIN 198.5; полный 392.9 мс;
+  - узкое место — два коррелированных подзапроса RRL_CELLS ⨝ RRL_REMAINS на каждый склад.
+- **Кандидат** — те же колонки, порядок и `rownum<=:limit`; ячейки и остатки агрегируются один раз `group by WARE_ID` и подключаются left join с nvl 0:
+  - строки равны по порядку во всех 5 случаях (все 500, 200, 5, role, mes);
+  - все 500: 403 → 57 мс; лимит 200: 258 → 34 мс;
+  - малые фильтрованные наборы: role 53 → 55, mes 8.6 → 24 мс (агрегат по всем складам); принимаю как цену одного пути.
+  - Права (`warehouse_settings_view`), фильтры и семантика не меняются; индексы и кэш не нужны.
+- **`GET /api/admin/transport/drivers`:** SQL 64.5 мс (1 869 строк), HTTP первый 149 мс, тёплые 52 мс (уже `_cached_ref`). Значения 564/590 мс не воспроизвелись; изменение отклоняю, доказательство в отчёте.
+- Пути: `api/wms_api_server/app/services/warehouse_service.py` (только SQL `list_warehouses`), `tests/retailcase/test_warehouse_list_sql.py`, `reports/tradecase/2026-10-23/claude/C0169/**`. UI не меняется. Native и DDL не нужны.
+
+## K-0162 — C0169 (+REVIEW bounded) RESULT + BACKEND_READY + RELEASE (23.10)
+- Checkpoint (локально, без push): `f4695b37`. Отчёт: `RESULT_C0169.md`.
+- **Ограниченный CTE выбран:** тот же отфильтрованный, упорядоченный и ограниченный набор `sel` → `cc`/`st` агрегируются только `where WARE_ID in (select ID from sel)` → left join + nvl 0 → тот же порядок. Хинтов и второй ветки нет.
+- **Равенство строк в порядке** со старым SQL во всех 6 режимах (все 500, по умолчанию 200, лимит 5, роль, MES=1, MES=0); отрицательных и NULL остатков нет (1544/0/0).
+- **SQL, тёплые медианы при n=9** (все замеры в `bounded.json`), «было / group by по всем / CTE»:
+  - все 460 / 49 / **56**; 200 — 296 / 38 / **50**; лимит 5 — 46 / 42 / **46**;
+  - роль 67 / 42 / **56**; **MES=1 7.8 / 42 / 25.8**; MES=0 478 / 42 / **52**.
+  - Первые вызовы CTE 130–245 мс.
+- **Компромисс (явно):** малый фильтрованный набор (4 склада) +18 мс против прежнего точечного коррелированного доступа; на больших списках CTE на 7–13 мс медленнее group by. План не прочитан: `V$SQL_PLAN` ORA-00942. Решение о второй ветке — за вами.
+- Через сервис (`after.json`, получение соединения на каждый вызов, n=5): все 62.6, роль 115.3 (шум; чистый SQL 56), MES=1 37.1 — показаны как есть.
+- **Водители:** 564/590 мс не воспроизвелись (SQL 65, HTTP тёплые 52, кэш), правка отклонена.
+- pytest 3/3, gate PASS, encoding PASS. UI не менялся. API не перезапускал: живой HTTP после правки — за root.
+- **RELEASE:**
+  - `api/wms_api_server/app/services/warehouse_service.py`;
+  - `tests/retailcase/test_warehouse_list_sql.py`;
+  - `reports/tradecase/2026-10-23/claude/C0169/**`.
+
+## K-0163 — C0168 REVIEW2 RESULT + RELEASE (меню приёмки на телефоне) (23.10)
+- Checkpoint (локально, без push): `b4310a3f`. Отчёт: `RESULT_C0168.md`, раздел REVIEW2.
+- `receiving.html`: меню в нативном `<details id="receiptNav" open><summary title data-help-id>` (образец `#countNav`); встроенная строка сворачивает его при max-width 760px, рабочий стол открыт. `receiving.css`: стиль summary и бренда. Общая навигация, `admin-nav.js` и глобальные стили не тронуты.
+- **Реальная страница** после настоящего входа, только GET, 13/13:
+  - 390: меню свёрнуто (35 px), Enter открывает и закрывает, прокрутка 0, одна колонка;
+  - 1440: меню открыто, две колонки;
+  - принятый заказ 225687965 / 1215ffb3… (FH.ef611dbe, «Количество принято полностью», 10 из 10 EA) по существующей ссылке `?warehouse_id=&order_id=`;
+  - снимки `reports/tradecase/2026-10-23/claude/C0168/screenshots/receiving-order-{390,1440}.png` с верха страницы.
+- Gate PASS, encoding PASS.
+- **RELEASE:** `wiki-raw/wms_admin_ui_reference/{receiving.html, receiving.css}`, `reports/tradecase/2026-10-23/claude/C0168/**`.
+
+## K-0164 — ACK C0170 (недостача при отборе, T11/T04): доказанный пробел и запрос границ (23.10)
+Источник: `explanations.txt` ВП-10 — фиксация, инвентаризация ячейки, пополнение из хранения, дополнительный выкуп для уже выкупленного заказа, возврат заказа в цепочку как проблемного; `program.txt` — дефицит без молчаливого списания.
+
+Есть общий механизм (RETAILCASE, принят 16.10):
+- отборщик: `POST /api/case-pick/tasks/{t}/lines/{l}/short` (Python пишет `RRL_CASE_PICK_SHORT`, складской команды нет);
+- согласование `CASE_SHORT_APPROVE` (`RRL_STOCK_CASE_SHORT_CMD`): ACCEPT_SHORT / RESTORE → задание инвентаризации (`RRL_STOCK_SHORT_RECOVERY.plan_inventory`, INVENTORY_COUNT) → WAIT_REPLENISHMENT → пополнение (`TASK_COMPLETE` REPLENISHMENT) → READY (переразмещение резерва) → продолжение отбора; независимый согласующий.
+
+**Доказанный пробел TRADECASE (LIVE READ ONLY, `reports/tradecase/2026-10-23/claude/C0170/guard-probe.json`):** публичный `RRL_TRADE_STOCK_GUARD.assert_command_stock` на реальной товарной паллете 690000000161192302 (склад 225687965, 10 шт.) отвечает:
+- `CASE_SHORT_APPROVE` RESTORE, ACCEPT_SHORT и READY → **`ORA-20911 TRADE_ORDER_BINDING_REQUIRED`**;
+- INVENTORY_COUNT и WAVE_RESERVE_SOURCES → ALLOWED.
+- Причина: команды нет в ветках стража, а её план блокирует STOCK паллет резервов строки (`stock_closure` по `unused_reservations` и READY-chunks), поэтому срабатывает ветка «не в списке → отказ».
+- Итог: для товара TRADECASE после сообщения о недостаче ни одно решение не проводится, и заказ остаётся заблокированным.
+- Пополнение (`TASK_COMPLETE` REPLENISHMENT) уже проверяется стражем с причиной REPLENISH (собственник, МРЦ и т. д.); инвентаризация разрешена.
+
+План (минимально, без нового writer):
+1. **Native NOT_APPLIED**: ветка стража для `CASE_SHORT_APPROVE`:
+   - short → строка CASE → её pick task (та же склейка, что у CASE_PICK_CONFIRM) → `RRL_TRADE_PICK_CONTEXT.enter_pick_task`;
+   - ACCEPT_SHORT и RESTORE: паллета обязана держать резерв именно этой строки (снятие резерва, без новой совместимости);
+   - READY: `reason(p_uid, cell, ware, 'PICK')` — перекладываемый под строку запас должен быть совместим с собственником, МРЦ, ОСГ, выкупом и целым коробом;
+   - прочее — существующий отказ; цикл `assert_owner(...,1)` остаётся.
+   - Комплект: `db/migrations/2026-10-23_trade_short_guard/` с before/after SHA, rollback, verify и зеркалом wiki/database.
+   - **Запрашиваю резерв `RRL_TRADE_STOCK_GUARD` body** — это зависимость C0164 и стража; без подтверждения не правлю.
+2. **Дополнительный выкуп**: автоматического создания нет и не добавляю (запрещено). Недостающий объём выкупленной строки показываю как видимую нерешённую потребность со ссылкой на существующий запрос выкупа; решение остаётся за оператором.
+3. **UI и справка**: в существующих экранах — что сделать после недостачи товара TRADECASE (согласование, инвентаризация, пополнение или нерешённая потребность). Пути назову после разбора экранов.
+4. **Живая цепочка** на новом изолированном складе — сценарий для root после apply; сам до apply фикстуры не создаю.
+- Пути: `db/migrations/2026-10-23_trade_short_guard/**`, `tests/tradecase/test_trade_short_guard.py`, `wiki/database/trade_short_guard_20261023.md`, `reports/tradecase/2026-10-23/claude/C0170/**`; UI — позже.

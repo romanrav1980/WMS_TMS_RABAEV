@@ -1,0 +1,2523 @@
+{
+  "tag": "SP23.82fc29dcb",
+  "warehouse_id": 210564699,
+  "requests": {
+    "owner": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "SP23.82fc29dcb.owner",
+        "expected_version": 0,
+        "username": "PS404e5bb51f7c",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own metadata parts acceptance"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "end_first": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.END",
+        "total_codes": 3,
+        "codes_sha256": "7736f0732553faffe80ca59bef34f4b2accbcbf24315584392ac4a757d9e3693"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "part2": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "part2_replay": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "part2_changed": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121DIFFERENTVALUE"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "part2_alias": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ALIAS",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "part_end_event_collision": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.END",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "end_part_event_collision": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.COLLISION",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P2",
+        "total_codes": 3,
+        "codes_sha256": "7736f0732553faffe80ca59bef34f4b2accbcbf24315584392ac4a757d9e3693"
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "end_reuse_other_transfer": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.COLLISION",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.END",
+        "total_codes": 3,
+        "codes_sha256": "7736f0732553faffe80ca59bef34f4b2accbcbf24315584392ac4a757d9e3693"
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "end_replay": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.END",
+        "total_codes": 3,
+        "codes_sha256": "7736f0732553faffe80ca59bef34f4b2accbcbf24315584392ac4a757d9e3693"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "end_header_conflict": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "OTHER_BATCH",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.END",
+        "total_codes": 3,
+        "codes_sha256": "7736f0732553faffe80ca59bef34f4b2accbcbf24315584392ac4a757d9e3693"
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "part1": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P1",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "part1_replay": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P1",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "linebreak_rejected": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.LF",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.LF",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0\n010460000000000121SP2382fc29dcbORDERED2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 422,
+      "qa": true
+    },
+    "v2_part2": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.V2",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.V2.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbV22"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "v2_end": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.V2",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.V2.END",
+        "total_codes": 3,
+        "codes_sha256": "cbb759f27198d8324467b4df289ab212d44216e15b29a4ad55e51e326122f58a"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "v2_part1": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.V2",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.V2.P1",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbV20"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbV21"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "late_old_new_event": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.OLD.NEW",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.OLD.NEW",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "historical_replay": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P1",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "race_part2": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.RACE",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.RACE.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbRACE2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "BEFORE_part2": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.BEFORE",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.BEFORE",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.BEFORE.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbBEFORE2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "BEFORE_end": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.BEFORE",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.BEFORE",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.BEFORE.END",
+        "total_codes": 3,
+        "codes_sha256": "5b5713571bc9e13207cece437fc9536be4f868d698eff89d4f3687282e80c057"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "BEFORE_delivered": {
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers/deliver",
+      "body": {
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.BEFORE"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "AFTER_part2": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.AFTER",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.AFTER",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.AFTER.P2",
+        "part_no": 2,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbAFTER2"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "AFTER_end": {
+      "path": "/api/tradecase/supply-parts/end",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.AFTER",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.AFTER",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.AFTER.END",
+        "total_codes": 3,
+        "codes_sha256": "c7a8277aa9c6a7cf5576df9380e0ba2994892a09c2cde2af6a5646f7189737d0"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "AFTER_delivered": {
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers/deliver",
+      "body": {
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.AFTER"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "wrong_source": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "NOT_CONFIGURED",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.WRONG.SRC",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.WRONG.SRC",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": true
+    },
+    "wrong_warehouse": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 219023232,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.WRONG.WARE",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.WRONG.WARE",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 403,
+      "qa": true
+    },
+    "owner_revoked": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "SP23.82fc29dcb.owner.revoke",
+        "expected_version": 1,
+        "username": "PS404e5bb51f7c",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Revoke own metadata sender"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "owner_replay_denied": {
+      "path": "/api/tradecase/supply-parts",
+      "body": {
+        "schema_version": 1,
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "part_count": 2,
+        "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+        "header": {
+          "composition_source": "SAP",
+          "entity_type": "SUPPLY",
+          "expiry_date": "2030-01-01",
+          "mrc": "200",
+          "owner_id": "SNS",
+          "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+          "sap_line_id": "1",
+          "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+          "sku_id": "A",
+          "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+          "wms_article_id": "TC03089DDB36"
+        },
+        "event_id": "SP23.82fc29dcb.ORDERED.P1",
+        "part_no": 1,
+        "codes": [
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED0"
+          },
+          {
+            "code": "010460000000000121SP2382fc29dcbORDERED1"
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 403,
+      "qa": true
+    },
+    "hidden_list": {
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers",
+      "body": null,
+      "method": "GET",
+      "status": 200,
+      "qa": true
+    }
+  },
+  "results": {
+    "owner": {
+      "version": 1,
+      "owner_id": "SNS",
+      "username": "PS404e5bb51f7c",
+      "warehouse_id": 210564699,
+      "operation_id": "SP23.82fc29dcb.owner",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "end_first": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 0,
+      "missing_parts": [
+        1,
+        2
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "part2": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "part2_replay": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null,
+      "replayed": true
+    },
+    "part2_changed": {
+      "detail": {
+        "code": "SUPPLY_PART_EVENT_CONFLICT"
+      }
+    },
+    "part2_alias": {
+      "detail": {
+        "code": "SUPPLY_PART_CONFLICT"
+      }
+    },
+    "part_end_event_collision": {
+      "detail": {
+        "code": "SUPPLY_PART_EVENT_CONFLICT"
+      }
+    },
+    "end_part_event_collision": {
+      "detail": {
+        "code": "SUPPLY_PART_EVENT_CONFLICT"
+      }
+    },
+    "end_reuse_other_transfer": {
+      "detail": {
+        "code": "SUPPLY_PART_EVENT_CONFLICT"
+      }
+    },
+    "end_replay": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null,
+      "replayed": true
+    },
+    "end_header_conflict": {
+      "detail": {
+        "code": "SUPPLY_END_CONFLICT"
+      }
+    },
+    "part1": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+      "delivery": {
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+        "correlation_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T05:28:08.974-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6846
+      }
+    },
+    "part1_replay": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+      "replayed": true
+    },
+    "linebreak_rejected": {
+      "detail": [
+        {
+          "type": "value_error",
+          "loc": [
+            "body"
+          ],
+          "msg": "Value error, Part codes must not contain line breaks used by the transfer digest",
+          "input": {
+            "schema_version": 1,
+            "source_id": "TC03.SAP",
+            "warehouse_id": 210564699,
+            "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+            "version": 1,
+            "transfer_id": "SP23.82fc29dcb.LF",
+            "part_count": 2,
+            "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+            "header": {
+              "composition_source": "SAP",
+              "entity_type": "SUPPLY",
+              "expiry_date": "2030-01-01",
+              "mrc": "200",
+              "owner_id": "SNS",
+              "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+              "sap_line_id": "1",
+              "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+              "sku_id": "A",
+              "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+              "wms_article_id": "TC03089DDB36"
+            },
+            "event_id": "SP23.82fc29dcb.LF",
+            "part_no": 1,
+            "codes": [
+              {
+                "code": "010460000000000121SP2382fc29dcbORDERED0\n010460000000000121SP2382fc29dcbORDERED2"
+              }
+            ]
+          },
+          "ctx": {
+            "error": {}
+          }
+        }
+      ]
+    },
+    "v2_part2": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.V2",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 2,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": false,
+      "status": "OPEN",
+      "status_reason": "WAITING_END",
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "v2_end": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.V2",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 2,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "v2_part1": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.V2",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 2,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+      "delivery": {
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "entity_type": "SUPPLY",
+        "version": 2,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+        "correlation_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T05:28:10.410-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6847
+      }
+    },
+    "late_old_new_event": {
+      "detail": {
+        "code": "SUPPLY_PART_VERSION_SUPERSEDED"
+      }
+    },
+    "historical_replay": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.ORDERED",
+      "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+      "replayed": true
+    },
+    "race_part2": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.RACE",
+      "document_id": "SP23.82fc29dcb.DOC.RACE",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": false,
+      "status": "OPEN",
+      "status_reason": "WAITING_END",
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "BEFORE_part2": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.BEFORE",
+      "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": false,
+      "status": "OPEN",
+      "status_reason": "WAITING_END",
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "BEFORE_end": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.BEFORE",
+      "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "BEFORE_delivered": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.BEFORE",
+      "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+      "delivery": {
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+        "correlation_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T05:28:14.829-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6849
+      }
+    },
+    "AFTER_part2": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.AFTER",
+      "document_id": "SP23.82fc29dcb.DOC.AFTER",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": false,
+      "status": "OPEN",
+      "status_reason": "WAITING_END",
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "AFTER_end": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.AFTER",
+      "document_id": "SP23.82fc29dcb.DOC.AFTER",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 1,
+      "missing_parts": [
+        1
+      ],
+      "end_received": true,
+      "status": "OPEN",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": null
+    },
+    "AFTER_delivered": {
+      "warehouse_id": 210564699,
+      "source_id": "TC03.SAP",
+      "transfer_id": "SP23.82fc29dcb.AFTER",
+      "document_id": "SP23.82fc29dcb.DOC.AFTER",
+      "version": 1,
+      "part_count": 2,
+      "received_codes": 3,
+      "missing_parts": [],
+      "end_received": true,
+      "status": "DELIVERED",
+      "status_reason": null,
+      "owner_id": "SNS",
+      "delivered_event_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+      "delivery": {
+        "warehouse_id": 210564699,
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+        "correlation_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T05:28:17.795-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6850,
+        "replayed": true
+      }
+    },
+    "wrong_source": {
+      "detail": {
+        "code": "SOURCE_MISMATCH"
+      }
+    },
+    "wrong_warehouse": {
+      "detail": {
+        "code": "TRADECASE_ACCESS_DENIED"
+      }
+    },
+    "owner_revoked": {
+      "version": 2,
+      "owner_id": "SNS",
+      "username": "PS404e5bb51f7c",
+      "warehouse_id": 210564699,
+      "operation_id": "SP23.82fc29dcb.owner.revoke",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "owner_replay_denied": {
+      "detail": {
+        "code": "TRADECASE_ACCESS_DENIED"
+      }
+    },
+    "hidden_list": {
+      "warehouse_id": 210564699,
+      "items": [],
+      "has_more": false
+    }
+  },
+  "checks": [
+    "END before all parts persisted; missing list, stable retry, conflicts and event namespace; corrected v2 survives late v1",
+    "Concurrent last part and END committed one canonical intake event",
+    "Adapter process exits before canonical intake; HTTP recovery keeps one canonical event",
+    "Adapter process exits after real canonical commit; HTTP recovery keeps one canonical event"
+  ],
+  "previous_calls": [],
+  "header": {
+    "composition_source": "SAP",
+    "entity_type": "SUPPLY",
+    "expiry_date": "2030-01-01",
+    "mrc": "200",
+    "owner_id": "SNS",
+    "pallet_identifier": "690000000445629982",
+    "sap_line_id": "1",
+    "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+    "sku_id": "A",
+    "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+    "wms_article_id": "TC03089DDB36"
+  },
+  "at": "2026-10-23T09:28:06.107935+00:00",
+  "actor": "PS404e5bb51f7c",
+  "password": "[REDACTED]",
+  "slow_marker": 6660,
+  "before": [
+    [
+      250,
+      0
+    ]
+  ],
+  "calls": [
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 248.77,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "PS404e5bb51f7c",
+        "warehouse_id": 210564699,
+        "operation_id": "SP23.82fc29dcb.owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 308.53,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 0,
+        "missing_parts": [
+          1,
+          2
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 176.81,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 92.61,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null,
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 409,
+      "elapsed_ms": 116.56,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_EVENT_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 409,
+      "elapsed_ms": 104.53,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 409,
+      "elapsed_ms": 87.47,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_EVENT_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 409,
+      "elapsed_ms": 88.17,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_EVENT_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 409,
+      "elapsed_ms": 171.33,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_EVENT_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 250.97,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null,
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 409,
+      "elapsed_ms": 123.62,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_END_CONFLICT"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 281.99,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+          "entity_type": "SUPPLY",
+          "version": 1,
+          "status": "ACCEPTED",
+          "replayed": false,
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+          "correlation_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:08.974-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6846
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 112.4,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 422,
+      "elapsed_ms": 66.64,
+      "response": {
+        "detail": [
+          {
+            "type": "value_error",
+            "loc": [
+              "body"
+            ],
+            "msg": "Value error, Part codes must not contain line breaks used by the transfer digest",
+            "input": {
+              "schema_version": 1,
+              "source_id": "TC03.SAP",
+              "warehouse_id": 210564699,
+              "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+              "version": 1,
+              "transfer_id": "SP23.82fc29dcb.LF",
+              "part_count": 2,
+              "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+              "header": {
+                "composition_source": "SAP",
+                "entity_type": "SUPPLY",
+                "expiry_date": "2030-01-01",
+                "mrc": "200",
+                "owner_id": "SNS",
+                "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+                "sap_line_id": "1",
+                "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+                "sku_id": "A",
+                "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+                "wms_article_id": "TC03089DDB36"
+              },
+              "event_id": "SP23.82fc29dcb.LF",
+              "part_no": 1,
+              "codes": [
+                {
+                  "code": "010460000000000121SP2382fc29dcbORDERED0\n010460000000000121SP2382fc29dcbORDERED2"
+                }
+              ]
+            },
+            "ctx": {
+              "error": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 97.66,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": false,
+        "status": "OPEN",
+        "status_reason": "WAITING_END",
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 86.16,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 304.83,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.V2",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 2,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+          "entity_type": "SUPPLY",
+          "version": 2,
+          "status": "ACCEPTED",
+          "replayed": false,
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+          "correlation_id": "PARTS.fd3a9cb18140559e5e2005c53c3d1a18f9897f4232dbaf3f",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:10.410-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6847
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 409,
+      "elapsed_ms": 121.43,
+      "response": {
+        "detail": {
+          "code": "SUPPLY_PART_VERSION_SUPERSEDED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 87.54,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.ORDERED",
+        "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.79829f110a1a3fd1662999a93ced6e9ae69aad8f6871e6c3",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 84.84,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": false,
+        "status": "OPEN",
+        "status_reason": "WAITING_END",
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 123.11,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 339.48,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.RACE",
+          "entity_type": "SUPPLY",
+          "version": 1,
+          "status": "ACCEPTED",
+          "replayed": false,
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+          "correlation_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:11.258-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6848
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 105.47,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.BEFORE",
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": false,
+        "status": "OPEN",
+        "status_reason": "WAITING_END",
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 81.49,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.BEFORE",
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers/deliver",
+      "status": 200,
+      "elapsed_ms": 131.82,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.BEFORE",
+        "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+          "entity_type": "SUPPLY",
+          "version": 1,
+          "status": "ACCEPTED",
+          "replayed": false,
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+          "correlation_id": "PARTS.0c17e15f3536fcd265b23c9492bbcab24c182f54cead9973",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:14.829-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6849
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 200,
+      "elapsed_ms": 92.33,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.AFTER",
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": false,
+        "status": "OPEN",
+        "status_reason": "WAITING_END",
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts/end",
+      "status": 200,
+      "elapsed_ms": 158.64,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.AFTER",
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers/deliver",
+      "status": 200,
+      "elapsed_ms": 145.05,
+      "response": {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.AFTER",
+        "document_id": "SP23.82fc29dcb.DOC.AFTER",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.AFTER",
+          "entity_type": "SUPPLY",
+          "version": 1,
+          "status": "ACCEPTED",
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+          "correlation_id": "PARTS.60fa0c27234d2425ff52683cf15cc78fa2ee7038bb36012b",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:17.795-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6850,
+          "replayed": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 409,
+      "elapsed_ms": 122.4,
+      "response": {
+        "detail": {
+          "code": "SOURCE_MISMATCH"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 403,
+      "elapsed_ms": 151.54,
+      "response": {
+        "detail": {
+          "code": "TRADECASE_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 157.36,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "PS404e5bb51f7c",
+        "warehouse_id": 210564699,
+        "operation_id": "SP23.82fc29dcb.owner.revoke",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/supply-parts",
+      "status": 403,
+      "elapsed_ms": 93.24,
+      "response": {
+        "detail": {
+          "code": "TRADECASE_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/210564699/supply-transfers",
+      "status": 200,
+      "elapsed_ms": 120.88,
+      "response": {
+        "warehouse_id": 210564699,
+        "items": [],
+        "has_more": false
+      }
+    }
+  ],
+  "identity": true,
+  "end_first_document_count": 0,
+  "ordered_body": {
+    "schema_version": 1,
+    "source_id": "TC03.SAP",
+    "warehouse_id": 210564699,
+    "document_id": "SP23.82fc29dcb.DOC.ORDERED",
+    "version": 1,
+    "transfer_id": "SP23.82fc29dcb.ORDERED",
+    "part_count": 2,
+    "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+    "header": {
+      "composition_source": "SAP",
+      "entity_type": "SUPPLY",
+      "expiry_date": "2030-01-01",
+      "mrc": "200",
+      "owner_id": "SNS",
+      "pallet_identifier": "SP23.82fc29dcb.PAL.ORDERED",
+      "sap_line_id": "1",
+      "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+      "sku_id": "A",
+      "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+      "wms_article_id": "TC03089DDB36"
+    },
+    "event_id": "SP23.82fc29dcb.ORDERED.P1",
+    "part_no": 1,
+    "codes": [
+      {
+        "code": "010460000000000121SP2382fc29dcbORDERED0"
+      },
+      {
+        "code": "010460000000000121SP2382fc29dcbORDERED1"
+      }
+    ]
+  },
+  "ordered_complete": true,
+  "race_requests": [
+    {
+      "schema_version": 1,
+      "source_id": "TC03.SAP",
+      "warehouse_id": 210564699,
+      "document_id": "SP23.82fc29dcb.DOC.RACE",
+      "version": 1,
+      "transfer_id": "SP23.82fc29dcb.RACE",
+      "part_count": 2,
+      "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+      "header": {
+        "composition_source": "SAP",
+        "entity_type": "SUPPLY",
+        "expiry_date": "2030-01-01",
+        "mrc": "200",
+        "owner_id": "SNS",
+        "pallet_identifier": "SP23.82fc29dcb.PAL.RACE",
+        "sap_line_id": "1",
+        "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+        "sku_id": "A",
+        "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+        "wms_article_id": "TC03089DDB36"
+      },
+      "event_id": "SP23.82fc29dcb.RACE.P1",
+      "part_no": 1,
+      "codes": [
+        {
+          "code": "010460000000000121SP2382fc29dcbRACE0"
+        },
+        {
+          "code": "010460000000000121SP2382fc29dcbRACE1"
+        }
+      ]
+    },
+    {
+      "schema_version": 1,
+      "source_id": "TC03.SAP",
+      "warehouse_id": 210564699,
+      "document_id": "SP23.82fc29dcb.DOC.RACE",
+      "version": 1,
+      "transfer_id": "SP23.82fc29dcb.RACE",
+      "part_count": 2,
+      "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+      "header": {
+        "composition_source": "SAP",
+        "entity_type": "SUPPLY",
+        "expiry_date": "2030-01-01",
+        "mrc": "200",
+        "owner_id": "SNS",
+        "pallet_identifier": "SP23.82fc29dcb.PAL.RACE",
+        "sap_line_id": "1",
+        "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+        "sku_id": "A",
+        "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+        "wms_article_id": "TC03089DDB36"
+      },
+      "event_id": "SP23.82fc29dcb.RACE.END",
+      "total_codes": 3,
+      "codes_sha256": "f185e0a9a1576a1ce625dfaf9a8bf6da94af7103f27c56c3e22dce026a2b4efc"
+    }
+  ],
+  "race_results": [
+    [
+      200,
+      {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 3,
+        "missing_parts": [],
+        "end_received": true,
+        "status": "DELIVERED",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+        "delivery": {
+          "warehouse_id": 210564699,
+          "document_id": "SP23.82fc29dcb.DOC.RACE",
+          "entity_type": "SUPPLY",
+          "version": 1,
+          "status": "ACCEPTED",
+          "replayed": false,
+          "stock_changed": false,
+          "physical_execution": "NOT_STARTED",
+          "schema_version": 1,
+          "event_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+          "correlation_id": "PARTS.6d9d77f8bf009c523920582235295fc8a6c614d96028df7d",
+          "source_id": "WMS_TRADECASE",
+          "target_source_id": "TC03.SAP",
+          "occurred_at": "2026-10-23T05:28:11.258-04:00",
+          "external_delivery": "PENDING",
+          "external_business": "NOT_CONFIRMED",
+          "outbox_id": 6848
+        }
+      }
+    ],
+    [
+      200,
+      {
+        "warehouse_id": 210564699,
+        "source_id": "TC03.SAP",
+        "transfer_id": "SP23.82fc29dcb.RACE",
+        "document_id": "SP23.82fc29dcb.DOC.RACE",
+        "version": 1,
+        "part_count": 2,
+        "received_codes": 1,
+        "missing_parts": [
+          1
+        ],
+        "end_received": true,
+        "status": "OPEN",
+        "status_reason": null,
+        "owner_id": "SNS",
+        "delivered_event_id": null
+      }
+    ]
+  ],
+  "race_complete": true,
+  "BEFORE_body": {
+    "schema_version": 1,
+    "source_id": "TC03.SAP",
+    "warehouse_id": 210564699,
+    "document_id": "SP23.82fc29dcb.DOC.BEFORE",
+    "version": 1,
+    "transfer_id": "SP23.82fc29dcb.BEFORE",
+    "part_count": 2,
+    "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+    "header": {
+      "composition_source": "SAP",
+      "entity_type": "SUPPLY",
+      "expiry_date": "2030-01-01",
+      "mrc": "200",
+      "owner_id": "SNS",
+      "pallet_identifier": "SP23.82fc29dcb.PAL.BEFORE",
+      "sap_line_id": "1",
+      "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+      "sku_id": "A",
+      "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+      "wms_article_id": "TC03089DDB36"
+    },
+    "event_id": "SP23.82fc29dcb.BEFORE.P1",
+    "part_no": 1,
+    "codes": [
+      {
+        "code": "010460000000000121SP2382fc29dcbBEFORE0"
+      },
+      {
+        "code": "010460000000000121SP2382fc29dcbBEFORE1"
+      }
+    ]
+  },
+  "BEFORE_child": {
+    "exit_code": 96,
+    "stdout": "",
+    "stderr": ""
+  },
+  "AFTER_body": {
+    "schema_version": 1,
+    "source_id": "TC03.SAP",
+    "warehouse_id": 210564699,
+    "document_id": "SP23.82fc29dcb.DOC.AFTER",
+    "version": 1,
+    "transfer_id": "SP23.82fc29dcb.AFTER",
+    "part_count": 2,
+    "occurred_at": "2026-10-23T09:28:06.107935+00:00",
+    "header": {
+      "composition_source": "SAP",
+      "entity_type": "SUPPLY",
+      "expiry_date": "2030-01-01",
+      "mrc": "200",
+      "owner_id": "SNS",
+      "pallet_identifier": "SP23.82fc29dcb.PAL.AFTER",
+      "sap_line_id": "1",
+      "sap_order_id": "4ee12d6485754d24ba47c8e32318cee8",
+      "sku_id": "A",
+      "supplier_batch": "TEST_PARTS_NOT_ERP.SP23.82fc29dcb",
+      "wms_article_id": "TC03089DDB36"
+    },
+    "event_id": "SP23.82fc29dcb.AFTER.P1",
+    "part_no": 1,
+    "codes": [
+      {
+        "code": "010460000000000121SP2382fc29dcbAFTER0"
+      },
+      {
+        "code": "010460000000000121SP2382fc29dcbAFTER1"
+      }
+    ]
+  },
+  "AFTER_child": {
+    "exit_code": 97,
+    "stdout": "",
+    "stderr": ""
+  },
+  "slow_sql": [
+    [
+      6669,
+      50,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6665,
+      33,
+      "/api/tradecase/supply-parts/end",
+      "TRADECASE supply parts put_end"
+    ],
+    [
+      6666,
+      33,
+      "/api/tradecase/supply-parts/end",
+      "TRADECASE supply parts put_end"
+    ],
+    [
+      6661,
+      22,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6662,
+      22,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6664,
+      20,
+      "/api/tradecase/supply-parts/end",
+      "TRADECASE supply parts put_end"
+    ],
+    [
+      6668,
+      19,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6663,
+      17,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6670,
+      17,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ],
+    [
+      6667,
+      16,
+      "/api/tradecase/supply-parts",
+      "TRADECASE supply parts put_part"
+    ]
+  ],
+  "status": "PASS"
+}

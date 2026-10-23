@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_retry\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_retry\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_retry\001_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_retry\verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

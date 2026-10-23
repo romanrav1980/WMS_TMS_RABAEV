@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "provider": "local OSRM",
+  "sample_count": 5,
+  "elapsed_ms": [
+    4969.7,
+    1345.56,
+    1339.17,
+    1358.31,
+    1366.4
+  ],
+  "equal_results": true,
+  "fixture": "two public test coordinates in Yekaterinburg; not a real delivery",
+  "map_timestamp": "OSRM data timestamp field empty; freshness not established",
+  "decision": "Keep existing adapter and pair-cache primary key; no fresh expensive native SQL. Initial ASGI test timing included importing app/TestClient and is not served HTTP SLA."
+}

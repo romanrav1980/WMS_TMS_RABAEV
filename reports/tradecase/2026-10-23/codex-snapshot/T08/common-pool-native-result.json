@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "stages": [
+    {
+      "stage": "apply",
+      "exit_code": 0
+    },
+    {
+      "stage": "rollback",
+      "exit_code": 0
+    },
+    {
+      "stage": "reapply",
+      "exit_code": 0
+    }
+  ],
+  "invalid": 0,
+  "after_sha256": {
+    "RRL_STOCK_POOL_READ:PACKAGE BODY": "761B51CA2258159170DD40C50C988CAD6C1B706FE7577A31CD439C4A9DA126C1",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "76AC3806FD7FF7C41D02B318D6A373694B3D364D36C7508C0162A6DE3621A6B3",
+    "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "8AA8EBBAA8C2BE720B7ABD6D78106E128F0213E1F2E12D378629BB73D2AD454A"
+  }
+}

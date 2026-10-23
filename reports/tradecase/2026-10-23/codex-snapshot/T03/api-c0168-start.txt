@@ -1,0 +1,169 @@
+Checking port 8088...
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 23388
+Stopping process PID 23388 (python)...
+Process PID 75196 is not visible to Get-Process, trying taskkill tree...
+cmd : ERROR: The process "75196" not found.
+строка:3 знак:26
++ ... RELOAD='0'; cmd /d /c C:\projects\TMS\serv.bat > runtime/test-evidenc ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: The process "75196" not found.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Found matching process '*uvicorn app.main:app*--port 8088*': PID 75196
+Process PID 75196 is not visible to Get-Process, trying taskkill tree...
+ERROR: The process "75196" not found.
+Checking port 8088...
+Starting WMS API server...
+  WMS_ORACLE_USER=RABAEV
+  WMS_ORACLE_DSN=127.0.0.1:1521/orcl
+  WMS_CORS_ORIGINS=*
+  WMS_API_AUDIT_ENABLED=1
+  WMS_ADMIN_AUTH_ENABLED=1
+  Admin users are read from Oracle RUSERS/USER_GROUP/RIGHTS
+  URL=http://127.0.0.1:8088/docs
+INFO:     Started server process [26252]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8088 (Press CTRL+C to quit)
+INFO:     127.0.0.1:19735 - "POST /api/integrations/sap/artmas HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:19741 - "PUT /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19742 - "PUT /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19743 - "PUT /api/tradecase/warehouses/225687965/site HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19744 - "POST /api/tradecase/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19745 - "POST /api/tradecase/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19746 - "POST /api/tradecase/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19747 - "PUT /api/tradecase/warehouses/225687965/stock/cells/T3Ref611dbe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19748 - "PUT /api/tradecase/warehouses/225687965/stock/cells/T3Sef611dbe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19749 - "PUT /api/tradecase/warehouses/225687965/stock/cells/T3Pef611dbe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19750 - "POST /api/integrations/sap/supply-orders HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:19751 - "POST /api/integrations/sap/supply-orders HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:19753 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19754 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19755 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19756 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19757 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 201 Created
+INFO:     127.0.0.1:19758 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 201 Created
+INFO:     127.0.0.1:19759 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19760 - "POST /api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19761 - "POST /api/tradecase/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19762 - "POST /api/tradecase/warehouses/225687965/stock/bind HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:19763 - "POST /api/tradecase/warehouses/225687966/stock/bind HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:19764 - "POST /api/tradecase/warehouses/225687965/stock/bind HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19765 - "GET /api/tradecase/warehouses/225687965/stock?pallet_identifier=690000000161192302&limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20250 - "GET /api/outgoing-quality/FP21.ST.213059748 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20251 - "GET /api/outgoing-quality/FP21.ST.213059748 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20253 - "GET /api/outgoing-quality/FP21.ST.213059748 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20254 - "GET /api/outgoing-quality/FP21.ST.213059748 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20255 - "GET /api/outgoing-quality/FP21.ST.213059748 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20256 - "GET /api/transport/loading/33677/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20257 - "GET /api/transport/loading/33677/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20258 - "GET /api/transport/loading/33677/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20259 - "GET /api/transport/loading/33677/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20260 - "GET /api/transport/loading/33677/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20261 - "GET /api/picking/waves/624/execution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20262 - "GET /api/picking/waves/624/execution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20263 - "GET /api/picking/waves/624/execution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20264 - "GET /api/picking/waves/624/execution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20265 - "GET /api/picking/waves/624/execution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20328 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20331 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20333 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20334 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20335 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20336 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20337 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20342 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20344 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20345 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20346 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20347 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20348 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20349 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20350 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20351 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20352 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20354 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20355 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20356 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20357 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20358 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20359 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20362 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20364 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20365 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20368 - "GET /api/master-data/warehouses/options?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20369 - "GET /api/master-data/warehouses/options?limit=100&after=8452713 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20370 - "GET /api/master-data/warehouses/options?limit=100&after=23954767 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20371 - "GET /api/master-data/warehouses/options?limit=100&after=61123418 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20373 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20374 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20375 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20376 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20377 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20378 - "GET /api/admin/transport/drivers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20866 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20866 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20867 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20869 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20870 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20871 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20866 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20867 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20870 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20869 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20871 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20866 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20867 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20867 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20867 - "GET /api/finished-goods/skus/TC03EF611DBE/receiving-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20868 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/receipt-history?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20875 - "GET /wms-admin/receiving.html?warehouse_id=225687965&supply_order_id=1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20877 - "GET /wms-admin/admin-nav.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20875 - "GET /wms-admin/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20876 - "GET /wms-admin/receiving.css?v=20261023-c0168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20878 - "GET /wms-admin/admin-auth.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20880 - "GET /wms-admin/receiving-history.js?v=20261013-937 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20879 - "GET /wms-admin/receiving-context.js?v=20261013-1035 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20877 - "GET /wms-admin/receiving-intent.js?v=20261013-969 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20876 - "GET /wms-admin/receiving-scan-list.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20875 - "GET /wms-admin/receiving-layout.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20878 - "GET /wms-admin/receiving-form-state.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20879 - "GET /wms-admin/receiving.js?v=20261014-formdraft HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20880 - "GET /wms-admin/receiving-form-draft.js?v=20261014 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20875 - "GET /wms-admin/assets/nav-icons.svg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20877 - "GET /wms-admin/receipt-reversal.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20876 - "GET /api/admin/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20877 - "GET /api/integrations/sap/supply-orders?warehouse_id=225687965 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20876 - "GET /api/access/workspaces HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20877 - "GET /api/integrations/sap/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21150 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21154 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21161 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21163 - "GET /api/admin/warehouses?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21166 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21179 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21183 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21184 - "GET /api/admin/warehouses HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21188 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21190 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21191 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21192 - "GET /api/admin/warehouses?limit=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21193 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21194 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21195 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21196 - "GET /api/admin/warehouses?role=FINISHED_GOODS&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21197 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21198 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21199 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21200 - "GET /api/admin/warehouses?mes_enabled=1&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21201 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21203 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21206 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21207 - "GET /api/admin/warehouses?mes_enabled=0&limit=500 HTTP/1.1" 200 OK
+Server exited. You can close this window.
+Press any key to continue . . . 

@@ -1,0 +1,896 @@
+{
+  "tag": "CS23.0745c8466",
+  "requests": {
+    "first_sap": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SAP",
+        "sender_id": "TC03.SAP",
+        "event_id": "CS23.0745c8466.first_sap",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "switch": {
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "body": {
+        "operation_id": "CS23.0745c8466.switch",
+        "expected_version": 1,
+        "source_id": "TC03.SAP",
+        "active_skm": "CS23.0745c8466.SKM",
+        "planning_source": "SAP",
+        "enabled": true,
+        "reason": "Owned provider switching metadata proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "changed": {
+      "path": "/api/tradecase/warehouses/220639789/order-compositions",
+      "body": null,
+      "method": "GET",
+      "status": 200,
+      "qa": false
+    },
+    "old_skm_after_switch": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SKM",
+        "sender_id": "TC03.SKM",
+        "event_id": "CS23.0745c8466.old_skm",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": false
+    },
+    "second_report": {
+      "path": "/api/tradecase/order-compositions/report",
+      "body": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "superseded_reply": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SAP",
+        "sender_id": "TC03.SAP",
+        "event_id": "CS23.0745c8466.late_sap",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 409,
+      "qa": false
+    },
+    "second_skm": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SKM",
+        "sender_id": "CS23.0745c8466.SKM",
+        "event_id": "CS23.0745c8466.second_skm",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 2,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "second_sap": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SAP",
+        "sender_id": "TC03.SAP",
+        "event_id": "CS23.0745c8466.second_sap",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 2,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "restore": {
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "body": {
+        "operation_id": "CS23.0745c8466.restore",
+        "expected_version": 2,
+        "source_id": "TC03.SAP",
+        "active_skm": "TC03.SKM",
+        "planning_source": "SAP",
+        "enabled": true,
+        "reason": "Owned provider switching metadata proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "third_report": {
+      "path": "/api/tradecase/order-compositions/report",
+      "body": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "third_skm": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SKM",
+        "sender_id": "TC03.SKM",
+        "event_id": "CS23.0745c8466.third_skm",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 3,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "third_sap": {
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "body": {
+        "schema_version": 1,
+        "warehouse_id": 220639789,
+        "system_code": "SAP",
+        "sender_id": "TC03.SAP",
+        "event_id": "CS23.0745c8466.third_sap",
+        "order_id": "FP21.220639789.ORDER",
+        "composition_no": 3,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "outcome": "ACCEPTED",
+        "occurred_at": "2026-10-23T10:33:38.787758+00:00"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    }
+  },
+  "results": {
+    "first_sap": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 1,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "ACCEPTED",
+      "sap_reason": null,
+      "skm_status": "WAITING",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING",
+      "acknowledged_system": "SAP",
+      "external_event_id": "CS23.0745c8466.first_sap",
+      "stock_changed": false
+    },
+    "switch": {
+      "warehouse_id": 220639789,
+      "version": 2,
+      "replayed": false,
+      "stock_changed": false
+    },
+    "changed": {
+      "warehouse_id": 220639789,
+      "items": [
+        {
+          "warehouse_id": 220639789,
+          "order_id": "FP21.220639789.ORDER",
+          "order_version": 1,
+          "assembly_closed": true,
+          "live_units": 10,
+          "live_carriers": 1,
+          "composition_no": 1,
+          "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+          "reported_order_version": 1,
+          "units": 10,
+          "carriers": 1,
+          "codes": 10,
+          "source_id": "TC03.SAP",
+          "skm_id": "TC03.SKM",
+          "sap_status": "ACCEPTED",
+          "sap_reason": null,
+          "skm_status": "WAITING",
+          "skm_reason": null,
+          "composition_state": "CURRENT",
+          "change_reason": "SKM_CHANGED",
+          "status": "CHANGED"
+        }
+      ],
+      "has_more": false
+    },
+    "old_skm_after_switch": {
+      "detail": {
+        "code": "TRADE_COMPOSITION_SKM_CHANGED"
+      }
+    },
+    "second_report": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 2,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "CS23.0745c8466.SKM",
+      "sap_status": "WAITING",
+      "sap_reason": null,
+      "skm_status": "WAITING",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING"
+    },
+    "superseded_reply": {
+      "detail": {
+        "code": "TRADE_COMPOSITION_ACK_STALE"
+      }
+    },
+    "second_skm": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 2,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "CS23.0745c8466.SKM",
+      "sap_status": "WAITING",
+      "sap_reason": null,
+      "skm_status": "ACCEPTED",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING",
+      "acknowledged_system": "SKM",
+      "external_event_id": "CS23.0745c8466.second_skm",
+      "stock_changed": false
+    },
+    "second_sap": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 2,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "CS23.0745c8466.SKM",
+      "sap_status": "ACCEPTED",
+      "sap_reason": null,
+      "skm_status": "ACCEPTED",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "CONFIRMED",
+      "acknowledged_system": "SAP",
+      "external_event_id": "CS23.0745c8466.second_sap",
+      "stock_changed": false
+    },
+    "restore": {
+      "warehouse_id": 220639789,
+      "version": 3,
+      "replayed": false,
+      "stock_changed": false
+    },
+    "third_report": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 3,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "WAITING",
+      "sap_reason": null,
+      "skm_status": "WAITING",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING"
+    },
+    "third_skm": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 3,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "WAITING",
+      "sap_reason": null,
+      "skm_status": "ACCEPTED",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "WAITING",
+      "acknowledged_system": "SKM",
+      "external_event_id": "CS23.0745c8466.third_skm",
+      "stock_changed": false
+    },
+    "third_sap": {
+      "warehouse_id": 220639789,
+      "order_id": "FP21.220639789.ORDER",
+      "order_version": 1,
+      "assembly_closed": true,
+      "live_units": 10,
+      "live_carriers": 1,
+      "composition_no": 3,
+      "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+      "reported_order_version": 1,
+      "units": 10,
+      "carriers": 1,
+      "codes": 10,
+      "source_id": "TC03.SAP",
+      "skm_id": "TC03.SKM",
+      "sap_status": "ACCEPTED",
+      "sap_reason": null,
+      "skm_status": "ACCEPTED",
+      "skm_reason": null,
+      "composition_state": "CURRENT",
+      "change_reason": null,
+      "status": "CONFIRMED",
+      "acknowledged_system": "SAP",
+      "external_event_id": "CS23.0745c8466.third_sap",
+      "stock_changed": false
+    }
+  },
+  "previous_calls": [],
+  "site": {
+    "warehouse_id": 220639789,
+    "source_id": "TC03.SAP",
+    "active_skm": "TC03.SKM",
+    "planning_source": "SAP",
+    "enabled": true,
+    "version": 1
+  },
+  "at": "2026-10-23T10:33:38.787758+00:00",
+  "slow_marker": 6702,
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "status": 200,
+      "elapsed_ms": 321.36,
+      "response": {
+        "warehouse_id": 220639789,
+        "source_id": "TC03.SAP",
+        "active_skm": "TC03.SKM",
+        "planning_source": "SAP",
+        "enabled": true,
+        "version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 270.33,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 326.43,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 149.4,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "acknowledged_system": "SAP",
+        "external_event_id": "CS23.0745c8466.first_sap",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "status": 200,
+      "elapsed_ms": 162.9,
+      "response": {
+        "warehouse_id": 220639789,
+        "version": 2,
+        "replayed": false,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220639789/order-compositions",
+      "status": 200,
+      "elapsed_ms": 92.54,
+      "response": {
+        "warehouse_id": 220639789,
+        "items": [
+          {
+            "warehouse_id": 220639789,
+            "order_id": "FP21.220639789.ORDER",
+            "order_version": 1,
+            "assembly_closed": true,
+            "live_units": 10,
+            "live_carriers": 1,
+            "composition_no": 1,
+            "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+            "reported_order_version": 1,
+            "units": 10,
+            "carriers": 1,
+            "codes": 10,
+            "source_id": "TC03.SAP",
+            "skm_id": "TC03.SKM",
+            "sap_status": "ACCEPTED",
+            "sap_reason": null,
+            "skm_status": "WAITING",
+            "skm_reason": null,
+            "composition_state": "CURRENT",
+            "change_reason": "SKM_CHANGED",
+            "status": "CHANGED"
+          }
+        ],
+        "has_more": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 409,
+      "elapsed_ms": 89.51,
+      "response": {
+        "detail": {
+          "code": "TRADE_COMPOSITION_SKM_CHANGED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 159.53,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 2,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "CS23.0745c8466.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 409,
+      "elapsed_ms": 152.95,
+      "response": {
+        "detail": {
+          "code": "TRADE_COMPOSITION_ACK_STALE"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 152.18,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 2,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "CS23.0745c8466.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "acknowledged_system": "SKM",
+        "external_event_id": "CS23.0745c8466.second_skm",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 118.84,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 2,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "CS23.0745c8466.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "CONFIRMED",
+        "acknowledged_system": "SAP",
+        "external_event_id": "CS23.0745c8466.second_sap",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "status": 200,
+      "elapsed_ms": 94.42,
+      "response": {
+        "warehouse_id": 220639789,
+        "version": 3,
+        "replayed": false,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 140.89,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 3,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 147.26,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 3,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "acknowledged_system": "SKM",
+        "external_event_id": "CS23.0745c8466.third_skm",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 157.79,
+      "response": {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 3,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "CONFIRMED",
+        "acknowledged_system": "SAP",
+        "external_event_id": "CS23.0745c8466.third_sap",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220639789/site",
+      "status": 200,
+      "elapsed_ms": 93.78,
+      "response": {
+        "warehouse_id": 220639789,
+        "source_id": "TC03.SAP",
+        "active_skm": "TC03.SKM",
+        "planning_source": "SAP",
+        "enabled": true,
+        "version": 3
+      }
+    }
+  ],
+  "race": [
+    [
+      200,
+      {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING"
+      }
+    ],
+    [
+      200,
+      {
+        "warehouse_id": 220639789,
+        "order_id": "FP21.220639789.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "ce963fb6f638ab23ddc0ae0b9901904b0cfd01f0980224ac4584d3613b9488e5",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "replayed": true
+      }
+    ]
+  ],
+  "frozen_error": "ORA-20902: COMPOSITION_SNAPSHOT_FROZEN\nORA-06512: at \"RABAEV.RRL_TRADE_ORDER_COMP_FROZEN\", line 6\nORA-04088: error during execution of trigger 'RABAEV.RRL_TRADE_ORDER_COMP_FROZEN'",
+  "frozen_checked": true,
+  "slow_sql": [
+    [
+      6704,
+      27,
+      "/api/tradecase/order-compositions/acknowledgments",
+      "TRADECASE order composition acknowledge"
+    ],
+    [
+      6703,
+      16,
+      "/api/tradecase/order-compositions/acknowledgments",
+      "TRADECASE order composition acknowledge"
+    ]
+  ],
+  "checks": [
+    "Two concurrent reports commit one snapshot/outbox",
+    "Current SKM switching invalidates waiting report and rejects old sender",
+    "Superseded snapshot rejects fresh late reply",
+    "SKM before SAP independently reaches CONFIRMED",
+    "Switch back queues distinct snapshot, never reuses old outbox",
+    "Frozen snapshot rejects direct metadata change; site restored; stock0/H0; INVALID0"
+  ],
+  "status": "PASS"
+}

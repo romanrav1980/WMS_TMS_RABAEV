@@ -1,0 +1,63 @@
+{
+  "kind": "FIXTURE_BROWSER",
+  "checks": [
+    {
+      "width": 1440,
+      "name": "Selected task identity forwarded to existing scoped lots API"
+    },
+    {
+      "width": 1440,
+      "name": "403 clears stale rows; retry preserves unknown original body even after confirmed denial"
+    },
+    {
+      "width": 1440,
+      "name": "Later422 cannot erase the prior unknown delivery"
+    },
+    {
+      "width": 1440,
+      "name": "Late previous-cell result never replaces current-cell rows"
+    },
+    {
+      "width": 1440,
+      "name": "Actor change discards in-flight data"
+    },
+    {
+      "width": 1440,
+      "name": "First422 validation rejection unlocks correction without losing another actor intent"
+    },
+    {
+      "width": 1440,
+      "name": "Actual page CSS fits viewport; every button has hint and help id"
+    },
+    {
+      "width": 390,
+      "name": "Selected task identity forwarded to existing scoped lots API"
+    },
+    {
+      "width": 390,
+      "name": "403 clears stale rows; retry preserves unknown original body even after confirmed denial"
+    },
+    {
+      "width": 390,
+      "name": "Later422 cannot erase the prior unknown delivery"
+    },
+    {
+      "width": 390,
+      "name": "Late previous-cell result never replaces current-cell rows"
+    },
+    {
+      "width": 390,
+      "name": "Actor change discards in-flight data"
+    },
+    {
+      "width": 390,
+      "name": "First422 validation rejection unlocks correction without losing another actor intent"
+    },
+    {
+      "width": 390,
+      "name": "Actual page CSS fits viewport; every button has hint and help id"
+    }
+  ],
+  "errors": [],
+  "status": "PASS"
+}

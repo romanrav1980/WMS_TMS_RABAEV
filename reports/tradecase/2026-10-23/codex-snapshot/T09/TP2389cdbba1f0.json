@@ -1,0 +1,62 @@
+{
+  "status": "FAIL",
+  "tag": "TP2389cdbba1f0",
+  "warehouse": 220793322,
+  "trip": 33665,
+  "stages": {
+    "before": {
+      "native": [
+        {
+          "ms": 352.51,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 340.26,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 494.42,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 383.93,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 423.89,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 346.33,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        }
+      ],
+      "http": [
+        423.59,
+        342.73,
+        306.77
+      ],
+      "warm_native_median": 383.93,
+      "http_median": 342.73
+    }
+  },
+  "checks": [],
+  "migration": [
+    {
+      "action": "apply",
+      "exit_code": 0,
+      "evidence": "C:\\projects\\TMS\\runtime\\test-evidence\\tradecase\\2026-10-23\\T09\\TP2389cdbba1f0.0.apply.txt"
+    },
+    {
+      "action": "rollback",
+      "exit_code": 0,
+      "evidence": "C:\\projects\\TMS\\runtime\\test-evidence\\tradecase\\2026-10-23\\T09\\TP2389cdbba1f0.1.rollback.txt"
+    },
+    {
+      "action": "apply",
+      "exit_code": 0,
+      "evidence": "C:\\projects\\TMS\\runtime\\test-evidence\\tradecase\\2026-10-23\\T09\\TP2389cdbba1f0.2.apply.txt"
+    }
+  ],
+  "qa_retired": true
+}

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "calls": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/999999999/cancel",
+      "status": 409,
+      "elapsed_ms": 460.38,
+      "response": {
+        "detail": {
+          "code": "YARD_PLAN_NOT_FOUND",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true,
+          "operation_id": "DOCKPLAN23.missing.read.before.retry"
+        }
+      }
+    }
+  ]
+}

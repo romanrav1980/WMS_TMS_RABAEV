@@ -1,0 +1,435 @@
+{
+  "status": "PASS_RECHECK_OF_SAVED_LIVE_RESPONSE",
+  "tag": "PV23.868000672f",
+  "assignments": [
+    {
+      "event_id": "YARD_DOCK_PLAN:9",
+      "resource_id": "DOCK:220793322:B22D1161"
+    },
+    {
+      "event_id": "YARD_DOCK_PLAN:9",
+      "resource_id": "VEHICLE:PV23.868000672F"
+    }
+  ],
+  "calls": [
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 423.07,
+      "response": {
+        "operation_id": "PV23.868000672f.visit",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.Q"
+        ],
+        "visit_id": 637,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "PV23.868000672F",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T11:13:12Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 84.33,
+      "response": {
+        "operation_id": "PV23.868000672f.plan",
+        "plan_id": 9,
+        "warehouse_id": 220793322,
+        "visit_id": 637,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T11:13:12Z",
+        "planned_to": "2026-10-23T12:13:12Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "PV23.868000672F",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T11:13:12Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/timeline?warehouse_id=220793322&start_at=2026-10-23T11%3A13%3A12%2B00%3A00&finish_at=2026-10-23T12%3A13%3A12%2B00%3A00",
+      "status": 200,
+      "elapsed_ms": 197.8,
+      "response": {
+        "warehouse_id": 220793322,
+        "start_at": "2026-10-23T11:13:12+00:00",
+        "finish_at": "2026-10-23T12:13:12+00:00",
+        "observed_at": "2026-10-23T06:13:12.714932+00:00",
+        "access_revision": 835,
+        "warehouse_time_zone": null,
+        "resources": [
+          {
+            "resource_id": "RESOURCE:86",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "RESOURCE:87",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "RESOURCE:88",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "RESOURCE:89",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "RESOURCE:90",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "RESOURCE:91",
+            "kind": "CASE_PICKER",
+            "label": "Factory CASE QA",
+            "warehouse_id": 220793322,
+            "source_state": "AVAILABLE",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": [],
+            "last_signal": null
+          },
+          {
+            "resource_id": "DOCK:220793322:B22D1161",
+            "kind": "DOCK",
+            "label": "B22D1161",
+            "warehouse_id": 220793322,
+            "source_state": "UNKNOWN",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": null,
+            "last_signal": null
+          },
+          {
+            "resource_id": "DOCK:220793322:N22DA1168",
+            "kind": "DOCK",
+            "label": "N22DA1168",
+            "warehouse_id": 220793322,
+            "source_state": "UNKNOWN",
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": null,
+            "last_signal": null
+          },
+          {
+            "resource_id": "VEHICLE:PV23.868000672F",
+            "kind": "VEHICLE",
+            "label": "PV23.868000672F",
+            "warehouse_id": 220793322,
+            "source_state": null,
+            "availability": "UNKNOWN",
+            "zone_code": null,
+            "qualifications": null,
+            "last_signal": null
+          }
+        ],
+        "events": [
+          {
+            "event_id": "CASE_PICK_TASK:1161",
+            "kind": "CASE_PICK_TASK",
+            "label": "Сборка 1161 · волна 605",
+            "source": "RRL_CASE_PICK_TASK",
+            "source_id": 1161,
+            "wave_id": 605,
+            "status": "CONTROLLED",
+            "total_lines": 1,
+            "picked_lines": 1,
+            "plan_start_at": null,
+            "plan_finish_at": null,
+            "fact_start_at": "2026-10-21T23:14:31.226612+00:00",
+            "fact_finish_at": null,
+            "time_status": "AWARE_FACT",
+            "legacy_time": {
+              "fact_finish": null
+            },
+            "fact_finish_status": "UNRESOLVED"
+          },
+          {
+            "event_id": "CASE_PICK_TASK:1162",
+            "kind": "CASE_PICK_TASK",
+            "label": "Сборка 1162 · волна 606",
+            "source": "RRL_CASE_PICK_TASK",
+            "source_id": 1162,
+            "wave_id": 606,
+            "status": "CONTROLLED",
+            "total_lines": 1,
+            "picked_lines": 1,
+            "plan_start_at": null,
+            "plan_finish_at": null,
+            "fact_start_at": "2026-10-21T23:14:34.050767+00:00",
+            "fact_finish_at": null,
+            "time_status": "AWARE_FACT",
+            "legacy_time": {
+              "fact_finish": null
+            },
+            "fact_finish_status": "UNRESOLVED"
+          },
+          {
+            "event_id": "CASE_PICK_TASK:1169",
+            "kind": "CASE_PICK_TASK",
+            "label": "Сборка 1169 · волна 613",
+            "source": "RRL_CASE_PICK_TASK",
+            "source_id": 1169,
+            "wave_id": 613,
+            "status": "CONTROLLED",
+            "total_lines": 1,
+            "picked_lines": 1,
+            "plan_start_at": null,
+            "plan_finish_at": null,
+            "fact_start_at": "2026-10-22T01:29:40.469926+00:00",
+            "fact_finish_at": null,
+            "time_status": "AWARE_FACT",
+            "legacy_time": {
+              "fact_finish": null
+            },
+            "fact_finish_status": "UNRESOLVED"
+          },
+          {
+            "source": "RRL_YARD_VISIT",
+            "source_id": 637,
+            "trip_id": null,
+            "plan_start_at": "2026-10-23T11:13:12Z",
+            "plan_finish_at": "2026-10-23T11:13:12Z",
+            "event_id": "YARD_VISIT:637",
+            "kind": "YARD_VISIT",
+            "label": "Визит 637 · приёмка",
+            "status": "EXPECTED",
+            "fact_start_at": null,
+            "fact_finish_at": null,
+            "time_status": "AWARE_PLAN",
+            "fact_finish_status": "UNRESOLVED"
+          },
+          {
+            "source": "RRL_YARD_DOCK_PLAN",
+            "source_id": 9,
+            "trip_id": null,
+            "event_id": "YARD_DOCK_PLAN:9",
+            "kind": "YARD_DOCK_PLAN",
+            "label": "План ворот B22D1161 · визит 637 · приёмка",
+            "status": "PLANNED",
+            "plan_start_at": "2026-10-23T11:13:12Z",
+            "plan_finish_at": "2026-10-23T12:13:12Z",
+            "fact_start_at": null,
+            "fact_finish_at": null,
+            "time_status": "AWARE_PLAN",
+            "fact_finish_status": "NOT_APPLICABLE"
+          }
+        ],
+        "unscheduled": [],
+        "assignments": [
+          {
+            "event_id": "CASE_PICK_TASK:1161",
+            "resource_id": "RESOURCE:86"
+          },
+          {
+            "event_id": "CASE_PICK_TASK:1162",
+            "resource_id": "RESOURCE:87"
+          },
+          {
+            "event_id": "CASE_PICK_TASK:1169",
+            "resource_id": "RESOURCE:91"
+          },
+          {
+            "event_id": "YARD_DOCK_PLAN:9",
+            "resource_id": "DOCK:220793322:B22D1161"
+          },
+          {
+            "event_id": "YARD_DOCK_PLAN:9",
+            "resource_id": "VEHICLE:PV23.868000672F"
+          },
+          {
+            "event_id": "YARD_VISIT:637",
+            "resource_id": "VEHICLE:PV23.868000672F"
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "registry",
+            "status": "READY",
+            "permission": "resource_management_view",
+            "limit": 500,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "attendance",
+            "status": "READY",
+            "permission": "resource_shift_view",
+            "limit": 500,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "warehouse_tasks",
+            "status": "READY",
+            "permission": "warehouse_task_view",
+            "limit": 2000,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "case_tasks",
+            "status": "READY",
+            "permission": "case_pick_view",
+            "limit": 2000,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "transport",
+            "status": "READY",
+            "permission": "transport_dispatch_view",
+            "limit": 2000,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "sessions",
+            "status": "READY",
+            "permission": "resource_session_view",
+            "limit": 2000,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          },
+          {
+            "source_id": "yard",
+            "status": "READY",
+            "permission": "tradecase_view",
+            "limit": 2000,
+            "observed_at": "2026-10-23T06:13:12.707564+00:00"
+          }
+        ],
+        "overlap_candidates": [],
+        "overlap_limit": 200,
+        "time_policy": "AWARE_ONLY_LEGACY_LOCAL_UNRESOLVED",
+        "snapshot": "ORACLE_READ_ONLY",
+        "commands_executed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/9/cancel",
+      "status": 200,
+      "elapsed_ms": 100.4,
+      "response": {
+        "operation_id": "PV23.868000672f.cancel.plan",
+        "plan_id": 9,
+        "warehouse_id": 220793322,
+        "visit_id": 637,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T11:13:12Z",
+        "planned_to": "2026-10-23T12:13:12Z",
+        "status": "CANCELLED",
+        "version": 2,
+        "cancel_reason": "End own two-resource plan projection proof",
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "PV23.868000672F",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T11:13:12Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/637/transitions",
+      "status": 200,
+      "elapsed_ms": 105.29,
+      "response": {
+        "operation_id": "PV23.868000672f.cancel.visit",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.Q"
+        ],
+        "visit_id": 637,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "PV23.868000672F",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T11:13:12Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T06:13:13Z",
+        "cancel_reason": "End own two-resource plan projection proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    }
+  ],
+  "validation": "Native vehicle canonical uppercase used; original case-sensitive harness failure retained; current visit and plan CANCELLED; INVALID0"
+}

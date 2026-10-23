@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_quality_outbox_payload\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_quality_outbox_payload\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_quality_outbox_payload\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_quality_outbox_payload\rollback_verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

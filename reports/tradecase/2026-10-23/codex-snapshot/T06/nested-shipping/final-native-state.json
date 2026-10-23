@@ -1,0 +1,87 @@
+{
+  "wave": [
+    [
+      623,
+      "DONE"
+    ]
+  ],
+  "open_tasks": [],
+  "composition": {
+    "warehouse_id": 222385707,
+    "items": [
+      {
+        "warehouse_id": 222385707,
+        "order_id": "FP21.222385707.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "400be56fa0e85a65a3eed8c0f85d64898be63d7333989746a243f30cfb034720",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "CONFIRMED"
+      }
+    ],
+    "has_more": false
+  },
+  "tare": [
+    {
+      "owner_ware_id": 222385707,
+      "pallet_type_id": 1,
+      "pallet_type_code": "EURO_PALLET",
+      "pallet_type_name": "Европоддон",
+      "condition_code": "GOOD",
+      "custodian_kind": "VEHICLE",
+      "custodian_id": "10127",
+      "quantity": "0",
+      "balance_version": 2,
+      "updated_at": "2026-10-23T07:50:02.240644",
+      "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+    },
+    {
+      "owner_ware_id": 222385707,
+      "pallet_type_id": 1,
+      "pallet_type_code": "EURO_PALLET",
+      "pallet_type_name": "Европоддон",
+      "condition_code": "GOOD",
+      "custodian_kind": "WAREHOUSE",
+      "custodian_id": "222385707",
+      "quantity": "0",
+      "balance_version": 5,
+      "updated_at": "2026-10-23T07:50:22.628456",
+      "last_operation_id": "NS23.57bdf1ab2.tare.close"
+    }
+  ],
+  "actors": [
+    [
+      "FPR21cf31f1148",
+      1
+    ],
+    [
+      "ND23c60356a98",
+      1
+    ],
+    [
+      "TC03bcfdabb6",
+      1
+    ]
+  ],
+  "sync": [
+    [
+      926,
+      "SYNCED",
+      null
+    ]
+  ]
+}

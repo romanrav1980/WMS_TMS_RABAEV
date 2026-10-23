@@ -1,0 +1,15 @@
+python : Traceback (most recent call last):
+строка:7 знак:44
++ ... 1521/orcl'; python tests/tradecase/live_vehicle_change.py depart > ru ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\projects\TMS\tests\tradecase\live_vehicle_change.py", line 135, in <module>
+    elif stage=='depart':depart_c()
+                         ~~~~~~~~^^
+  File "C:\projects\TMS\tests\tradecase\live_vehicle_change.py", line 112, in depart_c
+    assert 'DOCUMENT' in json.dumps(rejected),rejected
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'detail': {'code': 'STOCK_RULE_REJECTED', 'message': 'TRADE_TRIP_BINDING_STALE', 'operation_id': 'VC23
+.e239ec51a.old_doc.depart', 'retry_same_operation_id': True, 'outcome_confirmed': True}}

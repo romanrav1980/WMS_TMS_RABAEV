@@ -1,0 +1,6 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_warehouse_depot_scope_lock_order\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_warehouse_depot_scope_lock_order\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_warehouse_depot_scope_lock_order\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_warehouse_depot_scope_lock_order\preflight.sql
+Done. Statements=6; Errors=0; AbsentCleanup=0
+

@@ -55,6 +55,10 @@
   },
   {
    "width": 1440,
+   "name": "ack requires a fresh sheet check before another fact"
+  },
+  {
+   "width": 1440,
    "name": "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown"
   },
   {
@@ -147,6 +151,10 @@
   },
   {
    "width": 390,
+   "name": "ack requires a fresh sheet check before another fact"
+  },
+  {
+   "width": 390,
    "name": "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown"
   },
   {
@@ -193,16 +201,16 @@
  "liveWrites": [],
  "errors": [],
  "posts": [
-  "{\"operation_id\":\"case-paper-f58ce6e1-910b-49d7-96ce-205994aea335\",\"fact_qty\":\"2\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":null,\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\",\"unit_scans\":[{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215abcDEF\"},{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215ghiJKL\"}]}"
+  "{\"operation_id\":\"case-paper-0706bde8-506a-4052-b4c6-44fdc043abdb\",\"fact_qty\":\"2\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":null,\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\",\"unit_scans\":[{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215abcDEF\"},{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215ghiJKL\"}]}"
  ],
  "timings": {
-  "case_queue_1440": 2177,
-  "case_queue_390": 1659
+  "case_queue_1440": 2675,
+  "case_queue_390": 2020
  },
  "print_1440": {
   "printed": true,
-  "svgRight": 687,
-  "svgWidth": 680,
+  "svgRight": 990,
+  "svgWidth": 983,
   "viewport": 1120,
   "scroll": 1120,
   "code": "CPICK:1019:1023:6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A",
@@ -210,8 +218,8 @@
  },
  "print_390": {
   "printed": true,
-  "svgRight": 687,
-  "svgWidth": 680,
+  "svgRight": 990,
+  "svgWidth": 983,
   "viewport": 1120,
   "scroll": 1120,
   "code": "CPICK:1019:1023:6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A",

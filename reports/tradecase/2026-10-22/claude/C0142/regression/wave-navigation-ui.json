@@ -1,0 +1,394 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "test": "real DONE604 outside active wave lists opened from native header/overview",
+      "usefulScreenMs": 2004
+    },
+    {
+      "width": 1440,
+      "test": "wave action keeps actual shift/warehouse/selection and never opens static stage demo"
+    },
+    {
+      "width": 1440,
+      "test": "director opens actual shift with current warehouse; no stale wave"
+    },
+    {
+      "width": 1440,
+      "test": "foreign selected warehouse rejects wave604; no wrong wave in overview batch"
+    },
+    {
+      "width": 1440,
+      "test": "403 clears selected header/card; no static fallback"
+    },
+    {
+      "width": 390,
+      "test": "real DONE604 outside active wave lists opened from native header/overview",
+      "usefulScreenMs": 1887
+    },
+    {
+      "width": 390,
+      "test": "wave action keeps actual shift/warehouse/selection and never opens static stage demo"
+    },
+    {
+      "width": 390,
+      "test": "director opens actual shift with current warehouse; no stale wave"
+    },
+    {
+      "width": 390,
+      "test": "foreign selected warehouse rejects wave604; no wrong wave in overview batch"
+    },
+    {
+      "width": 390,
+      "test": "403 clears selected header/card; no static fallback"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "overview": [
+    {
+      "phase": "positive",
+      "warehouse_id": 220639789,
+      "wave_ids": [
+        604
+      ]
+    },
+    {
+      "phase": "foreign",
+      "warehouse_id": 219023232,
+      "wave_ids": [
+        601
+      ]
+    },
+    {
+      "phase": "positive",
+      "warehouse_id": 220639789,
+      "wave_ids": [
+        604
+      ]
+    },
+    {
+      "phase": "foreign",
+      "warehouse_id": 219023232,
+      "wave_ids": [
+        601
+      ]
+    }
+  ],
+  "http": [
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 78.9,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 311.737,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 570.494,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "elapsedMs": 568.026,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "elapsedMs": 568.617,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "elapsedMs": 572.709,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "elapsedMs": 586.68,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "elapsedMs": 708.007,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 736.131,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "elapsedMs": 736.422,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "elapsedMs": 799.986,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/shift-overview",
+      "elapsedMs": 110.585,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 1895.469,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 273.891,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 325.738,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "elapsedMs": 324.797,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "elapsedMs": 387.296,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "elapsedMs": 389.859,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "elapsedMs": 548.228,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 791.008,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "elapsedMs": 832.211,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "elapsedMs": 831.717,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "elapsedMs": 860.151,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/shift-overview",
+      "elapsedMs": 578.654,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 71.189,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 18.6,
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 194.481,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 496.271,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "elapsedMs": 497.971,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "elapsedMs": 621.195,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "elapsedMs": 695.921,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "elapsedMs": 697.399,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 696.808,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "elapsedMs": 790.539,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "elapsedMs": 844.81,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 845.353,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "elapsedMs": 903.049,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/shift-overview",
+      "elapsedMs": 120.205,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 1798.153,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 635.78,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "elapsedMs": 776.205,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "elapsedMs": 776.119,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "elapsedMs": 775.978,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "elapsedMs": 778.262,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "elapsedMs": 990.656,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "elapsedMs": 1156.273,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 1380.003,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "elapsedMs": 1380.876,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "elapsedMs": 1413.615,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/shift-overview",
+      "elapsedMs": 654.816,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/access/me",
+      "elapsedMs": 78.476,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/picking/waves/604/header",
+      "elapsedMs": 16.352,
+      "status": 403
+    }
+  ],
+  "asset": "/assets/index-8_qkYkhH.js",
+  "status": "PASS"
+}

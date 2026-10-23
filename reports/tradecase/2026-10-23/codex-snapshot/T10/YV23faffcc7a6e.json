@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "basis": "Synthetic documents/expected visits, real native functions, full transaction rollback",
+  "count": 201,
+  "visits_ms": 182.88,
+  "history_ms": 35.68,
+  "rolled_back": true,
+  "qa_retired": true
+}

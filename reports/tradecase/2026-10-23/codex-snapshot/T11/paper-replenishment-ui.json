@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "390: paper prevents confirmation before version check and separate START",
+    "Real stale paper409 disables new confirmation",
+    "Injected403 clears version admission",
+    "Real current paper permits existing fact form"
+  ],
+  "posts": [],
+  "errors": [],
+  "timings": {},
+  "synthetic": [
+    "403 paper read",
+    "lost response after real commit"
+  ]
+}

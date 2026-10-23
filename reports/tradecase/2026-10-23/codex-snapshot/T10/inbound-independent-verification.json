@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Direct insert and update of supply links denied by native guard",
+    "All own visits closed, actor retired, owner access zero, original stocks preserved, INVALID0",
+    "Real resource timeline contains both completed inbound vehicle intervals with the receiving label"
+  ],
+  "visits": [
+    [
+      408,
+      "DEPARTED"
+    ],
+    [
+      410,
+      "DEPARTED"
+    ],
+    [
+      411,
+      "CANCELLED"
+    ],
+    [
+      412,
+      "CANCELLED"
+    ]
+  ],
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "timeline_ms": 354.27,
+  "timeline_events": [
+    {
+      "source": "RRL_YARD_VISIT",
+      "source_id": 408,
+      "trip_id": null,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "event_id": "YARD_VISIT:408",
+      "kind": "YARD_VISIT",
+      "label": "Визит 408 · приёмка",
+      "status": "DEPARTED",
+      "fact_start_at": "2026-10-23T00:16:32Z",
+      "fact_finish_at": "2026-10-23T00:16:33Z",
+      "time_status": "AWARE_FACT",
+      "fact_finish_status": "CLOSED"
+    },
+    {
+      "source": "RRL_YARD_VISIT",
+      "source_id": 410,
+      "trip_id": null,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "event_id": "YARD_VISIT:410",
+      "kind": "YARD_VISIT",
+      "label": "Визит 410 · приёмка",
+      "status": "DEPARTED",
+      "fact_start_at": "2026-10-23T00:16:32Z",
+      "fact_finish_at": "2026-10-23T00:16:33Z",
+      "time_status": "AWARE_FACT",
+      "fact_finish_status": "CLOSED"
+    }
+  ]
+}

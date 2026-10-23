@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "same_raw_http_bytes": true,
+  "original_receipt": {
+    "status": "ok",
+    "result": {
+      "operation_id": "TASK.UI:fc0e8371-d626-4258-b9cb-125ebee33aea",
+      "task_id": 1242,
+      "status": "DONE",
+      "pallet_identifier": "690000000445629982",
+      "source_pallet_identifier": "690000000445629982",
+      "cell": "T3P089ddb36",
+      "quantity": "250",
+      "base_quantity": "250",
+      "base_uom": "EA",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "movement_id": null,
+      "outbox_id": 6765
+    }
+  },
+  "task": 1242,
+  "stock": "250 at original source, HARD0; original receipt still describes prior destination",
+  "verification_total_ms": 1040.75
+}

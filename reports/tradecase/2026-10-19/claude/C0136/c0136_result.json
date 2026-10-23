@@ -1,0 +1,228 @@
+{
+ "http": [
+  "1440 GET 200 /api/tradecase/warehouses/211559882/site",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=false",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=true",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/TC5R.17cd4aae.C2",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/TC5R.17cd4aae.C2/units?after=&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "390 GET 200 /api/tradecase/warehouses/211559882/site",
+  "390 GET 200 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 200 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=true",
+  "390 GET 200 /api/tradecase/warehouses/211559882/buyouts/TC5R.17cd4aae.C2",
+  "390 GET 200 /api/tradecase/warehouses/211559882/buyouts/TC5R.17cd4aae.C2/units?after=&limit=100",
+  "390 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "390 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "390 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/site",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "1440 POST 200 /api/tradecase/warehouses/211559882/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/UI.C1.1.599c6e90",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/UI.C1.1.599c6e90/units?after=&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/site",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/site",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 POST 200 /api/tradecase/warehouses/211559882/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/UI.C1.1.f214adbd",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/buyouts/UI.C1.1.f214adbd/units?after=&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/site",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "1440 POST 409 /api/tradecase/warehouses/211559882/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/stock?pallet_identifier=690000000993299668&limit=100&after=8e7d8f4431bdbe3e509d8e846",
+  "1440 POST 409 /api/tradecase/warehouses/211559882/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C1",
+  "1440 GET 200 /api/tradecase/warehouses/211559882/documents/ORDER/C2",
+  "1440 POST 200 /api/tradecase/warehouses/211559882/stock/sort",
+  "390 GET 200 /api/tradecase/warehouses/211559882/site",
+  "390 GET 200 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 403 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 200 /api/tradecase/warehouses/211559882/site",
+  "390 GET 403 /api/tradecase/warehouses/225837931/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 403 /api/tradecase/warehouses/211559882/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 200 /api/tradecase/warehouses/211559882/site",
+  "390 GET 403 /api/tradecase/warehouses/225837931/buyouts?after=0&limit=50&pending_only=false",
+  "390 GET 200 /api/tradecase/warehouses/225837931/site"
+ ],
+ "posts": [
+  {
+   "mode": "ok",
+   "body": {
+    "buyout_id": "UI.C1.1.599c6e90",
+    "basis_order_id": "C1",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0d1b0e694a21ef7d7aa967fc5768033e38d646637667f883af684a23b8db75a6",
+     "1c75fe2bd9ee019d595ef8294b5d74dcec6cfb0eb11e8a83f2d6bd2e10bdc163",
+     "1caddd5efb40b5fd5b23c58c1c0acae6d5d91f3706296d97786663a015589629"
+    ],
+    "operation_id": "TC.BUYOUT.UI:cce32e71-dca9-485d-b052-22636e2cc765"
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "buyout_id": "UI.C1.1.f214adbd",
+    "basis_order_id": "C1",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0d1b0e694a21ef7d7aa967fc5768033e38d646637667f883af684a23b8db75a6",
+     "1c75fe2bd9ee019d595ef8294b5d74dcec6cfb0eb11e8a83f2d6bd2e10bdc163"
+    ],
+    "operation_id": "TC.BUYOUT.UI:2520a5e3-104e-4a35-b075-f0499a5d20b4"
+   }
+  },
+  {
+   "mode": "replay",
+   "body": {
+    "buyout_id": "UI.C1.1.f214adbd",
+    "basis_order_id": "C1",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0d1b0e694a21ef7d7aa967fc5768033e38d646637667f883af684a23b8db75a6",
+     "1c75fe2bd9ee019d595ef8294b5d74dcec6cfb0eb11e8a83f2d6bd2e10bdc163"
+    ],
+    "operation_id": "TC.BUYOUT.UI:2520a5e3-104e-4a35-b075-f0499a5d20b4"
+   }
+  },
+  {
+   "mode": "409:OPERATION_CONTENT_CONFLICT",
+   "body": {
+    "buyout_id": "UI.C1.1.11b4dc53",
+    "basis_order_id": "C1",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0d1b0e694a21ef7d7aa967fc5768033e38d646637667f883af684a23b8db75a6"
+    ],
+    "operation_id": "TC.BUYOUT.UI:d37a2703-765b-4374-a56f-154b1b4e6595"
+   }
+  },
+  {
+   "mode": "409:TRADE_BUYOUT_UNIT_ALREADY_HELD",
+   "body": {
+    "buyout_id": "UI.C1.1.f89fff7c",
+    "basis_order_id": "C1",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0d1b0e694a21ef7d7aa967fc5768033e38d646637667f883af684a23b8db75a6"
+    ],
+    "operation_id": "TC.BUYOUT.UI:560b5c18-508d-45bd-b632-96fa443d3ab8"
+   }
+  },
+  {
+   "mode": "sort:abort",
+   "body": {
+    "source_pallet": "690000000993299668",
+    "source_cell": "T3S17cd4aae",
+    "target_cell": "FIXTURE-SORT-1",
+    "scans": [
+     {
+      "system_code": "CRPT",
+      "profile_code": "TOBACCO",
+      "code": "CODE-1"
+     },
+     {
+      "system_code": "CRPT",
+      "profile_code": "TOBACCO",
+      "code": "CODE-2"
+     }
+    ],
+    "operation_id": "TC.SORT.UI:fb3be392-4d78-4203-89df-cb810e97658f"
+   }
+  },
+  {
+   "mode": "sort:ok",
+   "body": {
+    "source_pallet": "690000000993299668",
+    "source_cell": "T3S17cd4aae",
+    "target_cell": "FIXTURE-SORT-1",
+    "scans": [
+     {
+      "system_code": "CRPT",
+      "profile_code": "TOBACCO",
+      "code": "CODE-1"
+     },
+     {
+      "system_code": "CRPT",
+      "profile_code": "TOBACCO",
+      "code": "CODE-2"
+     }
+    ],
+    "operation_id": "TC.SORT.UI:fb3be392-4d78-4203-89df-cb810e97658f"
+   }
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "checks": [
+  "live_buyouts_detail_create_review_sort_form_1440",
+  "live_buyouts_detail_create_review_sort_form_390",
+  "double_click_single_post_then_fresh_detail",
+  "unknown_saved_reload_exact_retry_replay",
+  "content_conflict_kept_confirmed_409_cleared",
+  "other_user_intent_ignored",
+  "after_pick_requires_demand",
+  "sort_double_click_unknown_exact_retry_uid_next_step_form_cleared",
+  "fixture_403_clears",
+  "late_response_ignored"
+ ],
+ "live1440": {
+  "list": "Выкупы\nЕсть ожидающие коды\nСправка\nВыкуп\tОснование / строка\tТовар\tСобственник\tМомент\tКоды: подтверждено / ожидает / отклонено\tСостояние\tРазделение\t\nT11.REVERSE.SALE1\tFIN.REVERSE.SNS / 1\tA\tBLC → SNS\tдо сборки\t1 / 0 / 0\tподтверждено СКМ\tв карточке\tОткрыть\nTC5R.17cd4aae.C2\tC2 / 1\tA\tSNS → BLC\tдо сборки\t0 / 50 / 0\tЕсть ожидающие коды\tв карточке\tОткрыть\nTC5R.17cd4aae.B\tMAIN / 1\tA\tSNS → BLC\tдо сборки\t0 / 100 / 0\tЕсть ожидающие коды\tв карточке\tОткрыть\nTC5R.17cd4aae.A\tMAIN / 1\tA\tSNS → BLC\tдо сборки\t80 / 0 / 20\tчастично отказано\tв карточке\tОткрыть",
+  "pendingUrl": "1",
+  "card": "Выкуп TC5R.17cd4aae.C2\n×\n\nВыкуп меняет собственника только после ответа СКМ по каждому коду. Физическое количество не меняется.\n\nОснование\nзаказ C2, строка 1, версия 1\nТовар / МРЦ\nA · МРЦ 200\nСобственник\nSNS → BLC\nМомент выкупа\nдо сборки\nКоды\nзапрошено 50: подтверждено 0, ожидает 50, отклонено 0 · Есть ожидающие коды\nОтвет СКМ\nответ ещё не получен; запрос в очереди склада не означает отправку провайдеру\nРазделение паллеты\nне нужно\nСоздан\n19.10, 11:53\nКоды выкупа\nПаллета\tАдрес\tОтвет СКМ\tПричина отказа\tУдержание под выкуп\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\nТехнические сведения",
+  "sorting": "не нужно",
+  "review": "Кодов на месте: 170. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом, без резерва): 20. В строке: 50 шт.\n\nКодов в выкуп\n\nБудет запрошен выкуп 5 кодов (до сборки): SNS → BLC, паллета 690000000993299668, адрес T3S17cd4aae; основание C1/1 (версия 1). Собственник сменится только после ответа СКМ.\n\nЗапросить выкуп\nКлючи выбранных кодов",
+  "untitled": [],
+  "overflow": 0,
+  "sortCount": "3",
+  "sortButton": {
+   "disabled": false,
+   "title": "Перенести отсканированные коды с исходной паллеты в целевую ячейку. Новая этикетка и агрегация этим не подтверждаются.",
+   "text": "Разделить"
+  },
+  "sortOverflow": 0
+ },
+ "live390": {
+  "list": "Выкупы\nЕсть ожидающие коды\nСправка\nВыкуп\tОснование / строка\tТовар\tСобственник\tМомент\tКоды: подтверждено / ожидает / отклонено\tСостояние\tРазделение\t\nT11.REVERSE.SALE1\tFIN.REVERSE.SNS / 1\tA\tBLC → SNS\tдо сборки\t1 / 0 / 0\tподтверждено СКМ\tв карточке\tОткрыть\nTC5R.17cd4aae.C2\tC2 / 1\tA\tSNS → BLC\tдо сборки\t0 / 50 / 0\tЕсть ожидающие коды\tв карточке\tОткрыть\nTC5R.17cd4aae.B\tMAIN / 1\tA\tSNS → BLC\tдо сборки\t0 / 100 / 0\tЕсть ожидающие коды\tв карточке\tОткрыть\nTC5R.17cd4aae.A\tMAIN / 1\tA\tSNS → BLC\tдо сборки\t80 / 0 / 20\tчастично отказано\tв карточке\tОткрыть",
+  "pendingUrl": "1",
+  "card": "Выкуп TC5R.17cd4aae.C2\n×\n\nВыкуп меняет собственника только после ответа СКМ по каждому коду. Физическое количество не меняется.\n\nОснование\nзаказ C2, строка 1, версия 1\nТовар / МРЦ\nA · МРЦ 200\nСобственник\nSNS → BLC\nМомент выкупа\nдо сборки\nКоды\nзапрошено 50: подтверждено 0, ожидает 50, отклонено 0 · Есть ожидающие коды\nОтвет СКМ\nответ ещё не получен; запрос в очереди склада не означает отправку провайдеру\nРазделение паллеты\nне нужно\nСоздан\n19.10, 11:53\nКоды выкупа\nПаллета\tАдрес\tОтвет СКМ\tПричина отказа\tУдержание под выкуп\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\n690000000993299668\tT3S17cd4aae\tожидает\t—\tда\nТехнические сведения",
+  "sorting": "не нужно",
+  "review": "Кодов на месте: 170. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом, без резерва): 20. В строке: 50 шт.\n\nКодов в выкуп\n\nБудет запрошен выкуп 5 кодов (до сборки): SNS → BLC, паллета 690000000993299668, адрес T3S17cd4aae; основание C1/1 (версия 1). Собственник сменится только после ответа СКМ.\n\nЗапросить выкуп\nКлючи выбранных кодов",
+  "untitled": [],
+  "overflow": 0,
+  "sortCount": "3",
+  "sortButton": {
+   "disabled": false,
+   "title": "Перенести отсканированные коды с исходной паллеты в целевую ячейку. Новая этикетка и агрегация этим не подтверждаются.",
+   "text": "Разделить"
+  },
+  "sortOverflow": 0
+ },
+ "sortResult": "Новый идентификатор паллеты: PART:fixtureFixtureFixtureFixtureFixtureFixtureFi (исходная 690000000993299668), ячейка FIXTURE-SORT-1.\nЭто внутренний идентификатор, не новая SSCC. Регуляторная агрегация: ожидает подтверждения; этикетка не напечатана.\nСледующий шаг: оформить новую этикетку и регуляторную агрегацию отдельно.",
+ "status": "PASS",
+ "labels": {
+  "live": "admin login + GET 211559882 (buyouts, documents, all stock unit pages)",
+  "fixture": "POST /buyouts answers, GET of UI-created buyout, 403, delay, AFTER_PICK payload change — intercepted in browser"
+ }
+}

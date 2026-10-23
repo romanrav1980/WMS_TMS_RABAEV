@@ -1,0 +1,546 @@
+{
+  "kind": "CONTROLLED_REFERENCE_NATIVE_READ_ONLY",
+  "reference": "program.txt lines192-224, fixed minutes, not a live provider route",
+  "source": {
+    "route_material": {
+      "policy_id": "CURRENT_NATIVE_POLICY_WITH_CONTROLLED_PROGRAM_INPUT",
+      "depot_address": "REF.DEPOT",
+      "order_valid": true,
+      "stops": [
+        "REF.HUB",
+        "REF.BRANCH",
+        "REF.STORE"
+      ],
+      "legs": [
+        {
+          "from_address": "REF.DEPOT",
+          "to_address": "REF.HUB",
+          "duration_min": 60,
+          "duration_basis": "ROAD_PROFILE_ESTIMATE",
+          "fresh": true,
+          "provider": "CONTROLLED_PROGRAM_REFERENCE_NOT_LIVE_ROAD"
+        },
+        {
+          "from_address": "REF.HUB",
+          "to_address": "REF.BRANCH",
+          "duration_min": 40,
+          "duration_basis": "ROAD_PROFILE_ESTIMATE",
+          "fresh": true,
+          "provider": "CONTROLLED_PROGRAM_REFERENCE_NOT_LIVE_ROAD"
+        },
+        {
+          "from_address": "REF.BRANCH",
+          "to_address": "REF.STORE",
+          "duration_min": 30,
+          "duration_basis": "ROAD_PROFILE_ESTIMATE",
+          "fresh": true,
+          "provider": "CONTROLLED_PROGRAM_REFERENCE_NOT_LIVE_ROAD"
+        },
+        {
+          "from_address": "REF.STORE",
+          "to_address": "REF.DEPOT",
+          "duration_min": 60,
+          "duration_basis": "ROAD_PROFILE_ESTIMATE",
+          "fresh": true,
+          "provider": "CONTROLLED_PROGRAM_REFERENCE_NOT_LIVE_ROAD"
+        }
+      ]
+    },
+    "members": [
+      {
+        "address": "REF.HUB",
+        "delivery_window_from": "2026-10-26 11:00:00",
+        "delivery_window_to": "2026-10-26 12:00:00"
+      },
+      {
+        "address": "REF.BRANCH",
+        "delivery_window_from": "2026-10-26 11:30:00",
+        "delivery_window_to": "2026-10-26 13:00:00"
+      },
+      {
+        "address": "REF.STORE",
+        "delivery_window_from": "2026-10-26 12:00:00",
+        "delivery_window_to": "2026-10-26 14:00:00"
+      }
+    ],
+    "destination_rules": [
+      {
+        "address": "REF.HUB",
+        "unload_norm_min": 15,
+        "window_strict": 1,
+        "address_count": 1
+      },
+      {
+        "address": "REF.BRANCH",
+        "unload_norm_min": 15,
+        "window_strict": 1,
+        "address_count": 1
+      },
+      {
+        "address": "REF.STORE",
+        "unload_norm_min": 15,
+        "window_strict": 1,
+        "address_count": 1
+      }
+    ],
+    "operations": [
+      {
+        "code": "DRIVE",
+        "plan_start": "2026-10-26 10:00:00",
+        "plan_end": "2026-10-26 11:00:00"
+      },
+      {
+        "code": "DRIVE_BACK",
+        "plan_start": "2026-10-26 13:10:00",
+        "plan_end": "2026-10-26 14:10:00"
+      }
+    ]
+  },
+  "status": "MATCH",
+  "elapsed_ms": 32.35,
+  "result": {
+    "segments": [
+      {
+        "code": "DRIVE",
+        "start_at": "2026-10-26T10:00:00.000000+03:00",
+        "finish_at": "2026-10-26T11:00:00.000000+03:00",
+        "duration_min": "60",
+        "address": "REF.HUB"
+      },
+      {
+        "code": "UNLOAD",
+        "start_at": "2026-10-26T11:00:00.000000+03:00",
+        "finish_at": "2026-10-26T11:15:00.000000+03:00",
+        "duration_min": "15",
+        "address": "REF.HUB"
+      },
+      {
+        "code": "DRIVE",
+        "start_at": "2026-10-26T11:15:00.000000+03:00",
+        "finish_at": "2026-10-26T11:55:00.000000+03:00",
+        "duration_min": "40",
+        "address": "REF.BRANCH"
+      },
+      {
+        "code": "UNLOAD",
+        "start_at": "2026-10-26T11:55:00.000000+03:00",
+        "finish_at": "2026-10-26T12:10:00.000000+03:00",
+        "duration_min": "15",
+        "address": "REF.BRANCH"
+      },
+      {
+        "code": "DRIVE",
+        "start_at": "2026-10-26T12:10:00.000000+03:00",
+        "finish_at": "2026-10-26T12:30:00.000000+03:00",
+        "duration_min": "20",
+        "address": "REF.STORE"
+      },
+      {
+        "code": "REST",
+        "start_at": "2026-10-26T12:30:00.000000+03:00",
+        "finish_at": "2026-10-26T12:45:00.000000+03:00",
+        "duration_min": "15",
+        "address": "REF.STORE"
+      },
+      {
+        "code": "DRIVE",
+        "start_at": "2026-10-26T12:45:00.000000+03:00",
+        "finish_at": "2026-10-26T12:55:00.000000+03:00",
+        "duration_min": "10",
+        "address": "REF.STORE"
+      },
+      {
+        "code": "UNLOAD",
+        "start_at": "2026-10-26T12:55:00.000000+03:00",
+        "finish_at": "2026-10-26T13:10:00.000000+03:00",
+        "duration_min": "15",
+        "address": "REF.STORE"
+      },
+      {
+        "code": "DRIVE",
+        "start_at": "2026-10-26T13:10:00.000000+03:00",
+        "finish_at": "2026-10-26T14:10:00.000000+03:00",
+        "duration_min": "60",
+        "address": "REF.DEPOT"
+      }
+    ],
+    "stops": [
+      {
+        "address": "REF.HUB",
+        "st_numbers": [
+          null
+        ],
+        "window_from": "2026-10-26T11:00:00.000000+03:00",
+        "window_to": "2026-10-26T12:00:00.000000+03:00",
+        "arrival_at": "2026-10-26T11:00:00.000000+03:00",
+        "service_start_at": "2026-10-26T11:00:00.000000+03:00",
+        "service_finish_at": "2026-10-26T11:15:00.000000+03:00",
+        "wait_min": "0",
+        "late_min": "0",
+        "unload_norm_min": "15",
+        "window_strict": 1,
+        "window_source": "ST_MATERIALIZED",
+        "issues": []
+      },
+      {
+        "address": "REF.BRANCH",
+        "st_numbers": [
+          null
+        ],
+        "window_from": "2026-10-26T11:30:00.000000+03:00",
+        "window_to": "2026-10-26T13:00:00.000000+03:00",
+        "arrival_at": "2026-10-26T11:55:00.000000+03:00",
+        "service_start_at": "2026-10-26T11:55:00.000000+03:00",
+        "service_finish_at": "2026-10-26T12:10:00.000000+03:00",
+        "wait_min": "0",
+        "late_min": "0",
+        "unload_norm_min": "15",
+        "window_strict": 1,
+        "window_source": "ST_MATERIALIZED",
+        "issues": []
+      },
+      {
+        "address": "REF.STORE",
+        "st_numbers": [
+          null
+        ],
+        "window_from": "2026-10-26T12:00:00.000000+03:00",
+        "window_to": "2026-10-26T14:00:00.000000+03:00",
+        "arrival_at": "2026-10-26T12:55:00.000000+03:00",
+        "service_start_at": "2026-10-26T12:55:00.000000+03:00",
+        "service_finish_at": "2026-10-26T13:10:00.000000+03:00",
+        "wait_min": "0",
+        "late_min": "0",
+        "unload_norm_min": "15",
+        "window_strict": 1,
+        "window_source": "ST_MATERIALIZED",
+        "issues": []
+      }
+    ],
+    "return_at": "2026-10-26T14:10:00.000000+03:00",
+    "departure_at": "2026-10-26T10:00:00.000000+03:00",
+    "issues": [],
+    "warnings": [],
+    "drive_min": "190",
+    "status": "NO_EARLIEST_WINDOW_VIOLATION",
+    "policy_id": "CURRENT_NATIVE_POLICY_WITH_CONTROLLED_PROGRAM_INPUT",
+    "time_zone": "Europe/Moscow",
+    "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+    "driver_breaks_included": true,
+    "legal_compliance_verified": false,
+    "operational_admission": false,
+    "destination_time_zones_verified": false,
+    "depot_address": "REF.DEPOT",
+    "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+    "read_only": true,
+    "stock_changed": false
+  },
+  "reference_expected": {
+    "arrival_hhmm": [
+      "11:00",
+      "11:55",
+      "12:55"
+    ],
+    "return_hhmm": "14:10"
+  },
+  "matches_owner_approved_reference": true,
+  "owner_decision": "2026-10-23: preserve120min driving/15min rest; store12:55, service complete13:10, return14:10. Raw source unchanged; no native rule changed",
+  "negative_checks": [
+    {
+      "case": "old_resource_envelope",
+      "expected_issue": "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE",
+      "result": {
+        "segments": [
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T10:00:00.000000+03:00",
+            "finish_at": "2026-10-26T11:00:00.000000+03:00",
+            "duration_min": "60",
+            "address": "REF.HUB"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T11:00:00.000000+03:00",
+            "finish_at": "2026-10-26T11:15:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.HUB"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T11:15:00.000000+03:00",
+            "finish_at": "2026-10-26T11:55:00.000000+03:00",
+            "duration_min": "40",
+            "address": "REF.BRANCH"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T11:55:00.000000+03:00",
+            "finish_at": "2026-10-26T12:10:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.BRANCH"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T12:10:00.000000+03:00",
+            "finish_at": "2026-10-26T12:30:00.000000+03:00",
+            "duration_min": "20",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "REST",
+            "start_at": "2026-10-26T12:30:00.000000+03:00",
+            "finish_at": "2026-10-26T12:45:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T12:45:00.000000+03:00",
+            "finish_at": "2026-10-26T12:55:00.000000+03:00",
+            "duration_min": "10",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T12:55:00.000000+03:00",
+            "finish_at": "2026-10-26T13:10:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T13:10:00.000000+03:00",
+            "finish_at": "2026-10-26T14:10:00.000000+03:00",
+            "duration_min": "60",
+            "address": "REF.DEPOT"
+          }
+        ],
+        "stops": [
+          {
+            "address": "REF.HUB",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T11:00:00.000000+03:00",
+            "window_to": "2026-10-26T12:00:00.000000+03:00",
+            "arrival_at": "2026-10-26T11:00:00.000000+03:00",
+            "service_start_at": "2026-10-26T11:00:00.000000+03:00",
+            "service_finish_at": "2026-10-26T11:15:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "0",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": []
+          },
+          {
+            "address": "REF.BRANCH",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T11:30:00.000000+03:00",
+            "window_to": "2026-10-26T13:00:00.000000+03:00",
+            "arrival_at": "2026-10-26T11:55:00.000000+03:00",
+            "service_start_at": "2026-10-26T11:55:00.000000+03:00",
+            "service_finish_at": "2026-10-26T12:10:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "0",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": []
+          },
+          {
+            "address": "REF.STORE",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T12:00:00.000000+03:00",
+            "window_to": "2026-10-26T14:00:00.000000+03:00",
+            "arrival_at": "2026-10-26T12:55:00.000000+03:00",
+            "service_start_at": "2026-10-26T12:55:00.000000+03:00",
+            "service_finish_at": "2026-10-26T13:10:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "0",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": []
+          }
+        ],
+        "return_at": "2026-10-26T14:10:00.000000+03:00",
+        "departure_at": "2026-10-26T10:00:00.000000+03:00",
+        "issues": [
+          {
+            "code": "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE",
+            "address": "REF.DEPOT"
+          }
+        ],
+        "warnings": [],
+        "drive_min": "190",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "policy_id": "CURRENT_NATIVE_POLICY_WITH_CONTROLLED_PROGRAM_INPUT",
+        "time_zone": "Europe/Moscow",
+        "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+        "driver_breaks_included": true,
+        "legal_compliance_verified": false,
+        "operational_admission": false,
+        "destination_time_zones_verified": false,
+        "depot_address": "REF.DEPOT",
+        "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+        "read_only": true,
+        "stock_changed": false
+      },
+      "matched": true
+    },
+    {
+      "case": "missed_store_window",
+      "expected_issue": "DELIVERY_HARD_WINDOW_MISSED",
+      "result": {
+        "segments": [
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T10:00:00.000000+03:00",
+            "finish_at": "2026-10-26T11:00:00.000000+03:00",
+            "duration_min": "60",
+            "address": "REF.HUB"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T11:00:00.000000+03:00",
+            "finish_at": "2026-10-26T11:15:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.HUB"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T11:15:00.000000+03:00",
+            "finish_at": "2026-10-26T11:55:00.000000+03:00",
+            "duration_min": "40",
+            "address": "REF.BRANCH"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T11:55:00.000000+03:00",
+            "finish_at": "2026-10-26T12:10:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.BRANCH"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T12:10:00.000000+03:00",
+            "finish_at": "2026-10-26T12:30:00.000000+03:00",
+            "duration_min": "20",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "REST",
+            "start_at": "2026-10-26T12:30:00.000000+03:00",
+            "finish_at": "2026-10-26T12:45:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T12:45:00.000000+03:00",
+            "finish_at": "2026-10-26T12:55:00.000000+03:00",
+            "duration_min": "10",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "UNLOAD",
+            "start_at": "2026-10-26T12:55:00.000000+03:00",
+            "finish_at": "2026-10-26T13:10:00.000000+03:00",
+            "duration_min": "15",
+            "address": "REF.STORE"
+          },
+          {
+            "code": "DRIVE",
+            "start_at": "2026-10-26T13:10:00.000000+03:00",
+            "finish_at": "2026-10-26T14:10:00.000000+03:00",
+            "duration_min": "60",
+            "address": "REF.DEPOT"
+          }
+        ],
+        "stops": [
+          {
+            "address": "REF.HUB",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T11:00:00.000000+03:00",
+            "window_to": "2026-10-26T12:00:00.000000+03:00",
+            "arrival_at": "2026-10-26T11:00:00.000000+03:00",
+            "service_start_at": "2026-10-26T11:00:00.000000+03:00",
+            "service_finish_at": "2026-10-26T11:15:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "0",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": []
+          },
+          {
+            "address": "REF.BRANCH",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T11:30:00.000000+03:00",
+            "window_to": "2026-10-26T13:00:00.000000+03:00",
+            "arrival_at": "2026-10-26T11:55:00.000000+03:00",
+            "service_start_at": "2026-10-26T11:55:00.000000+03:00",
+            "service_finish_at": "2026-10-26T12:10:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "0",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": []
+          },
+          {
+            "address": "REF.STORE",
+            "st_numbers": [
+              null
+            ],
+            "window_from": "2026-10-26T12:00:00.000000+03:00",
+            "window_to": "2026-10-26T12:40:00.000000+03:00",
+            "arrival_at": "2026-10-26T12:55:00.000000+03:00",
+            "service_start_at": "2026-10-26T12:55:00.000000+03:00",
+            "service_finish_at": "2026-10-26T13:10:00.000000+03:00",
+            "wait_min": "0",
+            "late_min": "29.99999999999999999999999999999999999995",
+            "unload_norm_min": "15",
+            "window_strict": 1,
+            "window_source": "ST_MATERIALIZED",
+            "issues": [
+              "DELIVERY_HARD_WINDOW_MISSED"
+            ]
+          }
+        ],
+        "return_at": "2026-10-26T14:10:00.000000+03:00",
+        "departure_at": "2026-10-26T10:00:00.000000+03:00",
+        "issues": [
+          {
+            "code": "DELIVERY_HARD_WINDOW_MISSED",
+            "address": "REF.STORE"
+          }
+        ],
+        "warnings": [],
+        "drive_min": "190",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "policy_id": "CURRENT_NATIVE_POLICY_WITH_CONTROLLED_PROGRAM_INPUT",
+        "time_zone": "Europe/Moscow",
+        "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+        "driver_breaks_included": true,
+        "legal_compliance_verified": false,
+        "operational_admission": false,
+        "destination_time_zones_verified": false,
+        "depot_address": "REF.DEPOT",
+        "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+        "read_only": true,
+        "stock_changed": false
+      },
+      "matched": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "rows": [
+    [
+      "690000000445629982",
+      "T3S089ddb36",
+      210,
+      "TRADE_ORDER_BINDING_REQUIRED"
+    ],
+    [
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "ALS303760e2f0",
+      20,
+      "TRADE_ORDER_BINDING_REQUIRED"
+    ],
+    [
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "ALS303760e2f1",
+      20,
+      "TRADE_ORDER_BINDING_REQUIRED"
+    ]
+  ],
+  "decision": "Own QA storage cells must not be system transit locations; no product guard change"
+}

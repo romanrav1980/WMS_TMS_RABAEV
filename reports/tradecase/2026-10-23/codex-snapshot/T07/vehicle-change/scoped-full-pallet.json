@@ -1,0 +1,220 @@
+{
+  "history": [],
+  "warehouse_id": 213059748,
+  "task": 1248,
+  "warehouses_at_creation": [
+    213059748,
+    213059748,
+    "PLANNED"
+  ],
+  "actor": "FPR2190bf42da0",
+  "authority": [
+    0,
+    1
+  ],
+  "shift": {
+    "id": 100
+  },
+  "equipment": {
+    "id": 34
+  },
+  "resource": {
+    "id": 97
+  },
+  "qualification": {
+    "resource_id": 97,
+    "task_type": "PICKING_MOVE",
+    "active": true
+  },
+  "session": {
+    "id": 93
+  },
+  "resource_id": 97,
+  "equipment_id": 34,
+  "session_id": 93,
+  "owner": {
+    "version": 1,
+    "owner_id": "SNS",
+    "username": "FPR2190bf42da0",
+    "warehouse_id": 213059748,
+    "operation_id": "FPR2190bf42da0.owner",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "ASSIGN_body": {
+    "operation_id": "FPR21.213059748.ASSIGN",
+    "action": "ASSIGN",
+    "target": "FPR2190bf42da0",
+    "expected_assignment_version": 0,
+    "expected_task_signature": "74ADEFDA141149E7E0B5E5BC1BCDD26745C5C95C3C5A7DB36C9083ABB2AE6843",
+    "resource_session_id": 93,
+    "resource_id": 97,
+    "equipment_id": 34
+  },
+  "ASSIGN": {
+    "task_id": 1248,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "task_signature": "6EAECA2882050537D2D8D714B4780196FE4DBF4F59C84DCEB01D854F20B1EABE",
+    "assigned_to": "FPR2190bf42da0",
+    "resource_id": 97,
+    "resource_session_id": 93,
+    "equipment_id": 34,
+    "started_shift_time_zone": null,
+    "started_at_instant": null,
+    "operation_id": "FPR21.213059748.ASSIGN",
+    "action": "ASSIGN",
+    "actor": "admin",
+    "target": "FPR2190bf42da0",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "9A04A747F7DCA3F15D0B6A8EF33978E38D4675DB90201AA55FE3FBA425185D43",
+    "may_create_corrected_operation": false
+  },
+  "START_body": {
+    "operation_id": "FPR21.213059748.START",
+    "action": "START",
+    "target": "FPR2190bf42da0",
+    "expected_assignment_version": 1,
+    "expected_task_signature": "6EAECA2882050537D2D8D714B4780196FE4DBF4F59C84DCEB01D854F20B1EABE",
+    "resource_session_id": 93,
+    "resource_id": 97,
+    "equipment_id": 34
+  },
+  "START": {
+    "task_id": 1248,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "task_signature": "ACCBD45A442F393BB04ED93728AF2F957A8880D90B19BE0EC60FA43B3649C699",
+    "assigned_to": "FPR2190bf42da0",
+    "resource_id": 97,
+    "resource_session_id": 93,
+    "equipment_id": 34,
+    "started_shift_time_zone": "+03:00",
+    "started_at_instant": "2026-10-23T14:37:46.666862+00:00",
+    "operation_id": "FPR21.213059748.START",
+    "action": "START",
+    "actor": "FPR2190bf42da0",
+    "target": "FPR2190bf42da0",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "96FC6B32F881D45500308CA5B05F45D7D2B32C44B66F10980E8C572ABBDA95FF",
+    "may_create_corrected_operation": false
+  },
+  "complete_body": {
+    "operation_id": "FPR21.213059748.complete",
+    "scanned_pallet": "690000000832956141",
+    "scanned_from_cell": "T3S2eb0247e",
+    "scanned_to_cell": "T3R2eb0247e",
+    "fact_qty": "10",
+    "expected_task_signature": "ACCBD45A442F393BB04ED93728AF2F957A8880D90B19BE0EC60FA43B3649C699",
+    "resource_id": 97,
+    "resource_session_id": 93,
+    "equipment_id": 34
+  },
+  "completed": {
+    "status": "ok",
+    "result": {
+      "operation_id": "FPR21.213059748.complete",
+      "task_id": 1248,
+      "status": "DONE",
+      "pallet_identifier": "690000000832956141",
+      "source_pallet_identifier": "690000000832956141",
+      "cell": "T3R2eb0247e",
+      "quantity": "10",
+      "base_quantity": "10",
+      "base_uom": "EA",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "movement_id": null,
+      "outbox_id": 6929
+    }
+  },
+  "shipment_id": 641561,
+  "shipment_identifier": "FP21.ST.213059748",
+  "bind_body": {
+    "operation_id": "FPR21.213059748.bind",
+    "shipment_identifier": "FP21.ST.213059748",
+    "scanned_pallet": "690000000832956141",
+    "expected_stock_version": 3
+  },
+  "bound": {
+    "operation_id": "FPR21.213059748.bind",
+    "fulfillment_id": 216,
+    "shipment_identifier": "FP21.ST.213059748",
+    "pallet_identifier": "690000000832956141",
+    "status": "PICKED",
+    "quantity": "10",
+    "base_uom": "EA",
+    "physical_composition": [
+      {
+        "article": "TC032EB0247E",
+        "base_uom": "EA",
+        "quantity": "10"
+      }
+    ],
+    "warehouse_task_id": 1248,
+    "physical_operation_id": "FPR21.213059748.complete",
+    "outbox_id": 6930
+  },
+  "revoked_replay": [
+    403,
+    {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "message": "TASK_CURRENT_EXECUTE_FORBIDDEN",
+        "operation_id": "FPR21.213059748.bind",
+        "outcome_confirmed": false,
+        "retry_same_operation_id": true,
+        "read_before_retry": true
+      }
+    }
+  ],
+  "restored_replay": {
+    "operation_id": "FPR21.213059748.bind",
+    "fulfillment_id": 216,
+    "shipment_identifier": "FP21.ST.213059748",
+    "pallet_identifier": "690000000832956141",
+    "status": "PICKED",
+    "quantity": "10",
+    "base_uom": "EA",
+    "physical_composition": [
+      {
+        "article": "TC032EB0247E",
+        "base_uom": "EA",
+        "quantity": "10"
+      }
+    ],
+    "warehouse_task_id": 1248,
+    "physical_operation_id": "FPR21.213059748.complete",
+    "outbox_id": 6930
+  },
+  "owner_revoked": {
+    "version": 2,
+    "owner_id": "SNS",
+    "username": "FPR2190bf42da0",
+    "warehouse_id": 213059748,
+    "operation_id": "FPR2190bf42da0.cleanup",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "logout": {
+    "status": "ok"
+  },
+  "qualification_revoked": {
+    "resource_id": 97,
+    "task_type": "PICKING_MOVE",
+    "active": false
+  },
+  "stock": [
+    10,
+    10
+  ],
+  "status": "PASS"
+}

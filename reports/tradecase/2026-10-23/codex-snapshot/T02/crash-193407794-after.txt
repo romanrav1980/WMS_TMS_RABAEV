@@ -1,0 +1,1 @@
+{"warehouse_id": 193407794, "status": "OK", "processed": 25, "accepted": 25, "rejected": 0, "waiting": 0}

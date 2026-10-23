@@ -1,0 +1,26 @@
+python : Traceback (most recent call last):
+строка:2 знак:44
++ ... 1521/orcl'; python tests/tradecase/live_vehicle_change.py depart > ru ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\projects\TMS\tests\tradecase\live_vehicle_change.py", line 135, in <module>
+    elif stage=='depart':depart_c()
+                         ~~~~~~~~^^
+  File "C:\projects\TMS\tests\tradecase\live_vehicle_change.py", line 108, in depart_c
+    qa.step('composition_ack_'+system,'/api/tradecase/order-compositions/acknowledgments',dict(schema_version=1,warehou
+se_id=s['warehouse'],order_id=tr['demand_order_id'],system_code=system,sender_id=sender,event_id=s['tag']+'.ack.'+syste
+m,composition_no=card['composition_no'],signature=card['signature'],outcome='ACCEPTED',occurred_at=datetime.now(timezon
+e.utc).isoformat()))
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+  File "C:\projects\TMS\tests\tradecase\live_topup_common_pool.py", line 57, in step
+    s['results'][key] = expect(r['status'], http(r['method'], r['path'], r['body'], *args))
+                        ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\projects\TMS\tests\tradecase\live_document_acceptance.py", line 46, in expect
+    assert actual[0] == status, actual
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: (409, {'detail': {'code': 'TRADE_COMPOSITION_PHYSICAL_CHANGED'}})

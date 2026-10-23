@@ -1,0 +1,6 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\001_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0
+

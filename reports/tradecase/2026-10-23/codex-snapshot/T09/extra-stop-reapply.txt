@@ -1,0 +1,6 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_extra_stop\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_extra_stop\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_extra_stop\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_extra_stop\002_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_extra_stop\verify.sql
+Done. Statements=10; Errors=0; AbsentCleanup=0

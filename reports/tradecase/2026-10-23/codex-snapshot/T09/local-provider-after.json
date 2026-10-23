@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "sample_count": 5,
+  "elapsed_ms": [
+    3274.79,
+    14.24,
+    19.65,
+    21.75,
+    14.07
+  ],
+  "equal_previous_matrix": true,
+  "client_init": "Once at module import, excluded from request times and closed at process exit; no claim of faster initialization"
+}

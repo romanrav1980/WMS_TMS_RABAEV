@@ -1,0 +1,159 @@
+{
+ "215590763/R1.1155": {
+  "status": "OK",
+  "ms": [
+   279,
+   32,
+   35
+  ],
+  "result": {
+   "warehouse_id": 215590763,
+   "trip_id": "R1.1155",
+   "native_task_id": 33660,
+   "points": [
+    {
+     "point_id": 641538,
+     "st_number": "TC7.1155",
+     "route_ordinal": 1,
+     "window_from": null,
+     "window_to": null,
+     "address": "TRADECASE.QA.1155",
+     "link_status": "LINKED",
+     "recipient_id": "C.AFTER",
+     "recipient_title": "TRADECASE AFTER",
+     "order_ids": [
+      "AFTER"
+     ],
+     "customer_consistent": true,
+     "address_status": "NOT_IN_CUSTOMER_ADDRESSES",
+     "address_type": null
+    }
+   ],
+   "blocked_reason": null,
+   "link_basis": "CASE_TASK_OR_FULL_PALLET_TASK",
+   "route_executed": false
+  }
+ },
+ "215590763/R1.1156": {
+  "status": "OK",
+  "ms": [
+   51,
+   70,
+   26
+  ],
+  "result": {
+   "warehouse_id": 215590763,
+   "trip_id": "R1.1156",
+   "native_task_id": 33661,
+   "points": [
+    {
+     "point_id": 641539,
+     "st_number": "TC7.1156",
+     "route_ordinal": 1,
+     "window_from": null,
+     "window_to": null,
+     "address": "TRADECASE.QA.1156",
+     "link_status": "LINKED",
+     "recipient_id": "C.TRANSIT",
+     "recipient_title": "TRADECASE TRANSIT",
+     "order_ids": [
+      "TRANSIT"
+     ],
+     "customer_consistent": true,
+     "address_status": "NOT_IN_CUSTOMER_ADDRESSES",
+     "address_type": null
+    }
+   ],
+   "blocked_reason": null,
+   "link_basis": "CASE_TASK_OR_FULL_PALLET_TASK",
+   "route_executed": false
+  }
+ },
+ "220793322/R1.1168": {
+  "status": "OK",
+  "ms": [
+   33,
+   20,
+   19
+  ],
+  "result": {
+   "warehouse_id": 220793322,
+   "trip_id": "R1.1168",
+   "native_task_id": 33665,
+   "points": [
+    {
+     "point_id": 641547,
+     "st_number": "N22A.220793322",
+     "route_ordinal": 1,
+     "window_from": null,
+     "window_to": null,
+     "address": "FP21.QA.ADDRESS",
+     "link_status": "LINKED",
+     "recipient_id": "MT22.220793322.RECIPIENT",
+     "recipient_title": "Factory CASE QA",
+     "order_ids": [
+      "NB22.A.220793322.ORDER"
+     ],
+     "customer_consistent": true,
+     "address_status": "NOT_IN_CUSTOMER_ADDRESSES",
+     "address_type": null
+    }
+   ],
+   "blocked_reason": null,
+   "link_basis": "CASE_TASK_OR_FULL_PALLET_TASK",
+   "route_executed": false
+  }
+ },
+ "220793322/R1.1169": {
+  "status": "ERR",
+  "ms": [
+   23,
+   20,
+   24
+  ],
+  "result": {
+   "error": "TradeTransportError",
+   "code": "TRADE_ROUTE_SOURCE_MISSING:TRIP"
+  }
+ },
+ "220639789/R1.1221": {
+  "status": "OK",
+  "ms": [
+   21,
+   13,
+   15
+  ],
+  "result": {
+   "warehouse_id": 220639789,
+   "trip_id": "R1.1221",
+   "native_task_id": 33662,
+   "points": [
+    {
+     "point_id": 641542,
+     "st_number": "FP.220639789",
+     "route_ordinal": 1,
+     "window_from": null,
+     "window_to": null,
+     "address": "FP21.QA.ADDRESS",
+     "link_status": "UNLINKED",
+     "reason": "NO_ORDER_FOR_POINT"
+    }
+   ],
+   "blocked_reason": "POINT_RECIPIENT_LINK_INCOMPLETE",
+   "link_basis": "CASE_TASK_OR_FULL_PALLET_TASK",
+   "route_executed": false
+  }
+ },
+ "215590763/NO.SUCH.TRIP": {
+  "status": "ERR",
+  "ms": [
+   22,
+   18,
+   24
+  ],
+  "result": {
+   "error": "TradeTransportError",
+   "code": "TRADE_ROUTE_SOURCE_MISSING:TRIP"
+  }
+ }
+}

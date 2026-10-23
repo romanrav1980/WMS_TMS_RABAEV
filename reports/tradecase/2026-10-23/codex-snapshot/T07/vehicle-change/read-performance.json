@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "environment": "RABAEV/orcl, API restarted for C0168; this package may already be warm. Same closed owned fixture10 physical units; real HTTP/Oracle reads.",
+  "reads": [
+    {
+      "path": "/api/outgoing-quality/FP21.ST.213059748",
+      "sample_count": 5,
+      "first_request_ms": 388.12,
+      "subsequent_ms": [
+        77.67,
+        118.68,
+        159.62,
+        109.91
+      ],
+      "equal_json": true
+    },
+    {
+      "path": "/api/transport/loading/33677/status",
+      "sample_count": 5,
+      "first_request_ms": 260.3,
+      "subsequent_ms": [
+        101.13,
+        131.6,
+        107.04,
+        105.95
+      ],
+      "equal_json": true
+    },
+    {
+      "path": "/api/picking/waves/624/execution",
+      "sample_count": 5,
+      "first_request_ms": 347.84,
+      "subsequent_ms": [
+        108.85,
+        100.55,
+        93.66,
+        92.84
+      ],
+      "equal_json": true
+    }
+  ],
+  "slow_sql": [],
+  "decision": "No query rewrite or index justified by this small equal-result read sample. Cold mutation launch/receipt timing cannot be reproduced by repeating committed commands. Codex/T12 retains an isolated phase-instrumented new wave/receipt and peak-load measurement; no p95 or production SLA claimed."
+}

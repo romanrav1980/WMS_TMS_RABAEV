@@ -1,0 +1,1786 @@
+{
+  "tag": "IO23.b452d8d6e",
+  "requests": {
+    "owner": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "IO23.b452d8d6e.owner",
+        "expected_version": 0,
+        "username": "IC7ae1e56ac06f",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own marked inventory proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "owner_revoked": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "IO23.b452d8d6e.owner.revoke",
+        "expected_version": 1,
+        "username": "IC7ae1e56ac06f",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Own negative inventory owner-view proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    }
+  },
+  "results": {
+    "owner": {
+      "version": 1,
+      "owner_id": "SNS",
+      "username": "IC7ae1e56ac06f",
+      "warehouse_id": 210564699,
+      "operation_id": "IO23.b452d8d6e.owner",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "owner_revoked": {
+      "version": 2,
+      "owner_id": "SNS",
+      "username": "IC7ae1e56ac06f",
+      "warehouse_id": 210564699,
+      "operation_id": "IO23.b452d8d6e.owner.revoke",
+      "stock_changed": false,
+      "replayed": false
+    }
+  },
+  "actor": "IC7ae1e56ac06f",
+  "password": "[REDACTED]",
+  "before": [
+    [
+      250,
+      0
+    ]
+  ],
+  "slow_marker": 6716,
+  "calls": [
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 338.15,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "IC7ae1e56ac06f",
+        "warehouse_id": 210564699,
+        "operation_id": "IO23.b452d8d6e.owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/revisions",
+      "status": 200,
+      "elapsed_ms": 115.67,
+      "response": {
+        "revision_id": 416,
+        "warehouse_id": 210564699
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/416/lots?cell=ALS303760e2f0",
+      "status": 200,
+      "elapsed_ms": 175.27,
+      "response": {
+        "revision_id": 416,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/416/lots?cell=ALS303760e2f1",
+      "status": 200,
+      "elapsed_ms": 94.45,
+      "response": {
+        "revision_id": 416,
+        "cell": "ALS303760e2f1",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f1",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/416/lots?cell=T3S089ddb36",
+      "status": 200,
+      "elapsed_ms": 125.57,
+      "response": {
+        "revision_id": 416,
+        "cell": "T3S089ddb36",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "T3S089ddb36",
+            "physical_qty": "210",
+            "hard_qty": "0",
+            "stock_version": 19,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "690000000445629982",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 131.57,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "IC7ae1e56ac06f",
+        "warehouse_id": 210564699,
+        "operation_id": "IO23.b452d8d6e.owner.revoke",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/416/lots?cell=ALS303760e2f0",
+      "status": 200,
+      "elapsed_ms": 81.57,
+      "response": {
+        "revision_id": 416,
+        "cell": "ALS303760e2f0",
+        "lots": [
+          {
+            "article": "TC03089DDB36",
+            "cell": "ALS303760e2f0",
+            "physical_qty": "20",
+            "hard_qty": "0",
+            "stock_version": 1,
+            "expiry_date": "2030-01-01T00:00:00",
+            "unit": "EA",
+            "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+            "marking_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "actor_created": true,
+  "revision": 416,
+  "body": {
+    "operation_id": "IO23.b452d8d6e.count",
+    "revision_id": 416,
+    "reason": "Same-quantity owned marked inventory proof",
+    "counts": [
+      {
+        "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+        "cell": "ALS303760e2f0",
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "quantity": "20",
+        "expected_stock_version": 1,
+        "unit_keys": [
+          "139ed9872f3702cef8e5fd56061dcb9bc4649f8b7730c54928579ba7f2aa769b",
+          "13d715c8504d6fdb175502e01e6665ba8a6a91e23da2d20d9b463c2e57871952",
+          "1490533c256eae0eca4a375a42cfdcf59d964eb82db39f4beede8864f1793941",
+          "163120170af1ef217dd5153062c19c6de448b6fe27e02af095db70afdcebc476",
+          "1660509da020d5532f8c53e430ffee8ee212bc61f93e87ccb2511ecffdfb23a9",
+          "16d2abcc0291165d9b862f035336845c2b0cc70c719a14e574a78703383d0499",
+          "16e7b5af885c5835aaa8affb3a50df2fb11ef1dd58f3616b48f64d00194a151a",
+          "17dd325b1f50abde9f2cb99f1f7392ec8359b21899e5cf2853bbd77677b479a9",
+          "192b84f87d2b11d40a677ad52aea74fdd751e7e65684f5a45fba21e427a655a5",
+          "1c2e5e9dab7d706dea148b6ccee2f71ce9c77edf2727468fd46461a92ad8172e",
+          "1cf6ef3816b310e73e12c6bf729278c4863ce3016fcda97f3dbf97c13f741dfc",
+          "1e0a5fb6e3d644f8c406b1bb0be088c625b9f1ccd5a47e643a8a08fefe10eb70",
+          "1e28078291abf74c6a8755b017afce9a14d08d3503250f2d8a6ffe3ff3043457",
+          "1e3f7fe6af9f398a261896d5373ca91b334d1fd6df89971dc3290baea5fad93d",
+          "1e8709cd7441aede2eb7f817b140e51197c718f9812d6e9fedbf221b6b69da52",
+          "23be7a3d17fd4c6d099659a1266e92f36ddf7f62170075bc7c191bebc08c5998",
+          "241bb4f4af6e66fc5ccc80e362c108a654eb4fedf5b685504d765360e88b2e12",
+          "248542352d102b4bd817cba8be1fe3fb47bffc549cba9464ffff6fe8f1464b50",
+          "24e56e4a38fa9976b9b814e0f3c7f0441ce70a53f1914bdae38e5745449ae698",
+          "276e13dc51823e404f52a3029b668418a557b78bee87ee9ba3b5e5de4b720b27"
+        ]
+      },
+      {
+        "uid": "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+        "cell": "ALS303760e2f1",
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "quantity": "20",
+        "expected_stock_version": 1,
+        "unit_keys": [
+          "0097cbc2cd9c81f78c5e5589d50eac6cbb786297a8ff98ae926d6e3d568edfd8",
+          "00a32a3900286fb68b3c36ebad689eb8e3bb1c454c9b38f12f22055b8cce398d",
+          "021916f3720ddcdc30f1266576a9ba3ef67341e29878611623e7237ae382db22",
+          "02fa5847b1279111bb7a184a0565c1815804228727c2a18832758f8349ff87fd",
+          "030c0f0aab08256cb080ca6e094245058654600b6a4c0dcfb5caca6fd6166ae1",
+          "0312ddd3e4d7da9cdcbf5559a15cf206f084c4942e37549e9725b18d20620224",
+          "042c584f2419e5cee744391a6f8d1f20ec65c830b170e2e11e3798a2ada69942",
+          "05c81466d52cdf8e22baed9d326b47c9adddf683370b0b626bcd47dcf5aa7905",
+          "091db87bb9c7d7e5088a764aa924d64fbfb0138a4c64faba661d300207421f36",
+          "09e9420193d8714ca04351d2b5256f14d190b4949947b637360aeede5d5d5f4d",
+          "09f5bf34d6cec5cf83d91d3a01cbecaf1c60c9128b9d2fff8f830634a8ff189f",
+          "0a0874136a36ca78c6c0211b12a5605030dad0021580b2d84b41f2491edc233b",
+          "0a724bc4b93b2039deb6dc956e6f8d6452400a10acd6894222808d4b84419bae",
+          "0ac0696ecca9be73d041d82e4693ed7cdf30c0b54680c7981688c552eb9554d3",
+          "0df8b7ddcbf8cb248fc98e5b267909ae0a874f0d4b164217ba4efb67686bc51d",
+          "0efc51467c803df86c982e33715cff7e9f4886cf555e4b57fa8f5be75b276ed5",
+          "101f5dd69f4de99a10569a1dcdbfdcca4a09763b1ce04741dfb9e22ac3c135ea",
+          "10400dfc7be95b569c56e63ce7dcc6af837a22ffe18d34fe6d1013802d5cddeb",
+          "1049d109e6c2611dfff2e53b9ca89e3c1fed2933bb83e9732f3e404af229f353",
+          "123a090ad2dc4281b601a10d4dd3f618a62eee905c6a2a97a98486605240504b"
+        ]
+      },
+      {
+        "uid": "690000000445629982",
+        "cell": "T3S089ddb36",
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "quantity": "210",
+        "expected_stock_version": 19,
+        "unit_keys": [
+          "2877e7bacd52c9105e704d501eba3f11ed6bae5a6e657f0e9ae63f2ae8cd2325",
+          "2c45d3aac82a87604e39f3906b6f54f30af47394d2ec34efd889eb748d9ba06e",
+          "2ccab54c68b998af4c9912560b0280dd8605b4f4d40e837bbb954f4e491eac49",
+          "2f803df3241dc3fb811015f783e8cea52209c0e67d767e6c9b730b3173e46462",
+          "30e74d9856ec5120b9ceae056800f629320ed6979e32617c069c574552fc5a13",
+          "30f7e01683c283b3b3c2fb1475c4daf7ae3fdc23fd629a0b6addf6e2815c97c2",
+          "329e6eee93868d35dc220a208c4ba96ed717c55d92cc31ce02c3359ab18a6645",
+          "32b8ef53d5b671827c214a5e622354ead8d6aab85a622f7edcbc7cba57bc7294",
+          "33c07821122a20cf79892faa69e51dd523b40d7e4e9cc1f97a489517c3f29b88",
+          "3534f23bcde40275326148e6c883f94bbcb2b814ab99c94e2a2deceaa47e942b",
+          "3589e1a08e3bb93456a776b02f14f61bfbfebd88fd32dc5b2363381ff3f6ce9e",
+          "36e054aade677c213a9e35691e4ddda1e884950a9cede595221f78047f1d35b7",
+          "36e6b0b28c56f698c83ff4ebcae3310482a17c898bb8318b226a809c8e3dd76d",
+          "37559db5a1f34c8c01593e83cee4d9b181c2602bde461682f7ba96c1c2c59b71",
+          "3902191015d81b8d72decba8917daf8780720eb77cdc2a35d3b78a4e6659db77",
+          "39c1cd0ddb7fc2d41f2e56c484570ce7d481823508e2c3901d608f186d0468f3",
+          "39d37bc0afdd45b037ef4429c212888a5b9590f340e16cdb835a0e324a4de940",
+          "3ae1a88f80651a30da5ee60148a2e63ca536d914de9b8ae6709602112b6be838",
+          "3f0701a16b2dffa4b0ac6974e9c68ec59ee76e47ea3581208f97204daf9b0699",
+          "3fa10b2149d16e603152c0f06e46581172a92cd5ef28aecc8489f53031af7745",
+          "3fe6e802c7d7c59ea20dacbd8e4f878e526621c41e7efda1db57761aa9c04b17",
+          "407ca21b3548ceef5f15324b322283c7276ae3b4ccf085a00cbec761e808ac36",
+          "41ef0661b2194079528ffb8648fbba49a6bebefbeffe79ccb3c92f147e67de4e",
+          "4247a66df8446587e33c12e60c8de3cd80fa6fe58a20e96e838fb529872174cb",
+          "42f2432d959fee32238ec5be6fe7925395c3b863f74c816505fbb316d68f3290",
+          "442b6815d7831f718191b449bae3223e28197e79d1dc2be6bf5be14bf747729e",
+          "4497dce81a9865fc2ce7c8518a8b3626f08f4a9ed05ceb294fbe6e224929e4f4",
+          "456e6d89331da503d4746d121a94796324ea6c42766af765228ab1cf4bb692cf",
+          "4a0661d49004a61f313b2441bbe93b98aba7fbbea001a24c6a915431f3978f51",
+          "4a0b35397da1750fec24bb60defa65c4cf05371a8beac2841c12d589b93a8a32",
+          "4a36e0ab3608ddc7f8c083771febd3bb2461e93b16a10e051259d1ce92840305",
+          "4a613c0e3f2844aa613f747b70b89748519cd5157e3581d7b7e1aa4e0c5368e0",
+          "4e13cfc04ae02fb7ea69624955c177581ddf83e79371d185bf2836b8355a8609",
+          "500083c999cbc9599c613dc98a8b199b7067f7dae56cb1041aa1c938f16bbb58",
+          "5083897d088ba45820595ecc33126975fa0982c9ce22c022dbdce6eed6877ebb",
+          "509b8244347c9f9f449712c156b43fd763b8d730433ef9d9647645dd2755c98c",
+          "511db5b7d9bc7ec656789d36febab07febf82d6840a416298f0fc105fbd3d862",
+          "51d68514c9a17040763bca76487802b62cb0ae40309caabf8c43903f859507b1",
+          "5237e1d95e0dcf436436af7cc0e57dab5752905277a7b03fcaf43a8225a570d9",
+          "52b2caee70386b06d92ddc47bcbc5b79d1f884f4971f0237fb82d3690b44e96e",
+          "5418e7354065752d7c348d7f913441354ce3bfb89c745f9026e222b9b0c82bd0",
+          "55ffaac825985b2dd9420bbf20ca12f2682a61e85e3677e1143cbf0f4dccd4af",
+          "562e8f656febbdc9c85add7d86cbf1e6717c6aceb104401df63b7ffdcecbb86b",
+          "5727b93a8b94afce2744992ef1d6a3937253ee9bf0e7a46632bb40d26654c946",
+          "57ec96e6e941ab7c6710e7bf2ead3654da9a34812f9f9c78ac2d4b07d68d25ac",
+          "5858e85191b3be3ac87815f996a9988042b1819df54b85cb4254c1dd380c5761",
+          "58b9926f41f089dd378cf774aa0f7e59733fb956676d1a82de88ca61264ecc57",
+          "5b0ed5ac7d3b8ffd2e13a7b5cb8b7daa435808be41f0890b8592e696616238c9",
+          "5b2fcdd551be0e7d2668b76265d414ab66d6206a86dd999b97b1590efb52df70",
+          "5be21a5067b6be87f0adb58f0dbee8375d4165a3fb3a6ce1feae851f5833fcbd",
+          "5c92e0641fe31bc808acf4be3da7b0c85bc8dd33c7b3a29bc7bf639ea825f55a",
+          "5d7e74c3f147072a4a41954f0a5a495e9567d9551c193356b4f5ebf71846e4f0",
+          "5ed068eb9bde2953f72999ba42bb149c69003ba83444589bc0a846b0bb86831a",
+          "5f07091b3bddaecb15a43105950849f0179457974028029a680a5aee012218c1",
+          "5f412e612f3b3fa8b4ce33f2ac827e0a2662f5f7daca0626095c22656c2775ed",
+          "5f60b9006a1549131c5f28decce82979c5af70d50939e6e9d8c8e00d31e79489",
+          "5fa69531dff0cbbeec0b113ec278a1ff4cf55e1422a7219ee90acadf62ec10da",
+          "61555fc51432243fe682870e3691bf54b272da3d749dc0d0732055f2a8647659",
+          "65893ef2d5535b20cd41a93845e9b2e1fe0100094135aeea3d2bcef9263db480",
+          "659c510ed2763479bcf28c160eb070227399bea12762bdf35cc327c68773ac18",
+          "65bf8386763042813a8072d6e2bdff62731dbdb29414436b9b30331281d3fd72",
+          "671dd09f7ecd55ae3c9fd69ed48dfce183064fb1cb43eafd052798d129bc35cb",
+          "680cdeaf9c9718a6c6a82d82a35aa47399481e33c2bf9f488606ecc80a2b7c35",
+          "6955337bc05d1a271a52921d51b2abbe08edb5651e7fbf48ab41725d746891ef",
+          "696de26c344edf797731dd31ee97e5f736e4303faaeae1f097475ee8d88214d5",
+          "6b4ea7393634f6de6cc7c358399183b51f7a32278165796a8ecfa776188935eb",
+          "6b56e69801d415ff0dcbc9c4a3b77cf495c432029cd920893a9f706ac3878fa2",
+          "6bd4b1bac2cf3e2968e19b48aade158af852fb646ee7026be5cb4963e71e68c5",
+          "6c8f87e5d3e0c779c3d6520953a0a29c564d163a5dd7f3547b4a761cd32c0075",
+          "6f0bbdaad49d2201109038d3eb6ef15d30834feff19d16546a1e843e7ae9804d",
+          "6f61d6a34b6d97bca6e899771558eda6a95fea96f3e47b1e89d45cc1f858e2a8",
+          "6fa8827965ff730e7d8809cda05c801ec0014f0be8b86034ac61ee5135beb919",
+          "6fdd4acd1ccf6bdb795750f94adec03f77012f1f4008497700ebac79bda1f347",
+          "71c97e241f9bc4eec1cacfd97f15a72a89352fa1b4ab19cb97f36bcff464f512",
+          "72a14cd88bc6a0f14244cd276c5c6fabf0fe2aa4ae3f0df3822c8df24031df6f",
+          "72d4f5499015564c90bb77f4b68886487d07b3a2803b0c76556c17e2ff16e6aa",
+          "738bdcaaee3e0b106d3675820309e6b9a1503a69ac4e9db001196eadb516d1db",
+          "748c43e3445feec09b7e91f064eb207a94dab5b2f6234c087f03828fd5bf3568",
+          "74c7b947201d791e5a5cc08b87e64bbbc75fd6ca186be24ff0a82bb5492fffb4",
+          "75ceca2a9601b5b482635083249f2349c20e39d4830a392dd50af13118219a04",
+          "782ecb4d195ce60054ccc82b98fc866ef482803cc1d7a6c6321d3d633c11c53d",
+          "794b3ec479085b8869f7bef2fc0ed079f02128c7f590a19b6329352f1d265327",
+          "7bacf7b798bb98d1b71bbd9cb659cb9ac8719e14ad681ed2e38d7a72da012a40",
+          "7c98232af57661a4ee86063e32352837ea3fdc4c5768e194ad895b4d846b292e",
+          "842d0bde1a665df62d624eacd81b61c458087e4e10ebc35efbe652ff1865af8f",
+          "84628764183974e8ce5b4929729ec03e5a6f34cb5b604ccfb8cb0119f7fce2f9",
+          "86802f63fa88c6eda00b811adde49f8c0b5cd7ceb74e8b7e3a0fe9327be97772",
+          "86aec154b2895f5830204cf6f086e1bdd7714230cec63393ce786316f599a146",
+          "879d9418a479b63c877eb70459a504ae8ee18b1d9a0e6ce07b67de1fb88894b1",
+          "88a62f3a8a0097e0fa0e552df10e848e8f5034744ef008ff8c2dff2eacd3993f",
+          "8a1c607c2cb933aafea138db52690de282181b881700dfed6d3d43aec5aa3a1f",
+          "8c5fa8c92ce4e375e87f35f2a6a0dd68e88c973369f8b9b48a07be823fcf5dd3",
+          "8cbbe9980a5b84c63c0a7e4bed1d1d29e259105d7b6a70e9a2b35a8a0cce9ffd",
+          "8e212e249ee3ab217d274d59faddf0ef5d99e53615872f7c93e7a7576b5bda0b",
+          "8e849196c9ff041dfa650591498aa05ad9889300556d46328dd7e5250cc20b82",
+          "8fadb665c8eb6d0a73142047894a89627ecbca39d02029e9438d8814147c293b",
+          "90eb235619b7edcede8e42770f07247448ef7072438e826bd4f0a5fa7ce485a8",
+          "9264edda0d79d8478d7a8016e84f00e9961443b3753760c53ad54eeaafcbf0a4",
+          "92934ec134598aec26956c78a239e48c87794becf835b78e1aa82c3170190e02",
+          "9445475e90b6f5b5c4d942efd75937f9f492b845b10f1c8f8e2bee7c50144e5b",
+          "9515a9e3aae4e734442a7aff6efac4966033fba4ca1fc5328b99312e0a76963b",
+          "9623e3f2c2172b9a9e89026d0192e258b29d36c88e99389ec5a3ff0f1bcb4673",
+          "9644e9655fc28cc5a7143075fac358743dd4f73b01bee01a4837e16fe298ade3",
+          "973e5c6e461aaa5c67aff7ab467774c01b3b0100774c714d3b0e666bd9c41c4e",
+          "9800c845c4b16c889f4e243b441ef815054489f9ccf70ffbb90221983d1ebba4",
+          "9bc5bc5f6d1dc3c962010bfa95a9d186ec9bfcde5dc0b19f18562aa3e3fc7ce4",
+          "9bd024ca395bed1e5dce329a2b98c40de457a24afefd70902b8237d3f1a44dd3",
+          "9d34a3a1693a0dad96e904c03b994831c62301d3adc6595c36418e94a75bf6cd",
+          "9d4cc88e2afef42ddd09056eefed9a6fd9a6e1b7a6d9e3463be6718d2419597f",
+          "9e427b9421db628c0ac2347d8b5ed7fce3844f1bce51dff6747b2bafc980709c",
+          "9ecbce53f7fea5ce660196c50a5c7d7db3085ad98e64ae49bbed1050d7eddbec",
+          "9f3fe636a0642dd541c0bd3be0bb47c904973d0fde7f57aa62802a7d34965c23",
+          "a19ebfa76e72c0ec62127d72de968c20d750fb1b46f2e44317a0b1d45a79f7ae",
+          "a33f4e0cc6f89a93bdd7e85a88b7989f33056a8720e715c5717981a9a0d2bc45",
+          "a3985462626e094c342dc495bfc84610decaa99d05040323a52ce95a23491e24",
+          "a3ecc47c92c0f9583cc3e578bb6d01b104e98ee456cd110890a62857552d50e3",
+          "a66dc34dd0b527bb2f704f101c6cc8fabab5d1dbe841aad4c3fd96cd945ed561",
+          "a7098da6df993ecbca8f11e2cb375d8bac190950ced2ec999526e41ec8101405",
+          "a868f2d4a7d3f4dd181fa695585915feba3d3d3e39d889bac923e9a1aad835d4",
+          "a89cc8f7535602ce9463b653e0a7ca52535d429b427cae9e8c129ed733145a05",
+          "a8cbf46bb5a94772791c99dbc2d04754aa3895953d343a746acd641d9c2c2ccd",
+          "a98358a60dd67db0534040e97fc3aa5d14ad5950ec9744be2a80088ef38108a8",
+          "aaa3823ef6eb2b8106301266fb56c5067fe0de5969ee5cf917411a2eec05713d",
+          "ac1f2f19d90d65883ebe9bb0eb04d0d88504af841b255b9886a6a397de864930",
+          "afcd7bcbdb45115f11411020b51c4699fae91ca98ec5384800c15b07ae11556a",
+          "b07d73eefce264c1cf1532e7fc899edfe767aca016eee749cf7713938c8a7fd3",
+          "b4d1d4067187ae24aad066053f58584a9c0cdb183a1e1988839c1387c74e1cd9",
+          "b5452719317f6598df754d1e935d09c2555e95b5d3be49a6f96e86bc20acb749",
+          "b601af4bb494df1f08414024af5983dfa89749fa639e7b406496ccc76083ada2",
+          "b7cb93873ad08e056179423ac52abc4edaf8d400a542d7f8608903d7710372eb",
+          "b8b134bcb637d84a417a28501de446768f9429cbb2ca40bf0b0a9dfe9f87efdf",
+          "ba6032c4adce789dc76e41313b4dc5af5ac0ed784c0c78a06d860662123bd64c",
+          "bafdf956c22f17096b7a61412f78b3893a1b499464c2d7668b67a0fecfeb855b",
+          "bb5e3981b314e91a996cb5119f41e9c66e8d2b205e0137f496a4f1add100c591",
+          "bc40d1f6265950ad03f6740c3a507c35bbaa7a0a61eee12d6ccd0a43a721a884",
+          "bd68c7e4d05ecec0c314dab7f8b7c9f999ecde8386784638698d58adf2eea991",
+          "bf245915d5d61257c085a3df32bfe22376c2a0a8e158635771274708354fd028",
+          "c0f71382ad9f342d1c33d13f04943b171d23e3264d1f0fabe88bc3f634975770",
+          "c11fad5b6e8ebf7892b2b3e633b140a4af04c91bb3afe9f01f3ad25028ad5753",
+          "c27937cea96462a6848db3978bb8661a3371a6e099a3881d1cbe2e3af07b423a",
+          "c3436a07bcc8ae57d535255038a0b92786cc6d720fdba41d2d19a5e12ca8348c",
+          "c4737f0724b4d8f96a696a121152466d0a958c15989186ce7236036a419ac8d3",
+          "c51686d79716b2ccb3b19448165d3184a17fbe47e5c21fa6b49377706778d738",
+          "c63ad3e6371446f8d358e119a742398f170c2869938bd27a833da19099b676b3",
+          "c664d7d1835801e89f3e7c02b33573acef508bd07498be3120db73f027912348",
+          "c68b2783ae548db9b1a75ceb12a60f0c15c19723d379b44587c88b6d77200b2b",
+          "c77e4eecc5ae1afe36d8f32dc6dcff0f5f8a44f58476902e51433bba5d948d23",
+          "c852291ac49e313322ae245160642f3a3eeda430a7c51985acc2e966416848e5",
+          "c9aff42093abfdf21250156314575794d3f103f97224171bd3861603361dc424",
+          "ccc3bdbc5ad460518838cbfcd367b735ce64a84b8a2aed4f019b7092c9436466",
+          "cd4b11c0d4dcf8537c2f5240e554d0df867e12f0791399558aacd638a70d6b78",
+          "cdf58ec276f97eeac9421ff81b6deef70a2acd1b22b3f87237a5299aac1b1be7",
+          "ce0fa9d33b5589dc73fc34b0d8a82e87ee8330da67c8c5622b75358ccd368c50",
+          "ce3755f968c918814f0d6556553500ae7e149be0488a634b2d4155a6258d9547",
+          "cf9c2a58bc057f9b7ba549dbf4f7b99351f3f15e3a816fde6bbf91b7e60a437b",
+          "d0211c3008af070207eb26bc021397a23dd2602c86ed5a70f4ea0d86d44bca84",
+          "d0e086bdad09062eba772707938bc3d079795a0691a9479dd402d2d976c35f6f",
+          "d1242ce754e626eb25ea739e92b55de16f31d5b41fbad3ee51e75001dc42d5f1",
+          "d18e441aa93d64d2b7a1339518eae7ea7a1af9f4d3cb1f948eed50441b3e4262",
+          "d30d4fadc2c5988347cff4bacd56ce524b882d3dc9ca717e3a0c39662feecff6",
+          "d393c19a3a2b90a70b5990cc0d5128e8c2e608469213425e28731ced6e3217c7",
+          "d519863d41d4e8a2e16973cf3bc2dfb0cb7a18c49bf1a3d9176fca401029c8ca",
+          "d6600157a0ecc03850acaf688ab1658839dd1d18a73132959af2969ac3b73015",
+          "d846ef61936aa9cf63d58faa8542ec1758990371f82bc1d1611827a41be0bb41",
+          "d8bf935c7004a4f5bb7f79b2f9d02eb00be100772c9158c869f6e96ed5d7e9e5",
+          "d8d6f4adbd8a0c3dec0f29be35c6f8a62e42ad6e892636a3882478590e51508c",
+          "d8ef1de23116258cd621a5d8031735bd2153a831c09c3d6af3ca81bc65452308",
+          "d934cecc9dc5e2e5b95da165c87687a954f77444de813cd81e0cb31724234d67",
+          "d9775ce088c6a5ae4e7e93d59d4cbe62badc0b67f96a79ba53638b8f255a3991",
+          "d990158dae91006da172d8fe94bcff3f8533acbfe210b054763606d9f8de7fbb",
+          "d9af2bcdebe7fd288c6d420df7486eda26661d9caaebdee331cd70c99165c36b",
+          "da121b3a264717c98587039bfc448d151392a06334c25989e65eda8b0de06c68",
+          "da7f7758da18b115d994e918e49c727d205be2c192771dbc6090f8a6f9829ff3",
+          "daf31fc399fda74ebfb0b7bd266c2d1b5086ea98edb92c6366e5b7786b08a85c",
+          "dbcc297e08410f29876743ed752f2aeab32a60f55854e2640fcbd505e0a57659",
+          "dbfe493252af98d0bfbcefa49cb4f32c4bb383e313331e0f5577d588fe9ab651",
+          "ddc3157635e6e07384494b328a28c11dbd77d83cc17fad360b13a0d8c86aefb0",
+          "deed4bd5ffce667cb989577a967efa5f03f35d8b32cf98329d34df998f64298b",
+          "e1f1f5bc7741b48d1d92bfda4e2a4aaaa427e9ada76cdd48d55998b0633a8b41",
+          "e2d84bb33b9b594fb7d7af0743d524a7d5bfcf80a5e2fe7ac5a0d31d1f07cf67",
+          "e33f09092d20698983278a85767449e69e434172273fa7e15ed11a0e3e014573",
+          "e3f9ea2f6596ab0e6eb4240ec7ba73f9c888987c3c68fe0fa9d944bda953c918",
+          "e41e2de63f8ae511d90a127f84d415eea57e65cc3974f9677fc77f9b1c5b3e3f",
+          "e4d6e6d7459508db44b7e8cc320d95728f652e1ee1b3fcff61874bd28c4dc5cd",
+          "e5be275f8cfd7a350c9a09a3203281e06e0b5463e80af9d48e088720431a5057",
+          "e641bb19835b1a2267805544c749b2219552317ee59ab90baf22491a642b3cb4",
+          "e6be72ed6dffb3c18a04e2e3b288102ed78eeb98a55dfb74690dcb3a798a2381",
+          "e731a58e12fd61df77f1d7807c7b371624cfa21ef375f1b390273020f0bd4fdc",
+          "e76ee7809cdf2f336e0cbba782297e9b94712bca27d050c96c58e593ed831494",
+          "e8bfccf49efd6b587d0baf9cc2d4496c0cb1f6c8c9230a5e648fc93a5635f517",
+          "e8e60058373d0c3554ee23479086a0afff86dd909bbdf49431482d5bdea30ca1",
+          "ea0a1319d0d8244729f2882b3feec169649bf79dfc24f25e916c72d186fea765",
+          "ea86196e6a446f5cb8e063f486575dd9ec537181602effea2c14a1773794ce47",
+          "eb3aff812167598979906456719ce7cee04ca42deb8d6249affb854ce2447e54",
+          "eed0c6953102816b36a82a879603b155f97b57ddf1339a249dceb2af007bb397",
+          "ef606be9d2c3a34615042e9b5b6753a12bed14689d8bdee84973c10663c9a589",
+          "efa5402bed6f3e20f8c8732f27b879c5cb3ac726766098fdb6a191e65eb43132",
+          "f1290a71e6331ab581397df6c94cc4d1f5cd56f5857eb3f8d9ad14d5f5a71579",
+          "f1afa5fe9c12b0ee353385406458ef5aedc6c9755d306b1b9b9b65e2c3f06a89",
+          "f506b222a648df7af976be56e740d24cf0dad3813766b394273e3716acc26c45",
+          "f554adc970a70cf5fc051241950a086b8fed610d12fb36e6195e977b7a8f84b1",
+          "f6cb7b66e3b1b4663a4333d1c0b61b53db70392f423d26182087ffabc50b23b8",
+          "f82b43282f4b6c0d4aa15cd022c65a8b29df51ab768f77ff1364bf64af28a6a1",
+          "f927e0c98ef186278a7e9c2127c1f800ae2c843871bf58ef62bf8da1bbd5d2c2",
+          "f99b1e74ff15dce07e7e627259070ac354c69f7cb758c835217b28b92af5f67b",
+          "fa01f302099f719c0c6ea0d8ebab823387a01b28216e558550a2bd978a604543",
+          "fa33452c8bc1862ccc81fc56774e7ec2ccf202e8dc1a3c85c2c4bbfaa5bc9ebf",
+          "fba81cb4e423b1f4adcb56f3a0e250675d5c3733ce37e8114b8d994ed1a82f2b",
+          "fe37757535b53139f9d39acd9784a881d175fa52c11cc7372799fdd242c88675",
+          "ff2405fe67f37fcfd6d68f437d9e25026d0b200f6a9d7fd1bfba9b1acbb7420e"
+        ]
+      }
+    ]
+  },
+  "before_units": [
+    [
+      "0097cbc2cd9c81f78c5e5589d50eac6cbb786297a8ff98ae926d6e3d568edfd8",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "00a32a3900286fb68b3c36ebad689eb8e3bb1c454c9b38f12f22055b8cce398d",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "021916f3720ddcdc30f1266576a9ba3ef67341e29878611623e7237ae382db22",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "02fa5847b1279111bb7a184a0565c1815804228727c2a18832758f8349ff87fd",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "030c0f0aab08256cb080ca6e094245058654600b6a4c0dcfb5caca6fd6166ae1",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0312ddd3e4d7da9cdcbf5559a15cf206f084c4942e37549e9725b18d20620224",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "042c584f2419e5cee744391a6f8d1f20ec65c830b170e2e11e3798a2ada69942",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "05c81466d52cdf8e22baed9d326b47c9adddf683370b0b626bcd47dcf5aa7905",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "091db87bb9c7d7e5088a764aa924d64fbfb0138a4c64faba661d300207421f36",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "09e9420193d8714ca04351d2b5256f14d190b4949947b637360aeede5d5d5f4d",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "09f5bf34d6cec5cf83d91d3a01cbecaf1c60c9128b9d2fff8f830634a8ff189f",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0a0874136a36ca78c6c0211b12a5605030dad0021580b2d84b41f2491edc233b",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0a724bc4b93b2039deb6dc956e6f8d6452400a10acd6894222808d4b84419bae",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0ac0696ecca9be73d041d82e4693ed7cdf30c0b54680c7981688c552eb9554d3",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0df8b7ddcbf8cb248fc98e5b267909ae0a874f0d4b164217ba4efb67686bc51d",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "0efc51467c803df86c982e33715cff7e9f4886cf555e4b57fa8f5be75b276ed5",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "101f5dd69f4de99a10569a1dcdbfdcca4a09763b1ce04741dfb9e22ac3c135ea",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "10400dfc7be95b569c56e63ce7dcc6af837a22ffe18d34fe6d1013802d5cddeb",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "1049d109e6c2611dfff2e53b9ca89e3c1fed2933bb83e9732f3e404af229f353",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "123a090ad2dc4281b601a10d4dd3f618a62eee905c6a2a97a98486605240504b",
+      "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+      "AVAILABLE"
+    ],
+    [
+      "139ed9872f3702cef8e5fd56061dcb9bc4649f8b7730c54928579ba7f2aa769b",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "13d715c8504d6fdb175502e01e6665ba8a6a91e23da2d20d9b463c2e57871952",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1490533c256eae0eca4a375a42cfdcf59d964eb82db39f4beede8864f1793941",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "163120170af1ef217dd5153062c19c6de448b6fe27e02af095db70afdcebc476",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1660509da020d5532f8c53e430ffee8ee212bc61f93e87ccb2511ecffdfb23a9",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "16d2abcc0291165d9b862f035336845c2b0cc70c719a14e574a78703383d0499",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "16e7b5af885c5835aaa8affb3a50df2fb11ef1dd58f3616b48f64d00194a151a",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "17dd325b1f50abde9f2cb99f1f7392ec8359b21899e5cf2853bbd77677b479a9",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "192b84f87d2b11d40a677ad52aea74fdd751e7e65684f5a45fba21e427a655a5",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1c2e5e9dab7d706dea148b6ccee2f71ce9c77edf2727468fd46461a92ad8172e",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1cf6ef3816b310e73e12c6bf729278c4863ce3016fcda97f3dbf97c13f741dfc",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1e0a5fb6e3d644f8c406b1bb0be088c625b9f1ccd5a47e643a8a08fefe10eb70",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1e28078291abf74c6a8755b017afce9a14d08d3503250f2d8a6ffe3ff3043457",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1e3f7fe6af9f398a261896d5373ca91b334d1fd6df89971dc3290baea5fad93d",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "1e8709cd7441aede2eb7f817b140e51197c718f9812d6e9fedbf221b6b69da52",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "23be7a3d17fd4c6d099659a1266e92f36ddf7f62170075bc7c191bebc08c5998",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "241bb4f4af6e66fc5ccc80e362c108a654eb4fedf5b685504d765360e88b2e12",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "248542352d102b4bd817cba8be1fe3fb47bffc549cba9464ffff6fe8f1464b50",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "24e56e4a38fa9976b9b814e0f3c7f0441ce70a53f1914bdae38e5745449ae698",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "276e13dc51823e404f52a3029b668418a557b78bee87ee9ba3b5e5de4b720b27",
+      "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+      "AVAILABLE"
+    ],
+    [
+      "2877e7bacd52c9105e704d501eba3f11ed6bae5a6e657f0e9ae63f2ae8cd2325",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "2c45d3aac82a87604e39f3906b6f54f30af47394d2ec34efd889eb748d9ba06e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "2ccab54c68b998af4c9912560b0280dd8605b4f4d40e837bbb954f4e491eac49",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "2f803df3241dc3fb811015f783e8cea52209c0e67d767e6c9b730b3173e46462",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "30e74d9856ec5120b9ceae056800f629320ed6979e32617c069c574552fc5a13",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "30f7e01683c283b3b3c2fb1475c4daf7ae3fdc23fd629a0b6addf6e2815c97c2",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "329e6eee93868d35dc220a208c4ba96ed717c55d92cc31ce02c3359ab18a6645",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "32b8ef53d5b671827c214a5e622354ead8d6aab85a622f7edcbc7cba57bc7294",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "33c07821122a20cf79892faa69e51dd523b40d7e4e9cc1f97a489517c3f29b88",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3534f23bcde40275326148e6c883f94bbcb2b814ab99c94e2a2deceaa47e942b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3589e1a08e3bb93456a776b02f14f61bfbfebd88fd32dc5b2363381ff3f6ce9e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "36e054aade677c213a9e35691e4ddda1e884950a9cede595221f78047f1d35b7",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "36e6b0b28c56f698c83ff4ebcae3310482a17c898bb8318b226a809c8e3dd76d",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "37559db5a1f34c8c01593e83cee4d9b181c2602bde461682f7ba96c1c2c59b71",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3902191015d81b8d72decba8917daf8780720eb77cdc2a35d3b78a4e6659db77",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "39c1cd0ddb7fc2d41f2e56c484570ce7d481823508e2c3901d608f186d0468f3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "39d37bc0afdd45b037ef4429c212888a5b9590f340e16cdb835a0e324a4de940",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3ae1a88f80651a30da5ee60148a2e63ca536d914de9b8ae6709602112b6be838",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3f0701a16b2dffa4b0ac6974e9c68ec59ee76e47ea3581208f97204daf9b0699",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3fa10b2149d16e603152c0f06e46581172a92cd5ef28aecc8489f53031af7745",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "3fe6e802c7d7c59ea20dacbd8e4f878e526621c41e7efda1db57761aa9c04b17",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "407ca21b3548ceef5f15324b322283c7276ae3b4ccf085a00cbec761e808ac36",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "41ef0661b2194079528ffb8648fbba49a6bebefbeffe79ccb3c92f147e67de4e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4247a66df8446587e33c12e60c8de3cd80fa6fe58a20e96e838fb529872174cb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "42f2432d959fee32238ec5be6fe7925395c3b863f74c816505fbb316d68f3290",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "442b6815d7831f718191b449bae3223e28197e79d1dc2be6bf5be14bf747729e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4497dce81a9865fc2ce7c8518a8b3626f08f4a9ed05ceb294fbe6e224929e4f4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "456e6d89331da503d4746d121a94796324ea6c42766af765228ab1cf4bb692cf",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4a0661d49004a61f313b2441bbe93b98aba7fbbea001a24c6a915431f3978f51",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4a0b35397da1750fec24bb60defa65c4cf05371a8beac2841c12d589b93a8a32",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4a36e0ab3608ddc7f8c083771febd3bb2461e93b16a10e051259d1ce92840305",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4a613c0e3f2844aa613f747b70b89748519cd5157e3581d7b7e1aa4e0c5368e0",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "4e13cfc04ae02fb7ea69624955c177581ddf83e79371d185bf2836b8355a8609",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "500083c999cbc9599c613dc98a8b199b7067f7dae56cb1041aa1c938f16bbb58",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5083897d088ba45820595ecc33126975fa0982c9ce22c022dbdce6eed6877ebb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "509b8244347c9f9f449712c156b43fd763b8d730433ef9d9647645dd2755c98c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "511db5b7d9bc7ec656789d36febab07febf82d6840a416298f0fc105fbd3d862",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "51d68514c9a17040763bca76487802b62cb0ae40309caabf8c43903f859507b1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5237e1d95e0dcf436436af7cc0e57dab5752905277a7b03fcaf43a8225a570d9",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "52b2caee70386b06d92ddc47bcbc5b79d1f884f4971f0237fb82d3690b44e96e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5418e7354065752d7c348d7f913441354ce3bfb89c745f9026e222b9b0c82bd0",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "55ffaac825985b2dd9420bbf20ca12f2682a61e85e3677e1143cbf0f4dccd4af",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "562e8f656febbdc9c85add7d86cbf1e6717c6aceb104401df63b7ffdcecbb86b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5727b93a8b94afce2744992ef1d6a3937253ee9bf0e7a46632bb40d26654c946",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "57ec96e6e941ab7c6710e7bf2ead3654da9a34812f9f9c78ac2d4b07d68d25ac",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5858e85191b3be3ac87815f996a9988042b1819df54b85cb4254c1dd380c5761",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "58b9926f41f089dd378cf774aa0f7e59733fb956676d1a82de88ca61264ecc57",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5b0ed5ac7d3b8ffd2e13a7b5cb8b7daa435808be41f0890b8592e696616238c9",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5b2fcdd551be0e7d2668b76265d414ab66d6206a86dd999b97b1590efb52df70",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5be21a5067b6be87f0adb58f0dbee8375d4165a3fb3a6ce1feae851f5833fcbd",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5c92e0641fe31bc808acf4be3da7b0c85bc8dd33c7b3a29bc7bf639ea825f55a",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5d7e74c3f147072a4a41954f0a5a495e9567d9551c193356b4f5ebf71846e4f0",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5ed068eb9bde2953f72999ba42bb149c69003ba83444589bc0a846b0bb86831a",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5f07091b3bddaecb15a43105950849f0179457974028029a680a5aee012218c1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5f412e612f3b3fa8b4ce33f2ac827e0a2662f5f7daca0626095c22656c2775ed",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5f60b9006a1549131c5f28decce82979c5af70d50939e6e9d8c8e00d31e79489",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "5fa69531dff0cbbeec0b113ec278a1ff4cf55e1422a7219ee90acadf62ec10da",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "61555fc51432243fe682870e3691bf54b272da3d749dc0d0732055f2a8647659",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "65893ef2d5535b20cd41a93845e9b2e1fe0100094135aeea3d2bcef9263db480",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "659c510ed2763479bcf28c160eb070227399bea12762bdf35cc327c68773ac18",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "65bf8386763042813a8072d6e2bdff62731dbdb29414436b9b30331281d3fd72",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "671dd09f7ecd55ae3c9fd69ed48dfce183064fb1cb43eafd052798d129bc35cb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "680cdeaf9c9718a6c6a82d82a35aa47399481e33c2bf9f488606ecc80a2b7c35",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6955337bc05d1a271a52921d51b2abbe08edb5651e7fbf48ab41725d746891ef",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "696de26c344edf797731dd31ee97e5f736e4303faaeae1f097475ee8d88214d5",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6b4ea7393634f6de6cc7c358399183b51f7a32278165796a8ecfa776188935eb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6b56e69801d415ff0dcbc9c4a3b77cf495c432029cd920893a9f706ac3878fa2",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6bd4b1bac2cf3e2968e19b48aade158af852fb646ee7026be5cb4963e71e68c5",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6c8f87e5d3e0c779c3d6520953a0a29c564d163a5dd7f3547b4a761cd32c0075",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6f0bbdaad49d2201109038d3eb6ef15d30834feff19d16546a1e843e7ae9804d",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6f61d6a34b6d97bca6e899771558eda6a95fea96f3e47b1e89d45cc1f858e2a8",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6fa8827965ff730e7d8809cda05c801ec0014f0be8b86034ac61ee5135beb919",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "6fdd4acd1ccf6bdb795750f94adec03f77012f1f4008497700ebac79bda1f347",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "71c97e241f9bc4eec1cacfd97f15a72a89352fa1b4ab19cb97f36bcff464f512",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "72a14cd88bc6a0f14244cd276c5c6fabf0fe2aa4ae3f0df3822c8df24031df6f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "72d4f5499015564c90bb77f4b68886487d07b3a2803b0c76556c17e2ff16e6aa",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "738bdcaaee3e0b106d3675820309e6b9a1503a69ac4e9db001196eadb516d1db",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "748c43e3445feec09b7e91f064eb207a94dab5b2f6234c087f03828fd5bf3568",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "74c7b947201d791e5a5cc08b87e64bbbc75fd6ca186be24ff0a82bb5492fffb4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "75ceca2a9601b5b482635083249f2349c20e39d4830a392dd50af13118219a04",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "782ecb4d195ce60054ccc82b98fc866ef482803cc1d7a6c6321d3d633c11c53d",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "794b3ec479085b8869f7bef2fc0ed079f02128c7f590a19b6329352f1d265327",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "7bacf7b798bb98d1b71bbd9cb659cb9ac8719e14ad681ed2e38d7a72da012a40",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "7c98232af57661a4ee86063e32352837ea3fdc4c5768e194ad895b4d846b292e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "842d0bde1a665df62d624eacd81b61c458087e4e10ebc35efbe652ff1865af8f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "84628764183974e8ce5b4929729ec03e5a6f34cb5b604ccfb8cb0119f7fce2f9",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "86802f63fa88c6eda00b811adde49f8c0b5cd7ceb74e8b7e3a0fe9327be97772",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "86aec154b2895f5830204cf6f086e1bdd7714230cec63393ce786316f599a146",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "879d9418a479b63c877eb70459a504ae8ee18b1d9a0e6ce07b67de1fb88894b1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "88a62f3a8a0097e0fa0e552df10e848e8f5034744ef008ff8c2dff2eacd3993f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8a1c607c2cb933aafea138db52690de282181b881700dfed6d3d43aec5aa3a1f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8c5fa8c92ce4e375e87f35f2a6a0dd68e88c973369f8b9b48a07be823fcf5dd3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8cbbe9980a5b84c63c0a7e4bed1d1d29e259105d7b6a70e9a2b35a8a0cce9ffd",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8e212e249ee3ab217d274d59faddf0ef5d99e53615872f7c93e7a7576b5bda0b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8e849196c9ff041dfa650591498aa05ad9889300556d46328dd7e5250cc20b82",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "8fadb665c8eb6d0a73142047894a89627ecbca39d02029e9438d8814147c293b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "90eb235619b7edcede8e42770f07247448ef7072438e826bd4f0a5fa7ce485a8",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9264edda0d79d8478d7a8016e84f00e9961443b3753760c53ad54eeaafcbf0a4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "92934ec134598aec26956c78a239e48c87794becf835b78e1aa82c3170190e02",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9445475e90b6f5b5c4d942efd75937f9f492b845b10f1c8f8e2bee7c50144e5b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9515a9e3aae4e734442a7aff6efac4966033fba4ca1fc5328b99312e0a76963b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9623e3f2c2172b9a9e89026d0192e258b29d36c88e99389ec5a3ff0f1bcb4673",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9644e9655fc28cc5a7143075fac358743dd4f73b01bee01a4837e16fe298ade3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "973e5c6e461aaa5c67aff7ab467774c01b3b0100774c714d3b0e666bd9c41c4e",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9800c845c4b16c889f4e243b441ef815054489f9ccf70ffbb90221983d1ebba4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9bc5bc5f6d1dc3c962010bfa95a9d186ec9bfcde5dc0b19f18562aa3e3fc7ce4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9bd024ca395bed1e5dce329a2b98c40de457a24afefd70902b8237d3f1a44dd3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9d34a3a1693a0dad96e904c03b994831c62301d3adc6595c36418e94a75bf6cd",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9d4cc88e2afef42ddd09056eefed9a6fd9a6e1b7a6d9e3463be6718d2419597f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9e427b9421db628c0ac2347d8b5ed7fce3844f1bce51dff6747b2bafc980709c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9ecbce53f7fea5ce660196c50a5c7d7db3085ad98e64ae49bbed1050d7eddbec",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "9f3fe636a0642dd541c0bd3be0bb47c904973d0fde7f57aa62802a7d34965c23",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a19ebfa76e72c0ec62127d72de968c20d750fb1b46f2e44317a0b1d45a79f7ae",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a33f4e0cc6f89a93bdd7e85a88b7989f33056a8720e715c5717981a9a0d2bc45",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a3985462626e094c342dc495bfc84610decaa99d05040323a52ce95a23491e24",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a3ecc47c92c0f9583cc3e578bb6d01b104e98ee456cd110890a62857552d50e3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a66dc34dd0b527bb2f704f101c6cc8fabab5d1dbe841aad4c3fd96cd945ed561",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a7098da6df993ecbca8f11e2cb375d8bac190950ced2ec999526e41ec8101405",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a868f2d4a7d3f4dd181fa695585915feba3d3d3e39d889bac923e9a1aad835d4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a89cc8f7535602ce9463b653e0a7ca52535d429b427cae9e8c129ed733145a05",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a8cbf46bb5a94772791c99dbc2d04754aa3895953d343a746acd641d9c2c2ccd",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "a98358a60dd67db0534040e97fc3aa5d14ad5950ec9744be2a80088ef38108a8",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "aaa3823ef6eb2b8106301266fb56c5067fe0de5969ee5cf917411a2eec05713d",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ac1f2f19d90d65883ebe9bb0eb04d0d88504af841b255b9886a6a397de864930",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "afcd7bcbdb45115f11411020b51c4699fae91ca98ec5384800c15b07ae11556a",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b07d73eefce264c1cf1532e7fc899edfe767aca016eee749cf7713938c8a7fd3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b4d1d4067187ae24aad066053f58584a9c0cdb183a1e1988839c1387c74e1cd9",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b5452719317f6598df754d1e935d09c2555e95b5d3be49a6f96e86bc20acb749",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b601af4bb494df1f08414024af5983dfa89749fa639e7b406496ccc76083ada2",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b7cb93873ad08e056179423ac52abc4edaf8d400a542d7f8608903d7710372eb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "b8b134bcb637d84a417a28501de446768f9429cbb2ca40bf0b0a9dfe9f87efdf",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ba6032c4adce789dc76e41313b4dc5af5ac0ed784c0c78a06d860662123bd64c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "bafdf956c22f17096b7a61412f78b3893a1b499464c2d7668b67a0fecfeb855b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "bb5e3981b314e91a996cb5119f41e9c66e8d2b205e0137f496a4f1add100c591",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "bc40d1f6265950ad03f6740c3a507c35bbaa7a0a61eee12d6ccd0a43a721a884",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "bd68c7e4d05ecec0c314dab7f8b7c9f999ecde8386784638698d58adf2eea991",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "bf245915d5d61257c085a3df32bfe22376c2a0a8e158635771274708354fd028",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c0f71382ad9f342d1c33d13f04943b171d23e3264d1f0fabe88bc3f634975770",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c11fad5b6e8ebf7892b2b3e633b140a4af04c91bb3afe9f01f3ad25028ad5753",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c27937cea96462a6848db3978bb8661a3371a6e099a3881d1cbe2e3af07b423a",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c3436a07bcc8ae57d535255038a0b92786cc6d720fdba41d2d19a5e12ca8348c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c4737f0724b4d8f96a696a121152466d0a958c15989186ce7236036a419ac8d3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c51686d79716b2ccb3b19448165d3184a17fbe47e5c21fa6b49377706778d738",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c63ad3e6371446f8d358e119a742398f170c2869938bd27a833da19099b676b3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c664d7d1835801e89f3e7c02b33573acef508bd07498be3120db73f027912348",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c68b2783ae548db9b1a75ceb12a60f0c15c19723d379b44587c88b6d77200b2b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c77e4eecc5ae1afe36d8f32dc6dcff0f5f8a44f58476902e51433bba5d948d23",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c852291ac49e313322ae245160642f3a3eeda430a7c51985acc2e966416848e5",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "c9aff42093abfdf21250156314575794d3f103f97224171bd3861603361dc424",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ccc3bdbc5ad460518838cbfcd367b735ce64a84b8a2aed4f019b7092c9436466",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "cd4b11c0d4dcf8537c2f5240e554d0df867e12f0791399558aacd638a70d6b78",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "cdf58ec276f97eeac9421ff81b6deef70a2acd1b22b3f87237a5299aac1b1be7",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ce0fa9d33b5589dc73fc34b0d8a82e87ee8330da67c8c5622b75358ccd368c50",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ce3755f968c918814f0d6556553500ae7e149be0488a634b2d4155a6258d9547",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "cf9c2a58bc057f9b7ba549dbf4f7b99351f3f15e3a816fde6bbf91b7e60a437b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d0211c3008af070207eb26bc021397a23dd2602c86ed5a70f4ea0d86d44bca84",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d0e086bdad09062eba772707938bc3d079795a0691a9479dd402d2d976c35f6f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d1242ce754e626eb25ea739e92b55de16f31d5b41fbad3ee51e75001dc42d5f1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d18e441aa93d64d2b7a1339518eae7ea7a1af9f4d3cb1f948eed50441b3e4262",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d30d4fadc2c5988347cff4bacd56ce524b882d3dc9ca717e3a0c39662feecff6",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d393c19a3a2b90a70b5990cc0d5128e8c2e608469213425e28731ced6e3217c7",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d519863d41d4e8a2e16973cf3bc2dfb0cb7a18c49bf1a3d9176fca401029c8ca",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d6600157a0ecc03850acaf688ab1658839dd1d18a73132959af2969ac3b73015",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d846ef61936aa9cf63d58faa8542ec1758990371f82bc1d1611827a41be0bb41",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d8bf935c7004a4f5bb7f79b2f9d02eb00be100772c9158c869f6e96ed5d7e9e5",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d8d6f4adbd8a0c3dec0f29be35c6f8a62e42ad6e892636a3882478590e51508c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d8ef1de23116258cd621a5d8031735bd2153a831c09c3d6af3ca81bc65452308",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d934cecc9dc5e2e5b95da165c87687a954f77444de813cd81e0cb31724234d67",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d9775ce088c6a5ae4e7e93d59d4cbe62badc0b67f96a79ba53638b8f255a3991",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d990158dae91006da172d8fe94bcff3f8533acbfe210b054763606d9f8de7fbb",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "d9af2bcdebe7fd288c6d420df7486eda26661d9caaebdee331cd70c99165c36b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "da121b3a264717c98587039bfc448d151392a06334c25989e65eda8b0de06c68",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "da7f7758da18b115d994e918e49c727d205be2c192771dbc6090f8a6f9829ff3",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "daf31fc399fda74ebfb0b7bd266c2d1b5086ea98edb92c6366e5b7786b08a85c",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "dbcc297e08410f29876743ed752f2aeab32a60f55854e2640fcbd505e0a57659",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "dbfe493252af98d0bfbcefa49cb4f32c4bb383e313331e0f5577d588fe9ab651",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ddc3157635e6e07384494b328a28c11dbd77d83cc17fad360b13a0d8c86aefb0",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "deed4bd5ffce667cb989577a967efa5f03f35d8b32cf98329d34df998f64298b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e1f1f5bc7741b48d1d92bfda4e2a4aaaa427e9ada76cdd48d55998b0633a8b41",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e2d84bb33b9b594fb7d7af0743d524a7d5bfcf80a5e2fe7ac5a0d31d1f07cf67",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e33f09092d20698983278a85767449e69e434172273fa7e15ed11a0e3e014573",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e3f9ea2f6596ab0e6eb4240ec7ba73f9c888987c3c68fe0fa9d944bda953c918",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e41e2de63f8ae511d90a127f84d415eea57e65cc3974f9677fc77f9b1c5b3e3f",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e4d6e6d7459508db44b7e8cc320d95728f652e1ee1b3fcff61874bd28c4dc5cd",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e5be275f8cfd7a350c9a09a3203281e06e0b5463e80af9d48e088720431a5057",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e641bb19835b1a2267805544c749b2219552317ee59ab90baf22491a642b3cb4",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e6be72ed6dffb3c18a04e2e3b288102ed78eeb98a55dfb74690dcb3a798a2381",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e731a58e12fd61df77f1d7807c7b371624cfa21ef375f1b390273020f0bd4fdc",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e76ee7809cdf2f336e0cbba782297e9b94712bca27d050c96c58e593ed831494",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e8bfccf49efd6b587d0baf9cc2d4496c0cb1f6c8c9230a5e648fc93a5635f517",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "e8e60058373d0c3554ee23479086a0afff86dd909bbdf49431482d5bdea30ca1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ea0a1319d0d8244729f2882b3feec169649bf79dfc24f25e916c72d186fea765",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ea86196e6a446f5cb8e063f486575dd9ec537181602effea2c14a1773794ce47",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "eb3aff812167598979906456719ce7cee04ca42deb8d6249affb854ce2447e54",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "eed0c6953102816b36a82a879603b155f97b57ddf1339a249dceb2af007bb397",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ef606be9d2c3a34615042e9b5b6753a12bed14689d8bdee84973c10663c9a589",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "efa5402bed6f3e20f8c8732f27b879c5cb3ac726766098fdb6a191e65eb43132",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f1290a71e6331ab581397df6c94cc4d1f5cd56f5857eb3f8d9ad14d5f5a71579",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f1afa5fe9c12b0ee353385406458ef5aedc6c9755d306b1b9b9b65e2c3f06a89",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f506b222a648df7af976be56e740d24cf0dad3813766b394273e3716acc26c45",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f554adc970a70cf5fc051241950a086b8fed610d12fb36e6195e977b7a8f84b1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f6cb7b66e3b1b4663a4333d1c0b61b53db70392f423d26182087ffabc50b23b8",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f82b43282f4b6c0d4aa15cd022c65a8b29df51ab768f77ff1364bf64af28a6a1",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f927e0c98ef186278a7e9c2127c1f800ae2c843871bf58ef62bf8da1bbd5d2c2",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "f99b1e74ff15dce07e7e627259070ac354c69f7cb758c835217b28b92af5f67b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "fa01f302099f719c0c6ea0d8ebab823387a01b28216e558550a2bd978a604543",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "fa33452c8bc1862ccc81fc56774e7ec2ccf202e8dc1a3c85c2c4bbfaa5bc9ebf",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "fba81cb4e423b1f4adcb56f3a0e250675d5c3733ce37e8114b8d994ed1a82f2b",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "fe37757535b53139f9d39acd9784a881d175fa52c11cc7372799fdd242c88675",
+      "690000000445629982",
+      "AVAILABLE"
+    ],
+    [
+      "ff2405fe67f37fcfd6d68f437d9e25026d0b200f6a9d7fd1bfba9b1acbb7420e",
+      "690000000445629982",
+      "AVAILABLE"
+    ]
+  ],
+  "negative": [
+    200,
+    {
+      "revision_id": 416,
+      "cell": "ALS303760e2f0",
+      "lots": [
+        {
+          "article": "TC03089DDB36",
+          "cell": "ALS303760e2f0",
+          "physical_qty": "20",
+          "hard_qty": "0",
+          "stock_version": 1,
+          "expiry_date": "2030-01-01T00:00:00",
+          "unit": "EA",
+          "uid": "CASELOT:65A5DC4376EBCE37968BB1FC47E2103B5BB9C9:1",
+          "marking_profiles": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cleanup": "revision closed, actor retired, RIGHTS removed, owner0/0; stock250/H0",
+  "status": "FAIL_OWNER_VIEW"
+}

@@ -1,0 +1,14 @@
++ C:\Users\roma\AppData\Local\Programs\Python\Python313\python.exe scripts/check_architecture.py
+Architecture: PASS; {'files': 1231, 'cycle_components': 0, 'debt_items': 72}
++ C:\Users\roma\AppData\Local\Programs\Python\Python313\python.exe -m pytest tests/architecture tests/tooling -q -o cache_dir=tmp/retailcase_quality/pytest-cache --basetemp C:\projects\TMS\tmp\retailcase_quality\pytest-e2e74b812ece433dbd1657d161fe36a9
+........................                                                 [100%]
+============================== warnings summary ===============================
+..\..\Users\roma\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\cacheprovider.py:475
+  C:\Users\roma\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path C:\projects\TMS\tmp\retailcase_quality\pytest-cache\v\cache\nodeids: [WinError 5] �������� � �������: 'C:\\projects\\TMS\\tmp\\retailcase_quality\\pytest-cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+24 passed, 1 warning in 5.27s
++ node C:\projects\TMS\admin\wms_admin_frontend\node_modules\typescript\bin\tsc --noEmit
++ node C:\projects\TMS\terminal\wms_terminal_web\node_modules\typescript\bin\tsc --noEmit
+RETAILCASE quality gate: PASS

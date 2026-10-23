@@ -1,0 +1,9 @@
+{
+  "error": "Imported helper finally appended this run calls to historical evidence; fixed output-directory guard",
+  "old_file": "runtime\\test-evidence\\tradecase\\2026-10-21\\T06\\full-pallet.json",
+  "old_history": 84,
+  "removed_exact_new_run_calls": 47,
+  "retained_history": 37,
+  "other_fields_unchanged": true,
+  "backup_sha256": "d0b46a53fbd4edab0306255a626768379215a5b2097a7745fee93fe5958d163b"
+}

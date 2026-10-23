@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_zero_demand\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_zero_demand\before_read.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_zero_demand\rollback_verify.sql
+Done. Statements=4; Errors=0; AbsentCleanup=0

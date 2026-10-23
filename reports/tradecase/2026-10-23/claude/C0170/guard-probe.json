@@ -1,0 +1,34 @@
+{
+ "probes": [
+  {
+   "command_type": "CASE_SHORT_APPROVE",
+   "decision": "RESTORE",
+   "outcome": "ORA-20911: TRADE_ORDER_BINDING_REQUIRED"
+  },
+  {
+   "command_type": "CASE_SHORT_APPROVE",
+   "decision": "ACCEPT_SHORT",
+   "outcome": "ORA-20911: TRADE_ORDER_BINDING_REQUIRED"
+  },
+  {
+   "command_type": "CASE_SHORT_APPROVE",
+   "decision": "READY",
+   "outcome": "ORA-20911: TRADE_ORDER_BINDING_REQUIRED"
+  },
+  {
+   "command_type": "INVENTORY_COUNT",
+   "decision": null,
+   "outcome": "ALLOWED"
+  },
+  {
+   "command_type": "WAVE_RESERVE_SOURCES",
+   "decision": null,
+   "outcome": "ALLOWED"
+  }
+ ],
+ "pallet": {
+  "uid": "690000000161192302",
+  "warehouse_id": 225687965,
+  "remain": 10.0
+ }
+}

@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "package": "RRL_STOCK_HU_TASK",
+      "expected": "TASK_EXPECTED_SIGNATURE_CHANGED",
+      "actual": "ORA-20890: TASK_EXPECTED_SIGNATURE_CHANGED",
+      "ms": 66.07
+    },
+    {
+      "package": "RRL_STOCK_HU_TASK",
+      "expected": "HU_TASK_CONTRACT_OR_STATE_INVALID",
+      "actual": "ORA-20886: HU_TASK_CONTRACT_OR_STATE_INVALID",
+      "ms": 6.11
+    },
+    {
+      "package": "RRL_STOCK_HU_TASK",
+      "expected": "HU_TASK_CONTRACT_OR_STATE_INVALID",
+      "actual": "ORA-20886: HU_TASK_CONTRACT_OR_STATE_INVALID",
+      "ms": 4.37
+    },
+    {
+      "package": "RRL_STOCK_CASE_MOVE_CMD",
+      "expected": "TASK_EXPECTED_SIGNATURE_CHANGED",
+      "actual": "ORA-20890: TASK_EXPECTED_SIGNATURE_CHANGED",
+      "ms": 53.94
+    },
+    {
+      "package": "RRL_STOCK_CASE_MOVE_CMD",
+      "expected": "PAPER_PHYSICAL_TASK_REQUIRED",
+      "actual": "ORA-20886: PAPER_PHYSICAL_TASK_REQUIRED",
+      "ms": 5.27
+    },
+    {
+      "package": "RRL_STOCK_CASE_MOVE_CMD",
+      "expected": "CASE_CARRIER_MOVE_SNAPSHOT_TARGET_REQUIRED",
+      "actual": "ORA-20886: CASE_CARRIER_MOVE_SNAPSHOT_TARGET_REQUIRED",
+      "ms": 24.39
+    },
+    {
+      "package": "RRL_STOCK_CASE_MOVE_CMD",
+      "expected": "CASE_CARRIER_MOVE_SNAPSHOT_TARGET_REQUIRED",
+      "actual": "ORA-20886: CASE_CARRIER_MOVE_SNAPSHOT_TARGET_REQUIRED",
+      "ms": 4.75
+    }
+  ],
+  "basis": "Native compiler calls in READ ONLY; completed own task, no execution"
+}

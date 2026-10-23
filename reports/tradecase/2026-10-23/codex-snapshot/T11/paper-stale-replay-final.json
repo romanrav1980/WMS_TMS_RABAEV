@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "calls": [
+    {
+      "case": "stale",
+      "status": 409,
+      "ms": 366.06,
+      "result": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PH23.68eb5dba.stale",
+          "oracle_code": 20890,
+          "reason": "TASK_EXPECTED_SIGNATURE_CHANGED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "read_before_retry": false
+        }
+      },
+      "wire_sha": "c49e2c816a31619fedfd07752a2049f9094ddbd92867359eba75b9015be4b8e3"
+    },
+    {
+      "case": "historical_receipt",
+      "status": 200,
+      "ms": 159.62,
+      "result": {
+        "status": "ok",
+        "result": {
+          "root": "PH23.68eb5dba.HU",
+          "warehouse": 212476763,
+          "cell": "PH23.68eb5dba.B",
+          "nodes": [
+            {
+              "uid": "PH23.68eb5dba.HU",
+              "kind": "CONTAINER",
+              "type": "PALLET",
+              "version": 1,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "open_task_count": 0,
+              "cell": "PH23.68eb5dba.B",
+              "depth": 0
+            }
+          ],
+          "links": [],
+          "ancestors": [],
+          "physical_unit_count": 0,
+          "leaf_count": 0,
+          "top_place_count": 1,
+          "operation_id": "PH23.68eb5dba.complete",
+          "task_id": 1233,
+          "status": "DONE",
+          "pallet_identifier": "PH23.68eb5dba.HU",
+          "source_pallet_identifier": "PH23.68eb5dba.HU",
+          "quantity": "1",
+          "unit_code": "HU",
+          "remaining_quantity": "0",
+          "residual_task_id": null,
+          "outbox_id": 6446
+        }
+      },
+      "wire_sha": "e4f02054665706e0c8ead4536bc1ef2c396c05b1226696875150ea0f9878be85"
+    },
+    {
+      "case": "changed_body",
+      "status": 409,
+      "ms": 148.98,
+      "result": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PH23.68eb5dba.complete",
+          "oracle_code": 20872,
+          "reason": "OPERATION_CONFLICT",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": false,
+          "read_before_retry": true
+        }
+      },
+      "wire_sha": "6f444ac2d283476c90a958a14c8cd635feb1c519a63c73cafff8583a837b7ad9"
+    }
+  ]
+}

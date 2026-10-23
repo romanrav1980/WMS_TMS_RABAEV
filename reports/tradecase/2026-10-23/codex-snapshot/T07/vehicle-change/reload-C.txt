@@ -1,0 +1,1 @@
+{"status": "RELOADED_C_DOCUMENT_PENDING", "warehouse": 213059748, "trip": 33677}

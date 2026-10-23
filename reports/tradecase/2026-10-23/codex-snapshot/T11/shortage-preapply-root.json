@@ -1,0 +1,33 @@
+{
+  "status": "READ_ONLY_BASELINE",
+  "database": [
+    [
+      "RABAEV",
+      "orcl"
+    ]
+  ],
+  "invalid": [
+    [
+      0
+    ]
+  ],
+  "trade_shorts": [
+    [
+      0
+    ]
+  ],
+  "operation_columns": [
+    [
+      "COMMAND_TYPE"
+    ],
+    [
+      "REQUEST_HASH"
+    ],
+    [
+      "CANONICAL_REQUEST"
+    ],
+    [
+      "CREATED_AT"
+    ]
+  ]
+}

@@ -1,0 +1,30 @@
+
+> wms-admin-frontend@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.2 building for production...
+transforming...
+node.exe : node_modules/react-leaflet-draw/dist/esm/EditControl.js (8:7): "default" is not exported by "node_modules/le
+aflet-draw/dist/leaflet.draw.js", imported by "node_modules/react-leaflet-draw/dist/esm/EditControl.js".
+C:\Program Files\nodejs\npm.ps1:29 знак:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (node_modules/re...ditControl.js".:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+✓ 345 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                            0.39 kB │ gzip:   0.27 kB
+dist/assets/spritesheet-DpIxuf5L.svg                       5.55 kB │ gzip:   1.67 kB
+dist/assets/reachtruck-4dir-sprite-sheet-9VCq4iMz.png    771.84 kB
+dist/assets/picker-4dir-sprite-sheet-otdcoW00.png        902.39 kB
+dist/assets/index-CCS-24bQ.css                           229.42 kB │ gzip:  48.98 kB
+dist/assets/index-Bo-JpOqP.js                          1,825.29 kB │ gzip: 498.99 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-m
+anualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 14.07s

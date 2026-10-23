@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\001_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_plan_scalar_fix\verify.sql
+
+ERROR verify.sql:1: ORA-20999: ORA-20999: INVALID_OBJECTS
+ORA-06512: на  line 5
+https://docs.oracle.com/error-help/db/ora-20999/
+SQL: declare s clob;n number;begin
+OracleApply stopped with ORA-20999: ORA-20999: INVALID_OBJECTS
+ORA-06512: на  line 5
+https://docs.oracle.com/error-help/db/ora-20999/
+No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.

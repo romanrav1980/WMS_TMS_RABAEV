@@ -25,5 +25,11 @@ try:
   s['accept_body']=dict(operation_id='T7.TARE.ACCEPT.1155',offer_operation_id='T7.TARE.OFFER.1155',accepted_quantity='1',scan_vehicle=f['vehicle_number']);save()
   expect(403,http('POST','/api/inventory/tare/accept',dict(s['accept_body'],operation_id='T7.TARE.SAME.1155')))
   s['accept']=expect(200,http('POST','/api/inventory/tare/accept',s['accept_body'],actor=s['actor'],password=password));save()
+ assert expect(200,http('POST','/api/inventory/tare/offer',s['offer_body']))==s['offer']
+ assert expect(200,http('POST','/api/inventory/tare/accept',s['accept_body'],actor=s['actor'],password=password))==s['accept']
+ if 'binding_closed'not in s:s['binding_closed']=expect(200,http('PUT','/api/transport/driver-bindings/'+str(f['driver_id']),dict(user_id=s['actor'],active=False,expected_version=1)));save()
  s['balances']=expect(200,http('GET',f"/api/inventory/tare/warehouses/{f['warehouse_id']}/balances"));s['status']='PASS';print(json.dumps(s['balances']))
+ with oracle_connection()as c:
+  q=c.cursor();q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP=:g",a=s['actor'],g=s['group']);c.commit()
+ s['actor_retired']=True;save()
 finally:s['history']+=CALLS;save()

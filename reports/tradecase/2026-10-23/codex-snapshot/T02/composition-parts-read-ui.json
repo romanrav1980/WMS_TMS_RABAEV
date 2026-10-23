@@ -1,0 +1,239 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "name": "Live independent SAP accepted / SKM rejected",
+      "usefulMs": 1758
+    },
+    {
+      "width": 1440,
+      "name": "Order navigation, help and button hints; no horizontal overflow"
+    },
+    {
+      "width": 1440,
+      "name": "Actual delivered parts open existing intake result; hints and no overflow"
+    },
+    {
+      "width": 390,
+      "name": "Live independent SAP accepted / SKM rejected",
+      "usefulMs": 1705
+    },
+    {
+      "width": 390,
+      "name": "Order navigation, help and button hints; no horizontal overflow"
+    },
+    {
+      "width": 390,
+      "name": "Actual delivered parts open existing intake result; hints and no overflow"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "http": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 114.527,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 308.991,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/site",
+      "ms": 631.642,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 748.847,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/messages?limit=50",
+      "ms": 748.042,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 808.422,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/supply-transfers?limit=50",
+      "ms": 514.267,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/order-compositions?limit=50",
+      "ms": 555.637,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 78.305,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 335.023,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 428.114,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/site",
+      "ms": 427.206,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/messages?limit=50",
+      "ms": 556.984,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 771.895,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/order-compositions?limit=50",
+      "ms": 518.258,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/supply-transfers?limit=50",
+      "ms": 545.135,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 89.52,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/supply-transfers?limit=50",
+      "ms": 272.988,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/messages?limit=50",
+      "ms": 354.26,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/site",
+      "ms": 355.372,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 356.062,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/order-compositions?limit=50",
+      "ms": 374.929,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 395.4,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 647.839,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/supply-transfers?limit=50",
+      "ms": 370.381,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/221164919/order-compositions?limit=50",
+      "ms": 402.026,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/me",
+      "ms": 189.965,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 350.695,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/site",
+      "ms": 470.899,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/workspaces?capability=tradecase",
+      "ms": 471.819,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/messages?limit=50",
+      "ms": 555.92,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/access/navigation",
+      "ms": 639.71,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/order-compositions?limit=50",
+      "ms": 325.455,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/supply-transfers?limit=50",
+      "ms": 368.887,
+      "status": 200
+    }
+  ],
+  "status": "PASS"
+}

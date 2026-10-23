@@ -1,0 +1,15 @@
+{
+  "decisions.txt": "db603a74e18ecf504119a4924c72a2e228dcec5c9a6ffbde6a66f0352688577a",
+  "detailed.txt": "c94f2030fa1612709db9c681c97f8e699da37992fa82a54a776fd669186f21a3",
+  "diagrams24_changes.txt": "de11e4c66b2dfd00e9e0771e24fc32900ead4ed1baa6461ef371bc66b2a7f765",
+  "discovered_files.json": "e14b1e7139928930077c88c89fc86aec51526a51b2aad2d9b4857cfdd4fe19d5",
+  "functional_clean.txt": "8d31e56eb9b05a01211a208f7aaecdeb2e40e18dfa6449608829679f83baa9de",
+  "functional_current.txt": "4b2f6a721360f712cbd3691ce725f727e3243a572d0b59fc91dbf8e1fe5e8ee4",
+  "information_exchange12.txt": "4ca6fc0abc2b20ce7d19eabfc0bf798b868aaaff07142df12deb2b8ea5eee7e0",
+  "nfr.txt": "c1cd3489e01ced6258f46a44552ca023b3cc5aaa923935477ce0d3c28ca15675",
+  "reply.txt": "b57849283820cf00086da6e1ca8b830698059a9eff049fe03b7aef97f7bade5e",
+  "revision_history.json": "d26434c30fae01d1907c19dbcb13ba37d014fe478086cc7471087dbf19ea272b",
+  "tests.txt": "d187d536a8b03637e18a607c62e0ad373f912dbd84ecaf2bc9e858e0702470c9",
+  "tests_previous_revision11.txt": "bd73a96b752f8d2e7e3d42a68791a3bffa3991b12dcaee4074099d1c61925992",
+  "tests_word_extracted.txt": "33c83cc233c62b7a5a3a71b32c3ef673dd3212c013ebe5d2174df82744990cb5"
+}

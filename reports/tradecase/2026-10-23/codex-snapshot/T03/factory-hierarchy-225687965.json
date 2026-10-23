@@ -1,0 +1,819 @@
+{
+  "status": "PASS",
+  "warehouse_id": 225687965,
+  "sscc": "690000000161192302",
+  "boxes": [
+    "29040161192300ef6B001",
+    "29040161192300ef6B002"
+  ],
+  "supply_order": "1215ffb3c18b416cad3a4f5c34f28b31",
+  "receipt": {
+    "status": "RECEIVED",
+    "operation_id": "FH.RECEIPT.ef611dbe",
+    "pallet_identifier": "690000000161192302",
+    "sscc": "690000000161192302",
+    "quantity": "10",
+    "base_quantity": "10",
+    "base_uom": "EA",
+    "sap_order_number": "FH.ef611dbe",
+    "sap_sender": "TC03.QA.SAP",
+    "order_revision": 1,
+    "line_number": "1",
+    "material": "TC03EF611DBE",
+    "unit": "EA",
+    "supplier_batch": "FH.ef611dbe",
+    "expiry_date": "2030-01-01",
+    "produced_date": null,
+    "warehouse_id": 225687965,
+    "physical_measurements": {
+      "gross_weight": "10",
+      "pallet_height": null,
+      "pallet_height_m": null,
+      "volume_m3": null
+    },
+    "receive_cell": "T3Ref611dbe",
+    "putaway_cell": "T3Sef611dbe",
+    "placement": {
+      "cell": "T3Sef611dbe",
+      "slot_id": null,
+      "score": "0.0",
+      "basis": "COORDINATE_DISTANCE",
+      "metric": "DISTANCE"
+    },
+    "marking_units": 10,
+    "marking_policy_version": 2,
+    "regulatory_validation": "NOT_PERFORMED",
+    "idempotent": false,
+    "task_id": 1249,
+    "outbox_id": 6963
+  },
+  "units": [
+    10,
+    10
+  ],
+  "stored_nodes": [
+    [
+      "BOX",
+      2
+    ],
+    [
+      "PALLET",
+      1
+    ]
+  ],
+  "failures": [
+    {
+      "case": "box_in_two_pallets",
+      "status": 422,
+      "result": {
+        "detail": "A box belongs to one factory pallet only"
+      }
+    },
+    {
+      "case": "unknown_sscc",
+      "status": 409,
+      "result": {
+        "detail": "Unknown aggregation composition: import exact sender manifest"
+      }
+    },
+    {
+      "case": "pallet_and_child_box",
+      "status": 409,
+      "result": {
+        "detail": "Physical unit/profile scanned more than once"
+      }
+    },
+    {
+      "case": "quantity",
+      "status": 409,
+      "result": {
+        "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+      }
+    },
+    {
+      "case": "one_box_only",
+      "status": 409,
+      "result": {
+        "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+      }
+    },
+    {
+      "case": "changed_replay",
+      "status": 409,
+      "result": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "FH.RECEIPT.ef611dbe",
+          "oracle_code": 20872,
+          "reason": "OPERATION_CONFLICT",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": true
+        }
+      }
+    },
+    {
+      "case": "second_receipt_same_sscc",
+      "status": 409,
+      "result": {
+        "detail": "No storage slot satisfies occupancy, limits, temperature and warehouse rules"
+      }
+    },
+    {
+      "case": "bind_without_owner_right",
+      "status": 403,
+      "result": {
+        "detail": {
+          "code": "TRADE_OWNER_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "case": "bind_other_warehouse",
+      "status": 404,
+      "result": {
+        "detail": {
+          "code": "TRADE_SUPPLY_NOT_FOUND"
+        }
+      }
+    }
+  ],
+  "checks": [
+    "one SSCC scan receives BOX6+BOX4 = 10 units through the existing receipt",
+    "each node stored with its expanded composition",
+    "wrong hierarchy, unknown SSCC, pallet+child box, wrong quantity, single box, changed replay and second receipt refused",
+    "exact replay returns the same receipt; one APPLIED operation",
+    "bind keeps SNS/MRC 200/expiry; owner right and warehouse enforced"
+  ],
+  "limits": [
+    "Synthetic supplier XML through the existing gateway, not an external DESADV/API adapter or provider response",
+    "Regulatory confirmation of the boxes by the SKM is not part of this receipt"
+  ],
+  "slow_sql": [
+    [
+      6828,
+      240,
+      "TRANSACTION"
+    ],
+    [
+      6829,
+      11,
+      "TRANSACTION"
+    ]
+  ],
+  "fixture": {
+    "tag": "ef611dbe",
+    "warehouse_id": 225687965,
+    "article": "TC03EF611DBE",
+    "receive": "T3Ref611dbe",
+    "storage": "T3Sef611dbe",
+    "pick": "T3Pef611dbe",
+    "gtin": "29040161192300",
+    "pallet": "690000000161192302",
+    "actor": "TC03ef611dbe",
+    "role": "TC03ef611dbe",
+    "slow_marker": 6827
+  },
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/artmas",
+      "status": 202,
+      "elapsed_ms": 734.12,
+      "response": {
+        "inbox_id": "c5ddfeade2f04663879062af10b9129d",
+        "status": "APPLIED",
+        "articles_applied": true,
+        "materials": [
+          "TC03EF611DBE"
+        ],
+        "older_skipped": [],
+        "idempotent": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/finished-goods/skus/TC03EF611DBE/receiving-policy",
+      "status": 200,
+      "elapsed_ms": 160.88,
+      "response": {
+        "articul": "TC03EF611DBE",
+        "version": 1,
+        "configured": true,
+        "marking_required": true,
+        "serialized_weight_boxes": false,
+        "order_weight_tolerance_pct": "15",
+        "stack_stage": "MAIN",
+        "profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "profile_version": "TC03",
+            "scan_mode": "UNIT"
+          }
+        ],
+        "legacy_mismatch": false,
+        "unmarked_scan_modes": [
+          "ITEM_BARCODE",
+          "BOX_BARCODE"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/finished-goods/skus/TC03EF611DBE/receiving-policy",
+      "status": 200,
+      "elapsed_ms": 106.82,
+      "response": {
+        "articul": "TC03EF611DBE",
+        "version": 2,
+        "configured": true,
+        "marking_required": true,
+        "serialized_weight_boxes": false,
+        "order_weight_tolerance_pct": "15.0",
+        "stack_stage": "MAIN",
+        "profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "profile_version": "TC03.FH",
+            "scan_mode": "UNIT_OR_AGGREGATION"
+          }
+        ],
+        "legacy_mismatch": false,
+        "unmarked_scan_modes": [
+          "ITEM_BARCODE",
+          "BOX_BARCODE"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/225687965/site",
+      "status": 200,
+      "elapsed_ms": 187.12,
+      "response": {
+        "warehouse_id": 225687965,
+        "version": 1,
+        "replayed": false,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 149.56,
+      "response": {
+        "warehouse_id": 225687965,
+        "document_id": "SNS",
+        "entity_type": "OWNER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "b3017a3901e646019fd933691f543b8c",
+        "correlation_id": "b3017a3901e646019fd933691f543b8c",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T11:14:29.238-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6960
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 134.03,
+      "response": {
+        "warehouse_id": 225687965,
+        "document_id": "BLC",
+        "entity_type": "OWNER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "76d559526b7c433a80b791725cce6599",
+        "correlation_id": "76d559526b7c433a80b791725cce6599",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T11:14:29.391-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6961
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 172.4,
+      "response": {
+        "warehouse_id": 225687965,
+        "document_id": "A",
+        "entity_type": "SKU",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "154a5f027fa34c45ae6340f246685657",
+        "correlation_id": "154a5f027fa34c45ae6340f246685657",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T11:14:29.560-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6962
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/225687965/stock/cells/T3Ref611dbe",
+      "status": 200,
+      "elapsed_ms": 166.64,
+      "response": {
+        "cell": "T3Ref611dbe",
+        "version": 1,
+        "warehouse_id": 225687965,
+        "operation_id": "FH.CELL.T3Ref611dbe",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/225687965/stock/cells/T3Sef611dbe",
+      "status": 200,
+      "elapsed_ms": 120.15,
+      "response": {
+        "cell": "T3Sef611dbe",
+        "version": 1,
+        "warehouse_id": 225687965,
+        "operation_id": "FH.CELL.T3Sef611dbe",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/225687965/stock/cells/T3Pef611dbe",
+      "status": 200,
+      "elapsed_ms": 124.03,
+      "response": {
+        "cell": "T3Pef611dbe",
+        "version": 1,
+        "warehouse_id": 225687965,
+        "operation_id": "FH.CELL.T3Pef611dbe",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/supply-orders",
+      "status": 422,
+      "elapsed_ms": 54.6,
+      "response": {
+        "detail": "A box belongs to one factory pallet only"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/supply-orders",
+      "status": 202,
+      "elapsed_ms": 485.09,
+      "response": {
+        "status": "APPLIED",
+        "order_id": "1215ffb3c18b416cad3a4f5c34f28b31",
+        "incoming_document_id": 25261,
+        "revision": 1,
+        "warehouse_id": 225687965,
+        "gateway_contract_version": 1,
+        "lines": 1,
+        "inventory_booked": false,
+        "idempotent": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 153.71,
+      "response": {
+        "detail": "Unknown aggregation composition: import exact sender manifest"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 99.36,
+      "response": {
+        "detail": "Physical unit/profile scanned more than once"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 77.64,
+      "response": {
+        "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 79.56,
+      "response": {
+        "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 201,
+      "elapsed_ms": 1703.0,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "FH.RECEIPT.ef611dbe",
+        "pallet_identifier": "690000000161192302",
+        "sscc": "690000000161192302",
+        "quantity": "10",
+        "base_quantity": "10",
+        "base_uom": "EA",
+        "sap_order_number": "FH.ef611dbe",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC03EF611DBE",
+        "unit": "EA",
+        "supplier_batch": "FH.ef611dbe",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 225687965,
+        "physical_measurements": {
+          "gross_weight": "10",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3Ref611dbe",
+        "putaway_cell": "T3Sef611dbe",
+        "placement": {
+          "cell": "T3Sef611dbe",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 10,
+        "marking_policy_version": 2,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1249,
+        "outbox_id": 6963
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 201,
+      "elapsed_ms": 126.38,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "FH.RECEIPT.ef611dbe",
+        "pallet_identifier": "690000000161192302",
+        "sscc": "690000000161192302",
+        "quantity": "10",
+        "base_quantity": "10",
+        "base_uom": "EA",
+        "sap_order_number": "FH.ef611dbe",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC03EF611DBE",
+        "unit": "EA",
+        "supplier_batch": "FH.ef611dbe",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 225687965,
+        "physical_measurements": {
+          "gross_weight": "10",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3Ref611dbe",
+        "putaway_cell": "T3Sef611dbe",
+        "placement": {
+          "cell": "T3Sef611dbe",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 10,
+        "marking_policy_version": 2,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1249,
+        "outbox_id": 6963
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 108.47,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "FH.RECEIPT.ef611dbe",
+          "oracle_code": 20872,
+          "reason": "OPERATION_CONFLICT",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/1215ffb3c18b416cad3a4f5c34f28b31/pallets",
+      "status": 409,
+      "elapsed_ms": 123.1,
+      "response": {
+        "detail": "No storage slot satisfies occupancy, limits, temperature and warehouse rules"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 98.03,
+      "response": {
+        "warehouse_id": 225687965,
+        "document_id": "SUPPLY",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "ee8d068a05d548cbbad61c47c9a79d2d",
+        "correlation_id": "ee8d068a05d548cbbad61c47c9a79d2d",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T11:14:33.100-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6964
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/225687965/stock/bind",
+      "status": 403,
+      "elapsed_ms": 384.62,
+      "response": {
+        "detail": {
+          "code": "TRADE_OWNER_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/225687966/stock/bind",
+      "status": 404,
+      "elapsed_ms": 109.76,
+      "response": {
+        "detail": {
+          "code": "TRADE_SUPPLY_NOT_FOUND"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/225687965/stock/bind",
+      "status": 200,
+      "elapsed_ms": 215.87,
+      "response": {
+        "supply_id": "SUPPLY",
+        "owner_id": "SNS",
+        "bound_units": 10,
+        "pallet_identifier": "690000000161192302",
+        "mark_state": "PENDING",
+        "attributes_bound": true,
+        "warehouse_id": 225687965,
+        "operation_id": "FH.BIND.ef611dbe",
+        "stock_changed": false,
+        "replayed": false,
+        "outbox_id": 6965
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/225687965/stock?pallet_identifier=690000000161192302&limit=100",
+      "status": 200,
+      "elapsed_ms": 218.36,
+      "response": {
+        "has_more": false,
+        "next_after": null,
+        "owner_scope_filtered": false,
+        "items": [
+          {
+            "physical_unit_key": "2d6bd5a9d78c78da116c6eca650aeb78d1d89745a9255c4e85c094852781f610",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "3da0e8378d91e8d3bba284d21b9d2fe3ab0b8f48142c4d52b682c2e6817b4ea1",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "43f2917522ad094cc09dd039bc403758b8d4550ba8aaf00dd6d6fb415afcfa8b",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "4d252d8b2d339a3a4e4280318075859bdd020195a2dc79ada2063f5067b3f574",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "694256c49d10f9e88d78e79a0b5ac3efdc5bda2cc8f87d98e2861653590f4a59",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "ae0352cadf8fd3e7fb4a84f9a0c1a875ef17cbfaff57fb5be751ef14a1ffd47b",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "bea585d7236b7ecb4a2428579a95a44db233d3c528aec0e6e709a12ea29823a3",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "c67b2d5cf6bff62a257a33d0046608e4267e1f7cd0541cbc9e877f343ae96fc7",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "d921018aaa09e22b4f29f610ad3b00a6dd2fd96c7a0d2a4c404c8200e123bae6",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "f0983bbcea098397e06b05aa52a7982724ec4b2647dce8c7d5856d771a8ccfed",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000161192302",
+            "cell": "T3Ref611dbe",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          }
+        ],
+        "warehouse_id": 225687965
+      }
+    }
+  ],
+  "state": {
+    "phase": "CLEANED",
+    "tag": "ef611dbe",
+    "warehouse_id": 225687965,
+    "planned_at": "2026-10-23T15:14:26.933466+00:00",
+    "actor": "TC03ef611dbe",
+    "role": "TC03ef611dbe",
+    "run_status": "PASS"
+  }
+}

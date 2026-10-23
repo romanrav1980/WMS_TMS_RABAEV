@@ -1,0 +1,22 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "compact": true,
+      "completedBlocked": true,
+      "wrongNamespaceBlocked": true,
+      "overflow": 0
+    },
+    {
+      "width": 1440,
+      "compact": true,
+      "completedBlocked": true,
+      "wrongNamespaceBlocked": true,
+      "overflow": 0
+    }
+  ],
+  "errors": [],
+  "queueReads": 0,
+  "posts": 0,
+  "status": "PASS"
+}

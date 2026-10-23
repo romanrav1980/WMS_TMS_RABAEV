@@ -1,0 +1,207 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "host": "react",
+      "test": "Plan section compact by default; New plan opens editor; closing preserves read tree; no writes"
+    },
+    {
+      "width": 1440,
+      "host": "react",
+      "test": "Actual departed3-node tree;10 physical units counted once; bounded layout",
+      "load_including_login_ms": 1698,
+      "geometry": {
+        "viewport": 1440,
+        "page": 1440
+      }
+    },
+    {
+      "width": 1440,
+      "host": "react",
+      "test": "fixture403 clears the previously loaded tree"
+    },
+    {
+      "width": 1440,
+      "host": "raw",
+      "test": "Actual departed3-node tree;10 physical units counted once; bounded layout",
+      "load_including_login_ms": 1216,
+      "geometry": {
+        "viewport": 1440,
+        "page": 1440
+      }
+    },
+    {
+      "width": 1440,
+      "host": "raw",
+      "test": "fixture403 clears the previously loaded tree"
+    },
+    {
+      "width": 390,
+      "host": "react",
+      "test": "Plan section compact by default; New plan opens editor; closing preserves read tree; no writes"
+    },
+    {
+      "width": 390,
+      "host": "react",
+      "test": "Actual departed3-node tree;10 physical units counted once; bounded layout",
+      "load_including_login_ms": 1111,
+      "geometry": {
+        "viewport": 390,
+        "page": 390
+      }
+    },
+    {
+      "width": 390,
+      "host": "react",
+      "test": "fixture403 clears the previously loaded tree"
+    },
+    {
+      "width": 390,
+      "host": "raw",
+      "test": "Actual departed3-node tree;10 physical units counted once; bounded layout",
+      "load_including_login_ms": 1250,
+      "geometry": {
+        "viewport": 390,
+        "page": 390
+      }
+    },
+    {
+      "width": 390,
+      "host": "raw",
+      "test": "fixture403 clears the previously loaded tree"
+    }
+  ],
+  "writes": [],
+  "errors": [],
+  "http": [
+    {
+      "width": 1440,
+      "host": "react",
+      "status": 200,
+      "timing": {
+        "startTime": 1792757194811.635,
+        "domainLookupStart": 0.402,
+        "domainLookupEnd": 1.208,
+        "connectStart": 1.208,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.176,
+        "requestStart": 2.314,
+        "responseStart": 503.053,
+        "responseEnd": 510.606
+      }
+    },
+    {
+      "width": 1440,
+      "host": "react",
+      "status": 403,
+      "timing": {
+        "startTime": 1792757196127.995,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": -1,
+        "responseStart": 5.328,
+        "responseEnd": 9.125
+      }
+    },
+    {
+      "width": 1440,
+      "host": "raw",
+      "status": 200,
+      "timing": {
+        "startTime": 1792757197368.175,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.035,
+        "responseStart": 94.062,
+        "responseEnd": 102.308
+      }
+    },
+    {
+      "width": 1440,
+      "host": "raw",
+      "status": 403,
+      "timing": {
+        "startTime": 1792757197826.173,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": -1,
+        "responseStart": 4.614,
+        "responseEnd": 5.698
+      }
+    },
+    {
+      "width": 390,
+      "host": "react",
+      "status": 200,
+      "timing": {
+        "startTime": 1792757198578.9668,
+        "domainLookupStart": 0.339,
+        "domainLookupEnd": 1.232,
+        "connectStart": 1.232,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.095,
+        "requestStart": 2.289,
+        "responseStart": 270.089,
+        "responseEnd": 276.786
+      }
+    },
+    {
+      "width": 390,
+      "host": "react",
+      "status": 403,
+      "timing": {
+        "startTime": 1792757199256.012,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": -1,
+        "responseStart": 2.973,
+        "responseEnd": 5.649
+      }
+    },
+    {
+      "width": 390,
+      "host": "raw",
+      "status": 200,
+      "timing": {
+        "startTime": 1792757200493.322,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.47,
+        "responseStart": 131.231,
+        "responseEnd": 138.365
+      }
+    },
+    {
+      "width": 390,
+      "host": "raw",
+      "status": 403,
+      "timing": {
+        "startTime": 1792757200870.748,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": -1,
+        "responseStart": 3.843,
+        "responseEnd": 4.675
+      }
+    }
+  ]
+}

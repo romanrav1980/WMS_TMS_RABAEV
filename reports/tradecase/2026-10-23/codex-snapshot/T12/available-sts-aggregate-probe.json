@@ -1,0 +1,139 @@
+{
+  "status": "ROWS_MATCH_NOT_DEPLOYED",
+  "comparisons": [
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 100,
+      "sha": "ef48d91338d33de504aad8ad392fdf0ce638c11c70ffca2beef5c5969d891010",
+      "samples": {
+        "current": [
+          347.72,
+          205.11,
+          236.72,
+          228.28
+        ],
+        "aggregate": [
+          1177.13,
+          1356.45,
+          922.33,
+          604.04
+        ]
+      },
+      "median_ms": {
+        "current": 232.5,
+        "aggregate": 1049.73
+      }
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 100,
+      "sha": "4b4385eafe26f69fc5b8e981e67ec6a588b9f052d2fc68dbac6564f93741ad92",
+      "samples": {
+        "current": [
+          246.58,
+          247.89,
+          232.68,
+          285.14
+        ],
+        "aggregate": [
+          774.48,
+          1535.28,
+          1348.1,
+          608.64
+        ]
+      },
+      "median_ms": {
+        "current": 247.235,
+        "aggregate": 1061.29
+      }
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100
+      },
+      "rows": 100,
+      "sha": "76e231a0ee451473defb1b6dbaf49feff44ab6418c20a9f369daf8a3d91e1f1c",
+      "samples": {
+        "current": [
+          726.75,
+          855.99,
+          951.87,
+          1010.92
+        ],
+        "aggregate": [
+          4216.27,
+          4394.4,
+          3740.36,
+          5888.08
+        ]
+      },
+      "median_ms": {
+        "current": 903.9300000000001,
+        "aggregate": 4305.335
+      }
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 20
+      },
+      "rows": 20,
+      "sha": "63409f8ba28f854157d57b39b95aa296126d8dfe646f84d1c283793ebb3ea9d7",
+      "samples": {
+        "current": [
+          799.06,
+          725.39,
+          618.45,
+          1854.94
+        ],
+        "aggregate": [
+          5476.95,
+          4907.92,
+          4557.12,
+          5416.64
+        ]
+      },
+      "median_ms": {
+        "current": 762.2249999999999,
+        "aggregate": 5162.280000000001
+      }
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "stdate": "2026-05-23"
+      },
+      "rows": 0,
+      "sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "samples": {
+        "current": [
+          2.05,
+          1.06,
+          1.17,
+          1.21
+        ],
+        "aggregate": [
+          1.61,
+          0.97,
+          1.73,
+          1.26
+        ]
+      },
+      "median_ms": {
+        "current": 1.19,
+        "aggregate": 1.435
+      }
+    }
+  ],
+  "product_changed": false
+}

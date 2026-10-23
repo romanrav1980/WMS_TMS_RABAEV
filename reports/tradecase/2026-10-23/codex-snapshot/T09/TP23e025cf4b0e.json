@@ -1,0 +1,85 @@
+{
+  "status": "PASS",
+  "tag": "TP23e025cf4b0e",
+  "warehouse": 220793322,
+  "trip": 33665,
+  "stages": {
+    "before": {
+      "native": [
+        {
+          "ms": 352.51,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 340.26,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 494.42,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 383.93,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 423.89,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 346.33,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        }
+      ],
+      "http": [
+        423.59,
+        342.73,
+        306.77
+      ],
+      "warm_native_median": 383.93,
+      "http_median": 342.73
+    },
+    "after": {
+      "native": [
+        {
+          "ms": 180.93,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 145.46,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 116.79,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 129.88,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 139.1,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        },
+        {
+          "ms": 141.68,
+          "hash": "e305b1e749f245f9431bbc5f66275db72469d2db8ce9de348fbfac9cd3397b96"
+        }
+      ],
+      "http": [
+        270.15,
+        88.89,
+        92.55
+      ],
+      "warm_native_median": 139.1,
+      "http_median": 92.55
+    }
+  },
+  "checks": [
+    "Six native contexts per stage have identical complete JSON; same warehouse and permissions; three actual HTTP reads per stage",
+    "Assigned right on a warehouse other than the current user warehouse still works via unchanged fallback",
+    "Revocation immediately denies native context and actual HTTP read"
+  ],
+  "before_evidence": "TP2389cdbba1f0.json: same warehouse, role permissions, source JSON; fresh QA actor after API pool restart",
+  "qa_retired": true
+}

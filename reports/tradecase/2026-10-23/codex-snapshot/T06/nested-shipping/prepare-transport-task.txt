@@ -1,0 +1,1 @@
+{"trip": 33676, "vehicle": 10127, "profile": {"base_hash": "18BF0EAC4013F13A829D90961CAD8F7BF885269170619A0BA1ABF1E571314788", "vehicle_id": 10127, "base": {"vehicle_id": 10127, "vehicle_number": "NS23V222385707", "vehicle_type": "10", "pallet_capacity": "10", "max_weight_kg": "1000"}, "state": "NOT_CONFIGURED", "version": 0}}

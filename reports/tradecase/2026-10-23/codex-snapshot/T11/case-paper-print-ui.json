@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "name": "print refresh rejects changed task before showing a sheet"
+    },
+    {
+      "width": 1440,
+      "name": "real current paper printed using a second native GET"
+    },
+    {
+      "width": 1440,
+      "name": "real stale signature409 shown in compiled UI"
+    },
+    {
+      "width": 1440,
+      "name": "compiled paper page fits the viewport"
+    },
+    {
+      "width": 390,
+      "name": "print refresh rejects changed task before showing a sheet"
+    },
+    {
+      "width": 390,
+      "name": "real current paper printed using a second native GET"
+    },
+    {
+      "width": 390,
+      "name": "real stale signature409 shown in compiled UI"
+    },
+    {
+      "width": 390,
+      "name": "compiled paper page fits the viewport"
+    }
+  ],
+  "errors": [],
+  "businessPosts": 0,
+  "injected": [
+    "changed version in print refresh"
+  ]
+}

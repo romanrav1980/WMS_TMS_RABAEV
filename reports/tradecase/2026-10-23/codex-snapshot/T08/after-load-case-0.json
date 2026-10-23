@@ -1,0 +1,368 @@
+{
+  "plan": 2267,
+  "wave": 621,
+  "native": {
+    "order": 2209,
+    "row": 3696
+  },
+  "case": 1176,
+  "line": 1178,
+  "pick_task": 2193,
+  "warehouse_id": 210564699,
+  "article": "TC03089DDB36",
+  "pick": "T3P089ddb36",
+  "quantity": 20,
+  "pallet_type_id": 33,
+  "history": [],
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "2",
+    "operation_id": "AL23.303760e2f.tare.count",
+    "quantity": "2",
+    "owner_ware_id": 210564699,
+    "pallet_type_id": 33,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 6804
+  },
+  "type": {
+    "operation_id": "AL23.303760e2f.case0.type",
+    "command_type": "CASE_PALLET_TYPE_CHANGE",
+    "case_task_id": 1176,
+    "pallet_type_id": 33,
+    "previous_pallet_type_id": 1,
+    "planned_pallet_type_id": null,
+    "version": 1,
+    "reason": "Own manual-weighed carton",
+    "stock_changed": false,
+    "status": "APPLIED",
+    "outbox_id": 6805
+  },
+  "actor": "FC218c2ee8631",
+  "cpt_policy": {
+    "cell": "CPT_210564699",
+    "version": 1,
+    "warehouse_id": 210564699,
+    "operation_id": "AL23.303760e2f.case0.cpt",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "owner": {
+    "version": 1,
+    "owner_id": "SNS",
+    "username": "FC218c2ee8631",
+    "warehouse_id": 210564699,
+    "operation_id": "AL23.303760e2f.case0.owner",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "shift": {
+    "id": 97
+  },
+  "resource": {
+    "id": 94
+  },
+  "qualification": {
+    "resource_id": 94,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "session": {
+    "id": 90
+  },
+  "tare_book": {
+    "operation_id": "AL23.303760e2f.case0.tare.book",
+    "status": "HELD",
+    "place_kind": "CASE",
+    "place_id": "1176",
+    "pallet_type_id": 33,
+    "warehouse_id": 210564699,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 6806
+  },
+  "CLAIM": {
+    "task_id": 1176,
+    "warehouse_id": 210564699,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "content_version": 1,
+    "assigned_to": "FC218c2ee8631",
+    "resource_id": 94,
+    "resource_session_id": 90,
+    "equipment_id": null,
+    "started_at_instant": null,
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "98F223C13ED893AACCAA70E086AA17D350C0C42872F2F6CD9F7A69663AD5D0E2",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "AL23.303760e2f.case0.CLAIM",
+    "action": "CLAIM",
+    "actor": "FC218c2ee8631",
+    "changed": true,
+    "stock_posted": false
+  },
+  "START": {
+    "task_id": 1176,
+    "warehouse_id": 210564699,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "content_version": 1,
+    "assigned_to": "FC218c2ee8631",
+    "resource_id": 94,
+    "resource_session_id": 90,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-23T08:19:29.124880+00:00",
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "EE15CCDB0E17F3A9CF892D26AE049FE34D9DD6FE96C272BCC5E3EB97A3B8D325",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "AL23.303760e2f.case0.START",
+    "action": "START",
+    "actor": "FC218c2ee8631",
+    "changed": true,
+    "stock_posted": false
+  },
+  "label": {
+    "case_pick_task_id": 1176,
+    "sscc": "009999999000029013",
+    "original_carrier": "CP621000000001176",
+    "content_version": 2,
+    "operation_id": "AL23.303760e2f.case0.label",
+    "confirmed": false
+  },
+  "label_confirmed": {
+    "case_pick_task_id": 1176,
+    "sscc": "009999999000029013",
+    "confirmed": true
+  },
+  "empty_tare": {
+    "operation_id": "AL23.303760e2f.case0.tare",
+    "case_pick_task_id": 1176,
+    "sscc": "009999999000029013",
+    "content_version": 2,
+    "tare_weight_kg": "0.1",
+    "origin": "MANUAL_CONFIRMED",
+    "recorded_by": "FC218c2ee8631",
+    "measurement_ref": "SYNTHETIC_NOT_HARDWARE:AL23.303760e2f.case0",
+    "stock_changed": false
+  },
+  "pick_body": {
+    "operation_id": "AL23.303760e2f.case0.pick",
+    "fact_qty": "20",
+    "scan_cell": "T3P089ddb36",
+    "scan_product": "TC03089DDB36",
+    "scan_container": "009999999000029013",
+    "resource_id": 94,
+    "resource_session_id": 90,
+    "unit_scans": [
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890096"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890108"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890109"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890110"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890114"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890122"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890127"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890159"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890150"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890152"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890156"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890240"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890176"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890191"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890036"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890068"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890071"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890075"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890206"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "290014456299810890208"
+      }
+    ]
+  },
+  "picked": {
+    "case_pick_task_id": 1176,
+    "case_pick_line_id": 1178,
+    "operation_id": "AL23.303760e2f.case0.pick",
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "20",
+    "carrier_identifier": "009999999000029013",
+    "cell": "CPT_210564699",
+    "picked_from_cell": "T3P089ddb36",
+    "lots": [
+      {
+        "uid": "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+        "source_uid": "690000000445629982",
+        "quantity": "20",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 6807,
+    "regulatory_composition_status": "PENDING"
+  },
+  "close_body": {
+    "operation_id": "AL23.303760e2f.case0.close",
+    "expected_content_version": 3
+  },
+  "closed": {
+    "operation_id": "AL23.303760e2f.case0.close",
+    "case_pick_task_id": 1176,
+    "status": "WAIT_CONTROL",
+    "content_version": 3,
+    "already_closed": false,
+    "physical_stock_changed": false
+  },
+  "shipment": {
+    "shipment_id": 641558,
+    "shipment_identifier": "AL23.303760e2f.case0.ST"
+  },
+  "moved": {
+    "operation_id": "AL23.303760e2f.case0.move",
+    "case_pick_task_id": 1176,
+    "carrier_identifier": "009999999000029013",
+    "from_cell": "CPT_210564699",
+    "cell": "ALE303760e2f",
+    "content_version": 4,
+    "status": "MOVED",
+    "lots": [
+      {
+        "uid": "CASELOT:A5371CD7D261ABFCA4A95C1994E584C6C7BE59:1",
+        "cell": "CPT_210564699",
+        "quantity": "20",
+        "version": 1,
+        "base": "EA",
+        "article": "TC03089DDB36",
+        "case_line": 1178
+      }
+    ],
+    "outbox_id": 6808
+  },
+  "bound": {
+    "case_pick_task_id": 1176,
+    "pallet_identifier": "AL23.303760e2f.case0.ST",
+    "status": "BOUND",
+    "fulfillment_status": "PICKED",
+    "physical_composition": [
+      {
+        "article": "TC03089DDB36",
+        "base_uom": "EA",
+        "quantity": "20"
+      }
+    ],
+    "idempotent": false
+  },
+  "scan_qc": {
+    "ready": false,
+    "whole_hu_shipment_required": false,
+    "failure_reason": null,
+    "operation_id": "AL23.303760e2f.case0.scanqc",
+    "verified": 1,
+    "shipped": 0,
+    "physical_loading_required": false,
+    "return_code": 0,
+    "outbox_id": 6813
+  },
+  "weight_qc": {
+    "ready": true,
+    "whole_hu_shipment_required": false,
+    "measurement_origin": "MANUAL_CONFIRMED",
+    "recorded_by": "admin",
+    "final_scale_capture": null,
+    "gross_weight_kg": "20.1",
+    "tare_weight_kg": "0.1",
+    "net_weight_kg": "20",
+    "failure_reason": null,
+    "operation_id": "AL23.303760e2f.case0.weightqc",
+    "verified": 1,
+    "shipped": 0,
+    "physical_loading_required": true,
+    "return_code": 1,
+    "outbox_id": 6814
+  }
+}

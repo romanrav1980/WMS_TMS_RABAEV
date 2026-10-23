@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\002_unit_core_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\003_unit_core_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\004_inventory_cmd_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_found_units\verify.sql
+Done. Statements=13; Errors=0; AbsentCleanup=0

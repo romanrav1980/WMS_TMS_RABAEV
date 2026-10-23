@@ -1,0 +1,33 @@
+{
+  "status": "FAIL",
+  "provider": "CONTROLLED TEST RESPONSE, not a live road calculation",
+  "checks": [],
+  "timings": [],
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [],
+  "trip": null,
+  "warehouse": 240380488,
+  "tag": "RD23e2359b42df"
+}

@@ -1,0 +1,1911 @@
+{
+  "warehouse_id": 219023232,
+  "article": "TC0389AF0087",
+  "pick": "T3P89af0087",
+  "face": 619,
+  "cpt_policy": {
+    "cell": "CPT_219023232",
+    "version": 1,
+    "warehouse_id": 219023232,
+    "operation_id": "FC21.219023232.cpt",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "pallet_type_id": 33,
+  "quantity": 1,
+  "history": [
+    {
+      "method": "POST",
+      "path": "/api/customers",
+      "status": 200,
+      "elapsed_ms": 381.56,
+      "response": {
+        "customer_id": 772
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/pick-faces/619/articuls",
+      "status": 200,
+      "elapsed_ms": 213.38,
+      "response": {
+        "pick_face_articul_id": 310
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 99.76,
+      "response": {
+        "warehouse_id": 219023232,
+        "document_id": "CP23B.219023232.RECIPIENT",
+        "entity_type": "RECIPIENT",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "CP23B.219023232.RECIPIENT",
+        "correlation_id": "CP23B.219023232.RECIPIENT",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T00:16:11.725-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6723
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 87.3,
+      "response": {
+        "warehouse_id": 219023232,
+        "document_id": "CP23B.219023232.ORDER",
+        "entity_type": "ORDER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "CP23B.219023232.ORDER",
+        "correlation_id": "CP23B.219023232.ORDER",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T00:16:11.815-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6724
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/219023232/orders/CP23B.219023232.ORDER/binding",
+      "status": 200,
+      "elapsed_ms": 217.25,
+      "response": {
+        "customer_order_id": 2202,
+        "order_id": "CP23B.219023232.ORDER",
+        "order_version": 1,
+        "bound_lines": 1,
+        "stock_changed": false,
+        "replayed": false,
+        "operation_id": "CP23B.219023232.bind",
+        "outbox_id": 6725
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/plans",
+      "status": 200,
+      "elapsed_ms": 585.42,
+      "response": {
+        "pick_plan_id": 2262,
+        "operation_id": "CP23B.219023232.plan"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves",
+      "status": 200,
+      "elapsed_ms": 103.52,
+      "response": {
+        "pick_wave_id": 617
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/617/plans",
+      "status": 200,
+      "elapsed_ms": 127.78,
+      "response": {
+        "pick_wave_id": 617,
+        "pick_plan_id": 2262,
+        "status": "ADDED"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/617/calculate",
+      "status": 200,
+      "elapsed_ms": 127.49,
+      "response": {
+        "pick_wave_id": 617,
+        "status": "PREVIEW"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/617/launch",
+      "status": 200,
+      "elapsed_ms": 2039.91,
+      "response": {
+        "pick_wave_id": 617,
+        "status": "LAUNCHED",
+        "operation_id": "CP23B.219023232.launch",
+        "launch_outcome": "APPLIED",
+        "continuation_state": "COMPLETE",
+        "wave_status": "LAUNCHED"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/617/release-picking",
+      "status": 200,
+      "elapsed_ms": 244.91,
+      "response": {
+        "wave_id": 617,
+        "warehouse": 219023232,
+        "status": "LAUNCHED",
+        "released_at": "2026-10-23T00:16:15.742029-04:00",
+        "released_by": "admin",
+        "release_operation_id": "CP23B.219023232.release",
+        "ready": true,
+        "tasks": [
+          {
+            "pick_task_id": 2189,
+            "wave_task_id": 2100,
+            "article": "TC0389AF0087",
+            "task_type": "CASE_PICK",
+            "status": "ASSIGNED",
+            "cell": "T3P89af0087",
+            "required_base": "1",
+            "covered_base": "1",
+            "missing_base": "0",
+            "base_uom": "EA",
+            "reservations": [
+              {
+                "reservation_id": 1982,
+                "uid": "690000000099475270",
+                "cell": "T3P89af0087",
+                "article": "TC0389AF0087",
+                "quantity": "1",
+                "base_uom": "EA",
+                "stock_version": 5,
+                "physical": "3",
+                "hard": "1",
+                "reason": null
+              }
+            ]
+          }
+        ],
+        "open_replenishments": [],
+        "outbox_id": 6728,
+        "command_operation_id": "CP23B.219023232.release"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/pallet-type",
+      "status": 200,
+      "elapsed_ms": 97.8,
+      "response": {
+        "case_task_id": 1172,
+        "warehouse_id": 219023232,
+        "sscc": "CP617000000001172",
+        "version": 0,
+        "status": "NEW",
+        "planned_pallet_type_id": null,
+        "planned_type_name": null,
+        "planned_source": "RECIPIENT_RULE",
+        "actual_pallet_type_id": 1,
+        "actual_type_name": "Европоддон",
+        "can_change_empty_type": true,
+        "change_blocker": null,
+        "assigned_to": null,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/pallet-type",
+      "status": 200,
+      "elapsed_ms": 183.61,
+      "response": {
+        "operation_id": "CP23B.219023232.type",
+        "command_type": "CASE_PALLET_TYPE_CHANGE",
+        "case_task_id": 1172,
+        "pallet_type_id": 33,
+        "previous_pallet_type_id": 1,
+        "planned_pallet_type_id": null,
+        "version": 1,
+        "reason": "Isolated tare and pick serialization proof",
+        "stock_changed": false,
+        "status": "APPLIED",
+        "outbox_id": 6729
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/receiving/warehouses/219023232/settings",
+      "status": 200,
+      "elapsed_ms": 93.68,
+      "response": {
+        "ware_id": 219023232,
+        "company_prefix": null,
+        "extension_digit": 0,
+        "coordinate_unit_m": 1,
+        "reachtruck_mps": 1,
+        "lift_mps": 0.5,
+        "placement_metric": "DISTANCE",
+        "updated_by": "admin",
+        "updated_at": "2026-10-22T14:43:48.546761",
+        "hu_cell_height_unit": null,
+        "outgoing_qc_mode": "NONE",
+        "outgoing_qc_independent": 0,
+        "outgoing_qc_sample_percent": 0,
+        "defer_wait_cell": null
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/receiving/warehouses/219023232/settings",
+      "status": 200,
+      "elapsed_ms": 292.9,
+      "response": {
+        "ware_id": 219023232,
+        "company_prefix": "09999999",
+        "extension_digit": 0,
+        "coordinate_unit_m": 1,
+        "reachtruck_mps": 1,
+        "lift_mps": 0.5,
+        "placement_metric": "DISTANCE",
+        "updated_by": "admin",
+        "updated_at": "2026-10-23T00:16:16.595929",
+        "hu_cell_height_unit": null,
+        "outgoing_qc_mode": "NONE",
+        "outgoing_qc_independent": 0,
+        "outgoing_qc_sample_percent": 0,
+        "defer_wait_cell": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/tare/warehouses/219023232/balances",
+      "status": 200,
+      "elapsed_ms": 115.32,
+      "response": [
+        {
+          "owner_ware_id": 219023232,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "219023232",
+          "quantity": "1",
+          "balance_version": 2,
+          "updated_at": "2026-10-21T07:28:23.744719",
+          "last_operation_id": "FC21.219023232.tare.book"
+        },
+        {
+          "owner_ware_id": 219023232,
+          "pallet_type_id": 33,
+          "pallet_type_code": "BULK22.CARTON.220793322",
+          "pallet_type_name": "TRADECASE test carton",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "219023232",
+          "quantity": "0",
+          "balance_version": 4,
+          "updated_at": "2026-10-22T14:43:48.229279",
+          "last_operation_id": "MTP22.219023232.tare.restore"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/count",
+      "status": 200,
+      "elapsed_ms": 260.25,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "1",
+        "operation_id": "CP23B.219023232.tare.count",
+        "quantity": "1",
+        "owner_ware_id": 219023232,
+        "pallet_type_id": 33,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6730
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/219023232/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 182.96,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "FC21a438e7b51",
+        "warehouse_id": 219023232,
+        "operation_id": "CP23B.219023232.owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/resources/shifts",
+      "status": 200,
+      "elapsed_ms": 148.06,
+      "response": {
+        "id": 96
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/resources",
+      "status": 200,
+      "elapsed_ms": 105.12,
+      "response": {
+        "id": 93
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/resources/93/qualifications",
+      "status": 200,
+      "elapsed_ms": 112.54,
+      "response": {
+        "resource_id": 93,
+        "task_type": "CASE_PICK",
+        "active": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/resources/sessions/login",
+      "status": 200,
+      "elapsed_ms": 98.44,
+      "response": {
+        "id": 89
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/book",
+      "status": 200,
+      "elapsed_ms": 211.1,
+      "response": {
+        "operation_id": "CP23B.219023232.tare.book",
+        "status": "HELD",
+        "place_kind": "CASE",
+        "place_id": "1172",
+        "pallet_type_id": 33,
+        "warehouse_id": 219023232,
+        "available_quantity": "0",
+        "quantity": "1",
+        "physical_tare_changed": false,
+        "goods_stock_changed": false,
+        "outbox_id": 6731
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/resource-context",
+      "status": 200,
+      "elapsed_ms": 154.09,
+      "response": {
+        "task_id": 1172,
+        "warehouse_id": 219023232,
+        "status": "NEW",
+        "assignment_version": 0,
+        "content_version": 1,
+        "assigned_to": null,
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "current_actor": "FC21a438e7b51"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/resource-commands",
+      "status": 200,
+      "elapsed_ms": 465.69,
+      "response": {
+        "task_id": 1172,
+        "warehouse_id": 219023232,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 1,
+        "assigned_to": "FC21a438e7b51",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "B973E7A18BA4E2E97DCD069C4C57574FD1B13B5B8466CED8B4414D646B95AA51",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CP23B.219023232.CLAIM",
+        "action": "CLAIM",
+        "actor": "FC21a438e7b51",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/resource-context",
+      "status": 200,
+      "elapsed_ms": 101.71,
+      "response": {
+        "task_id": 1172,
+        "warehouse_id": 219023232,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 1,
+        "assigned_to": "FC21a438e7b51",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "current_actor": "FC21a438e7b51"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/resource-commands",
+      "status": 200,
+      "elapsed_ms": 191.16,
+      "response": {
+        "task_id": 1172,
+        "warehouse_id": 219023232,
+        "status": "IN_PROGRESS",
+        "assignment_version": 2,
+        "content_version": 1,
+        "assigned_to": "FC21a438e7b51",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "equipment_id": null,
+        "started_at_instant": "2026-10-23T04:16:18.954800+00:00",
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "82C2045096343595FABE25082F3AF2E9AFBBA2A42C51AD1967C174ACAE4596AC",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CP23B.219023232.START",
+        "action": "START",
+        "actor": "FC21a438e7b51",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/sscc-label",
+      "status": 200,
+      "elapsed_ms": 301.67,
+      "response": {
+        "case_pick_task_id": 1172,
+        "sscc": "009999999000028016",
+        "original_carrier": "CP617000000001172",
+        "content_version": 2,
+        "operation_id": "CP23B.219023232.label",
+        "confirmed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/sscc-label/confirm",
+      "status": 200,
+      "elapsed_ms": 218.69,
+      "response": {
+        "case_pick_task_id": 1172,
+        "sscc": "009999999000028016",
+        "confirmed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/warehouse-scales/tasks/1172/manual-empty-tare",
+      "status": 200,
+      "elapsed_ms": 170.57,
+      "response": {
+        "operation_id": "CP23B.219023232.tare.first",
+        "case_pick_task_id": 1172,
+        "sscc": "009999999000028016",
+        "content_version": 2,
+        "tare_weight_kg": "0.1",
+        "origin": "MANUAL_CONFIRMED",
+        "recorded_by": "FC21a438e7b51",
+        "measurement_ref": "SYNTHETIC_NOT_HARDWARE:CP23B.219023232",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/paper",
+      "status": 200,
+      "elapsed_ms": 465.26,
+      "response": {
+        "task": {
+          "task_id": 1172,
+          "ware_id": 219023232,
+          "wave_code": "CP23B.219023232",
+          "order_no": "CP23B.219023232",
+          "customer_name": "Factory CASE QA",
+          "sscc": "009999999000028016",
+          "status": "IN_PROGRESS",
+          "assigned_to": "FC21a438e7b51",
+          "assignment_version": 2,
+          "content_version": 2
+        },
+        "lines": [
+          {
+            "line_id": 1174,
+            "articul": "TC0389AF0087",
+            "product_name": "Factory CASE QA",
+            "cell_code": "T3P89af0087",
+            "pick_sequence": 1,
+            "planned_qty": "1",
+            "picked_qty": "0",
+            "status": "NEW",
+            "required_scan_mode": "WAREHOUSE_SETTING",
+            "signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+            "reference": "CPICK:1172:1174:22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+            "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 935 84\" width=\"100%\" role=\"img\" aria-label=\"CASE 1172 line 1174\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"36\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"40\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"48\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"52\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"58\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"62\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"101\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"106\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"116\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"129\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"150\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"161\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"182\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"191\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"206\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"212\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"217\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"221\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"233\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"238\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"256\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"260\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"266\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"271\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"277\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"282\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"290\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"292\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"301\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"310\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"315\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"321\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"337\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"348\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"353\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"357\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"365\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"382\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"391\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"397\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"401\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"408\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"413\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"420\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"425\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"432\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"437\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"445\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"459\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"465\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"467\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"479\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"490\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"499\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"514\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"525\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"530\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"535\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"542\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"547\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"551\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"563\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"568\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"575\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"580\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"590\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"601\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"612\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"618\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"623\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"628\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"632\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"643\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"655\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"664\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"666\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"673\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"685\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"690\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"694\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"699\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"710\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"716\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"731\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"743\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"750\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"754\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"760\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"764\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"776\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"793\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"797\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"807\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"821\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"831\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"842\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"861\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"865\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"872\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"875\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"879\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"883\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"886\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"890\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"894\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"896\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"901\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"904\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"908\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"912\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"917\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"921\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"923\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"467.5\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1172 / 1174</text></svg>",
+            "device_required": "MARKING_SCAN_REQUIRED",
+            "scale_reading": false
+          }
+        ],
+        "prepared_at": "2026-10-23T04:28:08.788273+00:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 409,
+      "elapsed_ms": 1298.83,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "CP23B.219023232.paper.wrong",
+          "oracle_code": 20886,
+          "rule_reason": "CASE_PAPER_LINE_CHANGED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false,
+          "read_before_retry": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 200,
+      "elapsed_ms": 1013.01,
+      "response": {
+        "case_pick_task_id": 1172,
+        "case_pick_line_id": 1174,
+        "operation_id": "CP23B.219023232.paper.first",
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "1",
+        "carrier_identifier": "009999999000028016",
+        "cell": "CPT_219023232",
+        "picked_from_cell": "T3P89af0087",
+        "lots": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "source_uid": "690000000099475270",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 6732,
+        "regulatory_composition_status": "PENDING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 200,
+      "elapsed_ms": 150.06,
+      "response": {
+        "case_pick_task_id": 1172,
+        "case_pick_line_id": 1174,
+        "operation_id": "CP23B.219023232.paper.first",
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "1",
+        "carrier_identifier": "009999999000028016",
+        "cell": "CPT_219023232",
+        "picked_from_cell": "T3P89af0087",
+        "lots": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "source_uid": "690000000099475270",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 6732,
+        "regulatory_composition_status": "PENDING"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/paper?line=1174&expected_signature=22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+      "status": 409,
+      "elapsed_ms": 129.57,
+      "response": {
+        "detail": {
+          "code": "CASE_PAPER_LINE_CHANGED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 422,
+      "elapsed_ms": 237.51,
+      "response": {
+        "detail": {
+          "code": "CASE_COMMAND_INVALID",
+          "message": "Scanned unit is not reserved for this CASE line in the pick cell"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 200,
+      "elapsed_ms": 385.45,
+      "response": {
+        "case_pick_task_id": 1172,
+        "case_pick_line_id": 1174,
+        "operation_id": "CP23B.219023232.paper.first",
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "1",
+        "carrier_identifier": "009999999000028016",
+        "cell": "CPT_219023232",
+        "picked_from_cell": "T3P89af0087",
+        "lots": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "source_uid": "690000000099475270",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 6732,
+        "regulatory_composition_status": "PENDING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 422,
+      "elapsed_ms": 390.12,
+      "response": {
+        "detail": {
+          "code": "CASE_COMMAND_INVALID",
+          "message": "Scanned unit is not reserved for this CASE line in the pick cell"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1172/paper",
+      "status": 200,
+      "elapsed_ms": 105.2,
+      "response": {
+        "task": {
+          "task_id": 1172,
+          "ware_id": 219023232,
+          "wave_code": "CP23B.219023232",
+          "order_no": "CP23B.219023232",
+          "customer_name": "Factory CASE QA",
+          "sscc": "009999999000028016",
+          "status": "IN_PROGRESS",
+          "assigned_to": "FC21a438e7b51",
+          "assignment_version": 2,
+          "content_version": 3
+        },
+        "lines": [
+          {
+            "line_id": 1174,
+            "articul": "TC0389AF0087",
+            "product_name": "Factory CASE QA",
+            "cell_code": "T3P89af0087",
+            "pick_sequence": 1,
+            "planned_qty": "1",
+            "picked_qty": "1",
+            "status": "PICKED",
+            "required_scan_mode": "WAREHOUSE_SETTING",
+            "signature": "3F748AECBDDDB249D38AB86F5FE9B27DF7193CEAFFFE09D8C3AFF1C44353AA65",
+            "reference": "CPICK:1172:1174:3F748AECBDDDB249D38AB86F5FE9B27DF7193CEAFFFE09D8C3AFF1C44353AA65",
+            "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 935 84\" width=\"100%\" role=\"img\" aria-label=\"CASE 1172 line 1174\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"36\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"40\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"48\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"52\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"58\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"62\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"101\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"106\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"116\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"129\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"150\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"161\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"182\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"191\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"203\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"212\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"217\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"223\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"234\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"237\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"254\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"258\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"270\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"282\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"291\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"298\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"309\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"320\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"335\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"349\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"358\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"367\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"369\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"375\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"380\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"390\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"402\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"408\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"412\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"421\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"423\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"432\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"435\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"447\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"459\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"481\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"490\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"499\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"511\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"525\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"534\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"540\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"545\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"558\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"564\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"574\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"579\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"587\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"589\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"599\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"612\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"619\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"622\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"628\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"632\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"646\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"657\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"663\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"668\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"674\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"677\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"684\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"697\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"699\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"705\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"710\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"718\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"733\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"742\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"749\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"767\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"778\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"783\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"795\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"799\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"806\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"820\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"830\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"838\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"843\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"850\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"852\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"859\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"863\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"870\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"874\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"879\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"883\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"887\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"890\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"893\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"898\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"901\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"905\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"909\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"912\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"917\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"921\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"923\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"467.5\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1172 / 1174</text></svg>",
+            "device_required": "MARKING_SCAN_REQUIRED",
+            "scale_reading": false
+          }
+        ],
+        "prepared_at": "2026-10-23T04:29:02.460326+00:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 200,
+      "elapsed_ms": 142.45,
+      "response": {
+        "case_pick_task_id": 1172,
+        "case_pick_line_id": 1174,
+        "operation_id": "CP23B.219023232.paper.first",
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "1",
+        "carrier_identifier": "009999999000028016",
+        "cell": "CPT_219023232",
+        "picked_from_cell": "T3P89af0087",
+        "lots": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "source_uid": "690000000099475270",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 6732,
+        "regulatory_composition_status": "PENDING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 409,
+      "elapsed_ms": 126.94,
+      "response": {
+        "detail": {
+          "code": "OPERATION_CONTENT_CONFLICT",
+          "operation_id": "CP23B.219023232.paper.first",
+          "oracle_code": null,
+          "rule_reason": null,
+          "outcome_confirmed": false,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": true,
+          "read_before_retry": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "status": 200,
+      "elapsed_ms": 137.6,
+      "response": {
+        "case_pick_task_id": 1172,
+        "case_pick_line_id": 1174,
+        "operation_id": "CP23B.219023232.paper.first",
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "1",
+        "carrier_identifier": "009999999000028016",
+        "cell": "CPT_219023232",
+        "picked_from_cell": "T3P89af0087",
+        "lots": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "source_uid": "690000000099475270",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 6732,
+        "regulatory_composition_status": "PENDING"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/close-current",
+      "status": 200,
+      "elapsed_ms": 233.28,
+      "response": {
+        "operation_id": "CP23B.219023232.close",
+        "case_pick_task_id": 1172,
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "already_closed": false,
+        "physical_stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/case-pick/tasks/1172/return-carrier",
+      "status": 200,
+      "elapsed_ms": 534.76,
+      "response": {
+        "task": 1172,
+        "version": 3,
+        "carrier": "009999999000028016",
+        "warehouse": 219023232,
+        "stocks": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "cell": "CPT_219023232",
+            "quantity": "1",
+            "version": 1,
+            "base": "EA",
+            "article": "TC0389AF0087",
+            "case_line": 1174,
+            "target": "T3P89af0087",
+            "reservations": [
+              1982
+            ]
+          }
+        ],
+        "before": [
+          {
+            "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+            "cell": "CPT_219023232",
+            "quantity": "1",
+            "version": 1,
+            "base": "EA",
+            "article": "TC0389AF0087",
+            "case_line": 1174
+          }
+        ],
+        "unused": [],
+        "operation_id": "CP23B.219023232.return",
+        "status": "RETURNED",
+        "outbox_id": 6733
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/resources/sessions/89/logout",
+      "status": 200,
+      "elapsed_ms": 119.21,
+      "response": {
+        "status": "ok"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/219023232/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 170.73,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "FC21a438e7b51",
+        "warehouse_id": 219023232,
+        "operation_id": "CP23B.219023232.cleanup.owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/resources/93/qualifications",
+      "status": 200,
+      "elapsed_ms": 194.94,
+      "response": {
+        "resource_id": 93,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/book-cancel",
+      "status": 200,
+      "elapsed_ms": 191.78,
+      "response": {
+        "operation_id": "CP23B.219023232.book.cancel",
+        "status": "CANCELLED",
+        "place_kind": "CASE",
+        "place_id": "1172",
+        "pallet_type_id": 33,
+        "warehouse_id": 219023232,
+        "available_quantity": "1",
+        "quantity": "1",
+        "physical_tare_changed": false,
+        "goods_stock_changed": false,
+        "outbox_id": 6734
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/tare/warehouses/219023232/balances",
+      "status": 200,
+      "elapsed_ms": 97.31,
+      "response": [
+        {
+          "owner_ware_id": 219023232,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "219023232",
+          "quantity": "1",
+          "balance_version": 2,
+          "updated_at": "2026-10-21T07:28:23.744719",
+          "last_operation_id": "FC21.219023232.tare.book"
+        },
+        {
+          "owner_ware_id": 219023232,
+          "pallet_type_id": 33,
+          "pallet_type_code": "BULK22.CARTON.220793322",
+          "pallet_type_name": "TRADECASE test carton",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "219023232",
+          "quantity": "1",
+          "balance_version": 7,
+          "updated_at": "2026-10-23T00:29:05.964063",
+          "last_operation_id": "CP23B.219023232.book.cancel"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/count",
+      "status": 200,
+      "elapsed_ms": 169.91,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "0",
+        "operation_id": "CP23B.219023232.tare.restore",
+        "quantity": "0",
+        "owner_ware_id": 219023232,
+        "pallet_type_id": 33,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6735
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/receiving/warehouses/219023232/settings",
+      "status": 200,
+      "elapsed_ms": 218.73,
+      "response": {
+        "ware_id": 219023232,
+        "company_prefix": null,
+        "extension_digit": 0,
+        "coordinate_unit_m": 1,
+        "reachtruck_mps": 1,
+        "lift_mps": 0.5,
+        "placement_metric": "DISTANCE",
+        "updated_by": "admin",
+        "updated_at": "2026-10-23T00:29:06.370979",
+        "hu_cell_height_unit": null,
+        "outgoing_qc_mode": "NONE",
+        "outgoing_qc_independent": 0,
+        "outgoing_qc_sample_percent": 0,
+        "defer_wait_cell": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/617/finish-execution",
+      "status": 200,
+      "elapsed_ms": 561.21,
+      "response": {
+        "wave_id": 617,
+        "kind": "CUSTOMER_ORDER",
+        "items": [
+          {
+            "kind": "PICK_TASK",
+            "id": "2189",
+            "status": "CANCELLED",
+            "actor": null,
+            "reason": "CANCELLED_DEMAND_REQUIRES_RECONCILIATION",
+            "quantity": "1"
+          },
+          {
+            "kind": "REPLENISHMENT",
+            "id": "1676",
+            "status": "CANCELLED",
+            "actor": null,
+            "reason": null,
+            "quantity": null
+          },
+          {
+            "kind": "CASE",
+            "id": "1172",
+            "status": "CANCELLED",
+            "actor": "FC21a438e7b51",
+            "reason": "CASE_CONTROL_OR_SHIPPING_PENDING",
+            "quantity": "1"
+          }
+        ],
+        "blocking_count": 2,
+        "deferred_decision": {
+          "wave_id": 617,
+          "eligible": true,
+          "blocking_count": 0,
+          "reason": null,
+          "demands": [
+            {
+              "pick_plan_id": 2262,
+              "pick_plan_line_id": 2271,
+              "order_id": 2202,
+              "order_line_id": 3689,
+              "article": "TC0389AF0087",
+              "order_quantity": "1",
+              "unit": "EA",
+              "current_planning": {
+                "picked_hard_overlap": "0",
+                "picked_quantity": "0",
+                "hard_quantity": "0",
+                "line_id": 3689,
+                "order_id": 2202,
+                "customer_id": 772,
+                "quantity": "1",
+                "uom_version": 1,
+                "order_status": "OPEN",
+                "line_status": "OPEN",
+                "warehouse": 219023232,
+                "article": "TC0389AF0087",
+                "unit": "EA",
+                "requested_base_quantity": "1",
+                "weight_choice_pending_quantity": "0",
+                "accepted_weight_deviation_quantity": "0",
+                "quantity_semantics": "UNALLOCATED_BASE_NOT_SHIPPED_PROOF",
+                "open": true
+              },
+              "row_status": "OPEN",
+              "order_status": "OPEN",
+              "warehouse": 219023232
+            }
+          ],
+          "quantity_semantics": "ORIGINAL_ORDER_DEMAND_NOT_DELIVERED"
+        },
+        "completion_outcome": "UNFULFILLED_RETURNED_TO_PLANNING",
+        "order_fulfilled": false,
+        "physical_stock_changed": false,
+        "operation_id": "CP23B.219023232.wave.finish",
+        "status": "DONE",
+        "completed": true,
+        "ready": false,
+        "outbox_id": 6736
+      }
+    }
+  ],
+  "checks": [
+    "Marked native1 uses paper signature; old paper rejected, original receipt replays after line completion"
+  ],
+  "before": [
+    [
+      10,
+      0
+    ]
+  ],
+  "slow_marker": 6536,
+  "customer": 772,
+  "face_article": {
+    "pick_face_articul_id": 310
+  },
+  "recipient": {
+    "warehouse_id": 219023232,
+    "document_id": "CP23B.219023232.RECIPIENT",
+    "entity_type": "RECIPIENT",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "CP23B.219023232.RECIPIENT",
+    "correlation_id": "CP23B.219023232.RECIPIENT",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-23T00:16:11.725-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6723
+  },
+  "order": {
+    "warehouse_id": 219023232,
+    "document_id": "CP23B.219023232.ORDER",
+    "entity_type": "ORDER",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "CP23B.219023232.ORDER",
+    "correlation_id": "CP23B.219023232.ORDER",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-23T00:16:11.815-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6724
+  },
+  "native_order": 2202,
+  "native_row": 3689,
+  "binding": {
+    "customer_order_id": 2202,
+    "order_id": "CP23B.219023232.ORDER",
+    "order_version": 1,
+    "bound_lines": 1,
+    "stock_changed": false,
+    "replayed": false,
+    "operation_id": "CP23B.219023232.bind",
+    "outbox_id": 6725
+  },
+  "plan_created": {
+    "pick_plan_id": 2262,
+    "operation_id": "CP23B.219023232.plan"
+  },
+  "plan": 2262,
+  "wave_created": {
+    "pick_wave_id": 617
+  },
+  "wave": 617,
+  "added": {
+    "pick_wave_id": 617,
+    "pick_plan_id": 2262,
+    "status": "ADDED"
+  },
+  "calculated": {
+    "pick_wave_id": 617,
+    "status": "PREVIEW"
+  },
+  "launched": {
+    "pick_wave_id": 617,
+    "status": "LAUNCHED",
+    "operation_id": "CP23B.219023232.launch",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "replenishments": [],
+  "released": {
+    "wave_id": 617,
+    "warehouse": 219023232,
+    "status": "LAUNCHED",
+    "released_at": "2026-10-23T00:16:15.742029-04:00",
+    "released_by": "admin",
+    "release_operation_id": "CP23B.219023232.release",
+    "ready": true,
+    "tasks": [
+      {
+        "pick_task_id": 2189,
+        "wave_task_id": 2100,
+        "article": "TC0389AF0087",
+        "task_type": "CASE_PICK",
+        "status": "ASSIGNED",
+        "cell": "T3P89af0087",
+        "required_base": "1",
+        "covered_base": "1",
+        "missing_base": "0",
+        "base_uom": "EA",
+        "reservations": [
+          {
+            "reservation_id": 1982,
+            "uid": "690000000099475270",
+            "cell": "T3P89af0087",
+            "article": "TC0389AF0087",
+            "quantity": "1",
+            "base_uom": "EA",
+            "stock_version": 5,
+            "physical": "3",
+            "hard": "1",
+            "reason": null
+          }
+        ]
+      }
+    ],
+    "open_replenishments": [],
+    "outbox_id": 6728,
+    "command_operation_id": "CP23B.219023232.release"
+  },
+  "case": 1172,
+  "line": 1174,
+  "pick_task": 2189,
+  "admission_before": 1,
+  "type_body": {
+    "operation_id": "CP23B.219023232.type",
+    "pallet_type_id": 33,
+    "expected_version": 0,
+    "scan_container": "CP617000000001172",
+    "reason": "Isolated tare and pick serialization proof"
+  },
+  "type_set": {
+    "operation_id": "CP23B.219023232.type",
+    "command_type": "CASE_PALLET_TYPE_CHANGE",
+    "case_task_id": 1172,
+    "pallet_type_id": 33,
+    "previous_pallet_type_id": 1,
+    "planned_pallet_type_id": null,
+    "version": 1,
+    "reason": "Isolated tare and pick serialization proof",
+    "stock_changed": false,
+    "status": "APPLIED",
+    "outbox_id": 6729
+  },
+  "settings_before": {
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "settings_for_label": {
+    "ware_id": 219023232,
+    "company_prefix": "09999999",
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": "admin",
+    "updated_at": "2026-10-23T00:16:16.595929",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "tare_before": 0,
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "operation_id": "CP23B.219023232.tare.count",
+    "quantity": "1",
+    "owner_ware_id": 219023232,
+    "pallet_type_id": 33,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 6730
+  },
+  "actor": "FC21a438e7b51",
+  "owner": {
+    "version": 1,
+    "owner_id": "SNS",
+    "username": "FC21a438e7b51",
+    "warehouse_id": 219023232,
+    "operation_id": "CP23B.219023232.owner",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "shift": {
+    "id": 96
+  },
+  "resource": {
+    "id": 93
+  },
+  "qualification": {
+    "resource_id": 93,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "session": {
+    "id": 89
+  },
+  "tare_book": {
+    "operation_id": "CP23B.219023232.tare.book",
+    "status": "HELD",
+    "place_kind": "CASE",
+    "place_id": "1172",
+    "pallet_type_id": 33,
+    "warehouse_id": 219023232,
+    "available_quantity": "0",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 6731
+  },
+  "CLAIM": {
+    "task_id": 1172,
+    "warehouse_id": 219023232,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "content_version": 1,
+    "assigned_to": "FC21a438e7b51",
+    "resource_id": 93,
+    "resource_session_id": 89,
+    "equipment_id": null,
+    "started_at_instant": null,
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "B973E7A18BA4E2E97DCD069C4C57574FD1B13B5B8466CED8B4414D646B95AA51",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "CP23B.219023232.CLAIM",
+    "action": "CLAIM",
+    "actor": "FC21a438e7b51",
+    "changed": true,
+    "stock_posted": false
+  },
+  "START": {
+    "task_id": 1172,
+    "warehouse_id": 219023232,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "content_version": 1,
+    "assigned_to": "FC21a438e7b51",
+    "resource_id": 93,
+    "resource_session_id": 89,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-23T04:16:18.954800+00:00",
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "82C2045096343595FABE25082F3AF2E9AFBBA2A42C51AD1967C174ACAE4596AC",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "CP23B.219023232.START",
+    "action": "START",
+    "actor": "FC21a438e7b51",
+    "changed": true,
+    "stock_posted": false
+  },
+  "label_body": {
+    "operation_id": "CP23B.219023232.label",
+    "scan_container": "CP617000000001172",
+    "expected_content_version": 1
+  },
+  "label": {
+    "case_pick_task_id": 1172,
+    "sscc": "009999999000028016",
+    "original_carrier": "CP617000000001172",
+    "content_version": 2,
+    "operation_id": "CP23B.219023232.label",
+    "confirmed": false
+  },
+  "label_confirmed": {
+    "case_pick_task_id": 1172,
+    "sscc": "009999999000028016",
+    "confirmed": true
+  },
+  "tare_body": {
+    "operation_id": "CP23B.219023232.tare.first",
+    "expected_content_version": 2,
+    "scan_container": "009999999000028016",
+    "tare_weight_kg": "0.1",
+    "measurement_ref": "SYNTHETIC_NOT_HARDWARE:CP23B.219023232"
+  },
+  "tare_first": {
+    "operation_id": "CP23B.219023232.tare.first",
+    "case_pick_task_id": 1172,
+    "sscc": "009999999000028016",
+    "content_version": 2,
+    "tare_weight_kg": "0.1",
+    "origin": "MANUAL_CONFIRMED",
+    "recorded_by": "FC21a438e7b51",
+    "measurement_ref": "SYNTHETIC_NOT_HARDWARE:CP23B.219023232",
+    "stock_changed": false
+  },
+  "paper_actor": "FC21a438e7b51",
+  "paper_resource": 93,
+  "paper_session": 89,
+  "paper_scans": [
+    {
+      "system_code": "CRPT",
+      "profile_code": "TOBACCO",
+      "code": "2902309947527189a0010"
+    }
+  ],
+  "status": "PASS",
+  "paper_requests": {
+    "paper_first": {
+      "path": "/api/case-pick/tasks/1172/paper",
+      "body": null,
+      "method": "GET",
+      "status": 200
+    },
+    "paper_wrong": {
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "body": {
+        "operation_id": "CP23B.219023232.paper.wrong",
+        "fact_qty": "1",
+        "scan_cell": "T3P89af0087",
+        "scan_product": "TC0389AF0087",
+        "scan_container": "009999999000028016",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "unit_scans": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "code": "2902309947527189a0010"
+          }
+        ],
+        "expected_case_signature": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "method": "POST",
+      "status": 409
+    },
+    "paper_picked_first": {
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "body": {
+        "operation_id": "CP23B.219023232.paper.first",
+        "fact_qty": "1",
+        "scan_cell": "T3P89af0087",
+        "scan_product": "TC0389AF0087",
+        "scan_container": "009999999000028016",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "unit_scans": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "code": "2902309947527189a0010"
+          }
+        ],
+        "expected_case_signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B"
+      },
+      "method": "POST",
+      "status": 200
+    },
+    "paper_old_after_first": {
+      "path": "/api/case-pick/tasks/1172/paper?line=1174&expected_signature=22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+      "body": null,
+      "method": "GET",
+      "status": 409
+    },
+    "paper_stale_second": {
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "body": {
+        "operation_id": "CP23B.219023232.paper.stale.second",
+        "fact_qty": "1",
+        "scan_cell": "T3P89af0087",
+        "scan_product": "TC0389AF0087",
+        "scan_container": "009999999000028016",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "unit_scans": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "code": "2902309947527189a0010"
+          }
+        ],
+        "expected_case_signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B"
+      },
+      "method": "POST",
+      "status": 422,
+      "prior_expected_status": 409
+    },
+    "paper_after_first": {
+      "path": "/api/case-pick/tasks/1172/paper",
+      "body": null,
+      "method": "GET",
+      "status": 200
+    },
+    "paper_conflict": {
+      "path": "/api/case-pick/tasks/1172/lines/1174/confirm",
+      "body": {
+        "operation_id": "CP23B.219023232.paper.first",
+        "fact_qty": "2",
+        "scan_cell": "T3P89af0087",
+        "scan_product": "TC0389AF0087",
+        "scan_container": "009999999000028016",
+        "resource_id": 93,
+        "resource_session_id": 89,
+        "unit_scans": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "code": "2902309947527189a0010"
+          }
+        ],
+        "expected_case_signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B"
+      },
+      "method": "POST",
+      "status": 409
+    }
+  },
+  "paper_first": {
+    "task": {
+      "task_id": 1172,
+      "ware_id": 219023232,
+      "wave_code": "CP23B.219023232",
+      "order_no": "CP23B.219023232",
+      "customer_name": "Factory CASE QA",
+      "sscc": "009999999000028016",
+      "status": "IN_PROGRESS",
+      "assigned_to": "FC21a438e7b51",
+      "assignment_version": 2,
+      "content_version": 2
+    },
+    "lines": [
+      {
+        "line_id": 1174,
+        "articul": "TC0389AF0087",
+        "product_name": "Factory CASE QA",
+        "cell_code": "T3P89af0087",
+        "pick_sequence": 1,
+        "planned_qty": "1",
+        "picked_qty": "0",
+        "status": "NEW",
+        "required_scan_mode": "WAREHOUSE_SETTING",
+        "signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+        "reference": "CPICK:1172:1174:22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B",
+        "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 935 84\" width=\"100%\" role=\"img\" aria-label=\"CASE 1172 line 1174\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"36\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"40\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"48\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"52\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"58\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"62\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"101\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"106\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"116\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"129\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"150\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"161\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"182\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"191\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"206\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"212\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"217\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"221\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"233\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"238\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"256\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"260\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"266\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"271\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"277\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"282\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"290\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"292\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"301\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"310\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"315\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"321\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"337\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"348\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"353\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"357\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"365\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"382\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"391\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"397\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"401\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"408\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"413\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"420\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"425\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"432\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"437\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"445\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"459\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"465\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"467\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"479\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"490\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"499\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"514\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"525\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"530\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"535\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"542\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"547\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"551\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"563\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"568\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"575\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"580\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"590\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"601\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"612\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"618\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"623\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"628\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"632\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"643\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"655\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"664\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"666\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"673\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"685\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"690\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"694\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"699\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"710\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"716\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"731\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"743\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"750\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"754\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"760\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"764\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"776\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"793\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"797\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"807\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"821\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"831\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"842\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"861\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"865\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"872\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"875\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"879\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"883\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"886\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"890\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"894\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"896\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"901\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"904\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"908\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"912\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"917\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"921\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"923\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"467.5\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1172 / 1174</text></svg>",
+        "device_required": "MARKING_SCAN_REQUIRED",
+        "scale_reading": false
+      }
+    ],
+    "prepared_at": "2026-10-23T04:28:08.788273+00:00"
+  },
+  "paper_wrong": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "CP23B.219023232.paper.wrong",
+      "oracle_code": 20886,
+      "rule_reason": "CASE_PAPER_LINE_CHANGED",
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false,
+      "operation_id_conflict": false,
+      "read_before_retry": false
+    }
+  },
+  "paper_picked_first": {
+    "case_pick_task_id": 1172,
+    "case_pick_line_id": 1174,
+    "operation_id": "CP23B.219023232.paper.first",
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "009999999000028016",
+    "cell": "CPT_219023232",
+    "picked_from_cell": "T3P89af0087",
+    "lots": [
+      {
+        "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+        "source_uid": "690000000099475270",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 6732,
+    "regulatory_composition_status": "PENDING"
+  },
+  "paper_old_after_first": {
+    "detail": {
+      "code": "CASE_PAPER_LINE_CHANGED"
+    }
+  },
+  "paper_stale_second": {
+    "detail": {
+      "code": "CASE_COMMAND_INVALID",
+      "message": "Scanned unit is not reserved for this CASE line in the pick cell"
+    }
+  },
+  "paper_after_first": {
+    "task": {
+      "task_id": 1172,
+      "ware_id": 219023232,
+      "wave_code": "CP23B.219023232",
+      "order_no": "CP23B.219023232",
+      "customer_name": "Factory CASE QA",
+      "sscc": "009999999000028016",
+      "status": "IN_PROGRESS",
+      "assigned_to": "FC21a438e7b51",
+      "assignment_version": 2,
+      "content_version": 3
+    },
+    "lines": [
+      {
+        "line_id": 1174,
+        "articul": "TC0389AF0087",
+        "product_name": "Factory CASE QA",
+        "cell_code": "T3P89af0087",
+        "pick_sequence": 1,
+        "planned_qty": "1",
+        "picked_qty": "1",
+        "status": "PICKED",
+        "required_scan_mode": "WAREHOUSE_SETTING",
+        "signature": "3F748AECBDDDB249D38AB86F5FE9B27DF7193CEAFFFE09D8C3AFF1C44353AA65",
+        "reference": "CPICK:1172:1174:3F748AECBDDDB249D38AB86F5FE9B27DF7193CEAFFFE09D8C3AFF1C44353AA65",
+        "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 935 84\" width=\"100%\" role=\"img\" aria-label=\"CASE 1172 line 1174\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"36\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"40\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"48\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"52\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"58\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"62\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"101\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"106\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"116\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"129\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"150\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"161\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"182\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"191\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"203\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"212\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"217\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"223\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"234\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"237\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"254\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"258\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"270\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"282\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"291\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"298\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"309\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"320\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"335\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"349\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"358\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"367\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"369\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"375\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"380\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"390\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"402\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"408\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"412\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"421\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"423\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"432\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"435\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"447\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"459\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"481\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"490\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"499\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"511\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"525\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"534\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"540\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"545\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"558\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"564\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"574\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"579\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"587\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"589\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"599\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"612\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"619\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"622\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"628\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"632\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"646\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"657\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"663\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"668\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"674\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"677\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"684\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"697\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"699\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"705\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"710\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"718\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"733\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"742\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"749\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"767\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"778\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"783\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"795\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"799\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"806\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"820\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"830\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"838\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"843\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"850\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"852\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"859\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"863\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"870\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"874\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"879\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"883\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"887\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"890\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"893\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"898\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"901\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"905\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"909\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"912\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"917\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"921\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"923\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"467.5\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1172 / 1174</text></svg>",
+        "device_required": "MARKING_SCAN_REQUIRED",
+        "scale_reading": false
+      }
+    ],
+    "prepared_at": "2026-10-23T04:29:02.460326+00:00"
+  },
+  "paper_conflict": {
+    "detail": {
+      "code": "OPERATION_CONTENT_CONFLICT",
+      "operation_id": "CP23B.219023232.paper.first",
+      "oracle_code": null,
+      "rule_reason": null,
+      "outcome_confirmed": false,
+      "retry_same_operation_id": false,
+      "operation_id_conflict": true,
+      "read_before_retry": true
+    }
+  },
+  "pick_body": {
+    "operation_id": "CP23B.219023232.paper.first",
+    "fact_qty": "1",
+    "scan_cell": "T3P89af0087",
+    "scan_product": "TC0389AF0087",
+    "scan_container": "009999999000028016",
+    "resource_id": 93,
+    "resource_session_id": 89,
+    "unit_scans": [
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "2902309947527189a0010"
+      }
+    ],
+    "expected_case_signature": "22D54655991066A1FEAD12323E792F5FD52CC61ABE91FD7DBE0A76A9C870647B"
+  },
+  "picked": {
+    "case_pick_task_id": 1172,
+    "case_pick_line_id": 1174,
+    "operation_id": "CP23B.219023232.paper.first",
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "009999999000028016",
+    "cell": "CPT_219023232",
+    "picked_from_cell": "T3P89af0087",
+    "lots": [
+      {
+        "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+        "source_uid": "690000000099475270",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 6732,
+    "regulatory_composition_status": "PENDING"
+  },
+  "close_body": {
+    "operation_id": "CP23B.219023232.close",
+    "expected_content_version": 3
+  },
+  "closed": {
+    "operation_id": "CP23B.219023232.close",
+    "case_pick_task_id": 1172,
+    "status": "WAIT_CONTROL",
+    "content_version": 3,
+    "already_closed": false,
+    "physical_stock_changed": false
+  },
+  "returned": {
+    "task": 1172,
+    "version": 3,
+    "carrier": "009999999000028016",
+    "warehouse": 219023232,
+    "stocks": [
+      {
+        "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+        "cell": "CPT_219023232",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "TC0389AF0087",
+        "case_line": 1174,
+        "target": "T3P89af0087",
+        "reservations": [
+          1982
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:99700116B9C66C015662B7AA581F17318B080A:1",
+        "cell": "CPT_219023232",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "TC0389AF0087",
+        "case_line": 1174
+      }
+    ],
+    "unused": [],
+    "operation_id": "CP23B.219023232.return",
+    "status": "RETURNED",
+    "outbox_id": 6733
+  },
+  "logout": {
+    "status": "ok"
+  },
+  "cleanup_owner": {
+    "version": 2,
+    "owner_id": "SNS",
+    "username": "FC21a438e7b51",
+    "warehouse_id": 219023232,
+    "operation_id": "CP23B.219023232.cleanup.owner",
+    "stock_changed": false,
+    "replayed": false
+  },
+  "cleanup_qualification": {
+    "resource_id": 93,
+    "task_type": "CASE_PICK",
+    "active": false
+  },
+  "physical_after": [
+    10,
+    0
+  ],
+  "book_released": {
+    "operation_id": "CP23B.219023232.book.cancel",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1172",
+    "pallet_type_id": 33,
+    "warehouse_id": 219023232,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 6734
+  },
+  "tare_restored": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "0",
+    "operation_id": "CP23B.219023232.tare.restore",
+    "quantity": "0",
+    "owner_ware_id": 219023232,
+    "pallet_type_id": 33,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 6735
+  },
+  "settings_restored": {
+    "ware_id": 219023232,
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": "admin",
+    "updated_at": "2026-10-23T00:29:06.370979",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "wave_finished": {
+    "wave_id": 617,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2189",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": "CANCELLED_DEMAND_REQUIRES_RECONCILIATION",
+        "quantity": "1"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1676",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1172",
+        "status": "CANCELLED",
+        "actor": "FC21a438e7b51",
+        "reason": "CASE_CONTROL_OR_SHIPPING_PENDING",
+        "quantity": "1"
+      }
+    ],
+    "blocking_count": 2,
+    "deferred_decision": {
+      "wave_id": 617,
+      "eligible": true,
+      "blocking_count": 0,
+      "reason": null,
+      "demands": [
+        {
+          "pick_plan_id": 2262,
+          "pick_plan_line_id": 2271,
+          "order_id": 2202,
+          "order_line_id": 3689,
+          "article": "TC0389AF0087",
+          "order_quantity": "1",
+          "unit": "EA",
+          "current_planning": {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3689,
+            "order_id": 2202,
+            "customer_id": 772,
+            "quantity": "1",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "warehouse": 219023232,
+            "article": "TC0389AF0087",
+            "unit": "EA",
+            "requested_base_quantity": "1",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "quantity_semantics": "UNALLOCATED_BASE_NOT_SHIPPED_PROOF",
+            "open": true
+          },
+          "row_status": "OPEN",
+          "order_status": "OPEN",
+          "warehouse": 219023232
+        }
+      ],
+      "quantity_semantics": "ORIGINAL_ORDER_DEMAND_NOT_DELIVERED"
+    },
+    "completion_outcome": "UNFULFILLED_RETURNED_TO_PLANNING",
+    "order_fulfilled": false,
+    "physical_stock_changed": false,
+    "operation_id": "CP23B.219023232.wave.finish",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 6736
+  },
+  "slow_sql": [
+    [
+      6537,
+      29,
+      "TRANSACTION"
+    ],
+    [
+      6538,
+      17,
+      "TRANSACTION"
+    ],
+    [
+      6539,
+      250,
+      "TRANSACTION"
+    ]
+  ],
+  "prior_attempt_errors": [
+    "(422, {'detail': {'code': 'CASE_COMMAND_INVALID', 'message': 'Scanned unit is not reserved for this CASE line in the pick cell'}})"
+  ]
+}

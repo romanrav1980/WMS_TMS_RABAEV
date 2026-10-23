@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "comparisons": [
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 100,
+      "sha": "cd24accf4a5f75e143b7ee5612e7a5aa827f5997394039a7c94de85d0ff6774c",
+      "median_ms": {
+        "old": 312.06,
+        "new": 427.38
+      },
+      "samples_ms": {
+        "old": [
+          219.25,
+          291.57,
+          386.53,
+          332.55
+        ],
+        "new": [
+          493.58,
+          452.01,
+          402.75,
+          237.97
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 100,
+      "sha": "55e37f69b875591d7143711e3d070d0d1f0b66195cf82c8f0da8ea1781f4a859",
+      "median_ms": {
+        "old": 405.64,
+        "new": 305.08500000000004
+      },
+      "samples_ms": {
+        "old": [
+          538.54,
+          501.59,
+          275.32,
+          309.69
+        ],
+        "new": [
+          270.24,
+          403.57,
+          227.05,
+          339.93
+        ]
+      }
+    },
+    {
+      "filters": {
+        "page": 3,
+        "page_size": 20,
+        "ware_ids": [
+          7
+        ]
+      },
+      "rows": 20,
+      "sha": "8b1bd4e5cb0a5ca39685c2f3687ebe3a330d50c6cd347bbe4ef3448db318867c",
+      "median_ms": {
+        "old": 356.37,
+        "new": 337.09000000000003
+      },
+      "samples_ms": {
+        "old": [
+          318.23,
+          279.65,
+          394.51,
+          503.21
+        ],
+        "new": [
+          350.38,
+          323.8,
+          381.45,
+          215.83
+        ]
+      }
+    }
+  ],
+  "fixture_checks": [
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100
+      },
+      "rows": 7,
+      "match": true
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 2
+      },
+      "rows": 2,
+      "match": true
+    },
+    {
+      "filters": {
+        "page": 1,
+        "page_size": 100,
+        "ware_id": 7
+      },
+      "rows": 4,
+      "match": true
+    },
+    {
+      "filters": {
+        "page": 2,
+        "page_size": 2,
+        "ware_id": 7
+      },
+      "rows": 2,
+      "match": true
+    }
+  ],
+  "unscoped_unchanged": [
+    {
+      "page": 1,
+      "page_size": 100
+    },
+    {
+      "page": 2,
+      "page_size": 100
+    },
+    {
+      "page": 1,
+      "page_size": 100,
+      "ware_ids": [
+        7,
+        8
+      ]
+    }
+  ]
+}

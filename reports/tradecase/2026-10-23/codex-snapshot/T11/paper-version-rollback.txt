@@ -1,0 +1,6 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_paper_task_version\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_paper_task_version\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_paper_task_version\before_rrl_stock_hu_task.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_paper_task_version\before_rrl_stock_case_move_cmd.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_paper_task_version\rollback_verify.sql
+Done. Statements=6; Errors=0; AbsentCleanup=0

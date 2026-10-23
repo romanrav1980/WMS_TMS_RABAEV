@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "provider": "CONTROLLED TEST RESPONSE, not a live road calculation",
+  "checks": [
+    "Actual native snapshot, atomic cache publication and exact replay without recomputation",
+    "Stale source rejected; no extra provider call; native read returns the two directed legs",
+    "Changed-body replay rejected; one durable receipt"
+  ],
+  "timings": [
+    156.18,
+    33.26,
+    35.9,
+    42.53
+  ],
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6215,
+      29,
+      "TRANSACTION"
+    ],
+    [
+      6214,
+      22,
+      "TRANSACTION"
+    ]
+  ],
+  "trip": 33668,
+  "warehouse": 245514543,
+  "tag": "RD23c40c946d85"
+}

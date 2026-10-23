@@ -1,0 +1,323 @@
+{
+ "base": "http://127.0.0.1:3000/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE wave 613 (CASE1169 CONTROLLED) stands on actual stage 'Собрано', not static CLEAR",
+   "ms": 1353
+  },
+  {
+   "width": 1440,
+   "name": "LIVE keyboard Enter opens wave card with actual picking stage; wave_id in URL",
+   "ms": 1395
+  },
+  {
+   "width": 1440,
+   "name": "LIVE wave → Gantt exact wave filter, wave card kept"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE risks panel: all sources read, no gap block; cancelled replenishment 1673 not shown as waiting"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE completed wave 604 opens from header outside active lists; archive card without launch risks",
+   "ms": 1299
+  },
+  {
+   "width": 1440,
+   "name": "LIVE 9807 vehicle with 12 untimed transport operations: row marked, card lists them, state Unknown (not free)"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE event card keeps vehicle as resource, plain time/approval text, no 'no resource'"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE event → resource return path"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 case tasks + 503 overview: risks panel lists gaps, never 'no risks'; wave stays 'Детали не прочитаны'"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE one event on dock+vehicle+picker: 3 bars, one card with 3 roles, counted once"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE long resource/work names: no page horizontal overflow"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE warehouse switch clears wave card/URL wave; Gantt 403 shows no previous warehouse data"
+  },
+  {
+   "width": 390,
+   "name": "LIVE wave 613 (CASE1169 CONTROLLED) stands on actual stage 'Собрано', not static CLEAR",
+   "ms": 1279
+  },
+  {
+   "width": 390,
+   "name": "LIVE keyboard Enter opens wave card with actual picking stage; wave_id in URL",
+   "ms": 1317
+  },
+  {
+   "width": 390,
+   "name": "LIVE wave → Gantt exact wave filter, wave card kept"
+  },
+  {
+   "width": 390,
+   "name": "LIVE risks panel: all sources read, no gap block; cancelled replenishment 1673 not shown as waiting"
+  },
+  {
+   "width": 390,
+   "name": "LIVE completed wave 604 opens from header outside active lists; archive card without launch risks",
+   "ms": 1796
+  },
+  {
+   "width": 390,
+   "name": "LIVE 9807 vehicle with 12 untimed transport operations: row marked, card lists them, state Unknown (not free)"
+  },
+  {
+   "width": 390,
+   "name": "LIVE event card keeps vehicle as resource, plain time/approval text, no 'no resource'"
+  },
+  {
+   "width": 390,
+   "name": "LIVE event → resource return path"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 case tasks + 503 overview: risks panel lists gaps, never 'no risks'; wave stays 'Детали не прочитаны'"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE one event on dock+vehicle+picker: 3 bars, one card with 3 roles, counted once"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE long resource/work names: no page horizontal overflow"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE warehouse switch clears wave card/URL wave; Gantt 403 shows no previous warehouse data"
+  }
+ ],
+ "http": [
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "1440 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "1440 GET 200 /api/access/workspaces",
+  "1440 GET 200 /api/resources/sessions?ware_id=220793322",
+  "1440 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "1440 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220793322",
+  "1440 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "1440 POST 200 /api/picking/shift-overview",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220639789",
+  "1440 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220639789",
+  "1440 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220639789",
+  "1440 GET 200 /api/access/workspaces",
+  "1440 GET 200 /api/resources/sessions?ware_id=220639789",
+  "1440 GET 200 /api/resources/timeline?warehouse_id=220639789&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220639789",
+  "1440 GET 200 /api/picking/waves/604/header?ware_id=220639789",
+  "1440 GET 200 /api/case-pick/shorts?ware_id=220639789",
+  "1440 POST 200 /api/picking/shift-overview",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/access/workspaces",
+  "1440 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=9807",
+  "1440 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=9807",
+  "1440 GET 200 /api/resources/sessions?ware_id=9807",
+  "1440 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=9807",
+  "1440 GET 200 /api/case-pick/shorts?ware_id=9807",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=9807",
+  "1440 GET 200 /api/resources/timeline?warehouse_id=9807&start_at=2026-10-15T00%3A00%3A00%2B00%3A00&finish_at=2026-10-22T00%3A00%3A00%2",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 403 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "1440 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "1440 GET 200 /api/resources/sessions?ware_id=220793322",
+  "1440 GET 200 /api/access/workspaces",
+  "1440 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "1440 POST 503 /api/picking/shift-overview",
+  "1440 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "1440 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220793322",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "1440 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "1440 GET 200 /api/access/workspaces",
+  "1440 GET 200 /api/resources/sessions?ware_id=220793322",
+  "1440 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "1440 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "1440 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220793322",
+  "1440 POST 200 /api/picking/shift-overview",
+  "1440 GET 403 /api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "390 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "390 GET 200 /api/resources/sessions?ware_id=220793322",
+  "390 GET 200 /api/access/workspaces",
+  "390 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "390 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220793322",
+  "390 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "390 POST 200 /api/picking/shift-overview",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220639789",
+  "390 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220639789",
+  "390 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220639789",
+  "390 GET 200 /api/resources/sessions?ware_id=220639789",
+  "390 GET 200 /api/access/workspaces",
+  "390 GET 200 /api/resources/timeline?warehouse_id=220639789&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220639789",
+  "390 GET 200 /api/picking/waves/604/header?ware_id=220639789",
+  "390 GET 200 /api/case-pick/shorts?ware_id=220639789",
+  "390 POST 200 /api/picking/shift-overview",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=9807",
+  "390 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=9807",
+  "390 GET 200 /api/resources/sessions?ware_id=9807",
+  "390 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=9807",
+  "390 GET 200 /api/access/workspaces",
+  "390 GET 200 /api/case-pick/shorts?ware_id=9807",
+  "390 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=9807",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/resources/timeline?warehouse_id=9807&start_at=2026-10-15T00%3A00%3A00%2B00%3A00&finish_at=2026-10-22T00%3A00%3A00%2",
+  "390 GET 200 /api/access/me",
+  "390 GET 403 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "390 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "390 GET 200 /api/access/workspaces",
+  "390 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "390 GET 200 /api/resources/sessions?ware_id=220793322",
+  "390 POST 503 /api/picking/shift-overview",
+  "390 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "390 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/resources/timeline?warehouse_id=220793322&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3",
+  "390 GET 200 /api/picking/waves?status=PREVIEW&limit=50&ware_id=220793322",
+  "390 GET 200 /api/resources/sessions?ware_id=220793322",
+  "390 GET 200 /api/picking/waves?status=LAUNCHED&limit=100&ware_id=220793322",
+  "390 GET 200 /api/access/workspaces",
+  "390 GET 200 /api/case-pick/shorts?ware_id=220793322",
+  "390 GET 200 /api/case-pick/tasks?scope=all&limit=200&ware_id=220793322",
+  "390 GET 200 /api/inventory/recovery-shorts?limit=50&ware_id=220793322",
+  "390 GET 200 /api/access/navigation",
+  "390 POST 200 /api/picking/shift-overview",
+  "390 GET 403 /api/resources/timeline?warehouse_id=219023232&start_at=2026-10-22T00%3A00%3A00%2B00%3A00&finish_at=2026-10-23T00%3A00%3"
+ ],
+ "overview": [
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  },
+  {
+   "warehouse_id": 220639789,
+   "wave_ids": [
+    604
+   ]
+  },
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  },
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  },
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  },
+  {
+   "warehouse_id": 220639789,
+   "wave_ids": [
+    604
+   ]
+  },
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  },
+  {
+   "warehouse_id": 220793322,
+   "wave_ids": [
+    613,
+    612,
+    607,
+    606,
+    605
+   ]
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "fixtures": [
+  "case-pick/tasks 403",
+  "shift-overview 503",
+  "timeline multi-resource",
+  "timeline 403",
+  "case-pick/tasks 403",
+  "shift-overview 503",
+  "timeline multi-resource",
+  "timeline 403"
+ ],
+ "timings": {
+  "scene613_1440": 1353,
+  "card613_1440": 1395,
+  "done604_1440": 1299,
+  "scene613_390": 1279,
+  "card613_390": 1317,
+  "done604_390": 1796
+ },
+ "liveRisks": "Риски запуска\nвнимание Время волны не утверждено (NO_APPROVED_PLAN)\nволна 613 · влияние: нет утверждённого окна для расчёта загрузки людей и техники · ответственный: не указан в источнике · источник: time-context\nВолна\nЗагрузка ресурсов\nвнимание Время волны не утверждено (NO_APPROVED_PLAN)\nволна 612 · влияние: нет утверждённого окна для расчёта загрузки людей и техники · ответственный: не указан в",
+ "status": "PASS",
+ "asset": "assets/index-8_qkYkhH.js",
+ "counts": {
+  "checks": 24,
+  "http": 110,
+  "overviewPosts": 8,
+  "writes": 0,
+  "jsErrors": 0
+ }
+}

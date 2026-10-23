@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "basis": "Synthetic documents/expected visits, real native functions, full transaction rollback",
+  "count": 201,
+  "visits_ms": 164.06,
+  "history_ms": 150.51,
+  "visible_visit": 407,
+  "checks": [
+    "200 hidden visits cannot displace the visible 201st visit",
+    "History contains only the visible own visit"
+  ],
+  "rolled_back": true,
+  "qa_retired": true
+}

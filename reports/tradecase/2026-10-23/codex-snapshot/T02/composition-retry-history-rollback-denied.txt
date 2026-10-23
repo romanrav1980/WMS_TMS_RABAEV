@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_retry\rollback.sql
+ERROR rollback.sql:2: ORA-20999: ORA-20999: COMPOSITION_RETRY_HISTORY_EXISTS
+ORA-06512: на  line 1
+https://docs.oracle.com/error-help/db/ora-20999/
+SQL: declare n number;begin select count(*)into n from RRL_TRADE_ORDER_COMPOSITION where json_value(PAYLOAD_JSON,'$.retry_of' returning number) is not null;if n>0 then raise_application_error(-20999,'COMPOSITION_RETRY_HISTORY_EXISTS');end if;end;
+OracleApply stopped with ORA-20999: ORA-20999: COMPOSITION_RETRY_HISTORY_EXISTS
+ORA-06512: на  line 1
+https://docs.oracle.com/error-help/db/ora-20999/
+No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.

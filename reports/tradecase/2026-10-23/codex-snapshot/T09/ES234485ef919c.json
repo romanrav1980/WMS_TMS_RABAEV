@@ -1,0 +1,759 @@
+{
+  "status": "FAIL",
+  "road_basis": "SYNTHETIC controlled cache, not a provider response",
+  "checks": [
+    "Full current native route and insertion; selected proposal equals automatic proposal",
+    "Actual approval, exact replay, changed-body rejection, duplicate rejection and timezone-correct history",
+    "Mileage change invalidates shown proposal and archived decision",
+    "Versioned trip ban, exact replay and stale-policy rejection"
+  ],
+  "http": [
+    {
+      "method": "GET",
+      "suffix": "",
+      "status": 200,
+      "ms": 147.62,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "before": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T10:35:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "20",
+          "stops": [
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "before_slack_min": 215,
+        "after_slack_min": 190,
+        "variants": [
+          {
+            "position": 0,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          },
+          {
+            "position": 1,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          }
+        ],
+        "decision": "PROPOSE",
+        "position": 0,
+        "after": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T11:00:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "30",
+          "stops": [
+            {
+              "address": "ES234485ef919c.EXTRA",
+              "st_numbers": [
+                "EXTRA"
+              ],
+              "window_from": "2026-10-23T00:00:00.000000+03:00",
+              "window_to": "2026-10-23T23:59:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "STORE_WEEKLY",
+              "issues": []
+            },
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:50:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "added_min": 25,
+        "added_drive_min": 10,
+        "distance_km_before": 10,
+        "distance_km_after": 15,
+        "added_km": 5,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 0,
+        "new_stops_forbidden": false,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow",
+        "proposal_fingerprint": "985c978e585396ef41829d441e4c16a3ad944a6c9e685c89b6cf9a48e62d0b04"
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "",
+      "status": 200,
+      "ms": 114.39,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "before": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T10:35:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "20",
+          "stops": [
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "before_slack_min": 215,
+        "after_slack_min": 190,
+        "variants": [
+          {
+            "position": 0,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          }
+        ],
+        "decision": "PROPOSE",
+        "position": 0,
+        "after": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T11:00:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "30",
+          "stops": [
+            {
+              "address": "ES234485ef919c.EXTRA",
+              "st_numbers": [
+                "EXTRA"
+              ],
+              "window_from": "2026-10-23T00:00:00.000000+03:00",
+              "window_to": "2026-10-23T23:59:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "STORE_WEEKLY",
+              "issues": []
+            },
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:50:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "added_min": 25,
+        "added_drive_min": 10,
+        "distance_km_before": 10,
+        "distance_km_after": 15,
+        "added_km": 5,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 0,
+        "new_stops_forbidden": false,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow",
+        "proposal_fingerprint": "985c978e585396ef41829d441e4c16a3ad944a6c9e685c89b6cf9a48e62d0b04"
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 200,
+      "ms": 190.38,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "before": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T10:35:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "20",
+          "stops": [
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "before_slack_min": 215,
+        "after_slack_min": 190,
+        "variants": [
+          {
+            "position": 0,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          }
+        ],
+        "decision": "PROPOSE",
+        "position": 0,
+        "after": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T11:00:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "30",
+          "stops": [
+            {
+              "address": "ES234485ef919c.EXTRA",
+              "st_numbers": [
+                "EXTRA"
+              ],
+              "window_from": "2026-10-23T00:00:00.000000+03:00",
+              "window_to": "2026-10-23T23:59:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "STORE_WEEKLY",
+              "issues": []
+            },
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:50:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "added_min": 25,
+        "added_drive_min": 10,
+        "distance_km_before": 10,
+        "distance_km_after": 15,
+        "added_km": 5,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 0,
+        "new_stops_forbidden": false,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow",
+        "proposal_fingerprint": "985c978e585396ef41829d441e4c16a3ad944a6c9e685c89b6cf9a48e62d0b04",
+        "operation_id": "ES234485ef919c.APPROVE.e76b967f",
+        "action": "APPROVE",
+        "decision_state": "APPROVED",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T23:38:27Z",
+        "reason": "Owned acceptance fixture",
+        "next_stage": "WAITING_SAP_ORDER",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 200,
+      "ms": 98.62,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "before": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T10:35:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "20",
+          "stops": [
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "before_slack_min": 215,
+        "after_slack_min": 190,
+        "variants": [
+          {
+            "position": 0,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          }
+        ],
+        "decision": "PROPOSE",
+        "position": 0,
+        "after": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T11:00:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "30",
+          "stops": [
+            {
+              "address": "ES234485ef919c.EXTRA",
+              "st_numbers": [
+                "EXTRA"
+              ],
+              "window_from": "2026-10-23T00:00:00.000000+03:00",
+              "window_to": "2026-10-23T23:59:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "STORE_WEEKLY",
+              "issues": []
+            },
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:50:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "added_min": 25,
+        "added_drive_min": 10,
+        "distance_km_before": 10,
+        "distance_km_after": 15,
+        "added_km": 5,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 0,
+        "new_stops_forbidden": false,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow",
+        "proposal_fingerprint": "985c978e585396ef41829d441e4c16a3ad944a6c9e685c89b6cf9a48e62d0b04",
+        "operation_id": "ES234485ef919c.APPROVE.e76b967f",
+        "action": "APPROVE",
+        "decision_state": "APPROVED",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T23:38:27Z",
+        "reason": "Owned acceptance fixture",
+        "next_stage": "WAITING_SAP_ORDER",
+        "replayed": true
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "/decisions",
+      "status": 200,
+      "ms": 243.0,
+      "result": {
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "new_stops_forbidden": false,
+        "policy_version": 0,
+        "decisions": [
+          {
+            "operation_id": "ES234485ef919c.APPROVE.e76b967f",
+            "address": "ES234485ef919c.EXTRA",
+            "position": 0,
+            "decision_state": "APPROVED",
+            "decided_by": "admin",
+            "decided_at": "2026-10-22T23:38:27Z",
+            "validity": "CURRENT"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 409,
+      "ms": 114.21,
+      "result": {
+        "detail": {
+          "code": "EXTRA_STOP_OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 409,
+      "ms": 175.12,
+      "result": {
+        "detail": {
+          "code": "EXTRA_STOP_ALREADY_APPROVED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "",
+      "status": 200,
+      "ms": 110.66,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "before": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T10:35:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "20",
+          "stops": [
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "before_slack_min": 215,
+        "after_slack_min": 190,
+        "variants": [
+          {
+            "position": 0,
+            "verdict": "FEASIBLE",
+            "return_at": "2026-10-23T11:00:00.000000+03:00",
+            "issues": []
+          }
+        ],
+        "decision": "PROPOSE",
+        "position": 0,
+        "after": {
+          "status": "NO_EARLIEST_WINDOW_VIOLATION",
+          "return_at": "2026-10-23T11:00:00.000000+03:00",
+          "departure_at": "2026-10-23T10:00:00.000000+03:00",
+          "drive_min": "30",
+          "stops": [
+            {
+              "address": "ES234485ef919c.EXTRA",
+              "st_numbers": [
+                "EXTRA"
+              ],
+              "window_from": "2026-10-23T00:00:00.000000+03:00",
+              "window_to": "2026-10-23T23:59:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:10:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:25:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "STORE_WEEKLY",
+              "issues": []
+            },
+            {
+              "address": "ES234485ef919c.STORE",
+              "st_numbers": [
+                "ES234485ef919c.ST"
+              ],
+              "window_from": "2026-10-23T09:00:00.000000+03:00",
+              "window_to": "2026-10-23T14:00:00.000000+03:00",
+              "arrival_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_start_at": "2026-10-23T10:35:00.000000+03:00",
+              "service_finish_at": "2026-10-23T10:50:00.000000+03:00",
+              "wait_min": "0",
+              "late_min": "0",
+              "unload_norm_min": "15",
+              "window_strict": 1,
+              "window_source": "ST_MATERIALIZED",
+              "issues": []
+            }
+          ],
+          "issues": []
+        },
+        "added_min": 25,
+        "added_drive_min": 10,
+        "distance_km_before": 10,
+        "distance_km_after": 16,
+        "added_km": 6,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 0,
+        "new_stops_forbidden": false,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow",
+        "proposal_fingerprint": "ae23e6de1d4dc94d1335e759af9a4574504ce687edf90cdbc71db218961f1ef9"
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 409,
+      "ms": 215.2,
+      "result": {
+        "detail": {
+          "code": "EXTRA_STOP_PROPOSAL_CHANGED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "/decisions",
+      "status": 200,
+      "ms": 193.54,
+      "result": {
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "new_stops_forbidden": false,
+        "policy_version": 0,
+        "decisions": [
+          {
+            "operation_id": "ES234485ef919c.APPROVE.e76b967f",
+            "address": "ES234485ef919c.EXTRA",
+            "position": 0,
+            "decision_state": "APPROVED",
+            "decided_by": "admin",
+            "decided_at": "2026-10-22T23:38:27Z",
+            "validity": "STALE_INPUTS_CHANGED"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 200,
+      "ms": 144.23,
+      "result": {
+        "operation_id": "ES234485ef919c.SET_POLICY.497fe796",
+        "trip_id": 33672,
+        "action": "SET_POLICY",
+        "new_stops_forbidden": true,
+        "policy_version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 200,
+      "ms": 110.53,
+      "result": {
+        "operation_id": "ES234485ef919c.SET_POLICY.497fe796",
+        "trip_id": 33672,
+        "action": "SET_POLICY",
+        "new_stops_forbidden": true,
+        "policy_version": 1,
+        "replayed": true
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "",
+      "status": 200,
+      "ms": 90.1,
+      "result": {
+        "address": "ES234485ef919c.EXTRA",
+        "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+        "decision": "FORBIDDEN",
+        "reason": "NEW_STOPS_FORBIDDEN",
+        "distance_km_before": 10,
+        "trip_id": 33672,
+        "source_hash": "e99314450a4728dddd1577a49cf311972bbac99f24760ed4417f4f915046a1b6",
+        "time_version": 0,
+        "policy_version": 1,
+        "new_stops_forbidden": true,
+        "external_sap_order": "NOT_CREATED",
+        "zone": "Europe/Moscow"
+      }
+    },
+    {
+      "method": "POST",
+      "suffix": "",
+      "status": 409,
+      "ms": 115.09,
+      "result": {
+        "detail": {
+          "code": "VERSION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "suffix": "/decisions",
+      "status": 403,
+      "ms": 68.93,
+      "result": {
+        "detail": "Permission required: transport_dispatch_edit"
+      }
+    }
+  ],
+  "fixture_retired": true,
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_sql": [
+    [
+      6318,
+      137,
+      "TRANSACTION"
+    ],
+    [
+      6317,
+      104,
+      "TRANSACTION"
+    ],
+    [
+      6316,
+      37,
+      "TRANSACTION"
+    ],
+    [
+      6319,
+      32,
+      "TRANSACTION"
+    ]
+  ],
+  "tag": "ES234485ef919c",
+  "trip": 33672,
+  "warehouse": 240650839
+}

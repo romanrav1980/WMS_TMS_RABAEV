@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "target": "http://127.0.0.1:3000",
+  "run": "compiled",
+  "basis": "Actual UI/native plan, injected lost response after commit and403 before retry; exact replay, move, Gantt read and cancel actual",
+  "screens": [
+    {
+      "width": 1440,
+      "plan_id": 7,
+      "visit_id": 635,
+      "ready_ms": 3643,
+      "size": {
+        "width": 1440,
+        "document": 1440
+      },
+      "screenshot": "C:\\projects\\TMS\\runtime\\test-evidence\\tradecase\\2026-10-23\\T10\\dock-plan-compiled-1440.png",
+      "post_count": 3,
+      "exact_bytes_replay": true,
+      "gantt_actual": true
+    },
+    {
+      "width": 390,
+      "plan_id": 8,
+      "visit_id": 636,
+      "ready_ms": 2552,
+      "size": {
+        "width": 390,
+        "document": 390
+      },
+      "screenshot": "C:\\projects\\TMS\\runtime\\test-evidence\\tradecase\\2026-10-23\\T10\\dock-plan-compiled-390.png",
+      "post_count": 3,
+      "exact_bytes_replay": true,
+      "gantt_actual": true
+    }
+  ],
+  "errors": []
+}

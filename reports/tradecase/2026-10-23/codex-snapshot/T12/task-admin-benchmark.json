@@ -1,0 +1,74 @@
+{
+  "variants": {
+    "before": [
+      {
+        "ms": 194.91,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 251.88,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 182.34,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 193.91,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 194.01,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 177.67,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ],
+    "after": [
+      {
+        "ms": 189.29,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 112.68,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 104.15,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 142.77,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 112.43,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      },
+      {
+        "ms": 115.57,
+        "rows": 500,
+        "sha256": "2dca33a4f8b767bf730d7086154deb4d2d70880681d9cd4069b2a04605544329"
+      }
+    ]
+  },
+  "scope": "Same native admin semantics (alive GLOBAL_ADMIN); ordinary per-row checks unchanged",
+  "medians_ms": {
+    "before": 193.91,
+    "after": 112.68
+  },
+  "status": "PASS"
+}

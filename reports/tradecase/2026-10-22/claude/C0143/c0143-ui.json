@@ -1,0 +1,261 @@
+{
+ "base": "http://127.0.0.1:3000/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "FIXTURE list: reason of quantity, SAP order link without received order, active hold"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE save sends the previewed priority order and age with a durable operation id"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE adjust only within the calculated fit; expected_version sent"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE lost confirm reply: same body retried, no new operation, others locked meanwhile"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE reject: no warehouse tasks message"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE cancel releases only this proposal"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE approval_available=false keeps confirmation disabled with explanation"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE concurrent confirmation refused (capacity basis changed): clear reason, command cleared"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 shows no proposals"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE list: reason of quantity, SAP order link without received order, active hold"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE save sends the previewed priority order and age with a durable operation id"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE adjust only within the calculated fit; expected_version sent"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE lost confirm reply: same body retried, no new operation, others locked meanwhile"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE reject: no warehouse tasks message"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE cancel releases only this proposal"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE approval_available=false keeps confirmation disabled with explanation"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE concurrent confirmation refused (capacity basis changed): clear reason, command cleared"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 shows no proposals"
+  }
+ ],
+ "posts": [
+  {
+   "url": "R1.1155/topup-preview",
+   "body": {
+    "need_ids": [
+     "NEED.1",
+     "NEED.2"
+    ],
+    "max_age_minutes": 60
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:aec210d1-f684-47dc-b4bd-9f2618fdb246",
+    "need_ids": [
+     "NEED.1",
+     "NEED.2"
+    ],
+    "max_age_minutes": 60
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/2/decision",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:6e7eb923-5bad-4d5a-8e57-4be7191a9290",
+    "expected_version": 1,
+    "action": "ADJUST",
+    "boxes": 15
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/1/confirm",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:76648c88-b85d-4b79-a887-d727b4c316ca",
+    "expected_version": 1
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/1/confirm",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:76648c88-b85d-4b79-a887-d727b4c316ca",
+    "expected_version": 1
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/2/decision",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:db821394-414d-41f8-a088-6b1c7acb94df",
+    "expected_version": 2,
+    "action": "REJECT"
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/1/release",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:0da3c026-a6fc-4b86-8e55-973081507e13",
+    "expected_version": 2
+   }
+  },
+  {
+   "url": "R1.1155/topup-proposals/1/confirm",
+   "body": {
+    "operation_id": "TC.TOPUP.UI:b3a88c53-f758-4fc6-b7fa-20d4e9e26a02",
+    "expected_version": 1
+   }
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "http": [
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/access/workspaces?capability=tradecase",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 404 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-preview",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/2/decision",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 200 /api/transport/preflight/trips/33660/route-context",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/confirm",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/2/decision",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/release",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/access/workspaces?capability=tradecase",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/access/workspaces?capability=tradecase",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 POST 409 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/confirm",
+  "1440 GET 200 /api/access/me",
+  "1440 GET 200 /api/access/workspaces?capability=tradecase",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/access/navigation",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 403 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "1440 GET 404 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/access/workspaces?capability=tradecase",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/site",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 GET 404 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/NEED?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-preview",
+  "390 GET 200 /api/transport/preflight/trips/33660/route-context",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/2/decision",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/confirm",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/2/decision",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/release",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/access/workspaces?capability=tradecase",
+  "390 GET 200 /api/tradecase/warehouses/215590763/site",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/tradecase/warehouses/215590763/site",
+  "390 GET 200 /api/access/workspaces?capability=tradecase",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 POST 409 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals/1/confirm",
+  "390 GET 404 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage",
+  "390 GET 200 /api/access/me",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/access/workspaces?capability=tradecase",
+  "390 GET 200 /api/access/navigation",
+  "390 GET 200 /api/tradecase/warehouses/215590763/site",
+  "390 GET 403 /api/tradecase/warehouses/215590763/trips/R1.1155/topup-proposals",
+  "390 GET 404 /api/tradecase/warehouses/215590763/trips/R1.1155/coverage"
+ ],
+ "status": "PASS",
+ "asset": "assets/index-BmlpD63t.js",
+ "counts": {
+  "checks": 18,
+  "http": 104,
+  "liveWrites": 0,
+  "jsErrors": 0
+ }
+}

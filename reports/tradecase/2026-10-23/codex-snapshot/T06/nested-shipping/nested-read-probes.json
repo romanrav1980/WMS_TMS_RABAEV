@@ -1,0 +1,80 @@
+{
+  "root_qc": [
+    403,
+    {
+      "detail": {
+        "code": "OUTGOING_QC_FORBIDDEN",
+        "operation_id": "",
+        "oracle_code": 20882,
+        "reason": null,
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "operation_id_conflict": false
+      }
+    }
+  ],
+  "leaf_qc": [
+    200,
+    {
+      "shipment_identifier": "FP21.ST.222385707",
+      "document_id": 641560,
+      "ready": false,
+      "case_task_id": null,
+      "case_content_version": null,
+      "composition_signature_version": 2,
+      "final_scale_required": false,
+      "required": false,
+      "control_mode": "NONE",
+      "independent_controller_required": false,
+      "quality_policy": {
+        "warehouse_id": 222385707,
+        "mode": "NONE",
+        "independent": 0,
+        "sample_percent": 0,
+        "exempt_whole": 0,
+        "exempt_storage": 0,
+        "scoped_rule": false
+      },
+      "weight_exemption": {
+        "eligible": false,
+        "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+      },
+      "unique_mark_control_required": true,
+      "mark_profiles": [
+        {
+          "system_code": "CRPT",
+          "profile_code": "TOBACCO"
+        }
+      ],
+      "physical_unit_count": 10,
+      "composition_signature": "23088796105B0587B738FD6E70F72111C179E01256F8E270842553DFEA3BAE35",
+      "weight_exemption_recorded": false,
+      "sample_percent": 0,
+      "sample_selected": false,
+      "rescan_required": false,
+      "control_plan_required": false,
+      "full_scan_required": false,
+      "scan_matches": null,
+      "weight_matches": null,
+      "weight_policy_reason": "ORA-20887: QUALITY_SI_WEIGHT_POLICY_REQUIRED:TC03BCFDABB6",
+      "reason": "ORA-20886: SHIPMENT_CURRENT_UNIQUE_MARK_CONTROL_REQUIRED",
+      "transport_assignment": {
+        "state": "UNASSIGNED",
+        "shipment_id": 641560,
+        "transport_task_id": null
+      }
+    }
+  ],
+  "root_floor": [
+    409,
+    {
+      "detail": {
+        "code": "PALLET_FLOOR_READ_REJECTED",
+        "message": "ORA-20886: PALLET_FLOOR_CURRENT_SOURCE_REQUIRED",
+        "operation_id": "READ",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    }
+  ]
+}

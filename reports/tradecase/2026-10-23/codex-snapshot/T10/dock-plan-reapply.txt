@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\001_schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\002_visit_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\003_visit_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\004_plan_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_yard_dock_plan\verify.sql
+Done. Statements=16; Errors=0; AbsentCleanup=0
+

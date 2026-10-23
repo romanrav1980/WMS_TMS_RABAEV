@@ -1,0 +1,145 @@
+{
+ "http": [
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SKU?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/OWNER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/stock/pallets?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/stock/pallets?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/1/stock/pallets?limit=50",
+  "1440 GET 404 /api/tradecase/warehouses/1/site",
+  "390 GET 200 /api/tradecase/warehouses/225837931/site",
+  "390 GET 200 /api/tradecase/warehouses/225837931/documents/SKU?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/225837931/documents/OWNER?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/225837931/stock/pallets?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "390 GET 200 /api/tradecase/warehouses/225837931/stock/pallets?limit=50",
+  "390 GET 404 /api/tradecase/warehouses/1/site",
+  "390 GET 200 /api/tradecase/warehouses/1/stock/pallets?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "1440 POST 200 /api/tradecase/warehouses/225837931/stock/bind",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 POST 200 /api/tradecase/warehouses/225837931/stock/bind",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 POST 403 /api/tradecase/warehouses/225837931/stock/bind",
+  "1440 POST 403 /api/tradecase/warehouses/225837931/stock/bind",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/site",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/225837931/documents/SUPPLY/SUPPLY",
+  "390 GET 200 /api/tradecase/warehouses/225837931/site",
+  "390 GET 200 /api/tradecase/warehouses/225837931/stock/pallets?limit=50",
+  "390 GET 403 /api/tradecase/warehouses/225837931/site",
+  "390 GET 403 /api/tradecase/warehouses/225837931/stock/pallets?limit=50"
+ ],
+ "posts": [
+  {
+   "mode": "ok",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:196b26b4-f2c6-4468-971f-2355e3688b7f"
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:badd4999-9902-4f17-80a1-891c279def72"
+   }
+  },
+  {
+   "mode": "replay",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:badd4999-9902-4f17-80a1-891c279def72"
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:bf1cf792-309a-42f5-b2ce-62d6f6523732"
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:8509ed10-7b0d-4b3b-aca6-258f6b11179d"
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "supply_id": "SUPPLY",
+    "expected_supply_version": 1,
+    "scanned_pallet": "690000000545105591",
+    "operation_id": "TC.BIND.UI:8509ed10-7b0d-4b3b-aca6-258f6b11179d"
+   }
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "checks": [
+  "live_stock_supply_names_flow_switch_1440",
+  "live_stock_supply_names_flow_switch_390",
+  "scan_enter_and_button_double_click_single_post",
+  "unknown_saved_locked_reload_exact_retry_replayed",
+  "fixture_403_first_clears_after_unknown_kept",
+  "other_user_intent_ignored",
+  "corrupt_intent_blocks_not_overwritten",
+  "fixture_read_403_clears"
+ ],
+ "live1440": {
+  "tabAfterFlow": "STOCK",
+  "stock": "Запас\nСправка\nИдентификатор паллеты\tАдрес\tТовар\tСобственник\tМРЦ\tСрок\tКоличество\tРезерв\tКоды: подтверждено / ожидает / отклонено\n690000000545105591\tT3Sf1aaebdf\tQA tobacco leaf units (A)\tSNS (SNS)\t200\t2030-01-01\t250 шт.\t0 шт.\t3 / 246 / 1\n\nИтого на этой странице: 250 шт.. Это не общий остаток склада; групп: 1.",
+  "codes": [
+   "3",
+   "246",
+   "1"
+  ],
+  "supply": "Поставка SUPPLY\n×\n\nОснование принято, версия 1. Сверьте данные документа.\n\nИдентификатор паллеты\n690000000545105591\nТовар\nQA tobacco leaf units (A)\nСобственник\nSNS (SNS)\nМРЦ\n200\nПартия поставщика\nTC03.f1aaebdf\nСрок годности\n2030-01-01\nЗаказ SAP / строка\n16c414024f6b48a5a493b58f9975492f / 1\nСостав\n250 кодов маркировки (сами коды — в технических сведениях)\nПривязать поставку к принятому товару Справка\nИдентификатор паллеты\nПроверить\nТехнические сведения",
+  "untitled": [],
+  "overflow": 0,
+  "afterSwitchRows": 0
+ },
+ "live390": {
+  "tabAfterFlow": "STOCK",
+  "stock": "Запас\nСправка\nИдентификатор паллеты\tАдрес\tТовар\tСобственник\tМРЦ\tСрок\tКоличество\tРезерв\tКоды: подтверждено / ожидает / отклонено\n690000000545105591\tT3Sf1aaebdf\tQA tobacco leaf units (A)\tSNS (SNS)\t200\t2030-01-01\t250 шт.\t0 шт.\t3 / 246 / 1\n\nИтого на этой странице: 250 шт.. Это не общий остаток склада; групп: 1.",
+  "codes": [
+   "3",
+   "246",
+   "1"
+  ],
+  "supply": "Поставка SUPPLY\n×\n\nОснование принято, версия 1. Сверьте данные документа.\n\nИдентификатор паллеты\n690000000545105591\nТовар\nQA tobacco leaf units (A)\nСобственник\nSNS (SNS)\nМРЦ\n200\nПартия поставщика\nTC03.f1aaebdf\nСрок годности\n2030-01-01\nЗаказ SAP / строка\n16c414024f6b48a5a493b58f9975492f / 1\nСостав\n250 кодов маркировки (сами коды — в технических сведениях)\nПривязать поставку к принятому товару Справка\nИдентификатор паллеты\nПроверить\nТехнические сведения",
+  "untitled": [],
+  "overflow": 0,
+  "afterSwitchRows": 0
+ },
+ "review": "Будет записано: паллета 690000000545105591 — товар A, собственник SNS, МРЦ 200, срок 2030-01-01, партия TC03.f1aaebdf; поставка SUPPLY, версия 1.\n\nДействие записывает юридические атрибуты товара. Оно не принимает товар физически, не подтверждает коды в СКМ и не выкупает товар.\n\nПривязать Отмена",
+ "status": "PASS",
+ "labels": {
+  "live": "admin login + GET 225837931",
+  "fixture": "POST /stock/bind answers and read 403 intercepted in browser; no POST reached server"
+ }
+}

@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "hashes": {
+    "RRL_STOCK_CASE_PICK_CMD:PACKAGE BODY": "53EA97ECEF44BC34CEBEAC464F6A131D0F31D51A3C27221CB2715740485E735F",
+    "RRL_CASE_PICK_PAPER:PACKAGE": "CFA6B9FF605C009EC8960270808152865A809D4675CB73DEB153CF60591BD688",
+    "RRL_CASE_PICK_PAPER:PACKAGE BODY": "E7B8B94A53DEBC472A6B28D3423D957BC838745362969FA14A86FFBE4C3CE6CD"
+  },
+  "sql_decision": "Keep bounded line read/batched policy; measure internal SQL before index or statistics change",
+  "objects": [
+    [
+      0
+    ]
+  ],
+  "ledger": [
+    [
+      "APPLIED"
+    ]
+  ],
+  "stock": [
+    [
+      10,
+      0
+    ]
+  ],
+  "actor": [
+    [
+      1
+    ]
+  ],
+  "grant": [
+    [
+      0,
+      0
+    ]
+  ],
+  "case": [
+    [
+      "CANCELLED"
+    ]
+  ],
+  "wave": [
+    [
+      "DONE"
+    ]
+  ],
+  "slow": [
+    [
+      6537,
+      29,
+      "CASE paper READ ONLY snapshot"
+    ],
+    [
+      6538,
+      17,
+      "Resolve CASE unit scans without stock writes"
+    ],
+    [
+      6539,
+      250,
+      "Resolve CASE unit scans without stock writes"
+    ]
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "regulatory_outbox": [
+    6433,
+    "MARKED_GOODS_DISPOSED",
+    "PENDING",
+    "CRPT"
+  ],
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      212476763,
+      0,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "top_task_sql": [
+    [
+      "6j9aatdvm7a7s",
+      60,
+      417.99,
+      "select *               from (                 select TASK_ID, TASK_TYPE, TASK_SOURCE, SOURCE_TASK_ID,                        SOURCE_MOVEMENT_ID, SOURCE_DOC_TYPE"
+    ],
+    [
+      "gr8nf4bt3bc5r",
+      1,
+      169.83,
+      "insert into RRL_WAREHOUSE_TASK(TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_DOC_TYPE,SOURCE_DOC_ID,           TARGET_ARTICUL,UID_PALLET,SSCC,FROM_WARE_ID,FROM_CELL,TO_W"
+    ],
+    [
+      "d5ga5m9yw1xj0",
+      1,
+      11.48,
+      "select p.CASE_TASK_ID,p.STOCK_VERSION,t.UID_PALLET,t.TO_CELL from RRL_ST_DEFER_WAIT_PLAN p join RRL_WAREHOUSE_TASK t on t.TASK_ID=p.TASK_ID where p.TASK_ID=:tas"
+    ],
+    [
+      "80359p3p906k6",
+      12,
+      6.84,
+      "SELECT NVL(SUM(SR.BASE_QTY),0) FROM RRL_STOCK_RESERVATION SR JOIN RRL_PICK_PLAN_LINE PL ON PL.PICK_PLAN_LINE_ID=SR.PICK_PLAN_LINE_ID LEFT JOIN RRL_PICK_TASK PT "
+    ],
+    [
+      "fg7xq341y4cs9",
+      1,
+      6.46,
+      "select t.HU_CONTENT_VERSION,t.UID_PALLET,p.HU_KIND from RRL_WAREHOUSE_TASK t join RRL_PALLETS p on p.UID_PALLET=t.UID_PALLET where t.TASK_ID=:task"
+    ]
+  ],
+  "slow_queries": [
+    [
+      6248,
+      1037,
+      "/api/warehouse-tasks",
+      "Warehouse task queue native READ ONLY"
+    ],
+    [
+      6249,
+      1030,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n           "
+    ],
+    [
+      6244,
+      995,
+      "/api/warehouse-tasks",
+      "Warehouse task queue native READ ONLY"
+    ],
+    [
+      6238,
+      857,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n           "
+    ],
+    [
+      6237,
+      746,
+      "/api/warehouse-tasks",
+      "Warehouse task queue native READ ONLY"
+    ],
+    [
+      6245,
+      704,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n           "
+    ],
+    [
+      6240,
+      669,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n           "
+    ],
+    [
+      6243,
+      633,
+      "/api/case-pick/tasks",
+      "Current CASE queue READ ONLY snapshot"
+    ]
+  ],
+  "invalid": 0
+}

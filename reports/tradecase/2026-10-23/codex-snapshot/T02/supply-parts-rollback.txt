@@ -1,0 +1,3 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_supply_parts\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_supply_parts\rollback_verify.sql
+Done. Statements=9; Errors=0; AbsentCleanup=0

@@ -1,0 +1,4161 @@
+{
+  "history": [
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/artmas",
+      "status": 202,
+      "elapsed_ms": 460.07,
+      "response": {
+        "inbox_id": "67c616a6c98744beb81532fe2c315681",
+        "status": "APPLIED",
+        "articles_applied": true,
+        "materials": [
+          "TC03AA5CF70D"
+        ],
+        "older_skipped": [],
+        "idempotent": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/finished-goods/skus/TC03AA5CF70D/receiving-policy",
+      "status": 200,
+      "elapsed_ms": 379.08,
+      "response": {
+        "articul": "TC03AA5CF70D",
+        "version": 1,
+        "configured": true,
+        "marking_required": true,
+        "serialized_weight_boxes": false,
+        "order_weight_tolerance_pct": "15",
+        "stack_stage": "MAIN",
+        "profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "profile_version": "TC03",
+            "scan_mode": "UNIT"
+          }
+        ],
+        "legacy_mismatch": false,
+        "unmarked_scan_modes": [
+          "ITEM_BARCODE",
+          "BOX_BARCODE"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/finished-goods/skus/TC03AA5CF70D/receiving-policy",
+      "status": 200,
+      "elapsed_ms": 112.42,
+      "response": {
+        "articul": "TC03AA5CF70D",
+        "version": 2,
+        "configured": true,
+        "marking_required": true,
+        "serialized_weight_boxes": false,
+        "order_weight_tolerance_pct": "15.0",
+        "stack_stage": "MAIN",
+        "profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO",
+            "profile_version": "TC03.BOX",
+            "scan_mode": "BOX"
+          }
+        ],
+        "legacy_mismatch": false,
+        "unmarked_scan_modes": [
+          "ITEM_BARCODE",
+          "BOX_BARCODE"
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/221164919/site",
+      "status": 200,
+      "elapsed_ms": 104.38,
+      "response": {
+        "warehouse_id": 221164919,
+        "version": 1,
+        "replayed": false,
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 78.23,
+      "response": {
+        "warehouse_id": 221164919,
+        "document_id": "SNS",
+        "entity_type": "OWNER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "40b189dd028c4eee919acffc139b3a47",
+        "correlation_id": "40b189dd028c4eee919acffc139b3a47",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-21T15:53:19.392-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6094
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 67.59,
+      "response": {
+        "warehouse_id": 221164919,
+        "document_id": "A",
+        "entity_type": "SKU",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "466e043336d648caaea1e257c38407fa",
+        "correlation_id": "466e043336d648caaea1e257c38407fa",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-21T15:53:19.457-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6095
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/221164919/stock/cells/T3Raa5cf70d",
+      "status": 200,
+      "elapsed_ms": 103.29,
+      "response": {
+        "cell": "T3Raa5cf70d",
+        "version": 1,
+        "warehouse_id": 221164919,
+        "operation_id": "BOX.CELL.T3Raa5cf70d",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/221164919/stock/cells/T3Saa5cf70d",
+      "status": 200,
+      "elapsed_ms": 102.19,
+      "response": {
+        "cell": "T3Saa5cf70d",
+        "version": 1,
+        "warehouse_id": 221164919,
+        "operation_id": "BOX.CELL.T3Saa5cf70d",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/221164919/stock/cells/T3Paa5cf70d",
+      "status": 200,
+      "elapsed_ms": 83.38,
+      "response": {
+        "cell": "T3Paa5cf70d",
+        "version": 1,
+        "warehouse_id": 221164919,
+        "operation_id": "BOX.CELL.T3Paa5cf70d",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/integrations/sap/supply-orders",
+      "status": 202,
+      "elapsed_ms": 274.51,
+      "response": {
+        "status": "APPLIED",
+        "order_id": "88801607d58c4052b13391b08fe5b712",
+        "incoming_document_id": 25251,
+        "revision": 1,
+        "warehouse_id": 221164919,
+        "gateway_contract_version": 1,
+        "lines": 1,
+        "inventory_booked": false,
+        "idempotent": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 409,
+      "elapsed_ms": 102.9,
+      "response": {
+        "detail": "Unknown aggregation composition: import exact sender manifest"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 409,
+      "elapsed_ms": 104.52,
+      "response": {
+        "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 409,
+      "elapsed_ms": 241.19,
+      "response": {
+        "detail": "Physical unit/profile scanned more than once"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 409,
+      "elapsed_ms": 64.93,
+      "response": {
+        "detail": "This WMS profile requires aggregation scanning"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 201,
+      "elapsed_ms": 1422.77,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "BOX.RECEIPT.aa5cf70d",
+        "pallet_identifier": "690000000582192776",
+        "sscc": "690000000582192776",
+        "quantity": "10",
+        "base_quantity": "10",
+        "base_uom": "EA",
+        "sap_order_number": "BOX.aa5cf70d",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC03AA5CF70D",
+        "unit": "EA",
+        "supplier_batch": "BOX.aa5cf70d",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 221164919,
+        "physical_measurements": {
+          "gross_weight": "10",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3Raa5cf70d",
+        "putaway_cell": "T3Saa5cf70d",
+        "placement": {
+          "cell": "T3Saa5cf70d",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 10,
+        "marking_policy_version": 2,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1218,
+        "outbox_id": 6096
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/supply-orders/88801607d58c4052b13391b08fe5b712/pallets",
+      "status": 201,
+      "elapsed_ms": 115.25,
+      "response": {
+        "status": "RECEIVED",
+        "operation_id": "BOX.RECEIPT.aa5cf70d",
+        "pallet_identifier": "690000000582192776",
+        "sscc": "690000000582192776",
+        "quantity": "10",
+        "base_quantity": "10",
+        "base_uom": "EA",
+        "sap_order_number": "BOX.aa5cf70d",
+        "sap_sender": "TC03.QA.SAP",
+        "order_revision": 1,
+        "line_number": "1",
+        "material": "TC03AA5CF70D",
+        "unit": "EA",
+        "supplier_batch": "BOX.aa5cf70d",
+        "expiry_date": "2030-01-01",
+        "produced_date": null,
+        "warehouse_id": 221164919,
+        "physical_measurements": {
+          "gross_weight": "10",
+          "pallet_height": null,
+          "pallet_height_m": null,
+          "volume_m3": null
+        },
+        "receive_cell": "T3Raa5cf70d",
+        "putaway_cell": "T3Saa5cf70d",
+        "placement": {
+          "cell": "T3Saa5cf70d",
+          "slot_id": null,
+          "score": "0.0",
+          "basis": "COORDINATE_DISTANCE",
+          "metric": "DISTANCE"
+        },
+        "marking_units": 10,
+        "marking_policy_version": 2,
+        "regulatory_validation": "NOT_PERFORMED",
+        "idempotent": false,
+        "task_id": 1218,
+        "outbox_id": 6096
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 161.9,
+      "response": {
+        "warehouse_id": 221164919,
+        "document_id": "SUPPLY",
+        "entity_type": "SUPPLY",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "1c01b56f75dd41a7b8db53708d38ebd3",
+        "correlation_id": "1c01b56f75dd41a7b8db53708d38ebd3",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-21T15:53:22.214-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6097
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/221164919/stock/bind",
+      "status": 200,
+      "elapsed_ms": 254.9,
+      "response": {
+        "supply_id": "SUPPLY",
+        "owner_id": "SNS",
+        "bound_units": 10,
+        "pallet_identifier": "690000000582192776",
+        "mark_state": "PENDING",
+        "attributes_bound": true,
+        "warehouse_id": 221164919,
+        "operation_id": "BOX.BIND.aa5cf70d",
+        "stock_changed": false,
+        "replayed": false,
+        "outbox_id": 6098
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/221164919/stock?pallet_identifier=690000000582192776&limit=100",
+      "status": 200,
+      "elapsed_ms": 191.29,
+      "response": {
+        "has_more": false,
+        "next_after": null,
+        "owner_scope_filtered": false,
+        "items": [
+          {
+            "physical_unit_key": "23dfcc5abba191974dd8e3107aaaf2f2f6b69d9aedca1de1ef5f6f9b99126c8e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "50e017386626486cc9cc8105dffd105150b16b9f69a3a86e61c4ed7f49128204",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "62dfeed8d456b2d31c2402a3760085e0acfb39c9d757322a71dfd925ece2f331",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "71bab9c7a8afb13cd305eaf4866bf60998924ec8f15f2d6e13a66604cbb44991",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "7d0d6107d922ba89992cebaf42f8462e7d6edbd7bc28508d6cf60df36e4136b5",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "88e2f069801962e207e9457ac54f36f821fc6ce350a2214ecabfe829a34aa349",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "9448cf604619248f3832f67604f7e2aea6f7b5b8d9c65d04ac06763c97d8f46e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "a71091d3ccbebfd4f2adf80d9476842bbbb413263a87c71444aecd91d4254b05",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "acbdd806a81f05613d83f7ce17787d31962626df2cc0c14f6b5d139547a6a4ed",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "d3b87600879364a1f2de4e2414a15c0252d5747d5b60f4b9b2df3efd0ab34b62",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Raa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 1,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          }
+        ],
+        "warehouse_id": 221164919
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/receiving/putaway/1218/complete",
+      "status": 200,
+      "elapsed_ms": 609.53,
+      "response": {
+        "operation_id": "TASK.COMPLETE:1218",
+        "task_id": 1218,
+        "status": "DONE",
+        "pallet_identifier": "690000000582192776",
+        "source_pallet_identifier": "690000000582192776",
+        "cell": "T3Saa5cf70d",
+        "quantity": "10",
+        "base_quantity": "10",
+        "base_uom": "EA",
+        "remaining_quantity": "0",
+        "residual_task_id": null,
+        "movement_id": null,
+        "order_id": "88801607d58c4052b13391b08fe5b712",
+        "line_number": "1",
+        "article": "TC03AA5CF70D",
+        "outbox_id": 6099
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/221164919/stock/pallets/690000000582192776/units?limit=100",
+      "status": 404,
+      "elapsed_ms": 50.02,
+      "response": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/221164919/stock?pallet_identifier=690000000582192776&limit=100",
+      "status": 200,
+      "elapsed_ms": 259.01,
+      "response": {
+        "has_more": false,
+        "next_after": null,
+        "owner_scope_filtered": false,
+        "items": [
+          {
+            "physical_unit_key": "23dfcc5abba191974dd8e3107aaaf2f2f6b69d9aedca1de1ef5f6f9b99126c8e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "50e017386626486cc9cc8105dffd105150b16b9f69a3a86e61c4ed7f49128204",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "62dfeed8d456b2d31c2402a3760085e0acfb39c9d757322a71dfd925ece2f331",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "71bab9c7a8afb13cd305eaf4866bf60998924ec8f15f2d6e13a66604cbb44991",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "7d0d6107d922ba89992cebaf42f8462e7d6edbd7bc28508d6cf60df36e4136b5",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "88e2f069801962e207e9457ac54f36f821fc6ce350a2214ecabfe829a34aa349",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "9448cf604619248f3832f67604f7e2aea6f7b5b8d9c65d04ac06763c97d8f46e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "a71091d3ccbebfd4f2adf80d9476842bbbb413263a87c71444aecd91d4254b05",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "acbdd806a81f05613d83f7ce17787d31962626df2cc0c14f6b5d139547a6a4ed",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "d3b87600879364a1f2de4e2414a15c0252d5747d5b60f4b9b2df3efd0ab34b62",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "PENDING",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 1,
+            "unit_version": 2,
+            "hard_reserved": false,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          }
+        ],
+        "warehouse_id": 221164919
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/221164919/stock/mark-confirmations",
+      "status": 200,
+      "elapsed_ms": 139.99,
+      "response": {
+        "confirmed_units": 10,
+        "external_event_id": "FP21.221164919.valid",
+        "skm_id": "TC03.SKM",
+        "owner_changed": false,
+        "warehouse_id": 221164919,
+        "operation_id": "FP21.221164919.valid",
+        "stock_changed": false,
+        "replayed": false,
+        "outbox_id": 6100
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/customers",
+      "status": 200,
+      "elapsed_ms": 95.34,
+      "response": {
+        "customer_id": 763
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 81.54,
+      "response": {
+        "warehouse_id": 221164919,
+        "document_id": "FP21.221164919.RECIPIENT",
+        "entity_type": "RECIPIENT",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "FP21.221164919.RECIPIENT",
+        "correlation_id": "FP21.221164919.RECIPIENT",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-21T15:54:25.942-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6101
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 65.74,
+      "response": {
+        "warehouse_id": 221164919,
+        "document_id": "FP21.221164919.ORDER",
+        "entity_type": "ORDER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "FP21.221164919.ORDER",
+        "correlation_id": "FP21.221164919.ORDER",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-21T15:54:26.013-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6102
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/221164919/orders/FP21.221164919.ORDER/binding",
+      "status": 200,
+      "elapsed_ms": 156.79,
+      "response": {
+        "customer_order_id": 2191,
+        "order_id": "FP21.221164919.ORDER",
+        "order_version": 1,
+        "bound_lines": 1,
+        "stock_changed": false,
+        "replayed": false,
+        "operation_id": "FP21.221164919.bind",
+        "outbox_id": 6103
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/plans",
+      "status": 200,
+      "elapsed_ms": 626.6,
+      "response": {
+        "pick_plan_id": 2244,
+        "operation_id": "FP21.221164919.plan"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves",
+      "status": 200,
+      "elapsed_ms": 215.4,
+      "response": {
+        "pick_wave_id": 603
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/603/plans",
+      "status": 200,
+      "elapsed_ms": 147.49,
+      "response": {
+        "pick_wave_id": 603,
+        "pick_plan_id": 2244,
+        "status": "ADDED"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/603/calculate",
+      "status": 200,
+      "elapsed_ms": 139.65,
+      "response": {
+        "pick_wave_id": 603,
+        "status": "PREVIEW"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/603/launch",
+      "status": 200,
+      "elapsed_ms": 2037.09,
+      "response": {
+        "pick_wave_id": 603,
+        "status": "LAUNCHED",
+        "operation_id": "FP21.221164919.launch",
+        "launch_outcome": "APPLIED",
+        "continuation_state": "COMPLETE",
+        "wave_status": "LAUNCHED"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/603/staging/release",
+      "status": 200,
+      "elapsed_ms": 118.04,
+      "response": {
+        "pick_wave_id": 603,
+        "status": "RELEASED",
+        "released_count": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1219/complete",
+      "status": 409,
+      "elapsed_ms": 155.93,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "FP21.221164919.complete",
+          "oracle_code": 20886,
+          "reason": "WAVE_PICK_RELEASE_REQUIRED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "read_before_retry": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/221164919/stock?pallet_identifier=690000000582192776&limit=100",
+      "status": 200,
+      "elapsed_ms": 311.83,
+      "response": {
+        "has_more": false,
+        "next_after": null,
+        "owner_scope_filtered": false,
+        "items": [
+          {
+            "physical_unit_key": "23dfcc5abba191974dd8e3107aaaf2f2f6b69d9aedca1de1ef5f6f9b99126c8e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "50e017386626486cc9cc8105dffd105150b16b9f69a3a86e61c4ed7f49128204",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "62dfeed8d456b2d31c2402a3760085e0acfb39c9d757322a71dfd925ece2f331",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "71bab9c7a8afb13cd305eaf4866bf60998924ec8f15f2d6e13a66604cbb44991",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "7d0d6107d922ba89992cebaf42f8462e7d6edbd7bc28508d6cf60df36e4136b5",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "88e2f069801962e207e9457ac54f36f821fc6ce350a2214ecabfe829a34aa349",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "9448cf604619248f3832f67604f7e2aea6f7b5b8d9c65d04ac06763c97d8f46e",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "a71091d3ccbebfd4f2adf80d9476842bbbb413263a87c71444aecd91d4254b05",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "acbdd806a81f05613d83f7ce17787d31962626df2cc0c14f6b5d139547a6a4ed",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          },
+          {
+            "physical_unit_key": "d3b87600879364a1f2de4e2414a15c0252d5747d5b60f4b9b2df3efd0ab34b62",
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "mrc": "200",
+            "expiry_date": "2030-01-01",
+            "pallet_identifier": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "mark_state": "VALID",
+            "base_quantity": "1",
+            "base_uom": "EA",
+            "attribute_version": 2,
+            "unit_version": 3,
+            "hard_reserved": true,
+            "buyout_hold": false,
+            "allocation_enabled": false
+          }
+        ],
+        "warehouse_id": 221164919
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/picking/waves/603/release-picking",
+      "status": 200,
+      "elapsed_ms": 223.4,
+      "response": {
+        "wave_id": 603,
+        "warehouse": 221164919,
+        "status": "LAUNCHED",
+        "released_at": "2026-10-21T15:55:13.538404-04:00",
+        "released_by": "admin",
+        "release_operation_id": "FP21.221164919.release",
+        "ready": true,
+        "tasks": [
+          {
+            "pick_task_id": 2175,
+            "wave_task_id": 2086,
+            "article": "TC03AA5CF70D",
+            "task_type": "FULL_PALLET",
+            "status": "ASSIGNED",
+            "cell": "T3Saa5cf70d",
+            "required_base": "10",
+            "covered_base": "10",
+            "missing_base": "0",
+            "base_uom": "EA",
+            "reservations": [
+              {
+                "reservation_id": 1940,
+                "uid": "690000000582192776",
+                "cell": "T3Saa5cf70d",
+                "article": "TC03AA5CF70D",
+                "quantity": "10",
+                "base_uom": "EA",
+                "stock_version": 2,
+                "physical": "10",
+                "hard": "10",
+                "reason": null
+              }
+            ]
+          }
+        ],
+        "open_replenishments": [],
+        "outbox_id": 6105,
+        "command_operation_id": "FP21.221164919.release"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1219/complete",
+      "status": 409,
+      "elapsed_ms": 209.68,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "FP21.221164919.complete.v2",
+          "oracle_code": 20911,
+          "reason": "TRADE_TASK_BINDING_REQUIRED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "read_before_retry": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/transport/vehicles/10127/profile",
+      "status": 200,
+      "elapsed_ms": 282.03,
+      "response": {
+        "base_hash": "18BF0EAC4013F13A829D90961CAD8F7BF885269170619A0BA1ABF1E571314788",
+        "vehicle_id": 10127,
+        "base": {
+          "vehicle_id": 10127,
+          "vehicle_number": "NS23V222385707",
+          "vehicle_type": "10",
+          "pallet_capacity": "10",
+          "max_weight_kg": "1000"
+        },
+        "state": "NOT_CONFIGURED",
+        "version": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/transport/vehicle-profiles",
+      "status": 200,
+      "elapsed_ms": 172.1,
+      "response": {
+        "operation_id": "NS23.57bdf1ab2.profile",
+        "vehicle_id": 10127,
+        "version": 1,
+        "vehicle_size_class": "QA_VAN",
+        "cargo_length_mm": 3000,
+        "cargo_width_mm": 2400,
+        "cargo_height_mm": 2400,
+        "outer_height_mm": 3000,
+        "outer_length_mm": 6000,
+        "source": {
+          "vehicle_id": 10127,
+          "vehicle_number": "NS23V222385707",
+          "vehicle_type": "10",
+          "pallet_capacity": "10",
+          "max_weight_kg": "1000"
+        },
+        "actor": "admin",
+        "evidence_reference": "SYNTHETIC_NOT_ROAD_VEHICLE",
+        "floor_capacity": {
+          "variants": [
+            {
+              "code": "QA_TWO_EURO",
+              "limits": [
+                {
+                  "max_places": 2,
+                  "pallet_type_id": 1
+                }
+              ]
+            }
+          ],
+          "basis": "FLEET_DECLARED_FLOOR_VARIANTS",
+          "evidence_reference": "SYNTHETIC_NOT_ROAD_VEHICLE"
+        },
+        "status": "CONFIGURED",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/pallet-floor-types?identifier=690000000707411744",
+      "status": 409,
+      "elapsed_ms": 123.31,
+      "response": {
+        "detail": {
+          "code": "PALLET_FLOOR_READ_REJECTED",
+          "message": "ORA-20886: PALLET_FLOOR_INDEPENDENT_TOP_REQUIRED",
+          "operation_id": "READ",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 422.51,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 1,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner",
+              "content_version": 1,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:35:36.701450-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 742,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 741,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.2",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 161.83,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner",
+              "content_version": 1,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:35:36.701450-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 741,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "version": 1,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          }
+        ],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 0,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/detach",
+      "status": 200,
+      "elapsed_ms": 242.1,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "NS23.57bdf1ab2.outer_floor_detach",
+        "command": "HU_DETACH",
+        "outbox_id": 6887
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 99.96,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner",
+              "content_version": 1,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:35:36.701450-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 741,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=690000000707411744",
+      "status": 200,
+      "elapsed_ms": 89.26,
+      "response": {
+        "root": "690000000707411744",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "version": 3,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          }
+        ],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 0,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/detach",
+      "status": 200,
+      "elapsed_ms": 213.3,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 4,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner",
+              "content_version": 1,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:35:36.701450-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "NS23.57bdf1ab2.inner_floor_detach",
+        "command": "HU_DETACH",
+        "outbox_id": 6888
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/pallet-floor-types?identifier=690000000707411744",
+      "status": 200,
+      "elapsed_ms": 162.3,
+      "response": {
+        "article": "TC03BCFDABB6",
+        "uid": "690000000707411744",
+        "warehouse": 222385707,
+        "kind": "STOCK",
+        "sscc": "690000000707411744",
+        "cell": "T3Rbcfdabb6",
+        "has_physical_stock": true,
+        "operational_admission": false,
+        "stock_changed": false,
+        "version": 0,
+        "status": "NOT_CONFIGURED",
+        "types": [
+          {
+            "id": 1,
+            "code": "EURO_PALLET",
+            "name": "Европоддон"
+          },
+          {
+            "id": 2,
+            "code": "AMERICAN_PALLET",
+            "name": "Американский поддон"
+          },
+          {
+            "id": 3,
+            "code": "TROLLEY",
+            "name": "Тележка"
+          },
+          {
+            "id": 7,
+            "code": "SMALL202.E0AA707B",
+            "name": "Own202 final weighing small box"
+          },
+          {
+            "id": 8,
+            "code": "SMALL203.56E93BB1",
+            "name": "Own203 final weighing small box"
+          },
+          {
+            "id": 9,
+            "code": "SMALL204.65E23C0C",
+            "name": "Own204 final weighing small box"
+          },
+          {
+            "id": 10,
+            "code": "SMALL204.4F9A6052",
+            "name": "Own204 final weighing small box"
+          },
+          {
+            "id": 11,
+            "code": "SMALL205.097F5A91",
+            "name": "Own205 final weighing small box"
+          },
+          {
+            "id": 12,
+            "code": "SMALL205.F0C461FA",
+            "name": "Own205 final weighing small box"
+          },
+          {
+            "id": 13,
+            "code": "SMALL206.C6094492",
+            "name": "Own206 final weighing small box"
+          },
+          {
+            "id": 14,
+            "code": "SMALL206.C05567F9",
+            "name": "Own206 final weighing small box"
+          },
+          {
+            "id": 15,
+            "code": "SMALL207.45244A78",
+            "name": "Own207 final weighing small box"
+          },
+          {
+            "id": 16,
+            "code": "SMALL207.6EFB9A81",
+            "name": "Own207 final weighing small box"
+          },
+          {
+            "id": 17,
+            "code": "SMALL207.5AB68DD7",
+            "name": "Own207 final weighing small box"
+          },
+          {
+            "id": 18,
+            "code": "SMALL211.E4B192FE",
+            "name": "Own211 final weighing small box"
+          },
+          {
+            "id": 19,
+            "code": "SMALL211.51781C52",
+            "name": "Own211 final weighing small box"
+          },
+          {
+            "id": 20,
+            "code": "SMALL211.2B4E81F1",
+            "name": "Own211 final weighing small box"
+          },
+          {
+            "id": 21,
+            "code": "SMALL211.8258E0AB",
+            "name": "Own211 final weighing small box"
+          },
+          {
+            "id": 22,
+            "code": "SMALL212.1E544268",
+            "name": "Own212 final weighing small box"
+          },
+          {
+            "id": 23,
+            "code": "SMALL213.DF2C8044",
+            "name": "Own213 final weighing small box"
+          },
+          {
+            "id": 24,
+            "code": "SMALL214.6E1DAE4D",
+            "name": "Own214 final weighing small box"
+          },
+          {
+            "id": 25,
+            "code": "SMALL214.C62C896A",
+            "name": "Own214 final weighing small box"
+          },
+          {
+            "id": 26,
+            "code": "SMALL215.3FEC249F",
+            "name": "Own215 final weighing small box"
+          },
+          {
+            "id": 27,
+            "code": "SMALL216.7DF96570",
+            "name": "Own216 final weighing small box"
+          },
+          {
+            "id": 29,
+            "code": "CS361:268718d3e9",
+            "name": "CS361:268718d3e9"
+          },
+          {
+            "id": 30,
+            "code": "SMALL376.1761C294",
+            "name": "Own376 final weighing small box"
+          },
+          {
+            "id": 31,
+            "code": "SMALL499.95D3EE16",
+            "name": "Own499 final weighing small box"
+          },
+          {
+            "id": 32,
+            "code": "SMALL514.AF32399B",
+            "name": "Own514 final weighing small box"
+          },
+          {
+            "id": 33,
+            "code": "BULK22.CARTON.220793322",
+            "name": "TRADECASE test carton"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/pallet-floor-types",
+      "status": 200,
+      "elapsed_ms": 279.06,
+      "response": {
+        "operation_id": "NS23.57bdf1ab2.floor",
+        "command_type": "PALLET_FLOOR_TYPE_CONFIRM",
+        "uid": "690000000707411744",
+        "warehouse": 222385707,
+        "pallet_type_id": 1,
+        "version": 1,
+        "evidence_reference": "OWN_QA_PALLET_TYPE_NOT_HARDWARE",
+        "actor": "admin",
+        "stock_changed": false,
+        "tare_balance_changed": false,
+        "status": "APPLIED",
+        "outbox_id": 6889
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 91.74,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 4,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner",
+              "content_version": 1,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:35:36.701450-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "quantities": [],
+        "gross_weight_kg": "0.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "EMPTY",
+          "allowed": true,
+          "code": "HU_THERMAL_NO_STOCK",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 0,
+          "sku_count": 0,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": []
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=690000000707411744",
+      "status": 200,
+      "elapsed_ms": 92.66,
+      "response": {
+        "root": "690000000707411744",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 2,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/attach",
+      "status": 200,
+      "elapsed_ms": 212.31,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 5,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+        "command": "HU_ATTACH",
+        "outbox_id": 6890
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 102.39,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "quantities": [],
+        "gross_weight_kg": "0.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "EMPTY",
+          "allowed": true,
+          "code": "HU_THERMAL_NO_STOCK",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 0,
+          "sku_count": 0,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": []
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 154.15,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 5,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/attach",
+      "status": 200,
+      "elapsed_ms": 332.7,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 744,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "operation_id": "NS23.57bdf1ab2.outer_floor_repack",
+        "command": "HU_ATTACH",
+        "outbox_id": 6891
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/outgoing-quality/FP21.ST.222385707",
+      "status": 200,
+      "elapsed_ms": 159.76,
+      "response": {
+        "shipment_identifier": "FP21.ST.222385707",
+        "document_id": 641560,
+        "ready": false,
+        "case_task_id": null,
+        "case_content_version": null,
+        "composition_signature_version": 2,
+        "final_scale_required": false,
+        "required": false,
+        "control_mode": "NONE",
+        "independent_controller_required": false,
+        "quality_policy": {
+          "warehouse_id": 222385707,
+          "mode": "NONE",
+          "independent": 0,
+          "sample_percent": 0,
+          "exempt_whole": 0,
+          "exempt_storage": 0,
+          "scoped_rule": false
+        },
+        "weight_exemption": {
+          "eligible": false,
+          "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+        },
+        "unique_mark_control_required": true,
+        "mark_profiles": [
+          {
+            "system_code": "CRPT",
+            "profile_code": "TOBACCO"
+          }
+        ],
+        "physical_unit_count": 10,
+        "composition_signature": "998553FD657BD886C6DD90C1F7ECAE7CAE08CEE2689E9784BF25D9413060DC4A",
+        "weight_exemption_recorded": false,
+        "sample_percent": 0,
+        "sample_selected": false,
+        "rescan_required": false,
+        "control_plan_required": false,
+        "full_scan_required": false,
+        "scan_matches": null,
+        "weight_matches": null,
+        "weight_policy_reason": "ORA-20887: QUALITY_SI_WEIGHT_POLICY_REQUIRED:TC03BCFDABB6",
+        "reason": "ORA-20886: SHIPMENT_CURRENT_UNIQUE_MARK_CONTROL_REQUIRED",
+        "transport_assignment": {
+          "state": "ASSIGNED",
+          "shipment_id": 641560,
+          "transport_task_id": 33676
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/outgoing-quality/FP21.ST.222385707/scan",
+      "status": 200,
+      "elapsed_ms": 527.26,
+      "response": {
+        "ready": true,
+        "whole_hu_shipment_required": true,
+        "failure_reason": null,
+        "operation_id": "NS23.57bdf1ab2.qc",
+        "verified": 1,
+        "shipped": 0,
+        "physical_loading_required": true,
+        "return_code": 0,
+        "outbox_id": 6892
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 200.04,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 744,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.2",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/confirm",
+      "status": 409,
+      "elapsed_ms": 415.62,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "message": "LOAD_FLOOR_SINGLE_HELD_HU_TARE_REQUIRED",
+          "operation_id": "NS23.57bdf1ab2.load",
+          "retry_same_operation_id": true,
+          "outcome_confirmed": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 312.26,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "version": 3,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          }
+        ],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 0,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=690000000707411744",
+      "status": 200,
+      "elapsed_ms": 165.51,
+      "response": {
+        "root": "690000000707411744",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "version": 6,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "version": 3,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          }
+        ],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 0,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 175.37,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 744,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.2",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.BOX",
+      "status": 200,
+      "elapsed_ms": 99.22,
+      "response": {
+        "root": "NS23.57bdf1ab2.BOX",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "version": 3,
+            "cell": "T3Rbcfdabb6",
+            "open_task_count": 0
+          }
+        ],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 0,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/count",
+      "status": 200,
+      "elapsed_ms": 232.07,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "1",
+        "operation_id": "NS23.57bdf1ab2.tare.count",
+        "quantity": "1",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6893
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/book",
+      "status": 200,
+      "elapsed_ms": 278.51,
+      "response": {
+        "operation_id": "NS23.57bdf1ab2.tare.book",
+        "status": "HELD",
+        "place_kind": "HU",
+        "place_id": "NS23.57bdf1ab2.PALLET",
+        "pallet_type_id": 1,
+        "warehouse_id": 222385707,
+        "available_quantity": "0",
+        "quantity": "1",
+        "physical_tare_changed": false,
+        "goods_stock_changed": false,
+        "outbox_id": 6894
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 379.55,
+      "response": {
+        "warehouse_id": 222385707,
+        "order_id": "FP21.222385707.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "400be56fa0e85a65a3eed8c0f85d64898be63d7333989746a243f30cfb034720",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 102.13,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 744,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.2",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC03BCFDABB6",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "elapsed_ms": 992.64,
+      "response": {
+        "physical_load": {
+          "trip": 33676,
+          "vehicle_id": 10127,
+          "vehicle": "NS23V222385707",
+          "dock": "NS23D222385707",
+          "warehouse": 222385707,
+          "uid": "NS23.57bdf1ab2.PALLET",
+          "case_task_id": null,
+          "content_version": 3,
+          "mass_kg": "10.2",
+          "volume_m3": "1.44",
+          "members": [
+            641560
+          ],
+          "destinations": [
+            {
+              "id": 641560,
+              "address": "FP21.QA.ADDRESS"
+            }
+          ],
+          "physical_boxes": [
+            {
+              "box_uid": "NS23.57bdf1ab2.BOX",
+              "content_version": 6,
+              "gross_weight_kg": "10.1",
+              "origin": "MANUAL_CONFIRMED",
+              "coverage_complete": 1,
+              "measurement_ref": "SYNTHETIC_TYPED_BOX_WEIGHT",
+              "scan_box": "NS23.57bdf1ab2.BOX"
+            }
+          ],
+          "floor_at_loading": {
+            "vehicle_id": 10127,
+            "profile_version": 1,
+            "profile_base_hash": "18BF0EAC4013F13A829D90961CAD8F7BF885269170619A0BA1ABF1E571314788",
+            "pallet_type_id": 1,
+            "type_origin": "HELD_HU_TARE_BOOK",
+            "source_reference": "NS23.57bdf1ab2.tare.book",
+            "root": "NS23.57bdf1ab2.PALLET",
+            "warehouse": 222385707,
+            "top_place_count": 1
+          },
+          "temperature_at_loading": null
+        },
+        "operation_id": "NS23.57bdf1ab2.load.tare_ready",
+        "status": "SHIPPED",
+        "uid": "NS23.57bdf1ab2.PALLET",
+        "shipments": [
+          {
+            "case_pick_task_id": null,
+            "operation_id": "NS23.57bdf1ab2.load.tare_ready",
+            "status": "APPLIED",
+            "document_id": 641560,
+            "allocations": [
+              {
+                "row_id": 16728029,
+                "uid": "690000000707411744",
+                "cell": "T3Rbcfdabb6",
+                "article": "TC03BCFDABB6",
+                "source_p": "10",
+                "quantity": "10",
+                "base_uom": "EA",
+                "uom_version": 1,
+                "reservation_id": 2002,
+                "owner_type": "PICK_WAVE",
+                "owner_id": 623,
+                "pick_task_id": 2195,
+                "reservation_version": 2
+              }
+            ]
+          }
+        ],
+        "composition_at_departure": {
+          "root": "NS23.57bdf1ab2.PALLET",
+          "warehouse": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "nodes": [
+            {
+              "uid": "NS23.57bdf1ab2.PALLET",
+              "kind": "CONTAINER",
+              "type": "PALLET",
+              "version": 3,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 0
+            },
+            {
+              "uid": "NS23.57bdf1ab2.BOX",
+              "kind": "CONTAINER",
+              "type": "BOX",
+              "version": 6,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "packing_start": {
+                "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+                "content_version": 5,
+                "warehouse": 222385707,
+                "instant": "2026-10-23T07:41:51.026724-04:00"
+              },
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 1
+            },
+            {
+              "uid": "690000000707411744",
+              "kind": "STOCK",
+              "type": null,
+              "version": 3,
+              "sscc": "690000000707411744",
+              "tare_weight_kg": "0",
+              "article": "TC03BCFDABB6",
+              "quantity": "10",
+              "hard_quantity": "10",
+              "base_uom": "EA",
+              "stock_version": 3,
+              "weight_kg": "10",
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 2
+            }
+          ],
+          "links": [
+            {
+              "id": 744,
+              "parent": "NS23.57bdf1ab2.PALLET",
+              "child": "NS23.57bdf1ab2.BOX",
+              "version": 0
+            },
+            {
+              "id": 743,
+              "parent": "NS23.57bdf1ab2.BOX",
+              "child": "690000000707411744",
+              "version": 0
+            }
+          ],
+          "ancestors": [],
+          "physical_unit_count": 10,
+          "leaf_count": 1,
+          "top_place_count": 1
+        },
+        "top_place_count": 1,
+        "outbox_id": 6896
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "elapsed_ms": 121.65,
+      "response": {
+        "physical_load": {
+          "trip": 33676,
+          "vehicle_id": 10127,
+          "vehicle": "NS23V222385707",
+          "dock": "NS23D222385707",
+          "warehouse": 222385707,
+          "uid": "NS23.57bdf1ab2.PALLET",
+          "case_task_id": null,
+          "content_version": 3,
+          "mass_kg": "10.2",
+          "volume_m3": "1.44",
+          "members": [
+            641560
+          ],
+          "destinations": [
+            {
+              "id": 641560,
+              "address": "FP21.QA.ADDRESS"
+            }
+          ],
+          "physical_boxes": [
+            {
+              "box_uid": "NS23.57bdf1ab2.BOX",
+              "content_version": 6,
+              "gross_weight_kg": "10.1",
+              "origin": "MANUAL_CONFIRMED",
+              "coverage_complete": 1,
+              "measurement_ref": "SYNTHETIC_TYPED_BOX_WEIGHT",
+              "scan_box": "NS23.57bdf1ab2.BOX"
+            }
+          ],
+          "floor_at_loading": {
+            "vehicle_id": 10127,
+            "profile_version": 1,
+            "profile_base_hash": "18BF0EAC4013F13A829D90961CAD8F7BF885269170619A0BA1ABF1E571314788",
+            "pallet_type_id": 1,
+            "type_origin": "HELD_HU_TARE_BOOK",
+            "source_reference": "NS23.57bdf1ab2.tare.book",
+            "root": "NS23.57bdf1ab2.PALLET",
+            "warehouse": 222385707,
+            "top_place_count": 1
+          },
+          "temperature_at_loading": null
+        },
+        "operation_id": "NS23.57bdf1ab2.load.tare_ready",
+        "status": "SHIPPED",
+        "uid": "NS23.57bdf1ab2.PALLET",
+        "shipments": [
+          {
+            "case_pick_task_id": null,
+            "operation_id": "NS23.57bdf1ab2.load.tare_ready",
+            "status": "APPLIED",
+            "document_id": 641560,
+            "allocations": [
+              {
+                "row_id": 16728029,
+                "uid": "690000000707411744",
+                "cell": "T3Rbcfdabb6",
+                "article": "TC03BCFDABB6",
+                "source_p": "10",
+                "quantity": "10",
+                "base_uom": "EA",
+                "uom_version": 1,
+                "reservation_id": 2002,
+                "owner_type": "PICK_WAVE",
+                "owner_id": 623,
+                "pick_task_id": 2195,
+                "reservation_version": 2
+              }
+            ]
+          }
+        ],
+        "composition_at_departure": {
+          "root": "NS23.57bdf1ab2.PALLET",
+          "warehouse": 222385707,
+          "cell": "T3Rbcfdabb6",
+          "nodes": [
+            {
+              "uid": "NS23.57bdf1ab2.PALLET",
+              "kind": "CONTAINER",
+              "type": "PALLET",
+              "version": 3,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 0
+            },
+            {
+              "uid": "NS23.57bdf1ab2.BOX",
+              "kind": "CONTAINER",
+              "type": "BOX",
+              "version": 6,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "packing_start": {
+                "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+                "content_version": 5,
+                "warehouse": 222385707,
+                "instant": "2026-10-23T07:41:51.026724-04:00"
+              },
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 1
+            },
+            {
+              "uid": "690000000707411744",
+              "kind": "STOCK",
+              "type": null,
+              "version": 3,
+              "sscc": "690000000707411744",
+              "tare_weight_kg": "0",
+              "article": "TC03BCFDABB6",
+              "quantity": "10",
+              "hard_quantity": "10",
+              "base_uom": "EA",
+              "stock_version": 3,
+              "weight_kg": "10",
+              "open_task_count": 0,
+              "cell": "T3Rbcfdabb6",
+              "depth": 2
+            }
+          ],
+          "links": [
+            {
+              "id": 744,
+              "parent": "NS23.57bdf1ab2.PALLET",
+              "child": "NS23.57bdf1ab2.BOX",
+              "version": 0
+            },
+            {
+              "id": 743,
+              "parent": "NS23.57bdf1ab2.BOX",
+              "child": "690000000707411744",
+              "version": 0
+            }
+          ],
+          "ancestors": [],
+          "physical_unit_count": 10,
+          "leaf_count": 1,
+          "top_place_count": 1
+        },
+        "top_place_count": 1,
+        "outbox_id": 6896
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/report",
+      "status": 200,
+      "elapsed_ms": 205.7,
+      "response": {
+        "warehouse_id": 222385707,
+        "order_id": "FP21.222385707.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "400be56fa0e85a65a3eed8c0f85d64898be63d7333989746a243f30cfb034720",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "WAITING",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "replayed": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/transport/driver-bindings/10026",
+      "status": 403,
+      "elapsed_ms": 613.94,
+      "response": {
+        "detail": {
+          "code": "DRIVER_BINDING_REJECTED",
+          "message": "ORA-20882: DRIVER_DEDICATED_ACTIVE_USER_REQUIRED"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/transport/driver-bindings/10026",
+      "status": 200,
+      "elapsed_ms": 308.81,
+      "response": {
+        "driver_id": 10026,
+        "user_id": "ND23c60356a98",
+        "active": true,
+        "binding_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/offer",
+      "status": 200,
+      "elapsed_ms": 278.79,
+      "response": {
+        "status": "WAITING_OTHER_PARTICIPANT",
+        "tare_balance_changed": false,
+        "operation_id": "NS23.57bdf1ab2.tare.offer",
+        "quantity": "1",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6897
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/accept",
+      "status": 200,
+      "elapsed_ms": 412.08,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "1",
+        "offer_operation_id": "NS23.57bdf1ab2.tare.offer",
+        "short_quantity": "0",
+        "operation_id": "NS23.57bdf1ab2.tare.accept",
+        "quantity": "1",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6898
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 349.6,
+      "response": {
+        "warehouse_id": 222385707,
+        "order_id": "FP21.222385707.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "400be56fa0e85a65a3eed8c0f85d64898be63d7333989746a243f30cfb034720",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "WAITING",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "WAITING",
+        "acknowledged_system": "SAP",
+        "external_event_id": "NS23.57bdf1ab2.ack.SAP",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/order-compositions/acknowledgments",
+      "status": 200,
+      "elapsed_ms": 132.47,
+      "response": {
+        "warehouse_id": 222385707,
+        "order_id": "FP21.222385707.ORDER",
+        "order_version": 1,
+        "assembly_closed": true,
+        "live_units": 10,
+        "live_carriers": 1,
+        "composition_no": 1,
+        "signature": "400be56fa0e85a65a3eed8c0f85d64898be63d7333989746a243f30cfb034720",
+        "reported_order_version": 1,
+        "units": 10,
+        "carriers": 1,
+        "codes": 10,
+        "source_id": "TC03.SAP",
+        "skm_id": "TC03.SKM",
+        "sap_status": "ACCEPTED",
+        "sap_reason": null,
+        "skm_status": "ACCEPTED",
+        "skm_reason": null,
+        "composition_state": "CURRENT",
+        "change_reason": null,
+        "status": "CONFIRMED",
+        "acknowledged_system": "SKM",
+        "external_event_id": "NS23.57bdf1ab2.ack.SKM",
+        "stock_changed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=NS23.57bdf1ab2.PALLET",
+      "status": 200,
+      "elapsed_ms": 127.08,
+      "response": {
+        "root": "NS23.57bdf1ab2.PALLET",
+        "warehouse": 222385707,
+        "cell": "T3Rbcfdabb6",
+        "nodes": [
+          {
+            "uid": "NS23.57bdf1ab2.PALLET",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 0
+          },
+          {
+            "uid": "NS23.57bdf1ab2.BOX",
+            "kind": "CONTAINER",
+            "type": "BOX",
+            "version": 6,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "packing_start": {
+              "operation_id": "NS23.57bdf1ab2.inner_floor_repack",
+              "content_version": 5,
+              "warehouse": 222385707,
+              "instant": "2026-10-23T07:41:51.026724-04:00"
+            },
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 1
+          },
+          {
+            "uid": "690000000707411744",
+            "kind": "STOCK",
+            "type": null,
+            "version": 3,
+            "sscc": "690000000707411744",
+            "tare_weight_kg": "0",
+            "article": "TC03BCFDABB6",
+            "quantity": "10",
+            "hard_quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 3,
+            "weight_kg": "10",
+            "open_task_count": 0,
+            "cell": "T3Rbcfdabb6",
+            "depth": 2
+          }
+        ],
+        "links": [
+          {
+            "id": 744,
+            "parent": "NS23.57bdf1ab2.PALLET",
+            "child": "NS23.57bdf1ab2.BOX",
+            "version": 0
+          },
+          {
+            "id": 743,
+            "parent": "NS23.57bdf1ab2.BOX",
+            "child": "690000000707411744",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 10,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "status": "SHIPPED",
+        "departure_operation_id": "NS23.57bdf1ab2.load.tare_ready",
+        "historical_composition": true,
+        "quantities": [
+          {
+            "article": "TC03BCFDABB6",
+            "base_uom": "EA",
+            "quantity": "10"
+          }
+        ],
+        "gross_weight_kg": "10.2",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "status": "HISTORICAL_NOT_EVALUATED",
+          "allowed": null,
+          "policy_only": true,
+          "observed_temperature_c": null
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/offer",
+      "status": 200,
+      "elapsed_ms": 339.98,
+      "response": {
+        "status": "WAITING_OTHER_PARTICIPANT",
+        "tare_balance_changed": false,
+        "operation_id": "NS23.57bdf1ab2.tare.return.offer",
+        "quantity": "1",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6903
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/accept",
+      "status": 200,
+      "elapsed_ms": 204.26,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "1",
+        "offer_operation_id": "NS23.57bdf1ab2.tare.return.offer",
+        "short_quantity": "0",
+        "operation_id": "NS23.57bdf1ab2.tare.return.accept",
+        "quantity": "1",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6904
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/tare/warehouses/222385707/balances",
+      "status": 200,
+      "elapsed_ms": 165.14,
+      "response": [
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "VEHICLE",
+          "custodian_id": "10127",
+          "quantity": "0",
+          "balance_version": 2,
+          "updated_at": "2026-10-23T07:50:02.240644",
+          "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+        },
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "222385707",
+          "quantity": "1",
+          "balance_version": 4,
+          "updated_at": "2026-10-23T07:50:02.241777",
+          "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/tare/warehouses/222385707/balances",
+      "status": 200,
+      "elapsed_ms": 307.71,
+      "response": [
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "VEHICLE",
+          "custodian_id": "10127",
+          "quantity": "0",
+          "balance_version": 2,
+          "updated_at": "2026-10-23T07:50:02.240644",
+          "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+        },
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "222385707",
+          "quantity": "1",
+          "balance_version": 4,
+          "updated_at": "2026-10-23T07:50:02.241777",
+          "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/tare/count",
+      "status": 200,
+      "elapsed_ms": 125.27,
+      "response": {
+        "status": "POSTED",
+        "tare_balance_changed": true,
+        "destination_quantity": "0",
+        "operation_id": "NS23.57bdf1ab2.tare.close",
+        "quantity": "0",
+        "owner_ware_id": 222385707,
+        "pallet_type_id": 1,
+        "condition": "GOOD",
+        "goods_stock_changed": false,
+        "outbox_id": 6905
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/transport/driver-bindings/10026",
+      "status": 200,
+      "elapsed_ms": 93.87,
+      "response": {
+        "driver_id": 10026,
+        "user_id": "ND23c60356a98",
+        "active": false,
+        "binding_version": 2
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/resources/96/qualifications",
+      "status": 200,
+      "elapsed_ms": 115.02,
+      "response": {
+        "resource_id": 96,
+        "task_type": "PICKING_MOVE",
+        "active": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/tare/warehouses/222385707/balances",
+      "status": 200,
+      "elapsed_ms": 81.83,
+      "response": [
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "VEHICLE",
+          "custodian_id": "10127",
+          "quantity": "0",
+          "balance_version": 2,
+          "updated_at": "2026-10-23T07:50:02.240644",
+          "last_operation_id": "NS23.57bdf1ab2.tare.return.accept"
+        },
+        {
+          "owner_ware_id": 222385707,
+          "pallet_type_id": 1,
+          "pallet_type_code": "EURO_PALLET",
+          "pallet_type_name": "Европоддон",
+          "condition_code": "GOOD",
+          "custodian_kind": "WAREHOUSE",
+          "custodian_id": "222385707",
+          "quantity": "0",
+          "balance_version": 5,
+          "updated_at": "2026-10-23T07:50:22.628456",
+          "last_operation_id": "NS23.57bdf1ab2.tare.close"
+        }
+      ]
+    }
+  ],
+  "fixture": {
+    "tag": "aa5cf70d",
+    "warehouse_id": 221164919,
+    "article": "TC03AA5CF70D",
+    "receive": "T3Raa5cf70d",
+    "storage": "T3Saa5cf70d",
+    "pick": "T3Paa5cf70d",
+    "gtin": "29028582192772",
+    "pallet": "690000000582192776",
+    "actor": "TC03aa5cf70d",
+    "role": "TC03aa5cf70d",
+    "slow_marker": 5563
+  },
+  "receipt_proof": {
+    "status": "PASS",
+    "warehouse_id": 221164919,
+    "pallet": "690000000582192776",
+    "article": "TC03AA5CF70D",
+    "box_code": "29028582192772aa5B001",
+    "split": {
+      "status": "NOT_RUN",
+      "reason": "Whole pallet retained for FULL_PALLET proof"
+    },
+    "physical": [
+      10,
+      0
+    ],
+    "failures": [
+      {
+        "case": "unknown",
+        "status": 409,
+        "result": {
+          "detail": "Unknown aggregation composition: import exact sender manifest"
+        }
+      },
+      {
+        "case": "quantity",
+        "status": 409,
+        "result": {
+          "detail": "Sum of physical unit quantities must equal pallet quantity; maximum 10000 units"
+        }
+      },
+      {
+        "case": "duplicate",
+        "status": 409,
+        "result": {
+          "detail": "Physical unit/profile scanned more than once"
+        }
+      },
+      {
+        "case": "unit_scan",
+        "status": 409,
+        "result": {
+          "detail": "This WMS profile requires aggregation scanning"
+        }
+      }
+    ],
+    "codes": [
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50001"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50002"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50003"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50004"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50005"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50006"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50007"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50008"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50009"
+      },
+      {
+        "system_code": "CRPT",
+        "profile_code": "TOBACCO",
+        "code": "29028582192772aa50010"
+      }
+    ],
+    "supply_order": "88801607d58c4052b13391b08fe5b712",
+    "checks": [
+      "one source BOX scan expands exactly ten pieces",
+      "unknown/quantity/duplicate/unit-only scan rejected",
+      "native receipt exact replay does not double units/tasks",
+      "same ten legal attributes; pending regulatory confirmation"
+    ],
+    "limits": [
+      "Factory composition is synthetic XML, not an external provider response",
+      "Nested pallet/box tree, FULL_PAL and outgoing reaggregation not tested; physical split is not regulatory BOX confirmation"
+    ]
+  },
+  "putaway": {
+    "operation_id": "TASK.COMPLETE:1218",
+    "task_id": 1218,
+    "status": "DONE",
+    "pallet_identifier": "690000000582192776",
+    "source_pallet_identifier": "690000000582192776",
+    "cell": "T3Saa5cf70d",
+    "quantity": "10",
+    "base_quantity": "10",
+    "base_uom": "EA",
+    "remaining_quantity": "0",
+    "residual_task_id": null,
+    "movement_id": null,
+    "order_id": "88801607d58c4052b13391b08fe5b712",
+    "line_number": "1",
+    "article": "TC03AA5CF70D",
+    "outbox_id": 6099
+  },
+  "error": "(404, {'detail': 'Not Found'})",
+  "mark_valid": {
+    "confirmed_units": 10,
+    "external_event_id": "FP21.221164919.valid",
+    "skm_id": "TC03.SKM",
+    "owner_changed": false,
+    "warehouse_id": 221164919,
+    "operation_id": "FP21.221164919.valid",
+    "stock_changed": false,
+    "replayed": false,
+    "outbox_id": 6100
+  },
+  "norm": true,
+  "customer": {
+    "customer_id": 763
+  },
+  "RECIPIENT": {
+    "warehouse_id": 221164919,
+    "document_id": "FP21.221164919.RECIPIENT",
+    "entity_type": "RECIPIENT",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "FP21.221164919.RECIPIENT",
+    "correlation_id": "FP21.221164919.RECIPIENT",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-21T15:54:25.942-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6101
+  },
+  "ORDER": {
+    "warehouse_id": 221164919,
+    "document_id": "FP21.221164919.ORDER",
+    "entity_type": "ORDER",
+    "version": 1,
+    "status": "ACCEPTED",
+    "replayed": false,
+    "stock_changed": false,
+    "physical_execution": "NOT_STARTED",
+    "schema_version": 1,
+    "event_id": "FP21.221164919.ORDER",
+    "correlation_id": "FP21.221164919.ORDER",
+    "source_id": "WMS_TRADECASE",
+    "target_source_id": "TC03.SAP",
+    "occurred_at": "2026-10-21T15:54:26.013-04:00",
+    "external_delivery": "PENDING",
+    "external_business": "NOT_CONFIRMED",
+    "outbox_id": 6102
+  },
+  "native_order": 2191,
+  "native_row": 3678,
+  "binding": {
+    "customer_order_id": 2191,
+    "order_id": "FP21.221164919.ORDER",
+    "order_version": 1,
+    "bound_lines": 1,
+    "stock_changed": false,
+    "replayed": false,
+    "operation_id": "FP21.221164919.bind",
+    "outbox_id": 6103
+  },
+  "plan": {
+    "pick_plan_id": 2244,
+    "operation_id": "FP21.221164919.plan"
+  },
+  "wave": {
+    "pick_wave_id": 603
+  },
+  "wave_id": 603,
+  "added": {
+    "pick_wave_id": 603,
+    "pick_plan_id": 2244,
+    "status": "ADDED"
+  },
+  "calculated": {
+    "pick_wave_id": 603,
+    "status": "PREVIEW"
+  },
+  "launched": {
+    "pick_wave_id": 603,
+    "status": "LAUNCHED",
+    "operation_id": "FP21.221164919.launch",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "staging": {
+    "pick_wave_id": 603,
+    "status": "RELEASED",
+    "released_count": 1
+  },
+  "task": [
+    1219,
+    "690000000582192776",
+    "T3Saa5cf70d",
+    "T3Raa5cf70d",
+    10
+  ],
+  "admission_before": [
+    409,
+    {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "FP21.221164919.complete.v2",
+        "oracle_code": 20911,
+        "reason": "TRADE_TASK_BINDING_REQUIRED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "read_before_retry": false
+      }
+    }
+  ],
+  "complete_body": {
+    "operation_id": "FP21.221164919.complete.v2",
+    "scanned_pallet": "690000000582192776",
+    "scanned_from_cell": "T3Saa5cf70d",
+    "scanned_to_cell": "T3Raa5cf70d",
+    "fact_qty": "10"
+  },
+  "pick_release": {
+    "wave_id": 603,
+    "warehouse": 221164919,
+    "status": "LAUNCHED",
+    "released_at": "2026-10-21T15:55:13.538404-04:00",
+    "released_by": "admin",
+    "release_operation_id": "FP21.221164919.release",
+    "ready": true,
+    "tasks": [
+      {
+        "pick_task_id": 2175,
+        "wave_task_id": 2086,
+        "article": "TC03AA5CF70D",
+        "task_type": "FULL_PALLET",
+        "status": "ASSIGNED",
+        "cell": "T3Saa5cf70d",
+        "required_base": "10",
+        "covered_base": "10",
+        "missing_base": "0",
+        "base_uom": "EA",
+        "reservations": [
+          {
+            "reservation_id": 1940,
+            "uid": "690000000582192776",
+            "cell": "T3Saa5cf70d",
+            "article": "TC03AA5CF70D",
+            "quantity": "10",
+            "base_uom": "EA",
+            "stock_version": 2,
+            "physical": "10",
+            "hard": "10",
+            "reason": null
+          }
+        ]
+      }
+    ],
+    "open_replenishments": [],
+    "outbox_id": 6105,
+    "command_operation_id": "FP21.221164919.release"
+  }
+}

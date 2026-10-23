@@ -1,0 +1,2539 @@
+{
+  "tag": "DP23.3f641b406",
+  "requests": {
+    "grant": {
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "DP23.3f641b406.grant",
+        "expected_version": 0,
+        "username": "DPa7ec43e520de",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Owned dock plan proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "PUT"
+    },
+    "visit_A": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.A",
+        "supply_ids": [
+          "DP23.3f641b406.A"
+        ],
+        "vehicle": "DP23.3f641b406.A",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "visit_B": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.B",
+        "supply_ids": [
+          "DP23.3f641b406.B"
+        ],
+        "vehicle": "DP23.3f641b406.B",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "visit_C": {
+      "path": "/api/tradecase/warehouses/215590763/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.C",
+        "supply_ids": [
+          "DP23.3f641b406.C"
+        ],
+        "vehicle": "DP23.3f641b406.A",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "plan_A": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "replay_A": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "body_conflict": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "visit_id": 625,
+        "dock": "N22DA1168",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 409,
+      "qa": false,
+      "method": "POST"
+    },
+    "dock_conflict": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.conflict.dock",
+        "visit_id": 626,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T09:15:26+00:00",
+        "planned_to": "2026-10-23T10:15:26+00:00"
+      },
+      "status": 409,
+      "qa": false,
+      "method": "POST"
+    },
+    "vehicle_conflict": {
+      "path": "/api/tradecase/warehouses/215590763/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.conflict.vehicle",
+        "visit_id": 627,
+        "dock": "TC7D1155",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 409,
+      "qa": false,
+      "method": "POST"
+    },
+    "touching": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.touching",
+        "visit_id": 626,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T09:45:26+00:00",
+        "planned_to": "2026-10-23T10:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "move_A": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "body": {
+        "operation_id": "DP23.3f641b406.move.A",
+        "expected_version": 1,
+        "dock": "N22DA1168",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "old_receipt": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26+00:00",
+        "planned_to": "2026-10-23T09:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "visit_D": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.D",
+        "supply_ids": [
+          "DP23.3f641b406.D"
+        ],
+        "vehicle": "DP23.3f641b406.D",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "visit_E": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.E",
+        "supply_ids": [
+          "DP23.3f641b406.E"
+        ],
+        "vehicle": "DP23.3f641b406.E",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "visit_Q": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "body": {
+        "operation_id": "DP23.3f641b406.visit.Q",
+        "supply_ids": [
+          "DP23.3f641b406.Q"
+        ],
+        "vehicle": "DP23.3f641b406.Q",
+        "planned_arrival_at": "2026-10-23T08:45:26+00:00"
+      },
+      "status": 200,
+      "qa": true,
+      "method": "POST"
+    },
+    "plan_Q": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.Q",
+        "visit_id": 630,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T13:45:26+00:00",
+        "planned_to": "2026-10-23T14:45:26+00:00"
+      },
+      "status": 200,
+      "qa": true,
+      "method": "POST"
+    },
+    "visible": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-23T08%3A45%3A26%2B00%3A00&to=2026-10-24T08%3A45%3A26%2B00%3A00",
+      "body": null,
+      "status": 200,
+      "qa": true,
+      "method": "GET"
+    },
+    "revoke_owner": {
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "body": {
+        "operation_id": "DP23.3f641b406.revoke_owner",
+        "expected_version": 1,
+        "username": "DPa7ec43e520de",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Owned dock plan proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "PUT"
+    },
+    "hidden": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-23T08%3A45%3A26%2B00%3A00&to=2026-10-24T08%3A45%3A26%2B00%3A00",
+      "body": null,
+      "status": 200,
+      "qa": true,
+      "method": "GET"
+    },
+    "hidden_replay": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.Q",
+        "visit_id": 630,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T13:45:26+00:00",
+        "planned_to": "2026-10-23T14:45:26+00:00"
+      },
+      "status": [
+        403,
+        409
+      ],
+      "qa": true,
+      "method": "POST"
+    },
+    "scope_replay": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "body": {
+        "operation_id": "DP23.3f641b406.plan.Q",
+        "visit_id": 630,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T13:45:26+00:00",
+        "planned_to": "2026-10-23T14:45:26+00:00"
+      },
+      "status": 403,
+      "qa": true,
+      "method": "POST"
+    },
+    "cancel_plan_1": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/cancel",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.plan.1",
+        "expected_version": 2,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_plan_2": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/2/cancel",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.plan.2",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_plan_3": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/3/cancel",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.plan.3",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_plan_4": {
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/4/cancel",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.plan.4",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_625": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/625/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.625",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_626": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/626/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.626",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_627": {
+      "path": "/api/tradecase/warehouses/215590763/yard/visits/627/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.627",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_628": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/628/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.628",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_629": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/629/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.629",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    },
+    "cancel_visit_630": {
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/630/transitions",
+      "body": {
+        "operation_id": "DP23.3f641b406.cancel.visit.630",
+        "action": "CANCEL",
+        "expected_version": 1,
+        "reason": "End owned planning proof"
+      },
+      "status": 200,
+      "qa": false,
+      "method": "POST"
+    }
+  },
+  "results": {
+    "grant": {
+      "version": 1,
+      "owner_id": "SNS",
+      "username": "DPa7ec43e520de",
+      "warehouse_id": 220793322,
+      "operation_id": "DP23.3f641b406.grant",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "visit_A": {
+      "operation_id": "DP23.3f641b406.visit.A",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.A"
+      ],
+      "visit_id": 625,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "visit_B": {
+      "operation_id": "DP23.3f641b406.visit.B",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.B"
+      ],
+      "visit_id": 626,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.B",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "visit_C": {
+      "operation_id": "DP23.3f641b406.visit.C",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.C"
+      ],
+      "visit_id": 627,
+      "warehouse_id": 215590763,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "plan_A": {
+      "operation_id": "DP23.3f641b406.plan.A",
+      "plan_id": 1,
+      "warehouse_id": 220793322,
+      "visit_id": 625,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T08:45:26Z",
+      "planned_to": "2026-10-23T09:45:26Z",
+      "status": "ACTIVE",
+      "version": 1,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "replay_A": {
+      "operation_id": "DP23.3f641b406.plan.A",
+      "plan_id": 1,
+      "warehouse_id": 220793322,
+      "visit_id": 625,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T08:45:26Z",
+      "planned_to": "2026-10-23T09:45:26Z",
+      "status": "ACTIVE",
+      "version": 1,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": true
+    },
+    "body_conflict": {
+      "detail": {
+        "code": "YARD_OPERATION_CONFLICT",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    "dock_conflict": {
+      "detail": {
+        "code": "YARD_DOCK_PLAN_CONFLICT",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    "vehicle_conflict": {
+      "detail": {
+        "code": "YARD_VEHICLE_PLAN_CONFLICT",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    "touching": {
+      "operation_id": "DP23.3f641b406.touching",
+      "plan_id": 2,
+      "warehouse_id": 220793322,
+      "visit_id": 626,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T09:45:26Z",
+      "planned_to": "2026-10-23T10:45:26Z",
+      "status": "ACTIVE",
+      "version": 1,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.B",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "move_A": {
+      "operation_id": "DP23.3f641b406.move.A",
+      "plan_id": 1,
+      "warehouse_id": 220793322,
+      "visit_id": 625,
+      "dock": "N22DA1168",
+      "planned_from": "2026-10-23T08:45:26Z",
+      "planned_to": "2026-10-23T09:45:26Z",
+      "status": "ACTIVE",
+      "version": 2,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "old_receipt": {
+      "operation_id": "DP23.3f641b406.plan.A",
+      "plan_id": 1,
+      "warehouse_id": 220793322,
+      "visit_id": 625,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T08:45:26Z",
+      "planned_to": "2026-10-23T09:45:26Z",
+      "status": "ACTIVE",
+      "version": 1,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": true
+    },
+    "visit_D": {
+      "operation_id": "DP23.3f641b406.visit.D",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.D"
+      ],
+      "visit_id": 628,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.D",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "visit_E": {
+      "operation_id": "DP23.3f641b406.visit.E",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.E"
+      ],
+      "visit_id": 629,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.E",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "visit_Q": {
+      "operation_id": "DP23.3f641b406.visit.Q",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.Q"
+      ],
+      "visit_id": 630,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.Q",
+      "dock": null,
+      "state": "EXPECTED",
+      "version": 1,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "cancel_reason": null,
+      "updated_by": "DPa7ec43e520de",
+      "replayed": false
+    },
+    "plan_Q": {
+      "operation_id": "DP23.3f641b406.plan.Q",
+      "plan_id": 4,
+      "warehouse_id": 220793322,
+      "visit_id": 630,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T13:45:26Z",
+      "planned_to": "2026-10-23T14:45:26Z",
+      "status": "ACTIVE",
+      "version": 1,
+      "cancel_reason": null,
+      "updated_by": "DPa7ec43e520de",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.Q",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "visible": {
+      "warehouse_id": 220793322,
+      "observed_at": "2026-10-23T05:48:22Z",
+      "plans": [
+        {
+          "plan_id": 1,
+          "warehouse_id": 220793322,
+          "visit_id": 625,
+          "dock": "N22DA1168",
+          "planned_from": "2026-10-23T08:45:26Z",
+          "planned_to": "2026-10-23T09:45:26Z",
+          "status": "ACTIVE",
+          "version": 2,
+          "cancel_reason": null,
+          "updated_by": "admin",
+          "visit_kind": "INBOUND",
+          "trip_id": null,
+          "vehicle": "DP23.3F641B406.A",
+          "visit_state": "EXPECTED",
+          "fact_dock": null,
+          "planned_arrival_at": "2026-10-23T08:45:26Z",
+          "arrived_at": null,
+          "docked_at": null,
+          "work_started_at": null,
+          "work_finished_at": null,
+          "departed_at": null,
+          "cancelled_at": null
+        },
+        {
+          "plan_id": 2,
+          "warehouse_id": 220793322,
+          "visit_id": 626,
+          "dock": "B22D1161",
+          "planned_from": "2026-10-23T09:45:26Z",
+          "planned_to": "2026-10-23T10:45:26Z",
+          "status": "ACTIVE",
+          "version": 1,
+          "cancel_reason": null,
+          "updated_by": "admin",
+          "visit_kind": "INBOUND",
+          "trip_id": null,
+          "vehicle": "DP23.3F641B406.B",
+          "visit_state": "EXPECTED",
+          "fact_dock": null,
+          "planned_arrival_at": "2026-10-23T08:45:26Z",
+          "arrived_at": null,
+          "docked_at": null,
+          "work_started_at": null,
+          "work_finished_at": null,
+          "departed_at": null,
+          "cancelled_at": null
+        },
+        {
+          "plan_id": 3,
+          "warehouse_id": 220793322,
+          "visit_id": 629,
+          "dock": "B22D1161",
+          "planned_from": "2026-10-23T11:45:26Z",
+          "planned_to": "2026-10-23T12:45:26Z",
+          "status": "ACTIVE",
+          "version": 1,
+          "cancel_reason": null,
+          "updated_by": "admin",
+          "visit_kind": "INBOUND",
+          "trip_id": null,
+          "vehicle": "DP23.3F641B406.E",
+          "visit_state": "EXPECTED",
+          "fact_dock": null,
+          "planned_arrival_at": "2026-10-23T08:45:26Z",
+          "arrived_at": null,
+          "docked_at": null,
+          "work_started_at": null,
+          "work_finished_at": null,
+          "departed_at": null,
+          "cancelled_at": null
+        },
+        {
+          "plan_id": 4,
+          "warehouse_id": 220793322,
+          "visit_id": 630,
+          "dock": "B22D1161",
+          "planned_from": "2026-10-23T13:45:26Z",
+          "planned_to": "2026-10-23T14:45:26Z",
+          "status": "ACTIVE",
+          "version": 1,
+          "cancel_reason": null,
+          "updated_by": "DPa7ec43e520de",
+          "visit_kind": "INBOUND",
+          "trip_id": null,
+          "vehicle": "DP23.3F641B406.Q",
+          "visit_state": "EXPECTED",
+          "fact_dock": null,
+          "planned_arrival_at": "2026-10-23T08:45:26Z",
+          "arrived_at": null,
+          "docked_at": null,
+          "work_started_at": null,
+          "work_finished_at": null,
+          "departed_at": null,
+          "cancelled_at": null
+        }
+      ]
+    },
+    "revoke_owner": {
+      "version": 2,
+      "owner_id": "SNS",
+      "username": "DPa7ec43e520de",
+      "warehouse_id": 220793322,
+      "operation_id": "DP23.3f641b406.revoke_owner",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "hidden": {
+      "warehouse_id": 220793322,
+      "observed_at": "2026-10-23T05:48:22Z",
+      "plans": []
+    },
+    "hidden_replay": {
+      "detail": {
+        "code": "YARD_SUPPLY_NOT_FOUND",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    "scope_replay": {
+      "detail": {
+        "code": "YARD_ACCESS_DENIED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    "cancel_plan_1": {
+      "operation_id": "DP23.3f641b406.cancel.plan.1",
+      "plan_id": 1,
+      "warehouse_id": 220793322,
+      "visit_id": 625,
+      "dock": "N22DA1168",
+      "planned_from": "2026-10-23T08:45:26Z",
+      "planned_to": "2026-10-23T09:45:26Z",
+      "status": "CANCELLED",
+      "version": 3,
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "cancel_plan_2": {
+      "operation_id": "DP23.3f641b406.cancel.plan.2",
+      "plan_id": 2,
+      "warehouse_id": 220793322,
+      "visit_id": 626,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T09:45:26Z",
+      "planned_to": "2026-10-23T10:45:26Z",
+      "status": "CANCELLED",
+      "version": 2,
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.B",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "cancel_plan_3": {
+      "operation_id": "DP23.3f641b406.cancel.plan.3",
+      "plan_id": 3,
+      "warehouse_id": 220793322,
+      "visit_id": 629,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T11:45:26Z",
+      "planned_to": "2026-10-23T12:45:26Z",
+      "status": "CANCELLED",
+      "version": 2,
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.E",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "cancel_plan_4": {
+      "operation_id": "DP23.3f641b406.cancel.plan.4",
+      "plan_id": 4,
+      "warehouse_id": 220793322,
+      "visit_id": 630,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T13:45:26Z",
+      "planned_to": "2026-10-23T14:45:26Z",
+      "status": "CANCELLED",
+      "version": 2,
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "vehicle": "DP23.3F641B406.Q",
+      "visit_state": "EXPECTED",
+      "fact_dock": null,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": null,
+      "replayed": false
+    },
+    "cancel_visit_625": {
+      "operation_id": "DP23.3f641b406.cancel.visit.625",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.A"
+      ],
+      "visit_id": 625,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "cancel_visit_626": {
+      "operation_id": "DP23.3f641b406.cancel.visit.626",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.B"
+      ],
+      "visit_id": 626,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.B",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "cancel_visit_627": {
+      "operation_id": "DP23.3f641b406.cancel.visit.627",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.C"
+      ],
+      "visit_id": 627,
+      "warehouse_id": 215590763,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.A",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "cancel_visit_628": {
+      "operation_id": "DP23.3f641b406.cancel.visit.628",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.D"
+      ],
+      "visit_id": 628,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.D",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "cancel_visit_629": {
+      "operation_id": "DP23.3f641b406.cancel.visit.629",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.E"
+      ],
+      "visit_id": 629,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.E",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    },
+    "cancel_visit_630": {
+      "operation_id": "DP23.3f641b406.cancel.visit.630",
+      "planned_dock": null,
+      "supply_ids": [
+        "DP23.3f641b406.Q"
+      ],
+      "visit_id": 630,
+      "warehouse_id": 220793322,
+      "visit_kind": "INBOUND",
+      "trip_id": null,
+      "native_task_id": null,
+      "vehicle": "DP23.3F641B406.Q",
+      "dock": null,
+      "state": "CANCELLED",
+      "version": 2,
+      "planned_arrival_at": "2026-10-23T08:45:26Z",
+      "arrived_at": null,
+      "docked_at": null,
+      "work_started_at": null,
+      "work_finished_at": null,
+      "departed_at": null,
+      "cancelled_at": "2026-10-23T05:48:24Z",
+      "cancel_reason": "End owned planning proof",
+      "updated_by": "admin",
+      "replayed": false
+    }
+  },
+  "checks": [
+    "Replay/body conflict, dock and cross-site vehicle overlaps, touching, move with unchanged facts, immutable old receipt",
+    "Two parallel plans have one winner; role-only plan succeeds; owner revoke hides plans/denies receipt; WARE revoke403"
+  ],
+  "old_calls": [
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 386.6,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "DPa7ec43e520de",
+        "warehouse_id": 220793322,
+        "operation_id": "DP23.3f641b406.grant",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 215.71,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.A",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.A"
+        ],
+        "visit_id": 625,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 74.91,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.B",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.B"
+        ],
+        "visit_id": 626,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/215590763/yard/visits",
+      "status": 200,
+      "elapsed_ms": 69.66,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.C",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.C"
+        ],
+        "visit_id": 627,
+        "warehouse_id": 215590763,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 238.51,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 77.63,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 78.8,
+      "response": {
+        "detail": {
+          "code": "YARD_OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 132.09,
+      "response": {
+        "detail": {
+          "code": "YARD_DOCK_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/215590763/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 168.8,
+      "response": {
+        "detail": {
+          "code": "YARD_VEHICLE_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 91.08,
+      "response": {
+        "operation_id": "DP23.3f641b406.touching",
+        "plan_id": 2,
+        "warehouse_id": 220793322,
+        "visit_id": 626,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T09:45:26Z",
+        "planned_to": "2026-10-23T10:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "status": 503,
+      "elapsed_ms": 125.82,
+      "response": {
+        "detail": {
+          "code": "YARD_RESULT_UNKNOWN",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "status": 503,
+      "elapsed_ms": 283.3,
+      "response": {
+        "detail": {
+          "code": "YARD_RESULT_UNKNOWN",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true
+        }
+      }
+    }
+  ],
+  "before": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      215590763,
+      110,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "actor": "DPa7ec43e520de",
+  "password": "[REDACTED]",
+  "start": "2026-10-23T08:45:26+00:00",
+  "slow_marker": 6590,
+  "calls": [
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 386.6,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "DPa7ec43e520de",
+        "warehouse_id": 220793322,
+        "operation_id": "DP23.3f641b406.grant",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 215.71,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.A",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.A"
+        ],
+        "visit_id": 625,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 74.91,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.B",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.B"
+        ],
+        "visit_id": 626,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/215590763/yard/visits",
+      "status": 200,
+      "elapsed_ms": 69.66,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.C",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.C"
+        ],
+        "visit_id": 627,
+        "warehouse_id": 215590763,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 238.51,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 77.63,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 78.8,
+      "response": {
+        "detail": {
+          "code": "YARD_OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 132.09,
+      "response": {
+        "detail": {
+          "code": "YARD_DOCK_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/215590763/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 168.8,
+      "response": {
+        "detail": {
+          "code": "YARD_VEHICLE_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 91.08,
+      "response": {
+        "operation_id": "DP23.3f641b406.touching",
+        "plan_id": 2,
+        "warehouse_id": 220793322,
+        "visit_id": 626,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T09:45:26Z",
+        "planned_to": "2026-10-23T10:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "status": 503,
+      "elapsed_ms": 125.82,
+      "response": {
+        "detail": {
+          "code": "YARD_RESULT_UNKNOWN",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "status": 503,
+      "elapsed_ms": 283.3,
+      "response": {
+        "detail": {
+          "code": "YARD_RESULT_UNKNOWN",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "status": 200,
+      "elapsed_ms": 319.16,
+      "response": {
+        "operation_id": "DP23.3f641b406.move.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "N22DA1168",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 2,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 70.21,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.A",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 103.21,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.D",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.D"
+        ],
+        "visit_id": 628,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.D",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 72.24,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.E",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.E"
+        ],
+        "visit_id": 629,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.E",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 103.68,
+      "response": {
+        "operation_id": "DP23.3f641b406.race.E",
+        "plan_id": 3,
+        "warehouse_id": 220793322,
+        "visit_id": 629,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T11:45:26Z",
+        "planned_to": "2026-10-23T12:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.E",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 126.17,
+      "response": {
+        "detail": {
+          "code": "YARD_DOCK_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits",
+      "status": 200,
+      "elapsed_ms": 176.6,
+      "response": {
+        "operation_id": "DP23.3f641b406.visit.Q",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.Q"
+        ],
+        "visit_id": 630,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.Q",
+        "dock": null,
+        "state": "EXPECTED",
+        "version": 1,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "cancel_reason": null,
+        "updated_by": "DPa7ec43e520de",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 200,
+      "elapsed_ms": 123.15,
+      "response": {
+        "operation_id": "DP23.3f641b406.plan.Q",
+        "plan_id": 4,
+        "warehouse_id": 220793322,
+        "visit_id": 630,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T13:45:26Z",
+        "planned_to": "2026-10-23T14:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "DPa7ec43e520de",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.Q",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-23T08%3A45%3A26%2B00%3A00&to=2026-10-24T08%3A45%3A26%2B00%3A00",
+      "status": 200,
+      "elapsed_ms": 217.48,
+      "response": {
+        "warehouse_id": 220793322,
+        "observed_at": "2026-10-23T05:48:22Z",
+        "plans": [
+          {
+            "plan_id": 1,
+            "warehouse_id": 220793322,
+            "visit_id": 625,
+            "dock": "N22DA1168",
+            "planned_from": "2026-10-23T08:45:26Z",
+            "planned_to": "2026-10-23T09:45:26Z",
+            "status": "ACTIVE",
+            "version": 2,
+            "cancel_reason": null,
+            "updated_by": "admin",
+            "visit_kind": "INBOUND",
+            "trip_id": null,
+            "vehicle": "DP23.3F641B406.A",
+            "visit_state": "EXPECTED",
+            "fact_dock": null,
+            "planned_arrival_at": "2026-10-23T08:45:26Z",
+            "arrived_at": null,
+            "docked_at": null,
+            "work_started_at": null,
+            "work_finished_at": null,
+            "departed_at": null,
+            "cancelled_at": null
+          },
+          {
+            "plan_id": 2,
+            "warehouse_id": 220793322,
+            "visit_id": 626,
+            "dock": "B22D1161",
+            "planned_from": "2026-10-23T09:45:26Z",
+            "planned_to": "2026-10-23T10:45:26Z",
+            "status": "ACTIVE",
+            "version": 1,
+            "cancel_reason": null,
+            "updated_by": "admin",
+            "visit_kind": "INBOUND",
+            "trip_id": null,
+            "vehicle": "DP23.3F641B406.B",
+            "visit_state": "EXPECTED",
+            "fact_dock": null,
+            "planned_arrival_at": "2026-10-23T08:45:26Z",
+            "arrived_at": null,
+            "docked_at": null,
+            "work_started_at": null,
+            "work_finished_at": null,
+            "departed_at": null,
+            "cancelled_at": null
+          },
+          {
+            "plan_id": 3,
+            "warehouse_id": 220793322,
+            "visit_id": 629,
+            "dock": "B22D1161",
+            "planned_from": "2026-10-23T11:45:26Z",
+            "planned_to": "2026-10-23T12:45:26Z",
+            "status": "ACTIVE",
+            "version": 1,
+            "cancel_reason": null,
+            "updated_by": "admin",
+            "visit_kind": "INBOUND",
+            "trip_id": null,
+            "vehicle": "DP23.3F641B406.E",
+            "visit_state": "EXPECTED",
+            "fact_dock": null,
+            "planned_arrival_at": "2026-10-23T08:45:26Z",
+            "arrived_at": null,
+            "docked_at": null,
+            "work_started_at": null,
+            "work_finished_at": null,
+            "departed_at": null,
+            "cancelled_at": null
+          },
+          {
+            "plan_id": 4,
+            "warehouse_id": 220793322,
+            "visit_id": 630,
+            "dock": "B22D1161",
+            "planned_from": "2026-10-23T13:45:26Z",
+            "planned_to": "2026-10-23T14:45:26Z",
+            "status": "ACTIVE",
+            "version": 1,
+            "cancel_reason": null,
+            "updated_by": "DPa7ec43e520de",
+            "visit_kind": "INBOUND",
+            "trip_id": null,
+            "vehicle": "DP23.3F641B406.Q",
+            "visit_state": "EXPECTED",
+            "fact_dock": null,
+            "planned_arrival_at": "2026-10-23T08:45:26Z",
+            "arrived_at": null,
+            "docked_at": null,
+            "work_started_at": null,
+            "work_finished_at": null,
+            "departed_at": null,
+            "cancelled_at": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/220793322/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 118.43,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "DPa7ec43e520de",
+        "warehouse_id": 220793322,
+        "operation_id": "DP23.3f641b406.revoke_owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-23T08%3A45%3A26%2B00%3A00&to=2026-10-24T08%3A45%3A26%2B00%3A00",
+      "status": 200,
+      "elapsed_ms": 73.74,
+      "response": {
+        "warehouse_id": 220793322,
+        "observed_at": "2026-10-23T05:48:22Z",
+        "plans": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 409,
+      "elapsed_ms": 94.67,
+      "response": {
+        "detail": {
+          "code": "YARD_SUPPLY_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "status": 403,
+      "elapsed_ms": 126.0,
+      "response": {
+        "detail": {
+          "code": "YARD_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/1/cancel",
+      "status": 200,
+      "elapsed_ms": 75.7,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.plan.1",
+        "plan_id": 1,
+        "warehouse_id": 220793322,
+        "visit_id": 625,
+        "dock": "N22DA1168",
+        "planned_from": "2026-10-23T08:45:26Z",
+        "planned_to": "2026-10-23T09:45:26Z",
+        "status": "CANCELLED",
+        "version": 3,
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/2/cancel",
+      "status": 200,
+      "elapsed_ms": 81.34,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.plan.2",
+        "plan_id": 2,
+        "warehouse_id": 220793322,
+        "visit_id": 626,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T09:45:26Z",
+        "planned_to": "2026-10-23T10:45:26Z",
+        "status": "CANCELLED",
+        "version": 2,
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/3/cancel",
+      "status": 200,
+      "elapsed_ms": 77.87,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.plan.3",
+        "plan_id": 3,
+        "warehouse_id": 220793322,
+        "visit_id": 629,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T11:45:26Z",
+        "planned_to": "2026-10-23T12:45:26Z",
+        "status": "CANCELLED",
+        "version": 2,
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.E",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/4/cancel",
+      "status": 200,
+      "elapsed_ms": 74.04,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.plan.4",
+        "plan_id": 4,
+        "warehouse_id": 220793322,
+        "visit_id": 630,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T13:45:26Z",
+        "planned_to": "2026-10-23T14:45:26Z",
+        "status": "CANCELLED",
+        "version": 2,
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.Q",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/625/transitions",
+      "status": 200,
+      "elapsed_ms": 141.15,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.625",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.A"
+        ],
+        "visit_id": 625,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/626/transitions",
+      "status": 200,
+      "elapsed_ms": 238.03,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.626",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.B"
+        ],
+        "visit_id": 626,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.B",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/215590763/yard/visits/627/transitions",
+      "status": 200,
+      "elapsed_ms": 130.5,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.627",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.C"
+        ],
+        "visit_id": 627,
+        "warehouse_id": 215590763,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.A",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/628/transitions",
+      "status": 200,
+      "elapsed_ms": 92.25,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.628",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.D"
+        ],
+        "visit_id": 628,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.D",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/629/transitions",
+      "status": 200,
+      "elapsed_ms": 108.18,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.629",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.E"
+        ],
+        "visit_id": 629,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.E",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/220793322/yard/visits/630/transitions",
+      "status": 200,
+      "elapsed_ms": 76.61,
+      "response": {
+        "operation_id": "DP23.3f641b406.cancel.visit.630",
+        "planned_dock": null,
+        "supply_ids": [
+          "DP23.3f641b406.Q"
+        ],
+        "visit_id": 630,
+        "warehouse_id": 220793322,
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "native_task_id": null,
+        "vehicle": "DP23.3F641B406.Q",
+        "dock": null,
+        "state": "CANCELLED",
+        "version": 2,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": "2026-10-23T05:48:24Z",
+        "cancel_reason": "End owned planning proof",
+        "updated_by": "admin",
+        "replayed": false
+      }
+    }
+  ],
+  "fixture_created": true,
+  "race_requests": [
+    {
+      "operation_id": "DP23.3f641b406.race.D",
+      "visit_id": 628,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T11:45:26+00:00",
+      "planned_to": "2026-10-23T12:45:26+00:00"
+    },
+    {
+      "operation_id": "DP23.3f641b406.race.E",
+      "visit_id": 629,
+      "dock": "B22D1161",
+      "planned_from": "2026-10-23T11:45:26+00:00",
+      "planned_to": "2026-10-23T12:45:26+00:00"
+    }
+  ],
+  "race": [
+    [
+      409,
+      {
+        "detail": {
+          "code": "YARD_DOCK_PLAN_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    ],
+    [
+      200,
+      {
+        "operation_id": "DP23.3f641b406.race.E",
+        "plan_id": 3,
+        "warehouse_id": 220793322,
+        "visit_id": 629,
+        "dock": "B22D1161",
+        "planned_from": "2026-10-23T11:45:26Z",
+        "planned_to": "2026-10-23T12:45:26Z",
+        "status": "ACTIVE",
+        "version": 1,
+        "cancel_reason": null,
+        "updated_by": "admin",
+        "visit_kind": "INBOUND",
+        "trip_id": null,
+        "vehicle": "DP23.3F641B406.E",
+        "visit_state": "EXPECTED",
+        "fact_dock": null,
+        "planned_arrival_at": "2026-10-23T08:45:26Z",
+        "arrived_at": null,
+        "docked_at": null,
+        "work_started_at": null,
+        "work_finished_at": null,
+        "departed_at": null,
+        "cancelled_at": null,
+        "replayed": false
+      }
+    ]
+  ],
+  "cleanup_started": true,
+  "slow_sql": [
+    [
+      6592,
+      47,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6593,
+      46,
+      "/api/tradecase/warehouses/215590763/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6594,
+      41,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6596,
+      30,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6597,
+      20,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6591,
+      15,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6598,
+      15,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans",
+      "TRADECASE yard dock plan command"
+    ],
+    [
+      6595,
+      14,
+      "/api/tradecase/warehouses/220793322/yard/dock-plans/1/move",
+      "TRADECASE yard dock plan command"
+    ]
+  ],
+  "status": "PASS"
+}

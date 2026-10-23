@@ -1,0 +1,181 @@
+{
+ "http": [
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 GET 200 /api/admin/transport/tasks/33660",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER/TC7.FIN.TRANSIT",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1156/execution",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock/transit?load_operation_id=T7.LOAD.1156&limit=100",
+  "390 GET 200 /api/tradecase/warehouses/215590763/site",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "390 GET 200 /api/admin/transport/tasks/33660",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER/TC7.FIN.TRANSIT",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1156/execution",
+  "390 GET 200 /api/tradecase/warehouses/215590763/stock/transit?load_operation_id=T7.LOAD.1156&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 GET 200 /api/admin/transport/tasks/33660",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/trips/R1.1155/binding",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER/TC6.FIN.AFTER",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock?pallet_identifier=CASE-FIX&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock?pallet_identifier=CASE-FIX&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock?pallet_identifier=CASE-FIX&limit=100",
+  "1440 POST 200 /api/tradecase/warehouses/215590763/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER/TC7.FIN.TRANSIT",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock/transit?load_operation_id=T7.LOAD.1155&limit=100",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/stock/transit?load_operation_id=T7.LOAD.1155&limit=100&after=p2",
+  "1440 POST 409 /api/tradecase/warehouses/215590763/buyouts",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP/R1.1155",
+  "1440 GET 403 /api/tradecase/warehouses/215590763/trips/R1.1155/execution",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/SKU?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/site",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/215590763/documents/ORDER/AFTER",
+  "1440 GET 200 /api/tradecase/warehouses/224274301/site",
+  "1440 GET 200 /api/tradecase/warehouses/224274301/documents/TRIP?limit=50",
+  "1440 GET 200 /api/tradecase/warehouses/224274301/documents/TRIP/TC8.R1",
+  "1440 GET 200 /api/tradecase/warehouses/224274301/documents/SKU?limit=50",
+  "1440 GET 404 /api/tradecase/warehouses/224274301/trips/TC8.R1/execution",
+  "1440 GET 200 /api/tradecase/warehouses/224274301/trips/TC8.R1/capacity?sku_id=A&requested_boxes=60",
+  "390 GET 200 /api/tradecase/warehouses/224274301/documents/TRIP?limit=50",
+  "390 GET 200 /api/tradecase/warehouses/224274301/site",
+  "390 GET 200 /api/tradecase/warehouses/224274301/documents/TRIP/TC8.R1",
+  "390 GET 200 /api/tradecase/warehouses/224274301/documents/SKU?limit=50",
+  "390 GET 404 /api/tradecase/warehouses/224274301/trips/TC8.R1/execution",
+  "390 GET 200 /api/tradecase/warehouses/224274301/trips/TC8.R1/capacity?sku_id=A&requested_boxes=60"
+ ],
+ "posts": [
+  {
+   "kind": "binding",
+   "mode": "abort",
+   "body": {
+    "native_task_id": 33660,
+    "expected_trip_version": 1,
+    "expected_binding_version": 1,
+    "operation_id": "TC.TRIPBIND.UI:2bf4c9bb-316c-411a-a375-2777f200e85c"
+   }
+  },
+  {
+   "kind": "binding",
+   "mode": "replay",
+   "body": {
+    "native_task_id": 33660,
+    "expected_trip_version": 1,
+    "expected_binding_version": 1,
+    "operation_id": "TC.TRIPBIND.UI:2bf4c9bb-316c-411a-a375-2777f200e85c"
+   }
+  },
+  {
+   "kind": "buyout",
+   "mode": "ok",
+   "body": {
+    "buyout_id": "UI.TC6.FIN.AFTER.1.52bc6f39",
+    "basis_order_id": "TC6.FIN.AFTER",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "0000000000000000000000000000000000000000000000000000000000000001",
+     "0000000000000000000000000000000000000000000000000000000000000002"
+    ],
+    "demand_order_id": "AFTER",
+    "demand_line_id": "1",
+    "operation_id": "TC.BUYOUT.UI:266a1dfc-a86d-481e-9e01-7c4aec3c1639"
+   }
+  },
+  {
+   "kind": "buyout",
+   "mode": "409:OPERATION_CONTENT_CONFLICT",
+   "body": {
+    "buyout_id": "UI.TC7.FIN.TRANSIT.1.5f8ce373",
+    "basis_order_id": "TC7.FIN.TRANSIT",
+    "basis_line_id": "1",
+    "expected_basis_version": 1,
+    "unit_keys": [
+     "000000000000000000000000000000000000000000000000000000000000000b",
+     "000000000000000000000000000000000000000000000000000000000000000d"
+    ],
+    "demand_order_id": "TRANSIT",
+    "demand_line_id": "1",
+    "load_operation_id": "T7.LOAD.1155",
+    "operation_id": "TC.BUYOUT.UI:737a11c9-587e-4e57-882d-25d83ec9277e"
+   }
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "checks": [
+  "live_trip_execution_link_native_check_transit_blc_excluded_1440",
+  "live_trip_execution_link_native_check_transit_blc_excluded_390",
+  "binding_unknown_exact_retry_then_fresh_execution",
+  "root_hidden_owner_composition_blocks_buyout",
+  "root_old_composition_ignored_after_scan_change",
+  "after_pick_demand_case_hard_allowed_hold_blc_mrc_normalized",
+  "in_transit_full_pages_blc_hold_excluded_vehicle_place_conflict_kept",
+  "execution_403_clears",
+  "late_execution_ignored",
+  "root_live_capacity_600_plus40_remainder20_1440",
+  "root_live_capacity_600_plus40_remainder20_390"
+ ],
+ "timings": {
+  "exec1440": 859,
+  "transit40_1440": 238,
+  "exec390": 1287,
+  "transit40_390": 237,
+  "capacity1440": 249,
+  "capacity390": 861
+ },
+ "live1440": {
+  "execMs": 859,
+  "exec": "Фактическое исполнение рейса Справка\nФактический рейс склада\n№ 33660 · открыть погрузку и выезд\nАктуальность\nпривязка к текущей версии рейса · состав совпадает с погрузкой\nДокумент\nтранспортный документ готов (TEST_TRANSPORT_DOC_1155). Готовность документа не означает доставку.\nВерсии\nрейс 1, привязка 1, документ 2\nПогрузка\tМесто\tСостояние\tВыезд\tГруз передан получателю\nT7.LOAD.1155\tCP595000000001155\tвыехал\t19.10, 13:54\tнет\nТехнические сведения\nИзменить привязку\nМесто под дополнительные короба Справка\n\nРасчёт сопоставляет принятый план с массой и габаритами машины. Он не резервирует товар и не создаёт заказ добивки.\n\nТовар из заказа\nЗапрошено коробов\nРассчитать место",
+  "link": "http://127.0.0.1:8088/wms-admin/transport-loading.html?trip_id=33660",
+  "native": "Рейс склада № 33660: машина TC7QA1155, ворота TC7D1155, состояние «Отгружен», водитель TRADECASE QA driver1155. Во внешнем рейсе машина TC7QA1155.\n\nПривязать рейс",
+  "transitMs": 238,
+  "transit": "Кодов в погрузке: 40. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом): 0. В строке: 40 шт.\n\nКодов в выкуп\nЗапросить выкуп\nКлючи выбранных кодов",
+  "untitled": [],
+  "overflow": 0
+ },
+ "live390": {
+  "execMs": 1287,
+  "exec": "Фактическое исполнение рейса Справка\nФактический рейс склада\n№ 33660 · открыть погрузку и выезд\nАктуальность\nпривязка к текущей версии рейса · состав совпадает с погрузкой\nДокумент\nтранспортный документ готов (TEST_TRANSPORT_DOC_1155). Готовность документа не означает доставку.\nВерсии\nрейс 1, привязка 1, документ 2\nПогрузка\tМесто\tСостояние\tВыезд\tГруз передан получателю\nT7.LOAD.1155\tCP595000000001155\tвыехал\t19.10, 13:54\tнет\nТехнические сведения\nИзменить привязку\nМесто под дополнительные короба Справка\n\nРасчёт сопоставляет принятый план с массой и габаритами машины. Он не резервирует товар и не создаёт заказ добивки.\n\nТовар из заказа\nЗапрошено коробов\nРассчитать место",
+  "link": "http://127.0.0.1:8088/wms-admin/transport-loading.html?trip_id=33660",
+  "native": "Рейс склада № 33660: машина TC7QA1155, ворота TC7D1155, состояние «Отгружен», водитель TRADECASE QA driver1155. Во внешнем рейсе машина TC7QA1155.\n\nПривязать рейс",
+  "transitMs": 237,
+  "transit": "Кодов в погрузке: 40. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом): 0. В строке: 40 шт.\n\nКодов в выкуп\nЗапросить выкуп\nКлючи выбранных кодов",
+  "untitled": [],
+  "overflow": 0
+ },
+ "afterReview": "Кодов на месте: 5. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом): 2. В строке: 100 шт.\n\nКодов в выкуп\n\nБудет запрошен выкуп 2 кодов (после сборки): SNS → BLC, паллета CASE-FIX, адрес T6W554eebf3; основание TC6.FIN.AFTER/1 (версия 1), исходный заказ AFTER/1. Собственник сменится только после ответа СКМ.\n\nЗапросить выкуп\nКлючи выбранных кодов",
+ "transitReview": "Кодов в погрузке: 4. Подходят строке (товар A, МРЦ 200, собственник SNS, код подтверждён СКМ, не удержан другим выкупом): 2. В строке: 40 шт.\n\nКодов в выкуп\n\nБудет запрошен выкуп 2 кодов (в пути): SNS → BLC, в пути: погрузка T7.LOAD.1155, выезд 19.10, 13:54; основание TC7.FIN.TRANSIT/1 (версия 1), исходный заказ TRANSIT/1. Собственник сменится только после ответа СКМ; повторной отгрузки не будет.\n\nЗапросить выкуп\nКлючи выбранных кодов",
+ "status": "PASS",
+ "labels": {
+  "live": "admin login + GET 215590763 (execution, native trip 33660, transit T7.LOAD.1155, documents)",
+  "fixture": "POST binding/buyouts answers, basis mode IN_TRANSIT, CASE/transit compositions, 403, delay — intercepted"
+ },
+ "apiVolume": {
+  "gets": 64
+ }
+}

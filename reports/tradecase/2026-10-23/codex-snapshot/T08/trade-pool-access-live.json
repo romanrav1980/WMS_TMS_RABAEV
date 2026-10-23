@@ -1,0 +1,2488 @@
+{
+  "tag": "PA23.d13faa905",
+  "warehouse_id": 210564699,
+  "requests": {
+    "role_owner": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.role_owner",
+        "expected_version": 0,
+        "username": "PA07501a3c88b6",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "legacy_owner": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.legacy_owner",
+        "expected_version": 0,
+        "username": "PL1b3f184907e1",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "policy_on": {
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "body": {
+        "expected_version": 7,
+        "stock_class": "OTHER",
+        "ship_from_stock": true,
+        "pick_step": "1"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "order": {
+      "path": "/api/tradecase/messages",
+      "body": {
+        "schema_version": 1,
+        "event_id": "PA23.d13faa905.order",
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "PA23.d13faa905.ORDER",
+        "version": 1,
+        "occurred_at": "2026-10-23T08:44:07.246009+00:00",
+        "payload": {
+          "order_kind": "OUTBOUND",
+          "recipient_id": "C1",
+          "planned_ship_at": "2026-10-24T08:44:06.478016+00:00",
+          "lines": [
+            {
+              "line_id": "1",
+              "sku_id": "A",
+              "source_owner_id": "SNS",
+              "target_owner_id": "SNS",
+              "mrc": "200",
+              "quantity": "20",
+              "uom": "EA",
+              "min_osg_days": 0
+            }
+          ],
+          "entity_type": "ORDER"
+        }
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "native_binding": {
+      "path": "/api/tradecase/warehouses/210564699/orders/PA23.d13faa905.ORDER/binding",
+      "body": {
+        "operation_id": "PA23.d13faa905.native.bind",
+        "expected_order_version": 1,
+        "customer_order_id": 2211,
+        "lines": [
+          {
+            "line_id": "1",
+            "customer_order_row_id": 3698
+          }
+        ]
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "role_preview": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "body": null,
+      "method": "GET",
+      "status": 200,
+      "qa": true
+    },
+    "role_allocated": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.role.allocate"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "foreign_preview": {
+      "path": "/api/inventory/soft-pools/219023232/TC03089DDB36",
+      "body": null,
+      "method": "GET",
+      "status": 403,
+      "qa": true
+    },
+    "foreign_write": {
+      "path": "/api/inventory/soft-pools/219023232/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.foreign"
+      },
+      "method": "POST",
+      "status": 403,
+      "qa": true
+    },
+    "role_operate_revoked": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.role_operate_revoked",
+        "expected_version": 1,
+        "username": "PA07501a3c88b6",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": false,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "owner_replay_denied": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.role.allocate"
+      },
+      "method": "POST",
+      "status": 403,
+      "qa": true
+    },
+    "role_operate_restored": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.role_operate_restored",
+        "expected_version": 2,
+        "username": "PA07501a3c88b6",
+        "owner_id": "SNS",
+        "can_view": true,
+        "can_operate": true,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "role_replay_restored": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.role.allocate"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": true
+    },
+    "role_hidden": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.role_hidden",
+        "expected_version": 3,
+        "username": "PA07501a3c88b6",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "hidden_preview": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "body": null,
+      "method": "GET",
+      "status": 200,
+      "qa": true
+    },
+    "scope_preview_denied": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "body": null,
+      "method": "GET",
+      "status": 403,
+      "qa": true
+    },
+    "scope_replay_denied": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.role.allocate"
+      },
+      "method": "POST",
+      "status": 403,
+      "qa": true
+    },
+    "order_cancelled": {
+      "path": "/api/tradecase/messages",
+      "body": {
+        "schema_version": 1,
+        "event_id": "PA23.d13faa905.order_cancelled",
+        "source_id": "TC03.SAP",
+        "warehouse_id": 210564699,
+        "document_id": "PA23.d13faa905.ORDER",
+        "version": 2,
+        "occurred_at": "2026-10-23T08:46:25.576125+00:00",
+        "payload": {
+          "order_kind": "OUTBOUND",
+          "recipient_id": "C1",
+          "planned_ship_at": "2026-10-24T08:44:06.478016+00:00",
+          "lines": [
+            {
+              "line_id": "1",
+              "sku_id": "A",
+              "source_owner_id": "SNS",
+              "target_owner_id": "SNS",
+              "mrc": "200",
+              "quantity": "20",
+              "uom": "EA",
+              "min_osg_days": 0
+            }
+          ],
+          "entity_type": "ORDER",
+          "cancelled": true
+        }
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "pool_cleaned": {
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "body": {
+        "operation_id": "PA23.d13faa905.clean"
+      },
+      "method": "POST",
+      "status": 200,
+      "qa": false
+    },
+    "policy_restored": {
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "body": {
+        "expected_version": 8,
+        "stock_class": "OTHER",
+        "ship_from_stock": null,
+        "pick_step": "1"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    },
+    "legacy_owner_retired": {
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "body": {
+        "operation_id": "PA23.d13faa905.legacy_owner_retired",
+        "expected_version": 1,
+        "username": "PL1b3f184907e1",
+        "owner_id": "SNS",
+        "can_view": false,
+        "can_operate": false,
+        "reason": "Own pool scope and receipt proof"
+      },
+      "method": "PUT",
+      "status": 200,
+      "qa": false
+    }
+  },
+  "results": {
+    "role_owner": {
+      "version": 1,
+      "owner_id": "SNS",
+      "username": "PA07501a3c88b6",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.role_owner",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "legacy_owner": {
+      "version": 1,
+      "owner_id": "SNS",
+      "username": "PL1b3f184907e1",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.legacy_owner",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "policy_on": {
+      "stock_class": "OTHER",
+      "ship_from_stock": true,
+      "pick_step": "1",
+      "policy_version": 8,
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "effective_ship_from_stock": true
+    },
+    "order": {
+      "warehouse_id": 210564699,
+      "document_id": "PA23.d13faa905.ORDER",
+      "entity_type": "ORDER",
+      "version": 1,
+      "status": "ACCEPTED",
+      "replayed": false,
+      "stock_changed": false,
+      "physical_execution": "NOT_STARTED",
+      "schema_version": 1,
+      "event_id": "PA23.d13faa905.order",
+      "correlation_id": "PA23.d13faa905.order",
+      "source_id": "WMS_TRADECASE",
+      "target_source_id": "TC03.SAP",
+      "occurred_at": "2026-10-23T04:44:07.703-04:00",
+      "external_delivery": "PENDING",
+      "external_business": "NOT_CONFIRMED",
+      "outbox_id": 6840
+    },
+    "native_binding": {
+      "customer_order_id": 2211,
+      "order_id": "PA23.d13faa905.ORDER",
+      "order_version": 1,
+      "bound_lines": 1,
+      "stock_changed": false,
+      "replayed": false,
+      "operation_id": "PA23.d13faa905.native.bind",
+      "outbox_id": 6841
+    },
+    "role_preview": {
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "from_stock": true,
+      "policy_version": 8,
+      "available_quantity": "210",
+      "pick_step": "1",
+      "orders": [
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3687,
+          "order_id": 2200,
+          "customer_id": 770,
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "quantity": "0",
+          "dispatch_order": 0
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3690,
+          "order_id": 2203,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 1
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3691,
+          "order_id": 2204,
+          "customer_id": 770,
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "quantity": "0",
+          "dispatch_order": 2
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3696,
+          "order_id": 2209,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 3
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3697,
+          "order_id": 2210,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 4
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3692,
+          "order_id": 2205,
+          "customer_id": 770,
+          "quantity": "10",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 5
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3693,
+          "order_id": 2206,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 6
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3694,
+          "order_id": 2207,
+          "customer_id": 770,
+          "quantity": "300",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 7
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3695,
+          "order_id": 2208,
+          "customer_id": 770,
+          "quantity": "10",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 8
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3698,
+          "order_id": 2211,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [
+            "SNS|A|200|2030-01-01"
+          ],
+          "dispatch_order": 9
+        }
+      ],
+      "allocations": {
+        "3687": "0",
+        "3690": "0",
+        "3691": "0",
+        "3696": "0",
+        "3697": "0",
+        "3692": "0",
+        "3693": "0",
+        "3694": "0",
+        "3695": "0",
+        "3698": "20"
+      },
+      "reservations": [],
+      "complete": true,
+      "preview": true,
+      "physical_reserve": false,
+      "classes": [
+        {
+          "key": "SNS|A|200|2030-01-01",
+          "owner": "SNS",
+          "free": "210"
+        }
+      ]
+    },
+    "role_allocated": {
+      "operation_id": "PA23.d13faa905.role.allocate",
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "allocated_quantity": "20",
+      "available_quantity": "210",
+      "physical_reserve": false,
+      "from_stock": true,
+      "allocations": [
+        {
+          "order_id": 2200,
+          "line_id": 3687,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2203,
+          "line_id": 3690,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2204,
+          "line_id": 3691,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2209,
+          "line_id": 3696,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2210,
+          "line_id": 3697,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2205,
+          "line_id": 3692,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2206,
+          "line_id": 3693,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2207,
+          "line_id": 3694,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2208,
+          "line_id": 3695,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2211,
+          "line_id": 3698,
+          "customer_id": 770,
+          "reservation_id": 2001,
+          "quantity": "20"
+        }
+      ],
+      "outbox_id": 6842
+    },
+    "foreign_preview": {
+      "detail": {
+        "code": "POOL_WAREHOUSE_ACCESS_DENIED"
+      }
+    },
+    "foreign_write": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "PA23.d13faa905.foreign",
+        "oracle_code": 20882,
+        "reason": "POOL_ALLOCATION_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "operation_id_conflict": false
+      }
+    },
+    "role_operate_revoked": {
+      "version": 2,
+      "owner_id": "SNS",
+      "username": "PA07501a3c88b6",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.role_operate_revoked",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "owner_replay_denied": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "PA23.d13faa905.role.allocate",
+        "oracle_code": 20882,
+        "reason": "TRADE_OWNER_ACCESS_DENIED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "operation_id_conflict": false
+      }
+    },
+    "role_operate_restored": {
+      "version": 3,
+      "owner_id": "SNS",
+      "username": "PA07501a3c88b6",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.role_operate_restored",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "role_replay_restored": {
+      "operation_id": "PA23.d13faa905.role.allocate",
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "allocated_quantity": "20",
+      "available_quantity": "210",
+      "physical_reserve": false,
+      "from_stock": true,
+      "allocations": [
+        {
+          "order_id": 2200,
+          "line_id": 3687,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2203,
+          "line_id": 3690,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2204,
+          "line_id": 3691,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2209,
+          "line_id": 3696,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2210,
+          "line_id": 3697,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2205,
+          "line_id": 3692,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2206,
+          "line_id": 3693,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2207,
+          "line_id": 3694,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2208,
+          "line_id": 3695,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2211,
+          "line_id": 3698,
+          "customer_id": 770,
+          "reservation_id": 2001,
+          "quantity": "20"
+        }
+      ],
+      "outbox_id": 6842
+    },
+    "role_hidden": {
+      "version": 4,
+      "owner_id": "SNS",
+      "username": "PA07501a3c88b6",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.role_hidden",
+      "stock_changed": false,
+      "replayed": false
+    },
+    "hidden_preview": {
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "from_stock": true,
+      "policy_version": 8,
+      "available_quantity": null,
+      "pick_step": "1",
+      "orders": [],
+      "allocations": {},
+      "reservations": [],
+      "complete": false,
+      "preview": true,
+      "physical_reserve": false,
+      "classes": []
+    },
+    "scope_preview_denied": {
+      "detail": {
+        "code": "POOL_WAREHOUSE_ACCESS_DENIED"
+      }
+    },
+    "scope_replay_denied": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "PA23.d13faa905.role.allocate",
+        "oracle_code": 20882,
+        "reason": "POOL_ALLOCATION_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "operation_id_conflict": false
+      }
+    },
+    "order_cancelled": {
+      "warehouse_id": 210564699,
+      "document_id": "PA23.d13faa905.ORDER",
+      "entity_type": "ORDER",
+      "version": 2,
+      "status": "ACCEPTED",
+      "replayed": false,
+      "stock_changed": false,
+      "physical_execution": "NOT_STARTED",
+      "schema_version": 1,
+      "event_id": "PA23.d13faa905.order_cancelled",
+      "correlation_id": "PA23.d13faa905.order_cancelled",
+      "source_id": "WMS_TRADECASE",
+      "target_source_id": "TC03.SAP",
+      "occurred_at": "2026-10-23T04:46:25.975-04:00",
+      "external_delivery": "PENDING",
+      "external_business": "NOT_CONFIRMED",
+      "outbox_id": 6844
+    },
+    "pool_cleaned": {
+      "operation_id": "PA23.d13faa905.clean",
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "allocated_quantity": "0",
+      "available_quantity": "210",
+      "physical_reserve": false,
+      "from_stock": true,
+      "allocations": [
+        {
+          "order_id": 2200,
+          "line_id": 3687,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2203,
+          "line_id": 3690,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2204,
+          "line_id": 3691,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2209,
+          "line_id": 3696,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2210,
+          "line_id": 3697,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2205,
+          "line_id": 3692,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2206,
+          "line_id": 3693,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2207,
+          "line_id": 3694,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2208,
+          "line_id": 3695,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2211,
+          "line_id": 3698,
+          "customer_id": 770,
+          "reservation_id": 2001,
+          "quantity": "0"
+        }
+      ],
+      "outbox_id": 6845
+    },
+    "policy_restored": {
+      "stock_class": "OTHER",
+      "ship_from_stock": null,
+      "pick_step": "1",
+      "policy_version": 9,
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "effective_ship_from_stock": false
+    },
+    "legacy_owner_retired": {
+      "version": 2,
+      "owner_id": "SNS",
+      "username": "PL1b3f184907e1",
+      "warehouse_id": 210564699,
+      "operation_id": "PA23.d13faa905.legacy_owner_retired",
+      "stock_changed": false,
+      "replayed": false
+    }
+  },
+  "checks": [
+    "Scoped role and legacy group each allocate20; foreign warehouse403; recorded receipt owner403 then identical after restore; hidden preview incomplete/null; assignment and legacy edit revoke deny replay"
+  ],
+  "previous_calls": [
+    {
+      "method": "GET",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 257.95,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": null,
+        "pick_step": "1",
+        "policy_version": 7,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 114.11,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "PA07501a3c88b6",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.role_owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 165.6,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "PL1b3f184907e1",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.legacy_owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 181.74,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": true,
+        "pick_step": "1",
+        "policy_version": 8,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 180.43,
+      "response": {
+        "warehouse_id": 210564699,
+        "document_id": "PA23.d13faa905.ORDER",
+        "entity_type": "ORDER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PA23.d13faa905.order",
+        "correlation_id": "PA23.d13faa905.order",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T04:44:07.703-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6840
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/orders/PA23.d13faa905.ORDER/binding",
+      "status": 200,
+      "elapsed_ms": 305.11,
+      "response": {
+        "customer_order_id": 2211,
+        "order_id": "PA23.d13faa905.ORDER",
+        "order_version": 1,
+        "bound_lines": 1,
+        "stock_changed": false,
+        "replayed": false,
+        "operation_id": "PA23.d13faa905.native.bind",
+        "outbox_id": 6841
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 403,
+      "elapsed_ms": 166.87,
+      "response": {
+        "detail": "Permission required: stock_reservation_view"
+      }
+    }
+  ],
+  "before": [
+    [
+      250,
+      0
+    ]
+  ],
+  "policy_before": {
+    "stock_class": "OTHER",
+    "ship_from_stock": null,
+    "pick_step": "1",
+    "policy_version": 7,
+    "warehouse": 210564699,
+    "article": "TC03089DDB36",
+    "effective_ship_from_stock": false
+  },
+  "departure": "2026-10-24T08:44:06.478016+00:00",
+  "actor": "PA07501a3c88b6",
+  "password": "[REDACTED]",
+  "legacy": "PL1b3f184907e1",
+  "legacy_password": "1e030d8ec964a008b2afed7b548708d5c20c14c7",
+  "slow_marker": 6640,
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 257.95,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": null,
+        "pick_step": "1",
+        "policy_version": 7,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 114.11,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "PA07501a3c88b6",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.role_owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 165.6,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "PL1b3f184907e1",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.legacy_owner",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 181.74,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": true,
+        "pick_step": "1",
+        "policy_version": 8,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 180.43,
+      "response": {
+        "warehouse_id": 210564699,
+        "document_id": "PA23.d13faa905.ORDER",
+        "entity_type": "ORDER",
+        "version": 1,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PA23.d13faa905.order",
+        "correlation_id": "PA23.d13faa905.order",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T04:44:07.703-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6840
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/210564699/orders/PA23.d13faa905.ORDER/binding",
+      "status": 200,
+      "elapsed_ms": 305.11,
+      "response": {
+        "customer_order_id": 2211,
+        "order_id": "PA23.d13faa905.ORDER",
+        "order_version": 1,
+        "bound_lines": 1,
+        "stock_changed": false,
+        "replayed": false,
+        "operation_id": "PA23.d13faa905.native.bind",
+        "outbox_id": 6841
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 403,
+      "elapsed_ms": 166.87,
+      "response": {
+        "detail": "Permission required: stock_reservation_view"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 701.91,
+      "response": {
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "from_stock": true,
+        "policy_version": 8,
+        "available_quantity": "210",
+        "pick_step": "1",
+        "orders": [
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3687,
+            "order_id": 2200,
+            "customer_id": 770,
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "quantity": "0",
+            "dispatch_order": 0
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3690,
+            "order_id": 2203,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 1
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3691,
+            "order_id": 2204,
+            "customer_id": 770,
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "quantity": "0",
+            "dispatch_order": 2
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3696,
+            "order_id": 2209,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 3
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3697,
+            "order_id": 2210,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 4
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3692,
+            "order_id": 2205,
+            "customer_id": 770,
+            "quantity": "10",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 5
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3693,
+            "order_id": 2206,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 6
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3694,
+            "order_id": 2207,
+            "customer_id": 770,
+            "quantity": "300",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 7
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3695,
+            "order_id": 2208,
+            "customer_id": 770,
+            "quantity": "10",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 8
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3698,
+            "order_id": 2211,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [
+              "SNS|A|200|2030-01-01"
+            ],
+            "dispatch_order": 9
+          }
+        ],
+        "allocations": {
+          "3687": "0",
+          "3690": "0",
+          "3691": "0",
+          "3696": "0",
+          "3697": "0",
+          "3692": "0",
+          "3693": "0",
+          "3694": "0",
+          "3695": "0",
+          "3698": "20"
+        },
+        "reservations": [],
+        "complete": true,
+        "preview": true,
+        "physical_reserve": false,
+        "classes": [
+          {
+            "key": "SNS|A|200|2030-01-01",
+            "owner": "SNS",
+            "free": "210"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 200,
+      "elapsed_ms": 795.0,
+      "response": {
+        "operation_id": "PA23.d13faa905.role.allocate",
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "allocated_quantity": "20",
+        "available_quantity": "210",
+        "physical_reserve": false,
+        "from_stock": true,
+        "allocations": [
+          {
+            "order_id": 2200,
+            "line_id": 3687,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2203,
+            "line_id": 3690,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2204,
+            "line_id": 3691,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2209,
+            "line_id": 3696,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2210,
+            "line_id": 3697,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2205,
+            "line_id": 3692,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2206,
+            "line_id": 3693,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2207,
+            "line_id": 3694,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2208,
+            "line_id": 3695,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2211,
+            "line_id": 3698,
+            "customer_id": 770,
+            "reservation_id": 2001,
+            "quantity": "20"
+          }
+        ],
+        "outbox_id": 6842
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/219023232/TC03089DDB36",
+      "status": 403,
+      "elapsed_ms": 125.4,
+      "response": {
+        "detail": {
+          "code": "POOL_WAREHOUSE_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/219023232/TC03089DDB36/allocate",
+      "status": 403,
+      "elapsed_ms": 288.37,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PA23.d13faa905.foreign",
+          "oracle_code": 20882,
+          "reason": "POOL_ALLOCATION_FORBIDDEN",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 120.77,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "PA07501a3c88b6",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.role_operate_revoked",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 403,
+      "elapsed_ms": 143.2,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PA23.d13faa905.role.allocate",
+          "oracle_code": 20882,
+          "reason": "TRADE_OWNER_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 135.14,
+      "response": {
+        "version": 3,
+        "owner_id": "SNS",
+        "username": "PA07501a3c88b6",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.role_operate_restored",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 200,
+      "elapsed_ms": 192.06,
+      "response": {
+        "operation_id": "PA23.d13faa905.role.allocate",
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "allocated_quantity": "20",
+        "available_quantity": "210",
+        "physical_reserve": false,
+        "from_stock": true,
+        "allocations": [
+          {
+            "order_id": 2200,
+            "line_id": 3687,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2203,
+            "line_id": 3690,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2204,
+            "line_id": 3691,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2209,
+            "line_id": 3696,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2210,
+            "line_id": 3697,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2205,
+            "line_id": 3692,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2206,
+            "line_id": 3693,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2207,
+            "line_id": 3694,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2208,
+            "line_id": 3695,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2211,
+            "line_id": 3698,
+            "customer_id": 770,
+            "reservation_id": 2001,
+            "quantity": "20"
+          }
+        ],
+        "outbox_id": 6842
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 276.04,
+      "response": {
+        "version": 4,
+        "owner_id": "SNS",
+        "username": "PA07501a3c88b6",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.role_hidden",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 142.06,
+      "response": {
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "from_stock": true,
+        "policy_version": 8,
+        "available_quantity": null,
+        "pick_step": "1",
+        "orders": [],
+        "allocations": {},
+        "reservations": [],
+        "complete": false,
+        "preview": true,
+        "physical_reserve": false,
+        "classes": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 192.96,
+      "response": {
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "from_stock": true,
+        "policy_version": 8,
+        "available_quantity": "210",
+        "pick_step": "1",
+        "orders": [
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3687,
+            "order_id": 2200,
+            "customer_id": 770,
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "quantity": "0",
+            "dispatch_order": 0
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3690,
+            "order_id": 2203,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 1
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3691,
+            "order_id": 2204,
+            "customer_id": 770,
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "quantity": "0",
+            "dispatch_order": 2
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3696,
+            "order_id": 2209,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 3
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3697,
+            "order_id": 2210,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 4
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3692,
+            "order_id": 2205,
+            "customer_id": 770,
+            "quantity": "10",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 5
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3693,
+            "order_id": 2206,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 6
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3694,
+            "order_id": 2207,
+            "customer_id": 770,
+            "quantity": "300",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 7
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3695,
+            "order_id": 2208,
+            "customer_id": 770,
+            "quantity": "10",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [],
+            "pool_reason": "TRADE_ORDER_BINDING_STALE",
+            "dispatch_order": 8
+          },
+          {
+            "picked_hard_overlap": "0",
+            "picked_quantity": "0",
+            "hard_quantity": "0",
+            "line_id": 3698,
+            "order_id": 2211,
+            "customer_id": 770,
+            "quantity": "20",
+            "uom_version": 1,
+            "order_status": "OPEN",
+            "line_status": "OPEN",
+            "weight_choice_pending_quantity": "0",
+            "accepted_weight_deviation_quantity": "0",
+            "classes": [
+              "SNS|A|200|2030-01-01"
+            ],
+            "dispatch_order": 9
+          }
+        ],
+        "allocations": {
+          "3687": "0",
+          "3690": "0",
+          "3691": "0",
+          "3696": "0",
+          "3697": "0",
+          "3692": "0",
+          "3693": "0",
+          "3694": "0",
+          "3695": "0",
+          "3698": "20"
+        },
+        "reservations": [
+          {
+            "id": 2001,
+            "order_id": 2211,
+            "line_id": 3698,
+            "quantity": "20",
+            "version": 0,
+            "status": "ACTIVE"
+          }
+        ],
+        "complete": true,
+        "preview": true,
+        "physical_reserve": false,
+        "classes": [
+          {
+            "key": "SNS|A|200|2030-01-01",
+            "owner": "SNS",
+            "free": "210"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 200,
+      "elapsed_ms": 540.4,
+      "response": {
+        "operation_id": "PA23.d13faa905.legacy.allocate",
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "allocated_quantity": "20",
+        "available_quantity": "210",
+        "physical_reserve": false,
+        "from_stock": true,
+        "allocations": [
+          {
+            "order_id": 2200,
+            "line_id": 3687,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2203,
+            "line_id": 3690,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2204,
+            "line_id": 3691,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2209,
+            "line_id": 3696,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2210,
+            "line_id": 3697,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2205,
+            "line_id": 3692,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2206,
+            "line_id": 3693,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2207,
+            "line_id": 3694,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2208,
+            "line_id": 3695,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2211,
+            "line_id": 3698,
+            "customer_id": 770,
+            "reservation_id": 2001,
+            "quantity": "20"
+          }
+        ],
+        "outbox_id": 6843
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "status": 403,
+      "elapsed_ms": 80.05,
+      "response": {
+        "detail": {
+          "code": "POOL_WAREHOUSE_ACCESS_DENIED"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 403,
+      "elapsed_ms": 85.27,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PA23.d13faa905.role.allocate",
+          "oracle_code": 20882,
+          "reason": "POOL_ALLOCATION_FORBIDDEN",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 403,
+      "elapsed_ms": 82.73,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PA23.d13faa905.legacy.allocate",
+          "oracle_code": 20882,
+          "reason": "POOL_ALLOCATION_FORBIDDEN",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "operation_id_conflict": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/messages",
+      "status": 200,
+      "elapsed_ms": 76.85,
+      "response": {
+        "warehouse_id": 210564699,
+        "document_id": "PA23.d13faa905.ORDER",
+        "entity_type": "ORDER",
+        "version": 2,
+        "status": "ACCEPTED",
+        "replayed": false,
+        "stock_changed": false,
+        "physical_execution": "NOT_STARTED",
+        "schema_version": 1,
+        "event_id": "PA23.d13faa905.order_cancelled",
+        "correlation_id": "PA23.d13faa905.order_cancelled",
+        "source_id": "WMS_TRADECASE",
+        "target_source_id": "TC03.SAP",
+        "occurred_at": "2026-10-23T04:46:25.975-04:00",
+        "external_delivery": "PENDING",
+        "external_business": "NOT_CONFIRMED",
+        "outbox_id": 6844
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/inventory/soft-pools/210564699/TC03089DDB36/allocate",
+      "status": 200,
+      "elapsed_ms": 641.1,
+      "response": {
+        "operation_id": "PA23.d13faa905.clean",
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "unit": "EA",
+        "allocated_quantity": "0",
+        "available_quantity": "210",
+        "physical_reserve": false,
+        "from_stock": true,
+        "allocations": [
+          {
+            "order_id": 2200,
+            "line_id": 3687,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2203,
+            "line_id": 3690,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2204,
+            "line_id": 3691,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2209,
+            "line_id": 3696,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2210,
+            "line_id": 3697,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2205,
+            "line_id": 3692,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2206,
+            "line_id": 3693,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2207,
+            "line_id": 3694,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2208,
+            "line_id": 3695,
+            "customer_id": 770,
+            "reservation_id": null,
+            "quantity": "0"
+          },
+          {
+            "order_id": 2211,
+            "line_id": 3698,
+            "customer_id": 770,
+            "reservation_id": 2001,
+            "quantity": "0"
+          }
+        ],
+        "outbox_id": 6845
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 75.34,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": true,
+        "pick_step": "1",
+        "policy_version": 8,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": true
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/sku-allocation/210564699/TC03089DDB36",
+      "status": 200,
+      "elapsed_ms": 99.64,
+      "response": {
+        "stock_class": "OTHER",
+        "ship_from_stock": null,
+        "pick_step": "1",
+        "policy_version": 9,
+        "warehouse": 210564699,
+        "article": "TC03089DDB36",
+        "effective_ship_from_stock": false
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/210564699/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 97.76,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "PL1b3f184907e1",
+        "warehouse_id": 210564699,
+        "operation_id": "PA23.d13faa905.legacy_owner_retired",
+        "stock_changed": false,
+        "replayed": false
+      }
+    }
+  ],
+  "identities": true,
+  "native": {
+    "order": 2211,
+    "row": 3698
+  },
+  "legacy_proof": {
+    "preview": {
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "from_stock": true,
+      "policy_version": 8,
+      "available_quantity": "210",
+      "pick_step": "1",
+      "orders": [
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3687,
+          "order_id": 2200,
+          "customer_id": 770,
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "quantity": "0",
+          "dispatch_order": 0
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3690,
+          "order_id": 2203,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 1
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3691,
+          "order_id": 2204,
+          "customer_id": 770,
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "quantity": "0",
+          "dispatch_order": 2
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3696,
+          "order_id": 2209,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 3
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3697,
+          "order_id": 2210,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 4
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3692,
+          "order_id": 2205,
+          "customer_id": 770,
+          "quantity": "10",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 5
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3693,
+          "order_id": 2206,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 6
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3694,
+          "order_id": 2207,
+          "customer_id": 770,
+          "quantity": "300",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 7
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3695,
+          "order_id": 2208,
+          "customer_id": 770,
+          "quantity": "10",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [],
+          "pool_reason": "TRADE_ORDER_BINDING_STALE",
+          "dispatch_order": 8
+        },
+        {
+          "picked_hard_overlap": "0",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "line_id": 3698,
+          "order_id": 2211,
+          "customer_id": 770,
+          "quantity": "20",
+          "uom_version": 1,
+          "order_status": "OPEN",
+          "line_status": "OPEN",
+          "weight_choice_pending_quantity": "0",
+          "accepted_weight_deviation_quantity": "0",
+          "classes": [
+            "SNS|A|200|2030-01-01"
+          ],
+          "dispatch_order": 9
+        }
+      ],
+      "allocations": {
+        "3687": "0",
+        "3690": "0",
+        "3691": "0",
+        "3696": "0",
+        "3697": "0",
+        "3692": "0",
+        "3693": "0",
+        "3694": "0",
+        "3695": "0",
+        "3698": "20"
+      },
+      "reservations": [
+        {
+          "id": 2001,
+          "order_id": 2211,
+          "line_id": 3698,
+          "quantity": "20",
+          "version": 0,
+          "status": "ACTIVE"
+        }
+      ],
+      "complete": true,
+      "preview": true,
+      "physical_reserve": false,
+      "classes": [
+        {
+          "key": "SNS|A|200|2030-01-01",
+          "owner": "SNS",
+          "free": "210"
+        }
+      ]
+    },
+    "result": {
+      "operation_id": "PA23.d13faa905.legacy.allocate",
+      "warehouse": 210564699,
+      "article": "TC03089DDB36",
+      "unit": "EA",
+      "allocated_quantity": "20",
+      "available_quantity": "210",
+      "physical_reserve": false,
+      "from_stock": true,
+      "allocations": [
+        {
+          "order_id": 2200,
+          "line_id": 3687,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2203,
+          "line_id": 3690,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2204,
+          "line_id": 3691,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2209,
+          "line_id": 3696,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2210,
+          "line_id": 3697,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2205,
+          "line_id": 3692,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2206,
+          "line_id": 3693,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2207,
+          "line_id": 3694,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2208,
+          "line_id": 3695,
+          "customer_id": 770,
+          "reservation_id": null,
+          "quantity": "0"
+        },
+        {
+          "order_id": 2211,
+          "line_id": 3698,
+          "customer_id": 770,
+          "reservation_id": 2001,
+          "quantity": "20"
+        }
+      ],
+      "outbox_id": 6843
+    }
+  },
+  "assignment_revoked": true,
+  "legacy_edit_revoked": true,
+  "status": "PASS",
+  "slow_sql": [
+    [
+      6641,
+      22,
+      "/api/inventory/soft-pools/219023232/TC03089DDB36",
+      "Read SOFT demand pool"
+    ],
+    [
+      6642,
+      5,
+      "/api/inventory/soft-pools/210564699/TC03089DDB36",
+      "Read SOFT demand pool"
+    ]
+  ]
+}

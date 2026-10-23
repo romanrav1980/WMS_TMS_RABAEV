@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\rollback.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\before_cmd_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\before_api_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\before_read_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\before_read_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\recompile.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_topup_after_load\rollback_verify.sql
+Done. Statements=9; Errors=0; AbsentCleanup=0

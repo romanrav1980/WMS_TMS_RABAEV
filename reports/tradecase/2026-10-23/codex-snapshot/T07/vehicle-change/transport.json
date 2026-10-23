@@ -1,0 +1,358 @@
+{
+  "warehouse_id": 213059748,
+  "case_id": 641561,
+  "order_id": 2213,
+  "article": "TC032EB0247E",
+  "st_number": "FP.213059748",
+  "st_pallet": "FP21.ST.213059748",
+  "carrier": "690000000832956141",
+  "quantity": 10,
+  "expected_remaining": 0,
+  "expected_hard": 0,
+  "shipment_date": "2026-10-24",
+  "demand_order_id": "FP21.213059748.ORDER",
+  "planned_departure_at": "2026-10-24T17:40:42.522065+03:00",
+  "vehicle_number": "VC23C213059748",
+  "dock": "NS23D213059748",
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/admin/transport/vehicles",
+      "status": 201,
+      "elapsed_ms": 515.64,
+      "response": {
+        "id": 10128
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/transport/drivers",
+      "status": 201,
+      "elapsed_ms": 88.31,
+      "response": {
+        "id": 10027
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/transport/tasks",
+      "status": 200,
+      "elapsed_ms": 128.66,
+      "response": {
+        "task_id": 33677
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/admin/transport/tasks/33677",
+      "status": 200,
+      "elapsed_ms": 254.05,
+      "response": {
+        "task_id": 33677
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/transport/tasks/33677/sts",
+      "status": 200,
+      "elapsed_ms": 297.12,
+      "response": {
+        "store_access": {
+          "vehicle_id": 10128,
+          "rules": [],
+          "missing_dimension_addresses": [],
+          "requires_outer_dimensions": false,
+          "complete": true,
+          "outer_height_mm": null,
+          "outer_length_mm": null
+        },
+        "floor_capacity": {
+          "basis": "EXPLICIT_FLOOR_VARIANTS",
+          "operational_admission": false,
+          "status": "NOT_CONFIGURED"
+        },
+        "validation_status": "CAPACITY_TYPE_CHECKED",
+        "frozen_loaded_places": 0,
+        "frozen_loaded_weight_kg": "0",
+        "declared_places": 1,
+        "declared_weight_kg": "10",
+        "warnings": [],
+        "physical_stock_changed": false,
+        "physical_load_admission": false,
+        "retained_loaded_sts": 0,
+        "written_sts": 1,
+        "assigned": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/transport/vehicles/10128/profile",
+      "status": 200,
+      "elapsed_ms": 383.42,
+      "response": {
+        "base_hash": "3134DFF284D542ECE2579A937A8D120DE1BC1655243D5B911681CE2C42ECF292",
+        "vehicle_id": 10128,
+        "base": {
+          "vehicle_id": 10128,
+          "vehicle_number": "NS23V213059748",
+          "vehicle_type": "10",
+          "pallet_capacity": "10",
+          "max_weight_kg": "1000"
+        },
+        "state": "NOT_CONFIGURED",
+        "version": 0
+      }
+    }
+  ],
+  "vehicle_id": 10130,
+  "driver_id": 10027,
+  "transport_created": {
+    "task_id": 33677
+  },
+  "transport_task_id": 33677,
+  "trip_configured": {
+    "task_id": 33677
+  },
+  "assigned": {
+    "store_access": {
+      "vehicle_id": 10128,
+      "rules": [],
+      "missing_dimension_addresses": [],
+      "requires_outer_dimensions": false,
+      "complete": true,
+      "outer_height_mm": null,
+      "outer_length_mm": null
+    },
+    "floor_capacity": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "status": "NOT_CONFIGURED"
+    },
+    "validation_status": "CAPACITY_TYPE_CHECKED",
+    "frozen_loaded_places": 0,
+    "frozen_loaded_weight_kg": "0",
+    "declared_places": 1,
+    "declared_weight_kg": "10",
+    "warnings": [],
+    "physical_stock_changed": false,
+    "physical_load_admission": false,
+    "retained_loaded_sts": 0,
+    "written_sts": 1,
+    "assigned": 1
+  },
+  "vehicle_profile": {
+    "base_hash": "3134DFF284D542ECE2579A937A8D120DE1BC1655243D5B911681CE2C42ECF292",
+    "vehicle_id": 10128,
+    "base": {
+      "vehicle_id": 10128,
+      "vehicle_number": "NS23V213059748",
+      "vehicle_type": "10",
+      "pallet_capacity": "10",
+      "max_weight_kg": "1000"
+    },
+    "state": "NOT_CONFIGURED",
+    "version": 0
+  },
+  "reload_body": {
+    "operation_id": "VC23.e239ec51a.reload.C",
+    "identifier": "VC23.e239ec51a.PALLET",
+    "expected_version": 5,
+    "scan_container": "VC23.e239ec51a.PALLET",
+    "scan_cell": "T3R2eb0247e",
+    "transport_task_id": 33677,
+    "scan_vehicle": "VC23C213059748",
+    "scan_dock": "NS23D213059748",
+    "physical_boxes": [
+      {
+        "box_uid": "VC23.e239ec51a.BOX",
+        "scan_box": "VC23.e239ec51a.BOX",
+        "content_version": 8,
+        "origin": "MANUAL_CONFIRMED",
+        "gross_weight_kg": "10.1",
+        "measurement_ref": "SYNTHETIC_TYPED_BOX_WEIGHT"
+      }
+    ],
+    "measurements": {
+      "origin": "MANUAL_CONFIRMED",
+      "content_version": 5,
+      "gross_weight_kg": "10.2",
+      "width_m": "1.2",
+      "depth_m": "0.8",
+      "height_m": "1.5"
+    }
+  },
+  "load_body": {
+    "operation_id": "VC23.e239ec51a.load.tare_ready",
+    "identifier": "VC23.e239ec51a.PALLET",
+    "expected_version": 3,
+    "scan_container": "VC23.e239ec51a.PALLET",
+    "scan_cell": "T3R2eb0247e",
+    "transport_task_id": 33677,
+    "scan_vehicle": "VC23B213059748",
+    "scan_dock": "NS23D213059748",
+    "physical_boxes": [
+      {
+        "box_uid": "VC23.e239ec51a.BOX",
+        "scan_box": "VC23.e239ec51a.BOX",
+        "content_version": 6,
+        "origin": "MANUAL_CONFIRMED",
+        "gross_weight_kg": "10.1",
+        "measurement_ref": "SYNTHETIC_TYPED_BOX_WEIGHT"
+      }
+    ],
+    "measurements": {
+      "origin": "MANUAL_CONFIRMED",
+      "content_version": 3,
+      "gross_weight_kg": "10.2",
+      "width_m": "1.2",
+      "depth_m": "0.8",
+      "height_m": "1.5"
+    }
+  },
+  "loaded": {
+    "physical_load": {
+      "trip": 33677,
+      "vehicle_id": 10130,
+      "vehicle": "VC23C213059748",
+      "dock": "NS23D213059748",
+      "warehouse": 213059748,
+      "uid": "VC23.e239ec51a.PALLET",
+      "case_task_id": null,
+      "content_version": 5,
+      "mass_kg": "10.2",
+      "volume_m3": "1.44",
+      "members": [
+        641561
+      ],
+      "destinations": [
+        {
+          "id": 641561,
+          "address": "FP21.QA.ADDRESS"
+        }
+      ],
+      "physical_boxes": [
+        {
+          "box_uid": "VC23.e239ec51a.BOX",
+          "content_version": 8,
+          "gross_weight_kg": "10.1",
+          "origin": "MANUAL_CONFIRMED",
+          "coverage_complete": 1,
+          "measurement_ref": "SYNTHETIC_TYPED_BOX_WEIGHT",
+          "scan_box": "VC23.e239ec51a.BOX"
+        }
+      ],
+      "floor_at_loading": {
+        "vehicle_id": 10130,
+        "profile_version": 1,
+        "profile_base_hash": "3E05453577F0B6362DB52E32E9C869A2A8C0B94877969CEA5B95824B4B2EB15B",
+        "pallet_type_id": 1,
+        "type_origin": "HELD_HU_TARE_BOOK",
+        "source_reference": "VC23.e239ec51a.tare.book",
+        "root": "VC23.e239ec51a.PALLET",
+        "warehouse": 213059748,
+        "top_place_count": 1
+      },
+      "temperature_at_loading": null
+    },
+    "operation_id": "VC23.e239ec51a.reload.C",
+    "status": "SHIPPED",
+    "uid": "VC23.e239ec51a.PALLET",
+    "shipments": [
+      {
+        "case_pick_task_id": null,
+        "operation_id": "VC23.e239ec51a.reload.C",
+        "status": "APPLIED",
+        "document_id": 641561,
+        "allocations": [
+          {
+            "row_id": 16728030,
+            "uid": "690000000832956141",
+            "cell": "T3R2eb0247e",
+            "article": "TC032EB0247E",
+            "source_p": "10",
+            "quantity": "10",
+            "base_uom": "EA",
+            "uom_version": 1,
+            "reservation_id": 2004,
+            "owner_type": "PICK_WAVE",
+            "owner_id": 624,
+            "pick_task_id": 2196,
+            "reservation_version": 0
+          }
+        ]
+      }
+    ],
+    "composition_at_departure": {
+      "root": "VC23.e239ec51a.PALLET",
+      "warehouse": 213059748,
+      "cell": "T3R2eb0247e",
+      "nodes": [
+        {
+          "uid": "VC23.e239ec51a.PALLET",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 5,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "open_task_count": 0,
+          "cell": "T3R2eb0247e",
+          "depth": 0
+        },
+        {
+          "uid": "VC23.e239ec51a.BOX",
+          "kind": "CONTAINER",
+          "type": "BOX",
+          "version": 8,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "packing_start": {
+            "operation_id": "VC23.e239ec51a.inner_floor_repack",
+            "content_version": 5,
+            "warehouse": 213059748,
+            "instant": "2026-10-23T11:00:05.698504-04:00"
+          },
+          "open_task_count": 0,
+          "cell": "T3R2eb0247e",
+          "depth": 1
+        },
+        {
+          "uid": "690000000832956141",
+          "kind": "STOCK",
+          "type": null,
+          "version": 3,
+          "sscc": "690000000832956141",
+          "tare_weight_kg": "0",
+          "article": "TC032EB0247E",
+          "quantity": "10",
+          "hard_quantity": "10",
+          "base_uom": "EA",
+          "stock_version": 6,
+          "weight_kg": "10",
+          "open_task_count": 0,
+          "cell": "T3R2eb0247e",
+          "depth": 2
+        }
+      ],
+      "links": [
+        {
+          "id": 781,
+          "parent": "VC23.e239ec51a.PALLET",
+          "child": "VC23.e239ec51a.BOX",
+          "version": 0
+        },
+        {
+          "id": 782,
+          "parent": "VC23.e239ec51a.BOX",
+          "child": "690000000832956141",
+          "version": 0
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 10,
+      "leaf_count": 1,
+      "top_place_count": 1
+    },
+    "top_place_count": 1,
+    "outbox_id": 6949
+  }
+}

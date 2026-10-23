@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "ready_ms": 478,
+      "size": {
+        "viewport": 1440,
+        "document": 1440
+      },
+      "case": "Actual posted case and separate external pending; no repeated posting action"
+    },
+    {
+      "width": 390,
+      "ready_ms": 1063,
+      "size": {
+        "viewport": 390,
+        "document": 390
+      },
+      "case": "Actual posted case and separate external pending; no repeated posting action"
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

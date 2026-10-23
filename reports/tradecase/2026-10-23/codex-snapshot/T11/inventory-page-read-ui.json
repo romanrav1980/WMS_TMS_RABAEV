@@ -1,0 +1,15 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "name": "Actual served auth/closed revision read; responsive navigation, help and hints; no overflow"
+    },
+    {
+      "width": 390,
+      "name": "Actual served auth/closed revision read; responsive navigation, help and hints; no overflow"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "status": "PASS"
+}

@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "check": "Actual archived zero quantity and20lost codes render; hints/help/width"
+    },
+    {
+      "width": 1440,
+      "check": "Revoked read clears archived codes and rows"
+    },
+    {
+      "width": 390,
+      "check": "Actual archived zero quantity and20lost codes render; hints/help/width"
+    },
+    {
+      "width": 390,
+      "check": "Revoked read clears archived codes and rows"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "sourceApiCall": 92260,
+  "mode": "Audited actual GET replay; real page/auth; injected403",
+  "status": "PASS"
+}

@@ -1,0 +1,14 @@
+node : locator.waitFor: Timeout 30000ms exceeded.
+строка:62 знак:1
++ node tests/tradecase/vehicle_change_live_ui.cjs > runtime/test-eviden ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (locator.waitFor...000ms exceeded.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Call log:
+[2m  - waiting for locator('button.dispatch-edit-btn') to be visible[22m
+
+    at open (C:\projects\TMS\tests\tradecase\vehicle_change_live_ui.cjs:33:48)
+    at async C:\projects\TMS\tests\tradecase\vehicle_change_live_ui.cjs:35:3 {
+  name: 'TimeoutError'
+}

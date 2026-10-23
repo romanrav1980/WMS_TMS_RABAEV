@@ -1,0 +1,444 @@
+{
+  "tag": "PG23.dea0e64a0",
+  "hu": "PG23.dea0e64a0.HU",
+  "source": "T3P89af0087",
+  "target": "T3S89af0087",
+  "requests": {
+    "out.plan": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/plan-move",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.out.plan",
+        "identifier": "690000000099475270",
+        "target_cell": "T3R89af0087",
+        "expected_version": 0,
+        "scan_container": "690000000099475270",
+        "scanned_from_cell": "T3P89af0087",
+        "scanned_to_cell": "T3R89af0087"
+      }
+    },
+    "container.create": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/create",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.container.create",
+        "identifier": "PG23.dea0e64a0.HU",
+        "cell": "T3P89af0087",
+        "warehouse": 219023232,
+        "container_type": "PALLET",
+        "tare_weight_kg": "0.1",
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scan_cell": "T3P89af0087"
+      }
+    },
+    "container.attach": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/attach",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.container.attach",
+        "identifier": "PG23.dea0e64a0.HU",
+        "child_uid": "690000000099475270",
+        "expected_version": 1,
+        "expected_child_version": 0,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scan_child": "690000000099475270"
+      }
+    },
+    "container.attach.current": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/attach",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.container.attach.current",
+        "identifier": "PG23.dea0e64a0.HU",
+        "child_uid": "690000000099475270",
+        "expected_version": 0,
+        "expected_child_version": 0,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scan_child": "690000000099475270"
+      }
+    },
+    "out.container.plan": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/plan-move",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.out.container.plan",
+        "identifier": "PG23.dea0e64a0.HU",
+        "target_cell": "T3R89af0087",
+        "expected_version": 1,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scanned_from_cell": "T3P89af0087",
+        "scanned_to_cell": "T3R89af0087"
+      }
+    },
+    "out.empty.container.plan": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/plan-move",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.out.empty.container.plan",
+        "identifier": "PG23.dea0e64a0.HU",
+        "target_cell": "T3S89af0087",
+        "expected_version": 1,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scanned_from_cell": "T3P89af0087",
+        "scanned_to_cell": "T3S89af0087"
+      }
+    },
+    "retire.detach": {
+      "path": "/api/warehouse-hus/detach",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.retire.detach",
+        "identifier": "PG23.dea0e64a0.HU",
+        "child_uid": "690000000099475270",
+        "expected_version": 1,
+        "expected_child_version": 1,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scan_child": "690000000099475270",
+        "reason": "End unsupported arbitrary HU paper fixture; use a genuine replenishment task"
+      }
+    },
+    "retire.empty.move": {
+      "path": "/api/warehouse-hus/move",
+      "body": {
+        "operation_id": "PG23.dea0e64a0.retire.empty.move",
+        "identifier": "PG23.dea0e64a0.HU",
+        "target_cell": "T3S89af0087",
+        "expected_version": 2,
+        "scan_container": "PG23.dea0e64a0.HU",
+        "scanned_from_cell": "T3P89af0087",
+        "scanned_to_cell": "T3S89af0087"
+      }
+    }
+  },
+  "results": {
+    "container.create": {
+      "root": "PG23.dea0e64a0.HU",
+      "warehouse": 219023232,
+      "cell": "T3P89af0087",
+      "nodes": [
+        {
+          "uid": "PG23.dea0e64a0.HU",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "open_task_count": 0,
+          "cell": "T3P89af0087",
+          "depth": 0
+        }
+      ],
+      "links": [],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 0,
+      "top_place_count": 1,
+      "operation_id": "PG23.dea0e64a0.container.create",
+      "command": "HU_CREATE",
+      "outbox_id": 6757
+    },
+    "container.attach.current": {
+      "root": "PG23.dea0e64a0.HU",
+      "warehouse": 219023232,
+      "cell": "T3P89af0087",
+      "nodes": [
+        {
+          "uid": "PG23.dea0e64a0.HU",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 1,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "open_task_count": 0,
+          "cell": "T3P89af0087",
+          "depth": 0
+        },
+        {
+          "uid": "690000000099475270",
+          "kind": "STOCK",
+          "type": null,
+          "version": 1,
+          "sscc": "690000000099475270",
+          "tare_weight_kg": "0",
+          "article": "TC0389AF0087",
+          "quantity": "2",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "stock_version": 6,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "T3P89af0087",
+          "depth": 1
+        }
+      ],
+      "links": [
+        {
+          "id": 721,
+          "parent": "PG23.dea0e64a0.HU",
+          "child": "690000000099475270",
+          "version": 0
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 2,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "operation_id": "PG23.dea0e64a0.container.attach.current",
+      "command": "HU_ATTACH",
+      "outbox_id": 6758
+    }
+  },
+  "before": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "before_units": [
+    [
+      "ee5153fb619522da0b15c64e78ce107f109f1323355e0c9bfb10a96be199160d",
+      "690000000099475270",
+      "T3P89af0087",
+      "AVAILABLE",
+      null
+    ],
+    [
+      "eef26502f2b5b644ff805fddf1f521787ca7a7619f06abe66ba608fa58e67682",
+      "690000000099475270",
+      "T3P89af0087",
+      "AVAILABLE",
+      null
+    ]
+  ],
+  "slow_marker": 6606,
+  "error": "(409, {'detail': {'code': 'STOCK_RULE_REJECTED', 'operation_id': 'PG23.dea0e64a0.out.empty.container.plan', 'reason': 'TRADE_HU_REGISTERED_DEFER_WAIT_REQUIRED', 'oracle_code': 20911, 'outcome_confirmed': True, 'retry_same_operation_id': False}})",
+  "goods_uid": "690000000099475270",
+  "rejected_occupied_target": "T3R89af0087",
+  "status": "NOT_ACCEPTED_TRADE_CONTEXT_REQUIRED",
+  "cleanup": "Original goods remain untouched at P; own empty carrier moved to S; no open tasks; arbitrary HU goods planning was correctly refused",
+  "retirement_calls": [
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=PG23.dea0e64a0.HU",
+      "status": 200,
+      "elapsed_ms": 307.55,
+      "response": {
+        "root": "PG23.dea0e64a0.HU",
+        "warehouse": 219023232,
+        "cell": "T3P89af0087",
+        "nodes": [
+          {
+            "uid": "PG23.dea0e64a0.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 1,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3P89af0087",
+            "depth": 0
+          },
+          {
+            "uid": "690000000099475270",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": "690000000099475270",
+            "tare_weight_kg": "0",
+            "article": "TC0389AF0087",
+            "quantity": "2",
+            "hard_quantity": "0",
+            "base_uom": "EA",
+            "stock_version": 6,
+            "weight_kg": null,
+            "open_task_count": 0,
+            "cell": "T3P89af0087",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 721,
+            "parent": "PG23.dea0e64a0.HU",
+            "child": "690000000099475270",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 2,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "quantities": [
+          {
+            "article": "TC0389AF0087",
+            "base_uom": "EA",
+            "quantity": "2"
+          }
+        ],
+        "gross_weight_kg": null,
+        "unknown_weight_leaves": 1,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 219023232,
+          "cell": "T3P89af0087",
+          "status": "UNSPECIFIED",
+          "allowed": true,
+          "code": "HU_THERMAL_RULES_UNSPECIFIED",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 1,
+          "sku_count": 1,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": [
+            {
+              "article": "TC0389AF0087",
+              "min_c": null,
+              "max_c": null
+            }
+          ]
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/detach",
+      "status": 200,
+      "elapsed_ms": 198.23,
+      "response": {
+        "root": "PG23.dea0e64a0.HU",
+        "warehouse": 219023232,
+        "cell": "T3P89af0087",
+        "nodes": [
+          {
+            "uid": "PG23.dea0e64a0.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3P89af0087",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "PG23.dea0e64a0.retire.detach",
+        "command": "HU_DETACH",
+        "outbox_id": 6759
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition?identifier=PG23.dea0e64a0.HU",
+      "status": 200,
+      "elapsed_ms": 123.91,
+      "response": {
+        "root": "PG23.dea0e64a0.HU",
+        "warehouse": 219023232,
+        "cell": "T3P89af0087",
+        "nodes": [
+          {
+            "uid": "PG23.dea0e64a0.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 2,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3P89af0087",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "quantities": [],
+        "gross_weight_kg": "0.1",
+        "unknown_weight_leaves": 0,
+        "unknown_tare_containers": 0,
+        "thermal_admission": {
+          "domain": "HU_THERMAL_ADMISSION",
+          "version": 1,
+          "warehouse_id": 219023232,
+          "cell": "T3P89af0087",
+          "status": "EMPTY",
+          "allowed": true,
+          "code": "HU_THERMAL_NO_STOCK",
+          "policy_only": true,
+          "observed_temperature_c": null,
+          "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+          "known_sku_count": 0,
+          "unknown_sku_count": 0,
+          "sku_count": 0,
+          "common_min_c": null,
+          "common_max_c": null,
+          "cell_min_c": null,
+          "cell_max_c": null,
+          "rules": []
+        },
+        "placement": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/move",
+      "status": 200,
+      "elapsed_ms": 150.46,
+      "response": {
+        "root": "PG23.dea0e64a0.HU",
+        "warehouse": 219023232,
+        "cell": "T3S89af0087",
+        "nodes": [
+          {
+            "uid": "PG23.dea0e64a0.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 3,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "T3S89af0087",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "PG23.dea0e64a0.retire.empty.move",
+        "command": "HU_MOVE",
+        "outbox_id": 6760
+      }
+    }
+  ]
+}

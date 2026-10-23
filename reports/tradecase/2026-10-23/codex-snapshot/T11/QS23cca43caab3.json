@@ -1,0 +1,272 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Role-only warehouse access; hidden owner conceals case, view-only cannot write, operate reaches closed-state refusal, other actor cannot replay",
+    "Owner and warehouse revocation remove access on the next request"
+  ],
+  "http": [
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions",
+      "status": 200,
+      "elapsed_ms": 359.73,
+      "response": {
+        "warehouse_id": 212476763,
+        "observed_at": "2026-10-22T22:56:17Z",
+        "quarantine": [],
+        "cases": [],
+        "discrepancies": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "status": 404,
+      "elapsed_ms": 116.01,
+      "response": {
+        "detail": {
+          "code": "QUALITY_CASE_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 403,
+      "elapsed_ms": 129.11,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 186.56,
+      "response": {
+        "version": 1,
+        "owner_id": "SNS",
+        "username": "QS23cca43caab3",
+        "warehouse_id": 212476763,
+        "operation_id": "QS23cca43caab3.owner.0",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "status": 200,
+      "elapsed_ms": 99.35,
+      "response": {
+        "case_id": 1,
+        "warehouse_id": 212476763,
+        "pallet_uid": "690000000340515809",
+        "cell": "Q23.25cadbfc",
+        "state": "POSTED",
+        "version": 4,
+        "quality_hold_id": 2,
+        "reason": "Own quality acceptance",
+        "decision_note": "Own quality acceptance",
+        "approval_note": "Own quality acceptance",
+        "opened_by": "admin",
+        "opened_at": "2026-10-22T22:40:10Z",
+        "decided_by": "admin",
+        "decided_at": "2026-10-22T22:40:11Z",
+        "approved_by": "admin",
+        "approved_at": "2026-10-22T22:40:11Z",
+        "posted_by": "admin",
+        "posted_at": "2026-10-22T22:41:57Z",
+        "post_operation_id": "Q23.post.25cadbfc",
+        "posting_status": "POSTED",
+        "external_status": "PENDING",
+        "composition": [
+          {
+            "sku_id": "A",
+            "owner_id": "SNS",
+            "base_uom": "EA",
+            "base_qty": "2",
+            "units": 2
+          }
+        ],
+        "units": [
+          {
+            "unit_key": "3c7a57d82b67609b37b9338da52dac466f366c52be9d87011ff1806321b99723",
+            "sku_id": "A",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "owner_id": "SNS",
+            "unchanged": false
+          },
+          {
+            "unit_key": "9198470178347c3671d1a2f41d89f8e5e1f998747a5e3556b8cf1bb42e5755a8",
+            "sku_id": "A",
+            "base_uom": "EA",
+            "base_qty": "1",
+            "owner_id": "SNS",
+            "unchanged": false
+          }
+        ],
+        "events": [
+          {
+            "action": "OPEN",
+            "from_state": null,
+            "to_state": "OPEN",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:10Z"
+          },
+          {
+            "action": "DECIDE",
+            "from_state": "OPEN",
+            "to_state": "DEFECT",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:11Z"
+          },
+          {
+            "action": "APPROVE",
+            "from_state": "DEFECT",
+            "to_state": "WAITING_POSTING",
+            "actor": "admin",
+            "at": "2026-10-22T22:40:11Z"
+          },
+          {
+            "action": "POST",
+            "from_state": "WAITING_POSTING",
+            "to_state": "POSTED",
+            "actor": "admin",
+            "at": "2026-10-22T22:41:57Z",
+            "operation_id": "Q23.post.25cadbfc"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 403,
+      "elapsed_ms": 68.83,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 90.99,
+      "response": {
+        "version": 2,
+        "owner_id": "SNS",
+        "username": "QS23cca43caab3",
+        "warehouse_id": 212476763,
+        "operation_id": "QS23cca43caab3.owner.1",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 409,
+      "elapsed_ms": 79.77,
+      "response": {
+        "detail": {
+          "code": "QUALITY_WRITE_OFF_APPROVED_CASE_REQUIRED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 409,
+      "elapsed_ms": 87.49,
+      "response": {
+        "detail": {
+          "code": "OPERATION_CONFLICT",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/tradecase/warehouses/212476763/stock/owner-grants",
+      "status": 200,
+      "elapsed_ms": 133.61,
+      "response": {
+        "version": 3,
+        "owner_id": "SNS",
+        "username": "QS23cca43caab3",
+        "warehouse_id": 212476763,
+        "operation_id": "QS23cca43caab3.owner.2",
+        "stock_changed": false,
+        "replayed": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "status": 404,
+      "elapsed_ms": 83.76,
+      "response": {
+        "detail": {
+          "code": "QUALITY_CASE_NOT_FOUND",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 403,
+      "elapsed_ms": 93.6,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/tradecase/warehouses/212476763/exceptions",
+      "status": 403,
+      "elapsed_ms": 88.21,
+      "response": {
+        "detail": {
+          "code": "QUALITY_ACCESS_DENIED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/tradecase/warehouses/212476763/exceptions/write-offs",
+      "status": 403,
+      "elapsed_ms": 80.5,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false
+        }
+      }
+    }
+  ],
+  "qa_retired": true
+}

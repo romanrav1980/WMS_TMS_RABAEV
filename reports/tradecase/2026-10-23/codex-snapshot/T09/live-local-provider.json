@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "availability": {
+    "osrm": true,
+    "valhalla": true
+  },
+  "endpoint": "http://localhost:5000",
+  "points": [
+    [
+      56.8389,
+      60.5975
+    ],
+    [
+      56.8519,
+      60.6122
+    ]
+  ],
+  "provider": "osrm",
+  "distances_km": [
+    [
+      0.0,
+      3.65
+    ],
+    [
+      2.73,
+      0.0
+    ]
+  ],
+  "durations_min": [
+    [
+      0.0,
+      5.98
+    ],
+    [
+      4.4,
+      0.0
+    ]
+  ],
+  "elapsed_ms": 1792.92,
+  "data_timestamps": {
+    "/common/timestamp": ""
+  }
+}

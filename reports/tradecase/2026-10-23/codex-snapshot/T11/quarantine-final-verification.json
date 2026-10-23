@@ -1,0 +1,59 @@
+{
+  "stock": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      212476763,
+      0,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "active_own_qa": 0,
+  "active_own_holds": 0,
+  "invalid": 0,
+  "quality_slow_queries": [
+    [
+      6268,
+      11,
+      "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "TRADECASE quality case READ ONLY"
+    ],
+    [
+      6267,
+      13,
+      "/api/tradecase/warehouses/212476763/exceptions/cases/1",
+      "TRADECASE quality case READ ONLY"
+    ],
+    [
+      6246,
+      8,
+      "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "TRADECASE quality release check READ ONLY"
+    ],
+    [
+      6241,
+      18,
+      "/api/tradecase/warehouses/212476763/exceptions/quarantine-moves",
+      "TRADECASE quality release check READ ONLY"
+    ]
+  ],
+  "status": "PASS"
+}

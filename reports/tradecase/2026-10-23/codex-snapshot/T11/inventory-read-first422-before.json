@@ -1,0 +1,28 @@
+{
+  "kind": "FIXTURE_BROWSER",
+  "checks": [
+    {
+      "width": 1440,
+      "name": "Selected task identity forwarded to existing scoped lots API"
+    },
+    {
+      "width": 1440,
+      "name": "403 clears stale rows; retry preserves unknown original body even after confirmed denial"
+    },
+    {
+      "width": 1440,
+      "name": "Later422 cannot erase the prior unknown delivery"
+    },
+    {
+      "width": 1440,
+      "name": "Late previous-cell result never replaces current-cell rows"
+    },
+    {
+      "width": 1440,
+      "name": "Actor change discards in-flight data"
+    }
+  ],
+  "errors": [],
+  "status": "FAIL",
+  "error": "locator.waitFor: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#countRetry') to be hidden\u001b[22m\n\u001b[2m    - locator resolved to visible <button disabled id=\"countRetry\" data-help-id=\"inventory.count.countRetry\" title=\"Повторить сохранённую команду без изменения её параметров\">Повторить незавершённую команду</button>\u001b[22m\n\u001b[2m    9 × locator resolved to visible <button id=\"countRetry\" data-help-id=\"inventory.count.countRetry\" title=\"Повторить сохранённую команду без изменения её параметров\">Повторить незавершённую команду</button>\u001b[22m\n\n    at C:\\projects\\TMS\\tests\\tradecase\\inventory_read_recovery_ui.cjs:78:35"
+}

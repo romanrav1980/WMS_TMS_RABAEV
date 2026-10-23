@@ -1,0 +1,739 @@
+{
+  "tag": "PH23.68eb5dba",
+  "warehouse": 212476763,
+  "requests": {
+    "create": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/create",
+      "body": {
+        "operation_id": "PH23.68eb5dba.create",
+        "identifier": "PH23.68eb5dba.HU",
+        "cell": "PH23.68eb5dba.A",
+        "warehouse": 212476763,
+        "container_type": "PALLET",
+        "tare_weight_kg": "0.1",
+        "scan_container": "PH23.68eb5dba.HU",
+        "scan_cell": "PH23.68eb5dba.A"
+      },
+      "status": 200
+    },
+    "plan": {
+      "method": "POST",
+      "path": "/api/warehouse-hus/plan-move",
+      "body": {
+        "operation_id": "PH23.68eb5dba.plan",
+        "identifier": "PH23.68eb5dba.HU",
+        "target_cell": "PH23.68eb5dba.B",
+        "expected_version": 0,
+        "scan_container": "PH23.68eb5dba.HU",
+        "scanned_from_cell": "PH23.68eb5dba.A",
+        "scanned_to_cell": "PH23.68eb5dba.B"
+      },
+      "status": 200
+    },
+    "assign": {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/assign",
+      "body": {
+        "assigned_to": "admin"
+      },
+      "status": 200
+    },
+    "printed": {
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1233/paper",
+      "body": null,
+      "status": 200
+    },
+    "start": {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/start",
+      "body": {},
+      "status": 200
+    },
+    "stale": {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "body": {
+        "operation_id": "PH23.68eb5dba.stale",
+        "expected_task_signature": "EE96FCAD68064BE7462B1E1F6256813CFF979E922633116CC963295A7C890313",
+        "fact_qty": "1",
+        "scanned_pallet": "PH23.68eb5dba.HU",
+        "scanned_from_cell": "PH23.68eb5dba.A",
+        "scanned_to_cell": "PH23.68eb5dba.B"
+      },
+      "status": 409
+    },
+    "current": {
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1233/paper",
+      "body": null,
+      "status": 200
+    },
+    "complete": {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "body": {
+        "operation_id": "PH23.68eb5dba.complete",
+        "expected_task_signature": "00255C1E9E572F5808EC628C3A09E18378B614E0CAE57C9A54F69BC3866E1EEB",
+        "fact_qty": "1",
+        "scanned_pallet": "PH23.68eb5dba.HU",
+        "scanned_from_cell": "PH23.68eb5dba.A",
+        "scanned_to_cell": "PH23.68eb5dba.B"
+      },
+      "status": 200
+    }
+  },
+  "results": {
+    "create": {
+      "root": "PH23.68eb5dba.HU",
+      "warehouse": 212476763,
+      "cell": "PH23.68eb5dba.A",
+      "nodes": [
+        {
+          "uid": "PH23.68eb5dba.HU",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0.1",
+          "open_task_count": 0,
+          "cell": "PH23.68eb5dba.A",
+          "depth": 0
+        }
+      ],
+      "links": [],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 0,
+      "top_place_count": 1,
+      "operation_id": "PH23.68eb5dba.create",
+      "command": "HU_CREATE",
+      "outbox_id": 6444
+    },
+    "plan": {
+      "operation_id": "PH23.68eb5dba.plan",
+      "task_id": 1233,
+      "pallet_identifier": "PH23.68eb5dba.HU",
+      "from_cell": "PH23.68eb5dba.A",
+      "cell": "PH23.68eb5dba.B",
+      "target_slot_id": null,
+      "placement": {
+        "target_role": "ORDINARY_STORAGE"
+      },
+      "status": "PLANNED",
+      "quantity": "1",
+      "unit_code": "HU",
+      "content_version": 0,
+      "outbox_id": 6445
+    },
+    "assign": {
+      "status": "ok"
+    },
+    "printed": {
+      "task": {
+        "task_id": 1233,
+        "task_type": "PUTAWAY",
+        "task_source": "MANUAL",
+        "source_task_id": 1233,
+        "source_movement_id": null,
+        "source_doc_type": "WAREHOUSE_HU",
+        "source_doc_id": null,
+        "production_order_id": null,
+        "prod_batch_id": null,
+        "raw_articul": null,
+        "target_articul": null,
+        "uid_pallet": "PH23.68eb5dba.HU",
+        "sscc": null,
+        "from_ware_id": 212476763,
+        "from_cell": "PH23.68eb5dba.A",
+        "to_ware_id": 212476763,
+        "to_cell": "PH23.68eb5dba.B",
+        "qty": 1,
+        "unit_code": "HU",
+        "priority": 100,
+        "status": "ASSIGNED",
+        "assigned_to": "admin",
+        "created_at": "2026-10-22T21:35:18.930771",
+        "created_by": "admin",
+        "started_at": null,
+        "finished_at": null,
+        "cancelled_at": null,
+        "cancelled_by": null,
+        "last_error": null,
+        "qty_mode": "PALLET",
+        "fact_qty": null,
+        "parent_task_id": null,
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "planned_start_at": null,
+        "planned_finish_at": null,
+        "dispatch_priority": null,
+        "from_cell_slot_id": null,
+        "to_cell_slot_id": null,
+        "completion_hash": null,
+        "completion_json": null,
+        "target_uid_pallet": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "hu_content_version": 0,
+        "hu_measurements_json": null,
+        "finished_at_instant": null,
+        "wait_plan_operation_id": null,
+        "wait_decision_operation_id": null,
+        "wait_st_number": null,
+        "wait_target_tt_id": null,
+        "qty_exact": "1",
+        "fact_qty_exact": null,
+        "task_signature": "EE96FCAD68064BE7462B1E1F6256813CFF979E922633116CC963295A7C890313",
+        "from_warehouse_name": "TRADECASE QA 25cadbfc",
+        "to_warehouse_name": "TRADECASE QA 25cadbfc",
+        "assigned_to_name": "Global Administrator"
+      },
+      "reference": "WTASK:1233:EE96FCAD68064BE7462B1E1F6256813CFF979E922633116CC963295A7C890313",
+      "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 880 84\" width=\"100%\" role=\"img\" aria-label=\"Task 1233\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"35\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"41\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"45\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"49\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"57\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"61\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"102\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"107\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"115\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"126\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"146\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"149\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"157\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"160\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"169\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"183\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"190\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"195\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"205\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"210\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"214\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"221\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"234\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"238\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"255\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"259\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"271\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"281\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"291\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"300\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"311\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"322\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"337\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"349\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"357\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"365\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"380\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"387\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"392\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"404\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"410\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"414\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"421\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"426\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"431\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"436\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"447\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"457\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"478\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"491\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"498\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"503\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"514\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"521\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"523\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"534\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"543\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"545\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"565\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"575\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"580\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"591\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"601\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"610\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"619\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"621\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"629\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"634\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"640\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"645\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"656\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"663\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"667\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"674\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"686\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"696\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"700\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"709\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"718\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"723\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"730\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"732\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"739\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"744\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"749\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"765\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"777\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"787\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"796\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"798\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"805\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"819\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"827\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"832\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"841\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"862\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"866\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"440.0\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1233</text></svg>",
+      "prepared_at": "2026-10-23T01:35:19.004516+00:00"
+    },
+    "start": {
+      "status": "ok"
+    },
+    "stale": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "PH23.68eb5dba.stale",
+        "oracle_code": 20890,
+        "reason": "TASK_EXPECTED_SIGNATURE_CHANGED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false,
+        "read_before_retry": false
+      }
+    },
+    "current": {
+      "task": {
+        "task_id": 1233,
+        "task_type": "PUTAWAY",
+        "task_source": "MANUAL",
+        "source_task_id": 1233,
+        "source_movement_id": null,
+        "source_doc_type": "WAREHOUSE_HU",
+        "source_doc_id": null,
+        "production_order_id": null,
+        "prod_batch_id": null,
+        "raw_articul": null,
+        "target_articul": null,
+        "uid_pallet": "PH23.68eb5dba.HU",
+        "sscc": null,
+        "from_ware_id": 212476763,
+        "from_cell": "PH23.68eb5dba.A",
+        "to_ware_id": 212476763,
+        "to_cell": "PH23.68eb5dba.B",
+        "qty": 1,
+        "unit_code": "HU",
+        "priority": 100,
+        "status": "IN_PROGRESS",
+        "assigned_to": "admin",
+        "created_at": "2026-10-22T21:35:18.930771",
+        "created_by": "admin",
+        "started_at": "2026-10-22T21:35:19.568893",
+        "finished_at": null,
+        "cancelled_at": null,
+        "cancelled_by": null,
+        "last_error": null,
+        "qty_mode": "PALLET",
+        "fact_qty": null,
+        "parent_task_id": null,
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "planned_start_at": null,
+        "planned_finish_at": null,
+        "dispatch_priority": null,
+        "from_cell_slot_id": null,
+        "to_cell_slot_id": null,
+        "completion_hash": null,
+        "completion_json": null,
+        "target_uid_pallet": null,
+        "started_at_instant": "2026-10-22T21:35:19.568893",
+        "started_shift_time_zone": "+03:00",
+        "hu_content_version": 0,
+        "hu_measurements_json": null,
+        "finished_at_instant": null,
+        "wait_plan_operation_id": null,
+        "wait_decision_operation_id": null,
+        "wait_st_number": null,
+        "wait_target_tt_id": null,
+        "qty_exact": "1",
+        "fact_qty_exact": null,
+        "task_signature": "00255C1E9E572F5808EC628C3A09E18378B614E0CAE57C9A54F69BC3866E1EEB",
+        "from_warehouse_name": "TRADECASE QA 25cadbfc",
+        "to_warehouse_name": "TRADECASE QA 25cadbfc",
+        "assigned_to_name": "Global Administrator"
+      },
+      "reference": "WTASK:1233:00255C1E9E572F5808EC628C3A09E18378B614E0CAE57C9A54F69BC3866E1EEB",
+      "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 880 84\" width=\"100%\" role=\"img\" aria-label=\"Task 1233\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"35\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"41\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"45\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"49\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"57\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"61\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"102\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"107\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"115\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"126\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"149\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"160\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"173\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"178\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"183\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"189\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"205\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"211\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"216\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"223\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"235\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"237\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"255\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"260\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"270\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"283\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"294\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"299\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"304\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"311\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"321\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"336\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"347\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"359\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"366\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"382\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"391\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"403\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"410\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"412\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"419\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"423\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"431\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"435\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"444\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"446\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"457\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"479\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"489\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"498\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"512\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"522\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"535\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"541\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"546\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"564\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"574\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"578\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"590\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"595\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"599\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"611\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"618\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"623\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"630\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"633\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"645\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"653\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"655\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"661\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"665\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"673\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"685\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"696\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"701\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"711\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"719\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"731\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"744\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"751\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"765\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"777\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"795\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"798\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"805\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"810\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"820\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"831\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"841\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"862\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"866\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"440.0\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1233</text></svg>",
+      "prepared_at": "2026-10-23T01:37:55.291207+00:00"
+    },
+    "complete": {
+      "status": "ok",
+      "result": {
+        "root": "PH23.68eb5dba.HU",
+        "warehouse": 212476763,
+        "cell": "PH23.68eb5dba.B",
+        "nodes": [
+          {
+            "uid": "PH23.68eb5dba.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 1,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "PH23.68eb5dba.B",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "PH23.68eb5dba.complete",
+        "task_id": 1233,
+        "status": "DONE",
+        "pallet_identifier": "PH23.68eb5dba.HU",
+        "source_pallet_identifier": "PH23.68eb5dba.HU",
+        "quantity": "1",
+        "unit_code": "HU",
+        "remaining_quantity": "0",
+        "residual_task_id": null,
+        "outbox_id": 6446
+      }
+    }
+  },
+  "checks": [
+    "Own empty HU task assigned/printed/started; old paper version refused without movement",
+    "Current paper version completed; exact replay same receipt, changed body409",
+    "One DONE task, one completion journal entry; zero goods movement, protected balances unchanged"
+  ],
+  "status": "PASS",
+  "before": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      212476763,
+      0,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ],
+  "slow_marker": 6487,
+  "cells": [
+    "PH23.68eb5dba.A",
+    "PH23.68eb5dba.B"
+  ],
+  "task_id": 1233,
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/create",
+      "status": 200,
+      "elapsed_ms": 1569.3,
+      "response": {
+        "root": "PH23.68eb5dba.HU",
+        "warehouse": 212476763,
+        "cell": "PH23.68eb5dba.A",
+        "nodes": [
+          {
+            "uid": "PH23.68eb5dba.HU",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 0,
+            "sscc": null,
+            "tare_weight_kg": "0.1",
+            "open_task_count": 0,
+            "cell": "PH23.68eb5dba.A",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "PH23.68eb5dba.create",
+        "command": "HU_CREATE",
+        "outbox_id": 6444
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-hus/plan-move",
+      "status": 200,
+      "elapsed_ms": 323.53,
+      "response": {
+        "operation_id": "PH23.68eb5dba.plan",
+        "task_id": 1233,
+        "pallet_identifier": "PH23.68eb5dba.HU",
+        "from_cell": "PH23.68eb5dba.A",
+        "cell": "PH23.68eb5dba.B",
+        "target_slot_id": null,
+        "placement": {
+          "target_role": "ORDINARY_STORAGE"
+        },
+        "status": "PLANNED",
+        "quantity": "1",
+        "unit_code": "HU",
+        "content_version": 0,
+        "outbox_id": 6445
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/assign",
+      "status": 200,
+      "elapsed_ms": 191.67,
+      "response": {
+        "status": "ok"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1233/paper",
+      "status": 200,
+      "elapsed_ms": 82.06,
+      "response": {
+        "task": {
+          "task_id": 1233,
+          "task_type": "PUTAWAY",
+          "task_source": "MANUAL",
+          "source_task_id": 1233,
+          "source_movement_id": null,
+          "source_doc_type": "WAREHOUSE_HU",
+          "source_doc_id": null,
+          "production_order_id": null,
+          "prod_batch_id": null,
+          "raw_articul": null,
+          "target_articul": null,
+          "uid_pallet": "PH23.68eb5dba.HU",
+          "sscc": null,
+          "from_ware_id": 212476763,
+          "from_cell": "PH23.68eb5dba.A",
+          "to_ware_id": 212476763,
+          "to_cell": "PH23.68eb5dba.B",
+          "qty": 1,
+          "unit_code": "HU",
+          "priority": 100,
+          "status": "ASSIGNED",
+          "assigned_to": "admin",
+          "created_at": "2026-10-22T21:35:18.930771",
+          "created_by": "admin",
+          "started_at": null,
+          "finished_at": null,
+          "cancelled_at": null,
+          "cancelled_by": null,
+          "last_error": null,
+          "qty_mode": "PALLET",
+          "fact_qty": null,
+          "parent_task_id": null,
+          "resource_id": null,
+          "resource_session_id": null,
+          "equipment_id": null,
+          "planned_start_at": null,
+          "planned_finish_at": null,
+          "dispatch_priority": null,
+          "from_cell_slot_id": null,
+          "to_cell_slot_id": null,
+          "completion_hash": null,
+          "completion_json": null,
+          "target_uid_pallet": null,
+          "started_at_instant": null,
+          "started_shift_time_zone": null,
+          "hu_content_version": 0,
+          "hu_measurements_json": null,
+          "finished_at_instant": null,
+          "wait_plan_operation_id": null,
+          "wait_decision_operation_id": null,
+          "wait_st_number": null,
+          "wait_target_tt_id": null,
+          "qty_exact": "1",
+          "fact_qty_exact": null,
+          "task_signature": "EE96FCAD68064BE7462B1E1F6256813CFF979E922633116CC963295A7C890313",
+          "from_warehouse_name": "TRADECASE QA 25cadbfc",
+          "to_warehouse_name": "TRADECASE QA 25cadbfc",
+          "assigned_to_name": "Global Administrator"
+        },
+        "reference": "WTASK:1233:EE96FCAD68064BE7462B1E1F6256813CFF979E922633116CC963295A7C890313",
+        "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 880 84\" width=\"100%\" role=\"img\" aria-label=\"Task 1233\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"35\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"41\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"45\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"49\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"57\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"61\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"102\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"107\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"115\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"126\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"146\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"149\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"157\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"160\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"169\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"171\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"179\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"183\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"190\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"195\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"205\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"210\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"214\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"221\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"234\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"238\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"255\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"259\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"271\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"281\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"291\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"300\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"303\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"311\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"322\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"337\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"349\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"357\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"365\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"380\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"387\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"392\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"404\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"410\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"414\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"421\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"426\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"431\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"436\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"443\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"447\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"457\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"478\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"491\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"498\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"503\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"514\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"521\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"523\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"534\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"543\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"545\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"565\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"575\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"580\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"591\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"597\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"601\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"610\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"619\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"621\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"629\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"634\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"640\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"645\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"652\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"656\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"663\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"667\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"674\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"686\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"696\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"700\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"709\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"718\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"723\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"730\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"732\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"739\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"744\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"749\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"765\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"777\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"787\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"796\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"798\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"805\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"809\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"819\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"827\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"832\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"841\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"862\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"866\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"440.0\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1233</text></svg>",
+        "prepared_at": "2026-10-23T01:35:19.004516+00:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/start",
+      "status": 200,
+      "elapsed_ms": 340.54,
+      "response": {
+        "status": "ok"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "status": 503,
+      "elapsed_ms": 1038.56,
+      "response": {
+        "detail": {
+          "code": "LOCK_RETRY_EXHAUSTED",
+          "operation_id": "PH23.68eb5dba.stale",
+          "oracle_code": 20890,
+          "reason": null,
+          "outcome_confirmed": false,
+          "retry_same_operation_id": true,
+          "read_before_retry": true
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "status": 409,
+      "elapsed_ms": 447.42,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PH23.68eb5dba.stale",
+          "oracle_code": 20890,
+          "reason": "TASK_EXPECTED_SIGNATURE_CHANGED",
+          "outcome_confirmed": true,
+          "retry_same_operation_id": false,
+          "read_before_retry": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1233/paper",
+      "status": 200,
+      "elapsed_ms": 126.81,
+      "response": {
+        "task": {
+          "task_id": 1233,
+          "task_type": "PUTAWAY",
+          "task_source": "MANUAL",
+          "source_task_id": 1233,
+          "source_movement_id": null,
+          "source_doc_type": "WAREHOUSE_HU",
+          "source_doc_id": null,
+          "production_order_id": null,
+          "prod_batch_id": null,
+          "raw_articul": null,
+          "target_articul": null,
+          "uid_pallet": "PH23.68eb5dba.HU",
+          "sscc": null,
+          "from_ware_id": 212476763,
+          "from_cell": "PH23.68eb5dba.A",
+          "to_ware_id": 212476763,
+          "to_cell": "PH23.68eb5dba.B",
+          "qty": 1,
+          "unit_code": "HU",
+          "priority": 100,
+          "status": "IN_PROGRESS",
+          "assigned_to": "admin",
+          "created_at": "2026-10-22T21:35:18.930771",
+          "created_by": "admin",
+          "started_at": "2026-10-22T21:35:19.568893",
+          "finished_at": null,
+          "cancelled_at": null,
+          "cancelled_by": null,
+          "last_error": null,
+          "qty_mode": "PALLET",
+          "fact_qty": null,
+          "parent_task_id": null,
+          "resource_id": null,
+          "resource_session_id": null,
+          "equipment_id": null,
+          "planned_start_at": null,
+          "planned_finish_at": null,
+          "dispatch_priority": null,
+          "from_cell_slot_id": null,
+          "to_cell_slot_id": null,
+          "completion_hash": null,
+          "completion_json": null,
+          "target_uid_pallet": null,
+          "started_at_instant": "2026-10-22T21:35:19.568893",
+          "started_shift_time_zone": "+03:00",
+          "hu_content_version": 0,
+          "hu_measurements_json": null,
+          "finished_at_instant": null,
+          "wait_plan_operation_id": null,
+          "wait_decision_operation_id": null,
+          "wait_st_number": null,
+          "wait_target_tt_id": null,
+          "qty_exact": "1",
+          "fact_qty_exact": null,
+          "task_signature": "00255C1E9E572F5808EC628C3A09E18378B614E0CAE57C9A54F69BC3866E1EEB",
+          "from_warehouse_name": "TRADECASE QA 25cadbfc",
+          "to_warehouse_name": "TRADECASE QA 25cadbfc",
+          "assigned_to_name": "Global Administrator"
+        },
+        "reference": "WTASK:1233:00255C1E9E572F5808EC628C3A09E18378B614E0CAE57C9A54F69BC3866E1EEB",
+        "barcode_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 880 84\" width=\"100%\" role=\"img\" aria-label=\"Task 1233\"><rect x=\"10\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"13\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"16\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"21\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"25\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"29\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"32\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"35\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"41\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"43\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"45\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"49\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"54\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"57\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"61\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"65\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"67\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"72\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"76\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"81\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"84\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"87\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"90\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"95\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"98\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"102\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"107\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"109\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"113\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"115\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"120\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"124\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"126\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"131\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"136\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"139\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"142\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"145\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"149\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"153\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"156\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"160\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"164\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"168\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"173\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"175\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"178\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"183\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"186\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"189\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"194\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"197\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"201\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"205\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"208\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"211\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"216\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"219\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"223\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"226\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"230\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"235\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"237\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"241\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"245\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"248\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"252\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"255\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"260\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"263\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"267\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"270\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"274\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"278\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"283\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"285\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"289\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"294\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"296\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"299\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"304\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"307\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"311\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"314\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"318\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"321\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"325\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"329\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"333\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"336\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"340\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"344\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"347\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"351\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"355\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"359\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"362\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"366\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"370\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"373\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"377\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"382\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"384\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"388\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"391\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"395\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"399\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"403\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"406\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"410\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"412\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"417\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"419\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"423\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"428\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"431\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"435\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"439\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"444\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"446\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"450\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"454\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"457\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"461\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"464\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"469\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"472\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"476\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"479\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"483\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"487\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"489\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"494\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"498\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"501\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"505\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"509\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"512\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"516\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"520\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"522\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"527\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"531\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"535\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"538\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"541\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"546\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"549\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"553\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"556\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"560\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"564\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"567\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"571\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"574\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"578\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"582\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"586\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"590\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"593\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"595\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"599\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"604\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"608\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"611\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"615\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"618\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"623\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"626\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"630\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"633\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"637\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"641\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"645\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"648\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"653\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"655\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"659\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"661\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"665\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"670\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"673\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"678\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"681\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"685\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"688\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"692\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"696\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"701\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"703\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"707\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"711\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"714\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"719\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"721\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"725\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"729\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"731\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"736\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"740\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"744\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"747\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"751\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"753\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"758\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"762\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"765\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"769\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"773\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"777\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"780\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"784\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"788\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"791\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"795\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"798\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"802\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"805\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"810\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"813\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"817\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"820\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"824\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"828\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"831\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"835\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"839\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"841\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"846\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"849\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"853\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"857\" y=\"0\" width=\"2\" height=\"65\"/><rect x=\"862\" y=\"0\" width=\"3\" height=\"65\"/><rect x=\"866\" y=\"0\" width=\"1\" height=\"65\"/><rect x=\"868\" y=\"0\" width=\"2\" height=\"65\"/><text x=\"440.0\" y=\"80\" text-anchor=\"middle\" font-size=\"10\">1233</text></svg>",
+        "prepared_at": "2026-10-23T01:37:55.291207+00:00"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "status": 200,
+      "elapsed_ms": 385.32,
+      "response": {
+        "status": "ok",
+        "result": {
+          "root": "PH23.68eb5dba.HU",
+          "warehouse": 212476763,
+          "cell": "PH23.68eb5dba.B",
+          "nodes": [
+            {
+              "uid": "PH23.68eb5dba.HU",
+              "kind": "CONTAINER",
+              "type": "PALLET",
+              "version": 1,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "open_task_count": 0,
+              "cell": "PH23.68eb5dba.B",
+              "depth": 0
+            }
+          ],
+          "links": [],
+          "ancestors": [],
+          "physical_unit_count": 0,
+          "leaf_count": 0,
+          "top_place_count": 1,
+          "operation_id": "PH23.68eb5dba.complete",
+          "task_id": 1233,
+          "status": "DONE",
+          "pallet_identifier": "PH23.68eb5dba.HU",
+          "source_pallet_identifier": "PH23.68eb5dba.HU",
+          "quantity": "1",
+          "unit_code": "HU",
+          "remaining_quantity": "0",
+          "residual_task_id": null,
+          "outbox_id": 6446
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "status": 200,
+      "elapsed_ms": 162.72,
+      "response": {
+        "status": "ok",
+        "result": {
+          "root": "PH23.68eb5dba.HU",
+          "warehouse": 212476763,
+          "cell": "PH23.68eb5dba.B",
+          "nodes": [
+            {
+              "uid": "PH23.68eb5dba.HU",
+              "kind": "CONTAINER",
+              "type": "PALLET",
+              "version": 1,
+              "sscc": null,
+              "tare_weight_kg": "0.1",
+              "open_task_count": 0,
+              "cell": "PH23.68eb5dba.B",
+              "depth": 0
+            }
+          ],
+          "links": [],
+          "ancestors": [],
+          "physical_unit_count": 0,
+          "leaf_count": 0,
+          "top_place_count": 1,
+          "operation_id": "PH23.68eb5dba.complete",
+          "task_id": 1233,
+          "status": "DONE",
+          "pallet_identifier": "PH23.68eb5dba.HU",
+          "source_pallet_identifier": "PH23.68eb5dba.HU",
+          "quantity": "1",
+          "unit_code": "HU",
+          "remaining_quantity": "0",
+          "residual_task_id": null,
+          "outbox_id": 6446
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1233/complete",
+      "status": 409,
+      "elapsed_ms": 141.55,
+      "response": {
+        "detail": {
+          "code": "STOCK_RULE_REJECTED",
+          "operation_id": "PH23.68eb5dba.complete",
+          "oracle_code": 20872,
+          "reason": "OPERATION_CONFLICT",
+          "outcome_confirmed": false,
+          "retry_same_operation_id": false,
+          "read_before_retry": true
+        }
+      }
+    }
+  ],
+  "slow_sql": [
+    [
+      6488,
+      631,
+      "/api/admin/transport/available-sts",
+      "SELECT P.ST_NUMBER,\n                       P.ADDR,\n                       NVL(A.REGION, P.ADDR) AS REGION,\n                       A.RAION,\n                       A.ORD,\n                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,\n                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,\n                       NVL(A.STOL, 0) AS STOL,\n                       A.PRIM1,\n                       P.WARE_ID,\n                       MAX(P.NAPR) AS NAPR,\n                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,\n                       ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,\n                       ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,\n                       MIN(P.STDATE) AS STDATE,\n                       MIN(P.STDATE) AS DATE_LOAD,\n                       MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,\n                       MAX(P.ZONE) AS ZONE,\n                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,\n                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,\n                       NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1 THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,\n                       MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR\n                  FROM (select * from (select page_rows.*,rownum AS PAGE_ROW_NUMBER from (select H.ST_NUMBER,H.ADDR,H.WARE_ID from (select P.ST_NUMBER,P.ADDR,P.WARE_ID from RABAEV.RRL_SBORKA_PALLETS P left join RABAEV.RRL_ADDR A on A.ADDR=P.ADDR WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL and exists(select 1 from RABAEV.RRL_SBORKA_PALLET_ROWS R where R.PALLET_UID=P.PALLET_UID) group by P.ST_NUMBER,P.ADDR,P.WARE_ID) H left join RABAEV.RRL_ADDR PAGE_ADDR on PAGE_ADDR.ADDR=H.ADDR order by PAGE_ADDR.ORD NULLS LAST,NVL(PAGE_ADDR.REGION,H.ADDR),H.ST_NUMBER,H.WARE_ID,H.ADDR) page_rows where rownum<=:page_end) where PAGE_ROW_NUMBER>:page_offset order by PAGE_ROW_NUMBER) K JOIN RABAEV.RRL_SBORKA_PALLETS P ON (P.ST_NUMBER=K.ST_NUMBER OR (P.ST_NUMBER IS NULL AND K.ST_NUMBER IS NULL)) AND DECODE(P.ADDR,K.ADDR,1,0)=1 AND DECODE(P.WARE_ID,K.WARE_ID,1,0)=1\n                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID\n                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR\n                  WHERE P.CONDITION <> 2 AND P.TRANSTASK_ID IS NULL\n                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD,\n                          A.TRANSPORT_TYPE, A.STOL, A.PRIM1, P.WARE_ID\n                  \n                 ORDER BY A.ORD NULLS LAST, NVL(A.REGION, P.ADDR), P.ST_NUMBER, P.WARE_ID, P.ADDR"
+    ]
+  ],
+  "after": [
+    [
+      210564699,
+      250,
+      0
+    ],
+    [
+      212476763,
+      0,
+      0
+    ],
+    [
+      215266197,
+      1000,
+      0
+    ],
+    [
+      219023232,
+      10,
+      0
+    ],
+    [
+      220793322,
+      7,
+      5
+    ]
+  ]
+}

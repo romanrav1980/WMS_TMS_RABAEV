@@ -1,0 +1,482 @@
+{
+  "api_pid": 70172,
+  "identifier": "099999990000026027",
+  "fixture": "CASE1169 remains read-only; parent HU attached",
+  "probes": {
+    "bulk": {
+      "first_ms": 1985.72,
+      "warm_median_ms": 225.43,
+      "warm_max_ms": 273.38,
+      "same_complete_responses": true,
+      "samples": [
+        {
+          "status": 409,
+          "elapsed_ms": 1985.72,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        },
+        {
+          "status": 409,
+          "elapsed_ms": 209.03,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        },
+        {
+          "status": 409,
+          "elapsed_ms": 190.32,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        },
+        {
+          "status": 409,
+          "elapsed_ms": 273.38,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        },
+        {
+          "status": 409,
+          "elapsed_ms": 225.43,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        },
+        {
+          "status": 409,
+          "elapsed_ms": 231.62,
+          "body": {
+            "detail": {
+              "code": "BULK_BOX_INDEPENDENT_REQUIRED",
+              "message": "Сначала освободите короб из родительского места.",
+              "operation_id": "",
+              "retry_same_operation_id": false,
+              "outcome_confirmed": true
+            }
+          },
+          "sha256": "bf617242b290e530e3819f858773adb6a771c7e7d0dbec777a299b932a367c9f"
+        }
+      ]
+    },
+    "qc": {
+      "first_ms": 228.96,
+      "warm_median_ms": 154.56,
+      "warm_max_ms": 228.37,
+      "same_complete_responses": true,
+      "samples": [
+        {
+          "status": 200,
+          "elapsed_ms": 228.96,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        },
+        {
+          "status": 200,
+          "elapsed_ms": 191.95,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        },
+        {
+          "status": 200,
+          "elapsed_ms": 228.37,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        },
+        {
+          "status": 200,
+          "elapsed_ms": 147.76,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        },
+        {
+          "status": 200,
+          "elapsed_ms": 154.56,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        },
+        {
+          "status": 200,
+          "elapsed_ms": 133.81,
+          "body": {
+            "shipment_identifier": "NB22.ST.1169",
+            "document_id": 641548,
+            "case_content_version": 6,
+            "composition_signature_version": 3,
+            "final_scale_required": true,
+            "required": true,
+            "control_mode": "WEIGHT",
+            "independent_controller_required": false,
+            "quality_policy": {
+              "warehouse_id": 220793322,
+              "mode": "NONE",
+              "independent": 0,
+              "sample_percent": 0,
+              "exempt_whole": 0,
+              "exempt_storage": 0,
+              "scoped_rule": false
+            },
+            "weight_exemption": {
+              "eligible": false,
+              "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+            },
+            "unique_mark_control_required": true,
+            "mark_profiles": [
+              {
+                "system_code": "CRPT",
+                "profile_code": "TOBACCO"
+              }
+            ],
+            "case_task_id": 1169,
+            "case_status": "CONTROLLED",
+            "physical_unit_count": 1,
+            "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+            "weight_exemption_recorded": false,
+            "sample_percent": 0,
+            "sample_selected": false,
+            "rescan_required": false,
+            "control_plan_required": false,
+            "full_scan_required": false,
+            "scan_matches": true,
+            "weight_matches": true,
+            "expected_weight_kg": "1",
+            "tolerance_kg": "5",
+            "ready": true,
+            "transport_assignment": {
+              "state": "ASSIGNED",
+              "shipment_id": 641548,
+              "transport_task_id": 33666
+            },
+            "requested_identifier": "099999990000026027"
+          },
+          "sha256": "4bbf58b4149a904af94da067715451538fab85fa6b1efec869f05fb3cac3c19f"
+        }
+      ]
+    }
+  },
+  "slow_sql": [
+    [
+      6711,
+      1712,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ],
+    [
+      6714,
+      159,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ],
+    [
+      6716,
+      155,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ],
+    [
+      6712,
+      134,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ],
+    [
+      6713,
+      124,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ],
+    [
+      6715,
+      111,
+      "/api/transport/loading/bulk-box-preview",
+      "Current physical bulk BOX preview READ ONLY"
+    ]
+  ],
+  "status": "READ_ONLY_PROBES_PASS_NOT_COLD_ORACLE"
+}

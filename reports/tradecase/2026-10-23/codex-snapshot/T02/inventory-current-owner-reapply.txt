@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\001_access_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_inventory_current_owner\verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

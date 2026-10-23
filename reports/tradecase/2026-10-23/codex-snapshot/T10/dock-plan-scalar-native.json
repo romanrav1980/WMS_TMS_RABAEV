@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "stages": [
+    {
+      "stage": "recover_before",
+      "exit_code": 0
+    },
+    {
+      "stage": "apply",
+      "exit_code": 0
+    },
+    {
+      "stage": "rollback",
+      "exit_code": 0
+    },
+    {
+      "stage": "reapply",
+      "exit_code": 0
+    }
+  ]
+}

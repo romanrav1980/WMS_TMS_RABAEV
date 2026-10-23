@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "samples": [
+    {
+      "old": 235.75,
+      "new": 18.74
+    },
+    {
+      "old": 273.21,
+      "new": 2.83
+    },
+    {
+      "old": 254.13,
+      "new": 2.87
+    },
+    {
+      "old": 205.4,
+      "new": 2.16
+    },
+    {
+      "old": 202.71,
+      "new": 2.1
+    },
+    {
+      "old": 249.35,
+      "new": 4.65
+    }
+  ],
+  "warehouse": 220793322,
+  "warehouse_rows": 362,
+  "warm_medians": {
+    "old": 249.35,
+    "new": 2.83
+  },
+  "revocation_equal": true,
+  "qa_retired": true
+}

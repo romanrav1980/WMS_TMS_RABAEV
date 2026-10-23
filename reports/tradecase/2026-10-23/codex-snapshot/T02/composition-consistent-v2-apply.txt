@@ -1,0 +1,5 @@
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\000_preflight.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\001_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-23_trade_composition_consistent_read_v2\verify.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

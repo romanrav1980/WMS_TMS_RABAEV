@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 1440,
+      "case": "Existing duration and weekly windows preserved; only strictness changed; 503/reload exact retry"
+    },
+    {
+      "width": 1440,
+      "case": "Duration edit uses fresh basis; failed read clears form without JS error",
+      "size": {
+        "viewport": 1440,
+        "document": 1440
+      }
+    },
+    {
+      "width": 390,
+      "case": "Existing duration and weekly windows preserved; only strictness changed; 503/reload exact retry"
+    },
+    {
+      "width": 390,
+      "case": "Duration edit uses fresh basis; failed read clears form without JS error",
+      "size": {
+        "viewport": 390,
+        "document": 390
+      }
+    }
+  ],
+  "errors": [],
+  "writes": []
+}
