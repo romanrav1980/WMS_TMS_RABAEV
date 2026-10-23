@@ -4,11 +4,17 @@
 
 ## Сначала прочитать
 
-Последний инкремент: CASE paper native7/6/7 и маркированный отбор1EA/повтор/возврат приняты, CASE1172 CANCELLED/wave617 DONE,219023232=10/H0, QA retired. Generic paper HU1235/1236 также закрыты, HU вA. UI49 с подставленными POST +8compiled с реальными GET/409, Poppler203dpi/ZXing2PDF PASS, gate24/обаTS/27pytest/3journal PASS. API78876/session69030, UI3000/index-D9tBpTlY.js. C0157 d28e2e6a общий пул NOT_APPLIED у root; C0158 ACK K0131 плановые интервалы ворот у Claude. Бюджет20; CLIauth=false, CLI modelcalls0. Всё ещё T01 done/T02–T12 partial; DONE complete не создавать.
+Актуально23.10 10:35MSK: последний root checkpoint2823cfdb; сейчас сохраняется T11 товарная бумага. Настоящая волна619/REPL1242 переместила250 маркированных EA,9UI-проверок с lost reply/exact same bytes/reload прошли. EmptyCASE1174 отменена, wave619 DONE/RETURNED_TO_PLANNING, sourceORDER отменён. Все250ключей/UID/ячейка/owner/МРЦ/годность/mark восстановлены;250/H0. Поздний replay после возврата дал исходную квитанцию, одинstock_move250/APPLIED. В rawUI fullpal-форма скрыта для REPL; настоящая FULLPAL1221 и сохранённая browser-fixture команда видны, readonly390/1440 PASS. Сводка: wiki/components/warehouse_paper_goods_20261023.md.
+
+API30588/session51291, no reload. Общийdist3000/index-CyAZvAfh.js проверен на воротах actual1440/390, но последние две строки текста YardDockPlan и обновлённый help ещё ждут сборки. Двор native16/11/16 + scalarfix5/5/5 APPLIED,4SHA/INVALID0; исправлена привязка плана к машине и воротам, actualtimeline PASS. C0157 общий пул APPLIED7/7/7: собственный HARD40 переносится, но обычная торговая строка20 получила0/TRADE_ORDER_BINDING_REQUIRED; полный торговый пул открыт.
+
+Claude: последнее сообщение K0133 ACK C0159 от08:34; файлы UI обновлены08:36, отчёт08:45. RELEASE/результат не получены. C0160 торговый пул и C0161 добивка послеLOAD зарегистрированы и поставлены в очередь; всего23зарегистрированных запроса, исходные4 не обнулены. CLI10:33 дал Access is denied, модельные CLI-вызовы0; не объявлять Claude работающим сейчас без нового подтверждения. Владельцу задан async вопрос с готовой строкой для возобновления Claude. Пока ответа нет, продолжать собственную работу. Claude владеет risks/types/useShiftData/useShiftRisks/ShiftSupervisorDesk и authoring shift-help до RELEASE; root их не менять/не стейджить. TOPUP_READ/API/CMD и Python topup/capacity root не менял, передал следующему C0161. Новых публикацийGitHub нет.
+
+Открытых stock-fixtures root сейчас нет. Защищённые остатки250/H0,1000/H0,10/H0,7/H5. Вспомогательные не принятые T11 попытки закрыты: arbitrary HU/manual REPL без основания native отказал,1241CANCELLED/stock_move0; исходные2и3EA в219023232 не двигались. Собственный пустой HU PG23.dea0e64a0.HU оставлен вT3S89af0087; goods0, других движений нет. Полные отвергнутые harness сохранены только в runtime/T11; не возобновлять их. Принятый живой runner — tests/tradecase/live_paper_wave.py, PASS отказывается продолжать закрытую fixture.
 
 1. AGENTS.md и wiki/index.md (оглавление сокращено до63строк, старые ссылки сохранены в wiki/sources/wiki_index_history_20261023.md).
 2. wiki/roadmap/tradecase_execution_20261019.md и wiki/roadmap/tradecase_acceptance_20261021.md.
-3. Для следующего блока — coordination/retailcase-claude/TASK_C0155_PAPER_TASKS.md и последние сообщения канала.
+3. Для следующего блока — coordination/retailcase-claude/TASK.md и последние сообщения канала. Очередь C0159 → C0160 → C0161; не повторять старый C0155 и не обнулять бюджет.
 
 Источник программы — снимок Google Drive revision27 от21.10: wiki/sources/tradecase_20261021.md, wiki-raw/tradecase_source_review_20261021/program.txt. TRADECASE — торгово-производственный СНС/BLC; RETAILCASE не подменяет его. При новой сверке Drive использовать установленный skill и connector. SAP/SAP_INTEGRATION не публиковать. Нового поручения на GitHub push/fetch/PR нет.
 

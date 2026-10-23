@@ -2,7 +2,9 @@
 const fs = require('fs'), assert = require('assert');
 const {chromium} = require('../../admin/wms_admin_frontend/node_modules/playwright');
 const out = 'runtime/test-evidence/tradecase/2026-10-23/T11/';
-const state = JSON.parse(fs.readFileSync(out+'paper-fact-ui-state.json', 'utf8'));
+const state = JSON.parse(fs.readFileSync(out+(process.env.PAPER_STATE || 'paper-fact-ui-state.json'), 'utf8'));
+const reportName = process.env.PAPER_REPORT || 'paper-fact';
+const factQuantity = state.fact_qty || '1';
 const pass = fs.readFileSync('AGENTS.md', 'utf8').match(/PASS=(\S+?)[`,)\s]/)[1];
 const auth = 'Basic '+Buffer.from('admin:'+pass).toString('base64');
 const result = {checks: [], posts: [], errors: [], timings: {}, synthetic: ['403 paper read', 'lost response after real commit']};
@@ -25,9 +27,12 @@ const endpoint = `/api/warehouse-tasks/${state.task}/complete`;
         result.posts.push(req.postData());
         const response = await route.fetch();
         const value = await response.json();
-        assert.equal(response.status(),200,JSON.stringify(value));
+        if (response.status() !== 200) {
+          result.unexpected_response={status:response.status(),value};
+          return route.fulfill({response});
+        }
         if (lose) {lose=false;result.receipt=value;return route.abort('failed');}
-        assert.deepStrictEqual(value,result.receipt); return route.fulfill({response});
+        result.replayed_receipt=value; return route.fulfill({response});
       }
       return route.continue();
     });
@@ -50,8 +55,8 @@ const endpoint = `/api/warehouse-tasks/${state.task}/complete`;
     await page.locator('#warehouseTaskScanTo').fill(state.target);
     // A whole HU is one indivisible place; the existing form fixes its quantity.
     const qty=page.locator('#warehouseTaskFactQty');
-    if (await qty.isDisabled()) assert.equal(await qty.inputValue(),'1');
-    else await qty.fill('1');
+    if (await qty.isDisabled()) assert.equal(await qty.inputValue(),factQuantity);
+    else await qty.fill(factQuantity);
     const t0=Date.now(); await complete.click();
     await page.locator('#warehouseTaskRecovery').waitFor({state:'visible'});
     await page.waitForFunction(() => document.querySelector('#warehouseTaskRecovery button')?.disabled===false);
@@ -62,6 +67,7 @@ const endpoint = `/api/warehouse-tasks/${state.task}/complete`;
     await page.reload();await page.waitForFunction(id=>warehouseTaskState.selectedTask?.task_id===id,state.task);
     await page.locator('#warehouseTaskRecovery button').click();
     await page.locator('#warehouseTaskRecovery').waitFor({state:'hidden'});
+    assert.deepStrictEqual(result.replayed_receipt,result.receipt);
     assert.equal(result.posts.length,2); assert.equal(result.posts[0],result.posts[1]);
     assert.equal(await page.evaluate(()=>Object.keys(localStorage).filter(k=>k.startsWith('wms.task.complete.v1:')).length),0);
     ok('Reload and exact retry returned original receipt without another command body');
@@ -71,13 +77,13 @@ const endpoint = `/api/warehouse-tasks/${state.task}/complete`;
       const bounds=await panel.boundingBox();assert(bounds.x>=0&&bounds.x+bounds.width<=width+1);
       const size=await panel.locator('button').boundingBox();assert(size.height>=44);
       result.timings['overflow'+width]=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
-      await page.screenshot({path:out+`paper-fact-${width}.png`,fullPage:true});
+      await page.screenshot({path:out+`${reportName}-${width}.png`,fullPage:true});
       ok(`${width}: panel fits viewport and check target >=44px`);
     }
     const help = await ctx.request.get('http://127.0.0.1:8088/help/warehouse-task-paper.html');assert.equal(help.status(),200);
     ok('Raw screen help URL serves actual instructions');assert.deepStrictEqual(result.errors,[]);
     result.status='PASS';await ctx.close();
   } finally {
-    await browser.close();fs.writeFileSync(out+'paper-fact-ui.json',JSON.stringify(result,null,2));
+    await browser.close();fs.writeFileSync(out+reportName+'-ui.json',JSON.stringify(result,null,2));
   }
 })().catch(e=>{console.error(e);process.exitCode=1;});

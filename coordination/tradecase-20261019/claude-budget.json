@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 22,
-  "used": 22,
+  "limit": 23,
+  "used": 23,
   "requests": [
     {
       "id": "C-0130",
@@ -170,6 +170,14 @@
       "status": "REGISTERED; queued after C0159 RELEASE",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0161",
+      "task": "T08 top-up after main loading begins, frozen capacity and departure serialization",
+      "registered_at": "2026-10-23T06:35:59.153027+00:00",
+      "status": "REGISTERED; queued after C0160 RELEASE",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
     }
   ],
   "additional_grants": [
@@ -323,6 +331,16 @@
       "used": 1,
       "request_ids": [
         "C-0160"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner authorized continued joint work until all sprints complete and further Claude delegation",
+      "allocation_basis": "One large original T08 after-load requirement; root supplied actual source and native findings",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0161"
       ]
     }
   ]

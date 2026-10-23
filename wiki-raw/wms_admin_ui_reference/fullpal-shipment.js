@@ -4,7 +4,7 @@
  const mount=document.getElementById('warehouseTaskDetail');if(mount)mount.after(panel);else document.querySelector('main').append(panel);
  const task=panel.querySelector('[data-task]'),pallet=panel.querySelector('[data-pallet]'),shipment=panel.querySelector('[data-shipment]'),
   message=panel.querySelector('[role=status]'),bind=panel.querySelector('[data-bind]'),archive=panel.querySelector('[data-archive]');
- let snapshot=null,record=null,busy=false,generation=0;
+ let snapshot=null,record=null,busy=false,generation=0,selectedTask=null;
  const base=()=>window.wmsAdminAuth.state.apiBase.replace(/\/$/,'');
  const key=()=>'wms-fullpal-binding:'+base()+':'+(window.wmsAdminAuth.state.user?.username||'');
  function valid(v){return Boolean(v&&Number.isSafeInteger(v.task)&&v.task>0&&v.body&&/^FULLPAL.BIND:[A-Za-z0-9-]+$/.test(v.body.operation_id)&&
@@ -17,6 +17,8 @@
   catch{return{storageKey,raw,damaged:true};}
  }
  function controls(){
+  const eligible=selectedTask?.status==='DONE'&&selectedTask?.task_type==='PICKING_MOVE'&&selectedTask?.task_source==='WAVE';
+  panel.hidden=!window.wmsAdminAuth?.hasPermission('warehouse_task_view')||Boolean(mount&&!record&&!eligible);
   const pending=record?.value,locked=busy||Boolean(record);
   for(const field of[task,pallet,shipment])field.disabled=locked;
   panel.querySelector('[data-preview]').disabled=busy||Boolean(record);
@@ -84,7 +86,10 @@
   const name=record.storageKey+':damaged:'+crypto.randomUUID();localStorage.setItem(name,record.raw);
   if(localStorage.getItem(name)!==record.raw)throw Error('Архив не сохранён.');localStorage.removeItem(record.storageKey);record=null;message.textContent='Исходный запрос сохранён в архиве. Перечитайте паллету.';controls();
  }catch(e){message.textContent=e.message;}});
- window.addEventListener('warehouse-task-selected',event=>{if(busy||record)return;const value=event.detail;if(value?.status==='DONE'){task.value=value.task_id;++generation;snapshot=null;controls();}});
+ window.addEventListener('warehouse-task-selected',event=>{selectedTask=event.detail;if(!busy&&!record){
+  task.value=selectedTask?.status==='DONE'&&selectedTask?.task_type==='PICKING_MOVE'&&selectedTask?.task_source==='WAVE'?selectedTask.task_id:'';
+  ++generation;snapshot=null;
+ }controls();});
  window.addEventListener('storage',event=>{if(!busy&&event.key===key())rights();});
  window.addEventListener('wms-admin-auth-ready',rights);rights();
 })();

@@ -250,7 +250,7 @@ function renderWarehouseTaskDetail() {
   warehouseTaskEl("warehouseTaskFactQty").value = task?.qty_exact ?? task?.qty ?? "";
   warehouseTaskEl("warehouseTaskFactQty").disabled = !task || task.qty_mode === "PALLET" || terminal;
   warehouseTaskEl("warehouseTaskProgress").textContent = "-";
-  window.dispatchEvent(new CustomEvent("warehouse-task-selected",{detail:task?{task_id:task.task_id,status:task.status}:null}));
+  window.dispatchEvent(new CustomEvent("warehouse-task-selected",{detail:task?{task_id:task.task_id,status:task.status,task_type:task.task_type,task_source:task.task_source}:null}));
   if (task) showWarehouseTaskProgress(task.task_id).catch(error => {
     if (warehouseTaskState.selectedTask?.task_id === task.task_id)
       warehouseTaskEl("warehouseTaskProgress").textContent = error.message;

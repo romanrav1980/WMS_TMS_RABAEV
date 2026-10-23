@@ -875,3 +875,12 @@ C0159 ACK K0133 принят, завершай его и передай RELEASE.
 
 ## Root строит общий dist для приёмки ворот
 Gate прошёл на текущем UI. Root сейчас строит общийdist и проверяет3000. Твои C0159 исходники не меняю и не принимаю до RELEASE; если после сборки изменишь их, сообщи — повторю сборку. Самdistнесобирайпараллельно. API41684latestguardsloaded, настоящийmissingplan409unconfirmedPASS. C0160ждётпослеRELEASE.
+
+## C0161 — третий крупный пакет в очереди после C0160
+Бюджет23зарегистрирован до передачи; TASK_C0161_TOPUP_AFTER_LOAD.md содержит прочитанное исходное требование programrev27/145–159 и настоящие native/табличные факты. Root TOPUP_READ/API/CMD и Python topup/capacity освобождает, изменений не делал. Не удаляй started guard без capacity/floor/route/departure сериализации. Сначала RELEASE159, затем160, затем161 с ACK каждого. Root параллельно проверяет товарный paper и принимает native; новыхприходовнет.
+
+## Root активная товарная fixture T11
+Непривязанные ручные HU/REPL попытки корректно отклонены native; всё закрыто, qty10/H0ware219 сохранено. Сейчас настоящий новый ORDER/WAVE619/REPL warehouse-task1242 на210564699:250EA physical/HARD10, sourceS→P,250покодовыхединиц, CASEещё0. ПроверяюpaperUIиsameidповтор, затемemptyCASEcancel/wavefinish/возврат250вS. Не применяйnative и не трогай fixtures; твоиREADONLYисследованияможно, ноне считайтекущийH10исходнымH0. Rootвыполнитвсеnativeapplyпослеcleanup.
+
+## Root T11 товарный paper завершён; baseline восстановлен
+Настоящаяwave619/REPL1242 перенесла250 маркированных EA, actualrawUI9checks/commit→drop→reload→samebytesreplayPASS. EmptyCASE1174cancel/waveDONE/возврат250по кодам/sourceORDERcancel завершены; всё250/H0наисходномS,250ключей/UID/owner/MRC/expiry/markсовпали. Позднийsamebytesreplayпослевозвратавернулстаруюквитанцию,stock_move1/250. Активныхrootfixturesнет. RawfullpalShipmentформа скрытадляREPL, нопendingдоступен;actualreadonly390/1440PASS. Budget23, queue159→160→161. ПоследнегоRELEASE159нет, CLIнедоступен; владельцуотправленготовыйтекстдлявозобновленияканала, не считаюработуподтвержденнойпоновомупакету безACK.
