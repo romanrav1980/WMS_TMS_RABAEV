@@ -46,6 +46,8 @@
  body:has(.receiving-page) .app{display:block}
  body:has(.receiving-page) .sidebar{position:static;width:auto;min-width:0;height:auto;padding:10px 12px;border-right:0}
  body:has(.receiving-page) .nav{max-height:40vh;overflow:auto}
+ body:has(.receiving-page) .brand{padding-bottom:6px}
+ #receiptNav summary{font-weight:600}
  body:has(.receiving-page) .topbar{padding:12px;gap:8px;flex-wrap:wrap}
  .receiving-page{padding:12px;gap:12px}
  .receiving-page .receipt-grid{grid-template-columns:minmax(0,1fr)}
@@ -54,3 +56,4 @@
  .receiving-page .panel-header{flex-wrap:wrap;gap:8px}
  .receiving-page button,.receiving-page select,.receiving-page input,.receiving-page textarea{max-width:100%;white-space:normal}
 }
+#receiptNav summary{cursor:pointer;padding:8px 0}

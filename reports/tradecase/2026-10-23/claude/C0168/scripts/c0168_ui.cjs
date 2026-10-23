@@ -15,11 +15,27 @@ const ok = (w, name, extra = {}) => { res.checks.push({ width: w, name, ...extra
       const ctx = await b.newContext({ viewport: { width: w, height: w === 390 ? 844 : 1000 } }), p = await ctx.newPage();
       p.on("pageerror", e => res.errors.push(w + ": " + e));
       await ctx.route("**/*", r => { const m = r.request().method(); if (m !== "GET" && m !== "OPTIONS" && !r.request().url().includes("/auth/")) { res.writes.push(m + " " + r.request().url()); return r.abort(); } return r.continue(); });
-      await p.goto(URL_);
+      await p.goto(URL_ + "?warehouse_id=225687965&order_id=1215ffb3c18b416cad3a4f5c34f28b31");  // the existing deep link
       await p.locator("#loginUser").waitFor({ timeout: 20000 });
       await p.fill("#loginUser", "admin"); await p.fill("#loginPassword", pass); await p.keyboard.press("Enter");
       await p.waitForFunction(() => !document.body.classList.contains("auth-pending"), null, { timeout: 30000 });
       ok(w, "LIVE served receiving page after real login");
+      // Section menu: a native details/summary, collapsed on the phone, open on the desktop; keyboard toggles it.
+      const nav = await p.evaluate(() => { const d = document.getElementById("receiptNav"), s = d.querySelector("summary");
+        return { open: d.open, title: s.title, help: s.dataset.helpId, height: Math.round(d.getBoundingClientRect().height) }; });
+      assert(nav.title && nav.help, JSON.stringify(nav));
+      if (w === 390) {
+        assert(!nav.open && nav.height < 60, JSON.stringify(nav)); ok(w, "phone: section menu collapsed (" + nav.height + "px), title and help id", nav);
+        await p.locator("#receiptNav summary").focus(); await p.keyboard.press("Enter");
+        assert(await p.evaluate(() => document.getElementById("receiptNav").open)); await p.keyboard.press("Enter");
+        assert(!(await p.evaluate(() => document.getElementById("receiptNav").open))); ok(w, "keyboard opens and closes the menu");
+      } else { assert(nav.open); ok(w, "desktop: section menu open", nav); }
+      // The actual own accepted order of the root factory acceptance, read only.
+      await p.locator("#receiptOrderTitle").filter({ hasText: "Заказ FH.ef611dbe; склад 225687965" }).waitFor({ timeout: 30000 });
+      await p.locator("#receiptLines tr").first().waitFor({ timeout: 30000 });
+      ok(w, "LIVE accepted factory order 225687965/1215ffb3... opened read only");
+      await p.evaluate(() => scrollTo(0, 0));
+      await p.screenshot({ path: path.join(SHOTS, `receiving-order-${w}.png`), fullPage: false });
       const m = await p.evaluate(() => {
         const W = innerWidth, page = document.querySelector(".receiving-page");
         const scrollAnc = el => { for (let a = el.parentElement; a; a = a.parentElement) { const o = getComputedStyle(a).overflowX; if ((o === "auto" || o === "scroll") && a.getBoundingClientRect().right <= W + 2) return true; } return false; };

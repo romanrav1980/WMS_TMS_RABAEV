@@ -8,6 +8,18 @@
   },
   {
    "width": 1440,
+   "name": "desktop: section menu open",
+   "open": true,
+   "title": "Открыть или свернуть переходы к другим разделам WMS",
+   "help": "receiving.nav",
+   "height": 2927
+  },
+  {
+   "width": 1440,
+   "name": "LIVE accepted factory order 225687965/1215ffb3... opened read only"
+  },
+  {
+   "width": 1440,
    "name": "measure",
    "scroll": 0,
    "columns": 2,
@@ -30,6 +42,22 @@
   {
    "width": 390,
    "name": "LIVE served receiving page after real login"
+  },
+  {
+   "width": 390,
+   "name": "phone: section menu collapsed (35px), title and help id",
+   "open": false,
+   "title": "Открыть или свернуть переходы к другим разделам WMS",
+   "help": "receiving.nav",
+   "height": 35
+  },
+  {
+   "width": 390,
+   "name": "keyboard opens and closes the menu"
+  },
+  {
+   "width": 390,
+   "name": "LIVE accepted factory order 225687965/1215ffb3... opened read only"
   },
   {
    "width": 390,
