@@ -3,3 +3,9 @@
 .paper-desk input{min-height:40px;box-sizing:border-box;width:100%;min-width:0}
 .paper-desk .paper-scan>p{flex-basis:100%}
 .paper-desk .paper-scan>.task-paper{flex-basis:100%}
+.paper-mode{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.paper-mode [aria-pressed=true]{font-weight:700;outline:2px solid currentColor}
+.paper-desk .case-paper-scroll{overflow-x:auto;max-width:100%}
+.paper-desk .case-fact{border-top:1px solid var(--ops-border,#ccc);padding-top:8px}
+.paper-desk .case-fact>p{flex-basis:100%}
+.paper-desk .ops-list li{grid-template-columns:minmax(0,1fr) auto}

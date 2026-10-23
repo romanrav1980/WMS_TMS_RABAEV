@@ -1,0 +1,15 @@
+{
+ "line": 921,
+ "changes": {
+  "picked_qty+1": true,
+  "cell": true,
+  "planned_qty+1": true,
+  "assigned_to": true,
+  "carrier": true,
+  "line_status": true,
+  "scan_mode": true,
+  "task_status (expected same)": false,
+  "assignment_version (expected same)": false,
+  "content_version (expected same)": false
+ }
+}

@@ -875,6 +875,7 @@ class CasePickLineConfirmRequest(BaseModel):
     scan_product: str | None = None
     scan_box: str | None = None
     scan_container: str | None = None
+    expected_case_signature: str | None = Field(default=None, pattern=r"^[A-F0-9]{64}$")  # C-0156 paper sheet line version
     offline_event_id: str | None = None
     resource_id: int | None = None
     resource_session_id: int | None = None
@@ -927,7 +928,6 @@ class MesRawTransferTaskCancelRequest(BaseModel):
     operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     reason: str | None = None
     cancelled_by: str | None = None
-
 
 
 

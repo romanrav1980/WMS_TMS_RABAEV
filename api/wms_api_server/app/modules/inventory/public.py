@@ -557,3 +557,6 @@ def build_quality_cases() -> QualityCasePort:
     return OracleQualityCases(OracleGateway(), build_stock_posting_service().post)
 
 __all__.extend(["quality_case_router", "quality_case_service", "build_quality_cases"])
+from .infrastructure.case_paper import OracleCasePaper
+from .contracts_case_paper import CasePaperError, CasePaperPort, case_paper_service
+from .api.case_paper_routes import router as case_paper_router

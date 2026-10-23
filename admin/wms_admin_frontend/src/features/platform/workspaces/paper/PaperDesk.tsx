@@ -7,15 +7,20 @@ import { TaskPaperPanel } from "../resources/TaskPaperPanel";
 import { useUrlWarehouse } from "../useUrlWarehouse";
 import { LIMIT, STATE, openTasks, parseReference, route, taskLine } from "./paperQueue";
 import { paperHelp } from "./help";
+import { CasePaperQueue } from "./CasePaperPanel";
 import "./paper.css";
 
 /** Рабочее место «Бумажные задания» (C-0155, BP15): при отказе ТСД руководитель выбирает разрешённые задания склада и печатает
  *  бланки; после восстановления сверяет версию со штрихкода. Права, видимость и версии проверяет сервер; печать ничего не выполняет. */
 export function PaperDesk({ reload }: { reload: number }) {
-  const [wh, setWh] = useUrlWarehouse();
+  const [wh, setWh] = useUrlWarehouse(), [mode, setMode] = useState<"tasks" | "case">("tasks");
   return <>
-    <div className="ops-panel rg-window" style={{ gridColumn: "1/-1" }}><WarehousePicker capability="warehouse_tasks" value={wh} onChange={setWh} /></div>
-    {wh ? <PaperQueue key={wh} wh={wh} reload={reload} /> : <p className="ops-panel ops-note" style={{ gridColumn: "1/-1" }}>Выберите склад: задания показываются по одному складу.</p>}
+    <div className="ops-panel rg-window paper-mode" style={{ gridColumn: "1/-1" }}>
+      <WarehousePicker capability={mode === "case" ? "picking" : "warehouse_tasks"} value={wh} onChange={setWh} />
+      <span role="group" aria-label="Вид бланков">{(["tasks", "case"] as const).map(m => <HelpButton key={m} help={paperHelp.mode} aria-pressed={mode === m}
+        onClick={() => setMode(m)}>{m === "case" ? "Сборка коробов CASE" : "Складские задания"}</HelpButton>)}</span></div>
+    {!wh ? <p className="ops-panel ops-note" style={{ gridColumn: "1/-1" }}>Выберите склад: задания показываются по одному складу.</p>
+      : mode === "case" ? <CasePaperQueue key={wh} wh={wh} reload={reload} /> : <PaperQueue key={wh} wh={wh} reload={reload} />}
   </>;
 }
 

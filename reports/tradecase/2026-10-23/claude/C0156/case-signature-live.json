@@ -1,0 +1,26 @@
+{
+ "921": {
+  "signature": "B155FBF1BE505975CE07A5A616D4ACD16C8F913AAD098DA617C1AB7D77D0A411",
+  "stable": true,
+  "ms": [
+   4.9,
+   2.8
+  ]
+ },
+ "936": {
+  "signature": "8E9BFF10A0ECDC9A9A67428E831B601DBD31062E928DA400FEDA2F609450E040",
+  "stable": true,
+  "ms": [
+   2.9,
+   2.3
+  ]
+ },
+ "937": {
+  "signature": "AF5D9EF096045F69231DE4DC07E95951DB575D8786F415F74FDD686AF430A1F1",
+  "stable": true,
+  "ms": [
+   2.9,
+   2.7
+  ]
+ }
+}

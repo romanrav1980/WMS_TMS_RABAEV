@@ -65,6 +65,8 @@ def post_case_pick(gateway: Any, task_id: int, line_id: int, request: Any) -> di
     if request.unit_keys and request.unit_scans:
         raise ValueError("Choose unit identities or scanned marking codes")
     submitted = request.model_dump(mode="json")
+    if submitted.get("expected_case_signature") is None:  # C-0156: a command without paper compares as before the field existed
+        submitted.pop("expected_case_signature", None)
     submitted["fact_qty"] = quantity_text(request.fact_qty)
     if len(json.dumps(submitted, ensure_ascii=True).encode()) > 2 * 1024 * 1024:
         raise ValueError("CASE scan payload exceeds 2 MiB")
@@ -74,7 +76,8 @@ def post_case_pick(gateway: Any, task_id: int, line_id: int, request: Any) -> di
         wire = saved[0]["canonical_request"]
         old = wire if isinstance(wire,dict) else json.loads(wire.read() if hasattr(wire, "read") else wire)
         if (old["actor"] != request.actor or old["command_type"] != "CASE_PICK_CONFIRM"
-                or old["source"] != source or old["metadata"].get("requested_confirmation") != submitted):
+                or old["source"] != source or {k: v for k, v in (old["metadata"].get("requested_confirmation") or {}).items()
+                    if k != "expected_case_signature" or v is not None} != submitted):
             raise StockPostingError("OPERATION_CONTENT_CONFLICT", operation)
         metadata, units = old["metadata"], tuple(old["units"])
     else:
@@ -82,5 +85,7 @@ def post_case_pick(gateway: Any, task_id: int, line_id: int, request: Any) -> di
         metadata = {"fact_qty": quantity_text(request.fact_qty), "scan_cell": request.scan_cell,
             "scan_product": request.scan_product or request.scan_box, "scan_container": request.scan_container,
             "offline_event_id": request.offline_event_id, "requested_confirmation": submitted}
+        if getattr(request, "expected_case_signature", None):
+            metadata["expected_case_signature"] = request.expected_case_signature
     return StockPosting().post(StockCommand(operation_id=operation, command_type="CASE_PICK_CONFIRM",
         actor=request.actor, source=source, lines=(), units=units, metadata=metadata))

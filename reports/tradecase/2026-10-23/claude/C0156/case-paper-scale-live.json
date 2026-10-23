@@ -1,0 +1,35 @@
+[
+ {
+  "task": 968,
+  "lines": 2,
+  "articles": 1,
+  "lines_cold_ms": 15.5,
+  "policy_cold_ms": 18.9,
+  "signatures_cold_ms": 117.9,
+  "lines_warm_ms": 3.2,
+  "policy_warm_ms": 2.4,
+  "signatures_warm_ms": 3.6
+ },
+ {
+  "task": 1107,
+  "lines": 2,
+  "articles": 2,
+  "lines_cold_ms": 2.6,
+  "policy_cold_ms": 3.9,
+  "signatures_cold_ms": 2.4,
+  "lines_warm_ms": 2.3,
+  "policy_warm_ms": 3.1,
+  "signatures_warm_ms": 3.3
+ },
+ {
+  "task": 1106,
+  "lines": 2,
+  "articles": 2,
+  "lines_cold_ms": 2.0,
+  "policy_cold_ms": 3.3,
+  "signatures_cold_ms": 4.4,
+  "lines_warm_ms": 3.0,
+  "policy_warm_ms": 3.8,
+  "signatures_warm_ms": 5.5
+ }
+]

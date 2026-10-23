@@ -1,0 +1,177 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE CASE queue of warehouse 6667491: open tasks 1019/1020 listed"
+  },
+  {
+   "width": 1440,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE-TRANSPORT paper of task 1019 (live rows) shows cell, plan, picked"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "print sheet: one section per open line, CPICK barcode inside the page, print dialog requested"
+  },
+  {
+   "width": 1440,
+   "name": "PDF rendered with the sheet's own page size"
+  },
+  {
+   "width": 1440,
+   "name": "WTASK code is not accepted as CPICK"
+  },
+  {
+   "width": 1440,
+   "name": "stale sheet (synthetic 409) opens no fact entry"
+  },
+  {
+   "width": 1440,
+   "name": "late answer of the older check does not overwrite the newer one"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 503: fact kept with its operation id, retry offered"
+  },
+  {
+   "width": 1440,
+   "name": "pending fact survives reload"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE revoked access (403): fact kept, no new effect claimed"
+  },
+  {
+   "width": 1440,
+   "name": "exact replay: three sends of identical bytes (same operation id, sheet version, scans); own receipt clears the fact"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE conflict is confirmed and shown"
+  },
+  {
+   "width": 1440,
+   "name": "marked line: paper entry blocked (device required)"
+  },
+  {
+   "width": 1440,
+   "name": "task not started: paper entry blocked, start stays the normal action"
+  },
+  {
+   "width": 1440,
+   "name": "403 clears the CASE queue"
+  },
+  {
+   "width": 390,
+   "name": "LIVE CASE queue of warehouse 6667491: open tasks 1019/1020 listed"
+  },
+  {
+   "width": 390,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE-TRANSPORT paper of task 1019 (live rows) shows cell, plan, picked"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "print sheet: one section per open line, CPICK barcode inside the page, print dialog requested"
+  },
+  {
+   "width": 390,
+   "name": "WTASK code is not accepted as CPICK"
+  },
+  {
+   "width": 390,
+   "name": "stale sheet (synthetic 409) opens no fact entry"
+  },
+  {
+   "width": 390,
+   "name": "late answer of the older check does not overwrite the newer one"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 503: fact kept with its operation id, retry offered"
+  },
+  {
+   "width": 390,
+   "name": "pending fact survives reload"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE revoked access (403): fact kept, no new effect claimed"
+  },
+  {
+   "width": 390,
+   "name": "exact replay: three sends of identical bytes (same operation id, sheet version, scans); own receipt clears the fact"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE native refusal CASE_PAPER_LINE_CHANGED is confirmed and shown"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE conflict is confirmed and shown"
+  },
+  {
+   "width": 390,
+   "name": "marked line: paper entry blocked (device required)"
+  },
+  {
+   "width": 390,
+   "name": "task not started: paper entry blocked, start stays the normal action"
+  },
+  {
+   "width": 390,
+   "name": "403 clears the CASE queue"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "posts": [
+  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
+  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
+  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
+  "{\"operation_id\":\"case-paper-2a011f53-21da-41d7-a13f-a88fbd4dfe32\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
+  "{\"operation_id\":\"case-paper-e835a7b3-3a83-4e23-8735-af8df87c6eb7\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}"
+ ],
+ "timings": {
+  "case_queue_1440": 1827,
+  "case_queue_390": 2049
+ },
+ "print_1440": {
+  "printed": true,
+  "svgRight": 687,
+  "svgWidth": 680,
+  "viewport": 1120,
+  "scroll": 1120,
+  "code": "CPICK:1019:1023:6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A",
+  "sections": 1
+ },
+ "print_390": {
+  "printed": true,
+  "svgRight": 687,
+  "svgWidth": 680,
+  "viewport": 1120,
+  "scroll": 1120,
+  "code": "CPICK:1019:1023:6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A",
+  "sections": 1
+ },
+ "status": "PASS"
+}
