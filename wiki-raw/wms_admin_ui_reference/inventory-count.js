@@ -42,17 +42,20 @@
       }
       lots = article ? data.lots.filter(lot => lot.article === article) : data.lots;
       loadedRevision = revision; loadedCell = cell; loadedArticle = article;
+      const headings = [...el("countRows").closest("table").querySelectorAll("th")].map(th => th.textContent);
       const rows = lots.map((lot, index) => {
         const tr = document.createElement("tr");
-        for (const value of [lot.uid, lot.article, lot.expiry_date, lot.physical_qty, lot.hard_qty, lot.unit]) {
+        for (const value of [lot.uid, lot.article, String(lot.expiry_date ?? "").slice(0, 10).split("-").reverse().join(".") || "\u2014", lot.physical_qty, lot.hard_qty, lot.unit]) {
           const td = document.createElement("td"); td.textContent = String(value ?? ""); tr.append(td);
         }
         const quantity = document.createElement("input"); quantity.className = "count-qty"; quantity.inputMode = "decimal";
         quantity.value = String(lot.physical_qty); quantity.dataset.count = String(index);
         quantity.title = "Фактически измеренное количество этой паллеты в указанной единице";
+        quantity.setAttribute("aria-label", "Посчитано: " + lot.uid);
         const qtyCell = document.createElement("td"); qtyCell.append(quantity); tr.append(qtyCell);
         const profiles = document.createElement("select"); profiles.dataset.profile = String(index);
         profiles.title = "Выберите систему маркировки из карточки товара для сканирования найденных единиц";
+        profiles.setAttribute("aria-label", "Профиль маркировки: " + lot.uid);
         for (const profile of lot.marking_profiles || []) {
           const option = document.createElement("option"); option.value = JSON.stringify(profile);
           option.textContent = profile.system_code + " / " + profile.profile_code; profiles.append(option);
@@ -60,14 +63,20 @@
         const codes = document.createElement("textarea"); codes.dataset.units = String(index);
         codes.disabled = profiles.options.length === 0;
         codes.title = "Коды всех фактически найденных единиц, по одному в строке";
+        codes.setAttribute("aria-label", "Найденные коды: " + lot.uid);
         const unitsCell = document.createElement("td"); unitsCell.append(profiles, codes);
         if ((lot.lost_codes || []).length) {
-          const lost = document.createElement("p"); lost.className = "count-lost"; lost.dataset.lost = String(index);
+          const lost = document.createElement("details"); lost.className = "count-lost"; lost.dataset.lost = String(index);
           lost.title = "Эти единицы списаны прежним пересчётом как не найденные. Если код нашёлся на этой паллете, отсканируйте его вместе с остальными найденными и увеличьте количество: единица вернётся в остаток с прежним собственником и сроком.";
-          lost.textContent = "Не найдены ранее (" + lot.lost_codes.length + "): " + lot.lost_codes.join(", ");
+          const summary = document.createElement("summary"); summary.textContent = "Не найдены ранее (" + lot.lost_codes.length + ")";
+          summary.title = "Показать или свернуть коды единиц, списанных как недостача на этой паллете";
+          summary.dataset.helpId = "inventory.count.lost-codes";
+          const list = document.createElement("div"); list.textContent = lot.lost_codes.join("\n");
+          lost.append(summary, list);
           unitsCell.append(lost);
         }
         tr.append(unitsCell);
+        [...tr.children].forEach((td, column) => { td.dataset.label = headings[column]; });
         return tr;
       });
       el("countRows").replaceChildren(...rows); message(rows.length ? "Партии загружены. Введите фактическое количество." : "В ячейке нет зарегистрированных партий.");
@@ -118,11 +127,16 @@
         : fact.found_units ? fact.uid + ": найдено " + fact.found_units + " ед., возвращены в остаток" : null).filter(Boolean);
       message("Пересчёт подтверждён сервером. Операция: " + result.operation_id + (outcome.length ? "\n" + outcome.join("\n") : ""));
     } catch (error) {
-      if (attempted && !priorUnknown && error.detail?.outcome_confirmed === true) {
+      if (attempted && !priorUnknown && (error.detail?.outcome_confirmed === true || error.status === 422)) {
         localStorage.removeItem(key + ":delivery");
         localStorage.removeItem(key); pending();
       }
-      message(error.message + (readIntent() ? " Команда сохранена для повтора." : ""));
+      const text = !attempted ? error.message : error.status === 401 ? "Сеанс завершён. Войдите снова и повторите сохранённую команду."
+        : error.status === 403 ? "Нет права провести пересчёт этих партий. Проверьте назначение задания и права собственника."
+        : !error.status || error.status >= 500 ? "Ответ о пересчёте не получен. Проверьте результат повтором сохранённой команды."
+        : error.detail?.code === "OPERATION_CONTENT_CONFLICT" ? "Номер команды уже использован с другими данными. Передайте его администратору."
+        : "Сервер отклонил пересчёт. Загрузите актуальные остатки и проверьте количество и коды.";
+      message(text + (readIntent() ? " Команда сохранена для повтора." : ""));
     } finally {
       busy = false; el("countPost").disabled = el("countRetry").disabled = false;
     }

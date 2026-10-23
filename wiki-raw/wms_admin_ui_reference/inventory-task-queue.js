@@ -1,7 +1,8 @@
 (() => {
-  const panel = document.createElement("section");
-  panel.className = "panel";
-  panel.innerHTML = '<h2>Задания инвентаризации</h2><button type="button">Обновить задания</button><p role="status"></p><div></div>';
+  const panel = document.createElement("details");
+  panel.className = "panel count-task-queue";
+  panel.open = !matchMedia("(max-width:760px)").matches;
+  panel.innerHTML = '<summary title="Открыть или свернуть доступные задания инвентаризации" data-help-id="inventory.tasks.toggle">Задания инвентаризации</summary><button type="button" title="Перечитать доступные задания инвентаризации" data-help-id="inventory.tasks.refresh">Обновить задания</button><p role="status"></p><div></div>';
   (document.querySelector("main") || document.body).prepend(panel);
   const message = panel.querySelector("p");
   const api = async (path, post = false) => {
@@ -13,7 +14,7 @@
     return data;
   };
   async function load() {
-    if (!window.wmsAdminAuth?.hasPermission("inventory_task_view")) { panel.hidden = true; return; }
+    if (!window.wmsAdminAuth?.hasPermission("inventory_task_view")) { panel.hidden = true; panel.querySelector("div").replaceChildren(); return; }
     panel.hidden = false;
     try {
       const selected = new URLSearchParams(location.search).get("inventory_task_id");
@@ -33,6 +34,8 @@
           " — " + task.status + " — " + (task.assigned_to || "не назначен") + " ";
         const button = document.createElement("button");
         button.type = "button"; button.textContent = "Взять и пересчитать";
+        button.title = "Принять это задание и подставить его склад, ячейку и артикул в пересчёт";
+        button.dataset.helpId = "inventory.tasks.claim";
         button.disabled = !window.wmsAdminAuth.hasPermission("inventory_task_execute") ||
           !window.wmsAdminAuth.hasPermission("stock_inventory_count");
         button.addEventListener("click", async () => {
@@ -53,7 +56,7 @@
       });
       panel.querySelector("div").replaceChildren(...rows);
       message.textContent = rows.length ? "Срочные задания показаны первыми." : "Открытых заданий нет.";
-    } catch (error) { message.textContent = error.message; }
+    } catch (error) { panel.querySelector("div").replaceChildren(); message.textContent = error.message; }
   }
   panel.querySelector("button").addEventListener("click", load);
   window.addEventListener("wms-admin-auth-ready", load);

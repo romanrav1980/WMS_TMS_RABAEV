@@ -192,7 +192,9 @@ def test_schema_rollback_and_kit():
     rb = text("rollback.sql")
     assert rb.index("INVENTORY_LOSS_HISTORY_PRESENT") < rb.index("@@before_unit_core_spec.sql") < rb.index("drop table")
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False
+    assert m["status"] in {"NOT_APPLIED", "APPLIED"} and m["applied_by_claude"] is False
+    if m["status"] == "APPLIED":
+        assert m.get("application_evidence") and m.get("application_result")
     for key, h in m["before_sha256"].items():
         assert h in text("000_preflight.sql") and h in text("rollback_verify.sql")
     for h in m["after_sha256"].values():

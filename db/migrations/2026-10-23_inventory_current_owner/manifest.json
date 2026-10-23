@@ -1,6 +1,6 @@
 {
   "migration_id": "2026-10-23-inventory-current-owner",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "before_sha256": {
     "RRL_INVENTORY_TASK_ACCESS:PACKAGE BODY": "44EE875FA09C29BB43A5617081D77326C0963B12769DF2CF73BBBEBC2DF20AFD"
   },
@@ -22,5 +22,7 @@
     "rollback.sql": "455eaec934c26620f0aafa3d5d02522986224b7f62c0b2090dbd642b3d920692",
     "rollback_verify.sql": "64cd98ec723740337951901a463245745204c9187176713abf25858732570689",
     "verify.sql": "a4f5d2b7551452785c0c2592170ed5519028c25753ec9b892ab2e94d36a4f3bf"
-  }
+  },
+  "application_evidence": "runtime/test-evidence/tradecase/2026-10-23/T02/inventory-current-owner-native-result.json",
+  "application_result": "5/5/5;current authority before cached replay denied403;42paired losses revision418 and actual UI loss/found revision421 accepted;INVALID0"
 }

@@ -218,12 +218,22 @@ def guard_acceptance():
 def cleanup():
     assert s['stage']=='ALL_QUANTITIES_RESTORED_PENDING_CLEANUP'
     assert qa.stock()==[(250,0)]
+    current=qa.query('''select a.PHYSICAL_UNIT_KEY,a.OWNER_ID,a.SKU_ID,a.MRC,a.EXPIRY_DATE,
+        u.CURRENT_UID,u.CURRENT_CELL,u.STOCK_STATUS,u.BASE_QTY,u.UNIT_VERSION
+        from RRL_TRADE_STOCK_ATTR a join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=a.PHYSICAL_UNIT_KEY
+        where a.CAPTURE_WARE_ID=:w order by a.PHYSICAL_UNIT_KEY''',w=qa.W)
+    normalize=lambda rows:json.loads(json.dumps([r[:-1]for r in rows],default=str))
+    assert normalize(current)==normalize(s['baseline_attributes'])
+    s['unit_versions_after']=current
     qa.step('final_owner_retire',qa.BASE+'/stock/owner-grants',dict(operation_id=s['tag']+'.owner.retire',expected_version=5,
         username=s['actor'],owner_id='SNS',can_view=False,can_operate=False,reason='Finish owned inventory loss/found acceptance'),method='PUT')
     with qa.oracle_connection()as conn:
         cur=conn.cursor();result=cur.var(int)
-        cur.execute('begin :v:=REVIZION.close_revision(:r);end;',v=result,r=s['revision'])
-        assert result.getvalue()==1
+        cur.execute('select USER_ID,WARE_ID,CONDITION from RRL_REVIZION where ID=:r',r=s['revision'])
+        actor,ware,condition=cur.fetchone();assert (actor,ware)==(s['actor'],qa.W)
+        if condition!=2:
+            cur.execute('begin :v:=REVIZION.close_revision(:r);end;',v=result,r=s['revision'])
+            assert result.getvalue()==1
         cur.execute('update RUSERS set DELETED=1 where ID=:a',a=s['actor'])
         cur.execute('delete from RIGHTS where USER_GROUP=:a',a=s['actor']);conn.commit()
     s['loss_history']=qa.query('''select l.PHYSICAL_UNIT_KEY,l.LOSS_OPERATION_ID,f.FOUND_OPERATION_ID
@@ -231,6 +241,10 @@ def cleanup():
         on f.PHYSICAL_UNIT_KEY=l.PHYSICAL_UNIT_KEY and f.LOSS_OPERATION_ID=l.LOSS_OPERATION_ID
         where l.REVISION_ID=:r order by l.PHYSICAL_UNIT_KEY,l.LOSS_OPERATION_ID''',r=s['revision'])
     assert len(s['loss_history'])==42 and all(r[2]for r in s['loss_history'])
+    from collections import Counter
+    occurrences=Counter(r[0]for r in s['loss_history'])
+    baseline_versions={r[0]:r[-1]for r in s['baseline_attributes']}
+    assert all(r[-1]==baseline_versions[r[0]]+2*occurrences[r[0]]for r in current)
     codes=qa.query('''select c.SYSTEM_CODE,c.CODE_HASH,u.PHYSICAL_UNIT_KEY
         from RRL_WMS_RECEIPT_CODE c join RRL_WMS_RECEIPT_UNIT u on u.UID_PALLET=c.UID_PALLET and c.UNIT_ID=u.UNIT_ID
         join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
@@ -244,6 +258,7 @@ def cleanup():
 
 
 if __name__ == '__main__':
+    s['previous_calls'] = s.get('calls', [])
     assert sys.argv[1:] in [['--prepare'], ['--baseline'], ['--execute'], ['--shipped-baseline'], ['--guard'], ['--cleanup']]
     try:
         if s.get('status')=='PASS':
