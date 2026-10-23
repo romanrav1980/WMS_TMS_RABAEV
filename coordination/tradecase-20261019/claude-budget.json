@@ -207,7 +207,7 @@
       "id": "C-0165",
       "task": "T12 actual slow loading preview and outgoing quality read performance without rights regressions",
       "registered_at": "2026-10-23T09:25:53.928195+00:00",
-      "status": "REGISTERED; after C0164 RELEASE",
+      "status": "RESULT + RELEASE K0150,8f6c96ad; root accepts timings/no runtime edit, qualifies causal inference and Oracle host clock",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
     },
@@ -215,7 +215,7 @@
       "id": "C-0166",
       "task": "T11 marked inventory FOUND/LOST and operator recovery using existing commands",
       "registered_at": "2026-10-23T13:50:40.130164+03:00",
-      "status": "REGISTERED; WAITING_FOR_ACK",
+      "status": "ACK K0151; root approved narrow INVENTORY_CMD body / UNIT_CORE spec+body boundaries; candidate NOT_APPLIED pending",
       "delivery": "existing file channel"
     }
   ],

@@ -4,7 +4,7 @@ import json
 from typing import Any
 import oracledb
 from ..contracts_trade_stock import TradeSort, TradeStockError
-from ..contracts_stock import StockCommand, StockPostingError
+from ..contracts_stock import StockCommand
 from ..domain.mark_identity import normalize_unit_scan_codes
 from ..domain.stock_quantity import quantity_text
 from .stock_posting_uow import StockPosting
@@ -66,8 +66,5 @@ def post_sort(gateway: Any, warehouse: int, body: TradeSort, actor: str) -> dict
             lines=(),source=source,units=units,metadata=metadata))
     except ValueError as exc:
         raise TradeStockError(str(exc),422)from exc
-    except StockPostingError as exc:
-        unknown=exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","CONNECTION_UNUSABLE","LOCK_RETRY_EXHAUSTED","STOCK_RELEASE_NOT_ACTIVE"}
-        raise TradeStockError(exc.rule_reason or exc.code,503 if unknown else 403 if exc.oracle_code==20882 else 409)from exc
     except oracledb.DatabaseError as exc:
         raise TradeStockError("TRADE_SORT_RESULT_UNKNOWN",503)from exc

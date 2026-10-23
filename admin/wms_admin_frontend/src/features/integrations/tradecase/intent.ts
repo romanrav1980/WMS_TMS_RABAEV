@@ -48,6 +48,9 @@ export function classify(e: unknown, prior: boolean): { outcome: "unknown" | "au
   if (!(e instanceof ApiRequestError) || e.status >= 500) return { outcome: "unknown", code: "" };
   const code = codeOf(e);
   if (e.status === 401) return { outcome: "auth", code };
+  if (typeof e.detail === "object" && e.detail &&
+      (("outcome_confirmed" in e.detail && e.detail.outcome_confirmed === false) ||
+       ("operation_id_conflict" in e.detail && e.detail.operation_id_conflict === true))) return { outcome: "kept", code };
   if (KEEP_CODES.includes(code) || prior) return { outcome: "kept", code };
   return { outcome: "refused", code };
 }
