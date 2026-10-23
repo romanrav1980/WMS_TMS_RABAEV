@@ -9,8 +9,12 @@ from .task_view_predicate import task_view_predicate
 
 def require_task_viewer(cur: Any, actor: str, warehouse: int | None) -> None:
     cur.execute("""select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0
-        and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)
-        and RRL_ACCESS_API.allowed(:actor,'warehouse_task_view','WAREHOUSE',to_char(w.ID),:actor)=1)""",
+        and case when (:ware is null or u.WARE_ID=:ware) and exists(
+            select 1 from RRL_WARES w where w.ID=u.WARE_ID
+            and RRL_ACCESS_API.allowed(:actor,'warehouse_task_view','WAREHOUSE',to_char(w.ID),:actor)=1)
+            then 1 when exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)
+            and RRL_ACCESS_API.allowed(:actor,'warehouse_task_view','WAREHOUSE',to_char(w.ID),:actor)=1)
+            then 1 else 0 end=1""",
                 actor=actor, ware=warehouse)
     if cur.fetchone()[0] != 1:
         raise TaskReadError("TASK_SCOPED_VIEW_REQUIRED")

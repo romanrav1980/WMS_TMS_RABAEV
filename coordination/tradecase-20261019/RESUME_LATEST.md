@@ -4,6 +4,8 @@
 
 ## Сначала прочитать
 
+Последний инкремент: бумажный read API/Code128 checkpoint14e919d7; миграция `2026-10-23-paper-task-version` применена/откачена/повторена6/6/6, INVALID0.7READ ONLY prepare проверили stale HU/CASE, без физического выполнения. `task_scoped_view.require_task_viewer` ускорен CASE currentWARE→старый fallback; same actor SQL443→4,51мс,7областей/отзыв/retired совпали. HTTP5PASS `T11/PR23f26141a6a8.json`, warm112/96мс, revoke623мс (полный fallback сохранён). Gate/encoding PASS. **API81476/session35670**, безreload. Новые тесты `live_paper_version_guard.py`, `live_task_view_precheck.py`; детали wiki/database/paper_task_version_20261023.md. UI C0155 за Claude, ACK по-прежнему нет (последний ответ K0120 от02:20). Не повторять завершённый quality receipt/disposal; физическая сверка бумаги остаётся открытой. Все T02–T12 частичны.
+
 1. AGENTS.md и wiki/index.md (оглавление сокращено до63строк, старые ссылки сохранены в wiki/sources/wiki_index_history_20261023.md).
 2. wiki/roadmap/tradecase_execution_20261019.md и wiki/roadmap/tradecase_acceptance_20261021.md.
 3. Для следующего блока — coordination/retailcase-claude/TASK_C0155_PAPER_TASKS.md и последние сообщения канала.
