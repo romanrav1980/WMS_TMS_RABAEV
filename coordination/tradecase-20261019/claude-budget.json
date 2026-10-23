@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 17,
-  "used": 17,
+  "limit": 18,
+  "used": 18,
   "requests": [
     {
       "id": "C-0130",
@@ -129,10 +129,17 @@
     {
       "id": "C-0155",
       "registered_at": "2026-10-23T02:07:39.6275739+03:00",
-      "status": "Delivered to proceed after corrected C0154 RELEASE; paper ACK pending",
+      "status": "RESULT + RELEASE K0122, checkpoint a2322314; queue/read accepted, fact entry remains with root",
       "delivery": "existing file channel",
       "task": "T11 paper warehouse tasks and authoritative fact reconciliation after terminal outage using existing native commands",
       "cli_auth": "2026-10-23: loggedIn=false/authMethod=none; no CLI model request sent"
+    },
+    {
+      "id": "C-0156",
+      "registered_at": "2026-10-23T06:38:31.2260841+03:00",
+      "status": "ACK K0123: CASE-specific paper UI/API and NOT_APPLIED native candidate in progress",
+      "delivery": "existing file channel",
+      "task": "T11 CASE picking paper workflow using current native pick contracts, distinct barcode identity, version checks, operator UI/help and evidence"
     }
   ],
   "additional_grants": [
@@ -236,6 +243,16 @@
       "used": 1,
       "request_ids": [
         "C-0155"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner: continue until all sprints complete, Claude waiting; additional delegation authorized",
+      "allocation_basis": "One large independent CASE paper work package",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0156"
       ]
     }
   ]

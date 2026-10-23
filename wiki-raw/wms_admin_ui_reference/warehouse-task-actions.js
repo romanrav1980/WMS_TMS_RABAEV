@@ -1,4 +1,4 @@
-﻿/* Presentation of existing task transitions. Oracle remains the command authority. */
+/* Presentation of existing task transitions. Oracle remains the command authority. */
 (() => {
   let busy = false;
   const identity = () => JSON.stringify([
@@ -31,6 +31,7 @@
         '. Можно назначить сотрудника до начала. «Начать» действует от имени вошедшего пользователя.' :
       'Проверьте причину в поле «Ошибка». Доступность проведения проверит сервер.';
     warehouseTaskEl('warehouseTaskActionHint').textContent = hint;
+    window.warehouseTaskPaper?.render(task);
   }
   async function send(task, action, payload) {
     if (busy) throw new Error('Дождитесь результата предыдущего действия.');

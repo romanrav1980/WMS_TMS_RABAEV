@@ -34,9 +34,9 @@ export function paperFields(t: PaperTask): [string, string][] {
     ["Исполнитель", paperText(t.assigned_to_name ?? t.assigned_to ?? "Не назначен")],
     ["Товар / грузовое место", paperText(t.product_name ?? t.raw_articul ?? t.target_articul ?? "Грузовое место")],
     ["Количество", `${t.qty_exact.startsWith(".") ? "0" + t.qty_exact : t.qty_exact} ${UNIT[paperText(t.unit_code)] ?? paperText(t.unit_code)}`],
-    ["Со склада", paperText(t.from_warehouse_name ?? t.from_ware_id)],
+    ["Со склада", paperText(t.from_warehouse_name ?? t.from_ware_id ?? "Не указан")],
     ["Откуда", cell("from_cell", "from_cell_slot_id", "from_slot_code")],
-    ["На склад", paperText(t.to_warehouse_name ?? t.to_ware_id)],
+    ["На склад", paperText(t.to_warehouse_name ?? t.to_ware_id ?? "Не указан")],
     ["Куда", cell("to_cell", "to_cell_slot_id", "to_slot_code")],
     ["Идентификатор паллеты", paperText(t.uid_pallet ?? t.sscc)],
   ];

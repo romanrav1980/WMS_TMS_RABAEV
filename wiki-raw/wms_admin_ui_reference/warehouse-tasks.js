@@ -53,11 +53,15 @@ async function warehouseTaskFetch(path, options = {}) {
   const text = await response.text();
   const body = text ? JSON.parse(text) : {};
   if (!response.ok) {
-    const detail = body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
+    const detail = body.detail?.reason === 'TASK_EXPECTED_SIGNATURE_CHANGED'
+      ? 'Бланк устарел. Сверьте выполненную работу с текущим заданием и проверьте исходный бланк перед новым подтверждением.'
+      : body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
     const error = new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
     error.status = response.status;
     error.code = body.detail?.code;
     error.oracleCode = body.detail?.oracle_code;
+    error.outcomeConfirmed = body.detail?.outcome_confirmed;
+    error.operationId = body.detail?.operation_id;
     throw error;
   }
   return body;
@@ -90,7 +94,9 @@ async function loadWarehouseTasks() {
   const token=++warehouseTaskState.readEpoch;
   const identity=JSON.stringify([warehouseTaskApiBase(),window.wmsAdminAuth?.state?.user?.username]);
   const query=warehouseTaskParams().toString();
-  const tasks=await warehouseTaskFetch(`/api/warehouse-tasks?${query}`);
+  const directPaperTask = window.warehouseTaskPaper?.directTaskId();
+  const tasks = directPaperTask ? [await warehouseTaskFetch(`/api/warehouse-tasks/${directPaperTask}`)] :
+    await warehouseTaskFetch(`/api/warehouse-tasks?${query}`);
   if(token!==warehouseTaskState.readEpoch||query!==warehouseTaskParams().toString()||
     identity!==JSON.stringify([warehouseTaskApiBase(),window.wmsAdminAuth?.state?.user?.username]))return;
   warehouseTaskState.allTasks=tasks;
@@ -268,10 +274,12 @@ async function changeWarehouseTask(action) {
     const slotCode=warehouseTaskEl("warehouseTaskScanSlot").value.trim();
     if(slotCode)payload.scanned_to_slot_code=slotCode;
   }
+  if (action !== 'complete') window.warehouseTaskPaper?.guard(task, action, payload);
   if (action === "cancel") {
     payload.reason = warehouseTaskEl("warehouseTaskCancelReason").value.trim() || "Отмена из админки складских заданий";
   }
   if (action === "complete") {
+    window.warehouseTaskPaper?.guard(task, action, payload);
     const scanDraft=window.warehouseTaskScans?.draftId(task.task_id);
     if(scanDraft) payload.scan_draft_id=scanDraft;
     await window.warehouseTaskRecovery.complete(task.task_id, payload);

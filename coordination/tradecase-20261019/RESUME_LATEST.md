@@ -4,7 +4,7 @@
 
 ## Сначала прочитать
 
-Последний инкремент: resources-бланк/сверка/PDF1440/390 готов; полный UI внесения факта ещё открыт. API12832/session54441, UI3000/index-CdrWbWjh.js. Native6/6/6,31focused/gate/TS PASS;3concurrent emptyHU1234 дали одну квитанцию,1233/1234 DONE, parent PH23.68eb5dba.HU вA, stock/HARD неизменны. ClaudeC0155 безACK; CLIauthfalse/modelcalls0,17зарегистрировано. Детали и следующий блок — в последнем разделе этого файла и wiki/database/paper_task_version_20261023.md.
+Последний инкремент: очередь C0155 принята K0122/a2322314, root paper FACT UI принят на emptyHU1235/restore1236; HU вA, open0, goods0, protected balances unchanged. Gate24/обаTS/Vite PASS, UI1440/390/replay after commit PASS. API12832/session54441, UI3000/index-QEqNTtII.js. C0156 registered18 before delivery, ACK K0123: Claude CASE paper modules + NOT_APPLIED migration; root принимает после RELEASE. Товар/CASE/оборудование и полные спринты ещё открыты. Подробности в последнем разделе wiki/database/paper_task_version_20261023.md.
 
 1. AGENTS.md и wiki/index.md (оглавление сокращено до63строк, старые ссылки сохранены в wiki/sources/wiki_index_history_20261023.md).
 2. wiki/roadmap/tradecase_execution_20261019.md и wiki/roadmap/tradecase_acceptance_20261021.md.

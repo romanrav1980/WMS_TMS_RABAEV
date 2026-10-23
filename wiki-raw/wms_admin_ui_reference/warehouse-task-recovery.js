@@ -40,7 +40,9 @@
     } catch (error) {
       // Only explicit validation/rule rejection proves no new task fact was committed.
       if (current()&&([400, 422].includes(error.status) ||
-          (error.code === "STOCK_RULE_REJECTED" && [20881, 20886, 20887].includes(error.oracleCode)))) {
+          (error.code === "STOCK_RULE_REJECTED" && [20881, 20886, 20887].includes(error.oracleCode)) ||
+          (error.code === "STOCK_RULE_REJECTED" && error.oracleCode === 20890 &&
+           error.outcomeConfirmed === true && error.operationId === saved.payload.operation_id))) {
         localStorage.removeItem(storageKey);
       }
       throw error;

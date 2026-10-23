@@ -28,7 +28,8 @@ function load(fetcher) {
   const fetcher = async (_, options) => {
     calls.push(options.body);
     if (lost) { lost = false; throw new Error("response lost after commit"); }
-    return {result: {status: "DONE", quantity: "9007199254740993.000000001"}};
+    return {result: {status: "DONE", operation_id: JSON.parse(options.body).operation_id,
+      task_id: 17, quantity: "9007199254740993.000000001"}};
   };
   const body = {fact_qty: "9007199254740993.000000001", scanned_pallet: "internal-01"};
   await assert.rejects(load(fetcher).complete(17, body), /response lost/);
@@ -39,6 +40,18 @@ function load(fetcher) {
   assert.equal(calls[0], calls[1]);
   assert.equal(JSON.parse(calls[0]).fact_qty, body.fact_qty);
   assert.equal(saved.size, 0);
+  for (const [extra, retained] of [
+    [{outcomeConfirmed: true, operationId: "TASK.UI:same-id"}, 0],
+    [{outcomeConfirmed: false, operationId: "TASK.UI:same-id"}, 1],
+    [{outcomeConfirmed: true, operationId: "another-operation"}, 1],
+  ]) {
+    saved.clear();
+    await assert.rejects(load(async () => { throw Object.assign(new Error("stale paper"),
+      {status: 409, code: "STOCK_RULE_REJECTED", oracleCode: 20890}, extra);
+    }).complete(20, {...body, expected_task_signature: "A".repeat(64)}), /stale paper/);
+    assert.equal(saved.size, retained);
+  }
+  saved.clear();
   await assert.rejects(load(async () => { throw Object.assign(new Error("uncertain"),
     {status: 503, code: "RESULT_UNCERTAIN"}); }).complete(18, body), /uncertain/);
   assert.equal(saved.size, 1);

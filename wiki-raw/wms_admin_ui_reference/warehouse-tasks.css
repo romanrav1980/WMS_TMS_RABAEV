@@ -31,3 +31,12 @@
 .fullpal-shipment-panel [hidden]{display:none!important}
 .fullpal-shipment-panel button:disabled{opacity:.5}
 @media(max-width:800px){.fullpal-shipment-panel .fullpal-fields{grid-template-columns:minmax(0,1fr)}}
+
+.warehouse-operations .warehouse-task-paper{padding:16px;margin:0 0 16px;border:1px solid #cbdcf7;border-radius:12px;background:#eff6ff;min-width:0}
+.warehouse-operations .warehouse-task-paper form{display:flex;flex-wrap:wrap;align-items:end;gap:12px}
+.warehouse-operations .warehouse-task-paper label{display:grid;gap:6px;flex:1 1 240px;min-width:0}
+.warehouse-operations .warehouse-task-paper input{width:100%;min-width:0;box-sizing:border-box}
+.warehouse-operations .warehouse-task-paper button,.warehouse-operations .warehouse-task-paper input,.warehouse-operations .warehouse-task-paper a{min-height:44px;padding:10px;box-sizing:border-box}
+.warehouse-operations .warehouse-task-paper p{overflow-wrap:anywhere}.warehouse-operations.warehouse-paper-focus .warehouse-task-list-panel{display:none}
+.warehouse-operations.warehouse-paper-focus .warehouse-task-page{grid-template-columns:minmax(0,780px);justify-content:center}
+.warehouse-operations .warehouse-task-paper>a{display:inline-flex;align-items:center;margin-right:12px}

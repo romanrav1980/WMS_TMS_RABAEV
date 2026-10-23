@@ -4,6 +4,7 @@ import { HelpButton } from "../../help/HelpButton";
 import { paperFields, paperSignature, parsePaper, printPaper } from "./taskPaperModel";
 import type { PaperSnapshot } from "./taskPaperModel";
 import "./taskPaper.css";
+import { rawLink } from "../OpsParts";
 
 const article = "/help/warehouse-task-paper.html";
 const HELP = {
@@ -67,6 +68,10 @@ export function TaskPaperPanel({ taskId }: { taskId: number }) {
     {p.checked && p.paper && <p className="task-paper-verified" role="status">Версия бланка совпадает с версией задания.</p>}
     {p.paper && <><dl className="task-paper-fields">{paperFields(p.paper.task).map(([label, value]) => <Fragment key={label}><dt>{label}</dt><dd>{value}</dd></Fragment>)}</dl>
       <HelpButton help={HELP.print} disabled={p.busy} onClick={p.print}>Печать / PDF</HelpButton>
+      {p.checked && !["DONE", "CANCELLED"].includes(String(p.paper.task.status)) && <a
+        href={rawLink("warehouse-tasks.html") + "?task_id=" + taskId + "&paper_reference=" + encodeURIComponent(p.paper.reference)}
+        target="_blank" rel="noopener noreferrer" title="Открыть карточку задания для проверки бланка, ввода фактического количества и физических сканов"
+        data-help-id="task-paper.fact">Внести факт по бланку</a>}
       <p className="ops-note">Печать и сверка версии не подтверждают выполнение.</p>
       <details><summary title="Показать полный код версии для обращения в поддержку">Данные для поддержки</summary><code>{p.paper.reference}</code></details></>}
     <a href={article} target="_blank" rel="noopener noreferrer" title="Открыть инструкцию по бланку и сверке его версии">Инструкция по бланку</a>
