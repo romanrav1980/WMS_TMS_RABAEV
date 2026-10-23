@@ -127,6 +127,17 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   if p.STATUS not in('PROPOSED','ADJUSTED')then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
   -- C-0161: loaded main cargo is in the capacity basis checked next; only a departed trip refuses here (under the transport row lock).
   if RRL_TRADE_TOPUP_READ.departed(p.WARE_ID,p.TRIP_ID)=1 then fail('TOPUP_TRIP_DEPARTED');end if;
+  -- C-0161: with main cargo already loaded the planned departure must still be ahead now, at confirmation (not only at calculation/save).
+  -- The time is the accepted TRIP's planned_departure_at, ISO-8601 with offset as validated on receipt; unreadable = refused.
+  if RRL_TRADE_TOPUP_READ.loading_started(p.WARE_ID,p.TRIP_ID)=1 then
+   declare dep timestamp with time zone;begin
+    select json_value(BODY_JSON,'$.planned_departure_at'returning timestamp with time zone error on error)into dep
+     from RRL_TRADE_DOCUMENT where WARE_ID=p.WARE_ID and ENTITY_TYPE='TRIP'and EXTERNAL_ID=p.TRIP_ID and STATUS='ACCEPTED';
+    if dep is null or dep<=systimestamp then fail('TOPUP_DEPARTURE_TIME_PASSED');end if;
+   exception when no_data_found then fail('TRADE_TOPUP_TRIP_REQUIRED');
+    when others then if sqlcode=-20911 then raise;end if;fail('TOPUP_DEPARTURE_TIME_INVALID');
+   end;
+  end if;
   -- Someone else confirmed on this trip or the trip/vehicle/orders changed: recalculate, never squeeze in.
   if RRL_TRADE_TOPUP_READ.trip_basis(p.WARE_ID,p.TRIP_ID,p.PROPOSAL_ID)<>p.CAPACITY_BASIS then fail('TRADE_TOPUP_CAPACITY_BASIS_CHANGED');end if;
   select count(*)into n from RRL_TRADE_DOCUMENT where WARE_ID=p.WARE_ID and ENTITY_TYPE='NEED'and EXTERNAL_ID=p.NEED_ID and VERSION_NO=p.NEED_VERSION and STATUS='ACCEPTED';

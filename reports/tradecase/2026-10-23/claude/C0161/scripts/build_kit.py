@@ -36,13 +36,16 @@ write("001_read_spec.sql", edit(read_spec, [(
 write("002_read_body.sql", edit(read_body, [
     ("  return sha(acc);\n exception when no_data_found then raise_application_error(-20911,'TRADE_TOPUP_TRIP_REQUIRED');\n end;\n",
      "  -- C-0161: the physical loading of the bound native task is part of the basis: every LOAD/UNLOAD/DEPART, a changed content version\n"
-     "  -- or another vehicle on the native task makes an earlier calculation stale.\n"
+     "  -- or another vehicle on the native task makes an earlier calculation stale. The ordered load history is folded into a chained\n"
+     "  -- SHA-256 (fixed 64 chars per task, every transition included, nothing truncated), so any history length fits acc.\n"
      "  for t in(select l.NATIVE_TASK_ID,upper(trim(tt.TRANSPORT))TRANSPORT from RRL_TRADE_TRIP_LINK l join RRL_TRANSPORT_TASK tt on tt.ID=l.NATIVE_TASK_ID\n"
      "    where l.WARE_ID=p_ware and l.TRIP_ID=p_trip)loop\n"
-     "   acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT;\n"
-     "   for f in(select LOAD_OPERATION_ID,STATUS,CONTENT_VERSION from RRL_TT_HU_LOAD_FACT where TT_ID=t.NATIVE_TASK_ID order by LOAD_OPERATION_ID)loop\n"
-     "    acc:=acc||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION;\n"
-     "   end loop;\n"
+     "   declare lh varchar2(64):='-';cnt number:=0;begin\n"
+     "    for f in(select LOAD_OPERATION_ID,STATUS,CONTENT_VERSION from RRL_TT_HU_LOAD_FACT where TT_ID=t.NATIVE_TASK_ID order by LOAD_OPERATION_ID)loop\n"
+     "     lh:=sha(lh||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION);cnt:=cnt+1;\n"
+     "    end loop;\n"
+     "    acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT||':'||cnt||':'||lh;\n"
+     "   end;\n"
      "  end loop;\n"
      "  return sha(acc);\n exception when no_data_found then raise_application_error(-20911,'TRADE_TOPUP_TRIP_REQUIRED');\n end;\n"),
     (" function need_confirmed_boxes(",
@@ -72,6 +75,17 @@ write("004_cmd_body.sql", edit(cmd_body, [
      "  end loop;\n"),
     ("  if RRL_TRADE_TOPUP_READ.loading_started(p.WARE_ID,p.TRIP_ID)=1 then fail('TOPUP_LOADING_ALREADY_STARTED');end if;\n",
      "  -- C-0161: loaded main cargo is in the capacity basis checked next; only a departed trip refuses here (under the transport row lock).\n"
-     "  if RRL_TRADE_TOPUP_READ.departed(p.WARE_ID,p.TRIP_ID)=1 then fail('TOPUP_TRIP_DEPARTED');end if;\n"),
+     "  if RRL_TRADE_TOPUP_READ.departed(p.WARE_ID,p.TRIP_ID)=1 then fail('TOPUP_TRIP_DEPARTED');end if;\n"
+     "  -- C-0161: with main cargo already loaded the planned departure must still be ahead now, at confirmation (not only at calculation/save).\n"
+     "  -- The time is the accepted TRIP's planned_departure_at, ISO-8601 with offset as validated on receipt; unreadable = refused.\n"
+     "  if RRL_TRADE_TOPUP_READ.loading_started(p.WARE_ID,p.TRIP_ID)=1 then\n"
+     "   declare dep timestamp with time zone;begin\n"
+     "    select json_value(BODY_JSON,'$.planned_departure_at'returning timestamp with time zone error on error)into dep\n"
+     "     from RRL_TRADE_DOCUMENT where WARE_ID=p.WARE_ID and ENTITY_TYPE='TRIP'and EXTERNAL_ID=p.TRIP_ID and STATUS='ACCEPTED';\n"
+     "    if dep is null or dep<=systimestamp then fail('TOPUP_DEPARTURE_TIME_PASSED');end if;\n"
+     "   exception when no_data_found then fail('TRADE_TOPUP_TRIP_REQUIRED');\n"
+     "    when others then if sqlcode=-20911 then raise;end if;fail('TOPUP_DEPARTURE_TIME_INVALID');\n"
+     "   end;\n"
+     "  end if;\n"),
 ]))
 print("kit written to", D)

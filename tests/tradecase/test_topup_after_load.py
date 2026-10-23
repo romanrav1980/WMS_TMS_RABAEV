@@ -80,14 +80,21 @@ def text(name):
 
 def test_kit_gates_basis_and_lock_order():
     read, api, cmd = text("002_read_body.sql"), text("003_api_body.sql"), text("004_cmd_body.sql")
-    assert "acc:=acc||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION;" in read and "acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT;" in read
+    # Revision: the ordered load history is folded into a chained SHA (bounded), never appended to acc one operation at a time.
+    assert "lh:=sha(lh||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION);cnt:=cnt+1;" in read
+    assert "acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT||':'||cnt||':'||lh;" in read and "acc:=acc||'|L:'" not in read
     assert "f.STATUS='DEPARTED'" in read and "o.COMMAND_TYPE='TRIP_DEPART'" in read
     for body in (api, cmd):
-        assert "loading_started" not in body and "TOPUP_TRIP_DEPARTED" in body
+        assert "TOPUP_LOADING_ALREADY_STARTED" not in body and "TOPUP_TRIP_DEPARTED" in body
+    assert "loading_started" not in api and cmd.count("loading_started(") == 1  # cmd: only to require a future departure once loaded
     plan = cmd[cmd.index("procedure common_plan("):cmd.index("procedure compile_command(")]
     assert "row_key(r,'RRL_TRANSPORT_TASK'" in plan and "RRL_TRADE_TRIP_LINK" in plan
     confirm = cmd[cmd.index("procedure confirm("):cmd.index("procedure release(")]
     assert confirm.index("RRL_TRADE_TOPUP_READ.departed") < confirm.index("trip_basis(")  # departure first, then the basis with load facts
+    # Revision: with cargo loaded, the planned departure must still be ahead at confirmation (under the transport row lock).
+    assert confirm.index("RRL_TRADE_TOPUP_READ.departed") < confirm.index("loading_started(p.WARE_ID,p.TRIP_ID)=1") < confirm.index("trip_basis(")
+    assert "returning timestamp with time zone error on error" in confirm and "dep<=systimestamp then fail('TOPUP_DEPARTURE_TIME_PASSED')" in confirm
+    assert "fail('TOPUP_DEPARTURE_TIME_INVALID')" in confirm
     save = api[api.index("procedure save("):]
     assert save.index("if replay(op,hash_value,ware,p_result)then return;end if;") < save.index("RRL_TRADE_TOPUP_READ.departed")  # exact replay first
     assert "function departed(p_ware number,p_trip varchar2)return number;" in text("001_read_spec.sql")
@@ -104,3 +111,13 @@ def test_kit_hashes_and_live_evidence():
         assert hashlib.sha256((KIT / name).read_bytes()).hexdigest() == sha, name
     live = json.loads((ROOT / "reports/tradecase/2026-10-23/claude/C0161/candidate-live.json").read_text(encoding="utf-8"))
     assert live and all(v["departed"] == 1 and v["python"] != "COMPUTED" and v["basis"] != v["live_basis"] for v in live.values())
+
+
+def test_revision_proofs_recorded():
+    proof = json.loads((ROOT / "reports/tradecase/2026-10-23/claude/C0161/revision-proofs-live.json").read_text(encoding="utf-8"))
+    f = proof["folded"]
+    assert f["input_chars_approx"] > 32767 and f["acc_length"] < 200 and f["deterministic"] and f["order_or_status_change_changes_basis"]
+    assert proof["plain_concatenation"].startswith("ORA-06502")
+    b = proof["boundary"]
+    assert b["save_before_departure_now+1s"] == "ALLOWED" and b["confirm_after_departure_now-1s"] == "TOPUP_DEPARTURE_TIME_PASSED"
+    assert b["missing"] == b["unreadable"] == "TOPUP_DEPARTURE_TIME_INVALID"

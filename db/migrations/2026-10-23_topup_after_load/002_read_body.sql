@@ -22,13 +22,16 @@ create or replace package body RRL_TRADE_TOPUP_READ as
    acc:=acc||'|P:'||p.PROPOSAL_ID||':'||p.VERSION_NO||':'||p.APPROVED_BOXES;
   end loop;
   -- C-0161: the physical loading of the bound native task is part of the basis: every LOAD/UNLOAD/DEPART, a changed content version
-  -- or another vehicle on the native task makes an earlier calculation stale.
+  -- or another vehicle on the native task makes an earlier calculation stale. The ordered load history is folded into a chained
+  -- SHA-256 (fixed 64 chars per task, every transition included, nothing truncated), so any history length fits acc.
   for t in(select l.NATIVE_TASK_ID,upper(trim(tt.TRANSPORT))TRANSPORT from RRL_TRADE_TRIP_LINK l join RRL_TRANSPORT_TASK tt on tt.ID=l.NATIVE_TASK_ID
     where l.WARE_ID=p_ware and l.TRIP_ID=p_trip)loop
-   acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT;
-   for f in(select LOAD_OPERATION_ID,STATUS,CONTENT_VERSION from RRL_TT_HU_LOAD_FACT where TT_ID=t.NATIVE_TASK_ID order by LOAD_OPERATION_ID)loop
-    acc:=acc||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION;
-   end loop;
+   declare lh varchar2(64):='-';cnt number:=0;begin
+    for f in(select LOAD_OPERATION_ID,STATUS,CONTENT_VERSION from RRL_TT_HU_LOAD_FACT where TT_ID=t.NATIVE_TASK_ID order by LOAD_OPERATION_ID)loop
+     lh:=sha(lh||'|L:'||f.LOAD_OPERATION_ID||':'||f.STATUS||':'||f.CONTENT_VERSION);cnt:=cnt+1;
+    end loop;
+    acc:=acc||'|T:'||t.NATIVE_TASK_ID||':'||t.TRANSPORT||':'||cnt||':'||lh;
+   end;
   end loop;
   return sha(acc);
  exception when no_data_found then raise_application_error(-20911,'TRADE_TOPUP_TRIP_REQUIRED');

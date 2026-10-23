@@ -1,0 +1,31 @@
+{
+ "folded": {
+  "transitions": 3000,
+  "input_chars_approx": 186000,
+  "acc_length": 90,
+  "basis": "bda25a1c9e7ab7e818a2f2ddbc8a19f7ec511e3071b7966d35ebbeea752f95f1",
+  "deterministic": true,
+  "order_or_status_change_changes_basis": true
+ },
+ "plain_concatenation": "ORA-06502: PL/SQL: numeric or value error: character string buffer too small",
+ "boundary": {
+  "save_before_departure_now+1s": "ALLOWED",
+  "confirm_after_departure_now-1s": "TOPUP_DEPARTURE_TIME_PASSED",
+  "missing": "TOPUP_DEPARTURE_TIME_INVALID",
+  "unreadable": "TOPUP_DEPARTURE_TIME_INVALID"
+ },
+ "real_trips": {
+  "YS22c2c124ba6f.TRIP": {
+   "planned_departure_at": null,
+   "result": "TOPUP_DEPARTURE_TIME_INVALID"
+  },
+  "YS22b23073f613.TRIP": {
+   "planned_departure_at": null,
+   "result": "TOPUP_DEPARTURE_TIME_INVALID"
+  },
+  "T1": {
+   "planned_departure_at": "2026-10-22T23:04:36.641506Z",
+   "result": "TOPUP_DEPARTURE_TIME_PASSED"
+  }
+ }
+}
