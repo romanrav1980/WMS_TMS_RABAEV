@@ -49,14 +49,14 @@ export function YardDockPlan({ wh, reload, visits, onGantt }: { wh: string; relo
 
   return <div className="ops-yard-plan" aria-label="План ворот" title={shiftHelp.yardPlan.text} data-help-id={shiftHelp.yardPlan.id}>
     <h4>План ворот <HelpButton help={shiftHelp.yardPlanRefresh} onClick={() => setLocal(n => n + 1)}>Обновить план</HelpButton></h4>
-    <p className="ops-note">План — намерение диспетчера, а не факт приезда и не гарантия свободных ворот. При опоздании план сам не пересчитывается.</p>
+    <p className="ops-note">Укажите начало и конец работы у ворот. При опоздании перенесите интервал вручную.</p>
     {(read.error || parsed.error) && <p role="alert" className="ops-err">{read.error.includes("YARD_PLAN_NOT_AVAILABLE")
       ? "План ворот на сервере ещё не включён: планы неизвестны (это не «ворота свободны»)." : `План ворот не прочитан: ${read.error || parsed.error}`}</p>}
     {pending.damaged && <p role="alert" className="ops-err">{pending.damaged}</p>}
     {intent && <div role="status" className="ops-err">Команда плана «{intent.action === "PLAN" ? "запланировать" : intent.action === "MOVE" ? "перенести" : "отменить"}» не подтверждена.{" "}
       <HelpButton help={shiftHelp.yardPlanRetry} disabled={busy} onClick={() => run(() => intent)}>Повторить команду плана</HelpButton></div>}
     {message && <p role="status" className="ops-note">{message}</p>}
-    {snap && snap.plans.length === 0 && <p className="ops-note">Планов ворот на ближайшие дни нет (планы недоступных владельцев не показываются).</p>}
+    {snap && snap.plans.length === 0 && <p className="ops-note">Планы ворот на ближайшие дни не назначены.</p>}
     {snap && snap.plans.length > 0 && <ul className="ops-list">{snap.plans.map(p => {
       const dev = planDeviation(p, snap.observed_at, visits), own = edit?.plan?.plan_id === p.plan_id;
       return <li key={p.plan_id}><span>

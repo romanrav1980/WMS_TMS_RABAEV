@@ -152,11 +152,12 @@ def test_routes_map_errors_and_require_timezone():
 
 def test_timeline_plan_is_a_plan_on_the_dock_lane_never_a_fact():
     p = TimelineProjection(9)
-    p.yard_plan({"plan_id": 3, "dock": "15", "visit_id": 5, "visit_kind": "OUTBOUND", "trip_id": "T1", "planned_from": "2026-10-24T05:00:00Z", "planned_to": "2026-10-24T06:30:00Z"})
+    p.yard_plan({"plan_id": 3, "dock": "15", "visit_id": 5, "visit_kind": "OUTBOUND", "trip_id": "T1", "vehicle": "QA-TRUCK", "planned_from": "2026-10-24T05:00:00Z", "planned_to": "2026-10-24T06:30:00Z"})
     (e,) = p.events
     assert e["event_id"] == "YARD_DOCK_PLAN:3" and e["kind"] == "YARD_DOCK_PLAN" and e["time_status"] == "AWARE_PLAN"
     assert (e["plan_start_at"], e["plan_finish_at"], e["fact_start_at"], e["fact_finish_at"]) == ("2026-10-24T05:00:00Z", "2026-10-24T06:30:00Z", None, None)
-    assert "DOCK:9:15" in p.resources and ("DOCK:9:15", "YARD_DOCK_PLAN:3") in p.bindings or "DOCK:9:15" in p.resources
+    assert ("YARD_DOCK_PLAN:3", "DOCK:9:15") in p.bindings
+    assert ("YARD_DOCK_PLAN:3", "VEHICLE:QA-TRUCK") in p.bindings
     source = (ROOT / "api/wms_api_server/app/modules/resources/infrastructure/resource_timeline.py").read_text(encoding="utf-8")
     assert "plan_window(cur, warehouse, actor, start, finish)" in source and source.index("projection.yard(row)") < source.index("projection.yard_plan(row)")
 

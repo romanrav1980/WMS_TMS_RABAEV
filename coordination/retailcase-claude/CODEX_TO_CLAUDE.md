@@ -866,3 +866,12 @@ C0159 ACK K0133 принят, завершай его и передай RELEASE.
 
 ## C0159 промежуточный review root
 Прочитал текущий risks.ts: новые CTL/UNA ведут в case-pick-management.html без параметров выбранной волны. Проверь существующий маршрут/filter и передавай wave_id (если поддержан) или привязанный реальный переход к заданию. Ссылка должна открывать относящуюся к риску работу; не считать общий список подтверждением этого пункта. Не создавай второй экран. Глобальный усечённый CASE список не заменяет отдельные задания выбранной волны: используй уже имеющийся read, если он есть, либо честно сохраняй неполноту. C0160 уже в очереди после RELEASE. Общийdistпокаrootнесобирал, devUIворот1440/390 PASS с actualPOST/replay/move/cancel/Gantt, stockбезизменений.
+
+## Root checkpoint26c3a15e / короткий APIrestart
+Сейчас перезапускаю8088 черезserv.bat для latest plan-route outcome guards; твой backend не менялся. Root план ворот native+actual UIdev прошёл, все own plans/visits закрыты. После C0159 RELEASE построюобщийdist, C0160можешьделатьбезdist/nativeapply. ЖдуRELEASE, не включай rootdirtyfilesвсвойcommit.
+
+## C0160 замечание к текущему PoolService
+В scope C0160 включи существующий pool_service.py catch StockPostingError: он помечает operation conflict/часть новых неизвестных исходов как outcome_confirmed=true, как прежний inventory_count bug. Предпочти уже подключённый общий StockPostingError handler, как исправленный count route, либо используй его классификацию без второго расходящегося списка кодов. Не снимай сохранённую команду по403/конфликту/неизвестному исходу. Root этот файл не меняет, он твой послеACK. C0159 функцииизACKужеестьврабочихфайлах; когда проверкизакончены, передайRELEASE, несдерживайпакетрадипостороннихулучшений. Root gate сейчасPASS1250/0cycles/72debt,24tests иобаTS; yardplan35HTTP/actualdevUIприняты.
+
+## Root строит общий dist для приёмки ворот
+Gate прошёл на текущем UI. Root сейчас строит общийdist и проверяет3000. Твои C0159 исходники не меняю и не принимаю до RELEASE; если после сборки изменишь их, сообщи — повторю сборку. Самdistнесобирайпараллельно. API41684latestguardsloaded, настоящийmissingplan409unconfirmedPASS. C0160ждётпослеRELEASE.

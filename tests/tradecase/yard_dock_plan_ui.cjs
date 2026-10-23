@@ -5,8 +5,8 @@ const source=JSON.parse(fs.readFileSync(path.join(OUT,'dock-plan-live.json'),'ut
 const pass=fs.readFileSync(path.join(ROOT,'AGENTS.md'),'utf8').match(/PASS=(\S+?)[`,)\s]/)[1];
 const headers={Authorization:'Basic '+Buffer.from('admin:'+pass).toString('base64')};
 const base='http://127.0.0.1:8088/api/tradecase/warehouses/220793322/yard';
-const target=process.env.UI_BASE||'http://127.0.0.1:3021';
-const report={status:'FAIL',basis:'Actual UI/native plan, injected lost response after commit and403 before retry; exact replay, move, Gantt read and cancel actual',screens:[],errors:[]};
+const target=process.env.UI_BASE||'http://127.0.0.1:3021',run=process.env.DOCK_PLAN_RUN||'live';
+const report={status:'FAIL',target,run,basis:'Actual UI/native plan, injected lost response after commit and403 before retry; exact replay, move, Gantt read and cancel actual',screens:[],errors:[]};
 const panel=p=>p.getByLabel('План ворот',{exact:true});
 async function enter(p){
  const password=p.locator('input[type=password]'),open=p.locator('[aria-label="Процессы старшего смены"]').getByRole('button',{name:/Двор и ворота/});
@@ -55,17 +55,17 @@ async function enter(p){
     await row.getByRole('button',{name:'Перенести план',exact:true}).click();assert.equal((await moved).status(),200);
     await panel(p).getByText('План перенесён.',{exact:true}).waitFor();
     const timeline=await context.request.get('http://127.0.0.1:8088/api/resources/timeline?'+new URLSearchParams({warehouse_id:'220793322',start_at:start.toISOString(),finish_at:finish.toISOString()}),{headers});
-    assert.equal(timeline.status(),200);const tl=await timeline.json();fs.writeFileSync(path.join(OUT,'dock-plan-timeline-'+width+'.json'),JSON.stringify(tl,null,2));
+    assert.equal(timeline.status(),200);const tl=await timeline.json();fs.writeFileSync(path.join(OUT,'dock-plan-'+run+'-timeline-'+width+'.json'),JSON.stringify(tl,null,2));
     assert(JSON.stringify(tl).includes('YARD_DOCK_PLAN:'+planId),'Actual Gantt must contain plan');
     const help=await panel(p).locator('button').evaluateAll(bs=>bs.filter(b=>!b.title||!b.dataset.helpId).map(b=>b.textContent));assert.deepEqual(help,[]);
     const size=await p.evaluate(()=>({width:innerWidth,document:document.documentElement.scrollWidth}));assert(size.document<=size.width+1,JSON.stringify(size));
-    const screenshot=path.join(OUT,'dock-plan-live-'+width+'.png');await panel(p).screenshot({path:screenshot});
+    const screenshot=path.join(OUT,'dock-plan-'+run+'-'+width+'.png');await panel(p).screenshot({path:screenshot});
     await row.getByRole('button',{name:'Отменить план',exact:true}).click();await row.getByLabel('Причина отмены плана',{exact:true}).fill('End actual browser plan proof');
     const cancel=p.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/'+planId+'/cancel'));
     await row.getByRole('button',{name:'Отменить план',exact:true}).filter({has:p.locator('xpath=ancestor::form')}).count();
     await row.locator('form').getByRole('button',{name:'Отменить план',exact:true}).click();assert.equal((await cancel).status(),200);
     await panel(p).getByText('План отменён.',{exact:true}).waitFor();report.screens.push({width,plan_id:planId,visit_id:visit.visit_id,ready_ms:ready,size,screenshot,post_count:posts.length,exact_bytes_replay:true,gantt_actual:true});
-   }catch(e){report.failure={error:String(e),text:await panel(p).innerText(),html:await panel(p).innerHTML()};await p.screenshot({path:path.join(OUT,"dock-plan-live-failed.png"),fullPage:true});throw e;}finally{
+   }catch(e){report.failure={error:String(e),text:await panel(p).innerText(),html:await panel(p).innerHTML()};await p.screenshot({path:path.join(OUT,'dock-plan-'+run+'-failed.png'),fullPage:true});throw e;}finally{
     if(planId){const plans=await context.request.get(base+'/dock-plans?'+new URLSearchParams({from:start.toISOString(),to:finish.toISOString()}),{headers});if(plans.ok()){const active=(await plans.json()).plans.find(x=>x.plan_id===planId);if(active){const r=await context.request.post(base+'/dock-plans/'+planId+'/cancel',{headers,data:{operation_id:tag+'.cleanup.plan',expected_version:active.version,reason:'End actual UI proof'}});assert.equal(r.status(),200,await r.text());}}}
     const visits=await context.request.get(base+'/visits',{headers});assert.equal(visits.status(),200);const v=(await visits.json()).visits.find(x=>x.visit_id===visit.visit_id);
     if(v&&!['CANCELLED','DEPARTED'].includes(v.state)){const r=await context.request.post(base+'/visits/'+v.visit_id+'/transitions',{headers,data:{operation_id:tag+'.cleanup.visit',expected_version:v.version,action:'CANCEL',reason:'End actual UI proof'}});assert.equal(r.status(),200,await r.text());}
@@ -73,6 +73,6 @@ async function enter(p){
    }
   }
   assert.deepEqual(report.errors,[]);report.status='PASS';
- }finally{await browser.close();fs.writeFileSync(path.join(OUT,'dock-plan-live-ui.json'),JSON.stringify(report,null,2));}
+ }finally{await browser.close();fs.writeFileSync(path.join(OUT,'dock-plan-'+run+'-ui.json'),JSON.stringify(report,null,2));}
  console.log(JSON.stringify({status:report.status,screens:report.screens.length}));
 })().catch(e=>{console.error(e);process.exit(1)});
