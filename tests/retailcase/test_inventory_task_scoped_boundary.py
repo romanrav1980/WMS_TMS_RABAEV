@@ -37,6 +37,8 @@ class Cursor:
         elif 'RRL_SKU_RECEIPT_PROFILE'in sql:
             self.description=[(v,)for v in ['ARTICUL','SYSTEM_CODE','PROFILE_CODE']]
             self.rows=[('A','CRPT','X')]
+        elif 'RRL_INVENTORY_LOSS_UNIT'in sql:
+            self.rows=[]
         elif 'it.INVENTORY_TASK_ID=:task_id'in sql:
             self.description=[('INVENTORY_TASK_ID',),('ASSIGNED_TO',)];self.rows=[(8,'auditor')]
     def fetchall(self):return self.rows
@@ -56,7 +58,8 @@ def test_lots_authority_and_profiles_share_one_read_snapshot():
     assert gateway.transactions==1
     assert gateway.cursor.calls[0][0]=='set transaction read only'
     assert gateway.cursor.calls[1]==('RRL_INVENTORY_TASK_ACCESS.assert_read',['auditor',4,None,8,'C','A'])
-    assert result['lots']==[dict(uid='L',article='A',cell='C',unit='EA',marking_profiles=[dict(system_code='CRPT',profile_code='X')])]
+    assert result['lots']==[dict(uid='L',article='A',cell='C',unit='EA',marking_profiles=[dict(system_code='CRPT',profile_code='X')],lost_codes=[])]
+    assert 'RRL_INVENTORY_FOUND_UNIT' in gateway.cursor.calls[-1][0]  # C-0166 open losses in the same read-only snapshot
     assert 'fetch first 201 rows only'in gateway.cursor.calls[2][0]
 
 

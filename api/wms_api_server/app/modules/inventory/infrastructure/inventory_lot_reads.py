@@ -1,5 +1,6 @@
 """One read-only snapshot for current authority, lot rows and marking profiles."""
 from typing import Any
+import oracledb
 from ....db import rows_as_dicts
 from ..contracts_observations import InventoryObservationError
 from .inventory_scope import assert_inventory_cursor_scope
@@ -42,4 +43,29 @@ def inventory_lots(gateway: Any, revision: int, cell: str, article: str | None, 
             for row in rows:
                 row["marking_profiles"] = [{"system_code": p["system_code"], "profile_code": p["profile_code"]}
                     for p in profiles if p["articul"] == row["article"]]
+        lost = open_losses(cursor, cell, [row["uid"] for row in rows]) if rows else {}
+        for row in rows:
+            row["lost_codes"] = lost.get(row["uid"], [])
         return {"revision_id": revision, "cell": cell, "lots": rows}
+
+
+def open_losses(cursor: Any, cell: str, lots: list[str]) -> dict[str, list[str]]:
+    """C-0166: codes of units an earlier inventory count wrote off and nobody found yet, so the counter knows what to look for
+    (at most 50 per lot). Before the native kit is applied the journal does not exist and nothing is shown."""
+    params = {"lot" + str(i): value for i, value in enumerate(lots)}
+    try:
+        cursor.execute("select l.UID_PALLET,nvl(c.CANONICAL_CODE,c.CODE_HASH) from RRL_INVENTORY_LOSS_UNIT l"
+                       " join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=l.PHYSICAL_UNIT_KEY and u.STOCK_STATUS='ISSUED'"
+                       " join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID"
+                       " where l.CELL=:cell and l.UID_PALLET in (" + ",".join(":" + key for key in params) + ")"
+                       " and not exists(select 1 from RRL_INVENTORY_FOUND_UNIT f where f.PHYSICAL_UNIT_KEY=l.PHYSICAL_UNIT_KEY"
+                       " and f.LOSS_OPERATION_ID=l.LOSS_OPERATION_ID) order by l.UID_PALLET,2", {"cell": cell, **params})
+    except oracledb.DatabaseError as exc:
+        if getattr(exc.args[0], "code", None) == 942:
+            return {}
+        raise
+    result: dict[str, list[str]] = {}
+    for lot, code in cursor.fetchall():
+        if len(result.setdefault(lot, [])) < 50:
+            result[lot].append(code)
+    return result

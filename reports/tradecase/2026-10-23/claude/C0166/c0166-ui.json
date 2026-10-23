@@ -1,0 +1,63 @@
+{
+ "kind": "FIXTURE_BROWSER",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "FIXTURE lost codes per lot (also a zero-quantity lot) with the closing action in the hint"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE found code is posted as an ordinary scan; 503 keeps the command for retry"
+  },
+  {
+   "width": 1440,
+   "name": "retry sends the same operation id and bytes; 403 after an unknown outcome keeps the saved command"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE confirmed outcome names the found units in plain words"
+  },
+  {
+   "width": 1440,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "local help explains lost/found and what cannot be restored"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE lost codes per lot (also a zero-quantity lot) with the closing action in the hint"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE found code is posted as an ordinary scan; 503 keeps the command for retry"
+  },
+  {
+   "width": 390,
+   "name": "retry sends the same operation id and bytes; 403 after an unknown outcome keeps the saved command"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE confirmed outcome names the found units in plain words"
+  },
+  {
+   "width": 390,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "local help explains lost/found and what cannot be restored"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  }
+ ],
+ "errors": [],
+ "status": "PASS"
+}

@@ -1,0 +1,21 @@
+{
+ "003_unit_core_body.sql": {
+  "codes": [
+   "ORA-00942",
+   "ORA-06550",
+   "PLS-00364",
+   "PLS-00904"
+  ],
+  "syntax_error": false,
+  "message": "ORA-06550: line 57, column 3:\nPLS-00904: insufficient privilege to access object RRL_STOCK_CTX_API\nORA-06550: line 57, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 60, column 3:\nPLS-00904: insufficient privilege to access object RRL_STOCK_CTX_API\nORA-06550: line 60, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 82, column 3:\nPLS-00904: insufficient privilege to access object RRL_STOCK_CTX_API\nORA-06550: line 82, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 86, column 3:\nPLS-00904: insufficient privilege to access object RRL_STOCK_CTX_API\nORA-06550: line 86, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 102, column 80:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 101, column 12:\nPL/SQL: SQL Statement ignored\nORA-06550: line 105, column 7:\nPLS-00364: loop index variable 'K' use is invalid\nORA-06550: line 105, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 106, column 7:\nPLS-00364: loop index variable 'K' use is invalid\nORA-06550: line 106, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 107, column 7:\nPLS-00364: loop index variable 'K' use is invalid\nORA-06550: line 107, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 108, column 7:\nPLS-00364: loop index variable 'K' use is invalid\nORA-06550: line 108, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 109, column 13:\nPLS-00364: loop index variable 'K' use is invalid\nORA-06550: line 109, column 4:\nPL/SQL: Statement ignored\nHelp: https://docs.oracle.com/error-help/db/ora-06550/"
+ },
+ "004_inventory_cmd_body.sql": {
+  "codes": [
+   "ORA-00942",
+   "ORA-06550",
+   "PLS-00904"
+  ],
+  "syntax_error": false,
+  "message": "ORA-06550: line 66, column 4:\nPLS-00904: insufficient privilege to access object RRL_STOCK_PALLET_UOM\nORA-06550: line 66, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 101, column 67:\nPLS-00904: insufficient privilege to access object RRL_STOCK_SHORT_RECOVERY\nORA-06550: line 101, column 67:\nPL/SQL: Statement ignored\nORA-06550: line 162, column 4:\nPLS-00904: insufficient privilege to access object RRL_STOCK_LOCATION_CORE\nORA-06550: line 162, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 180, column 4:\nPLS-00904: insufficient privilege to access object RRL_STOCK_PALLET_UOM\nORA-06550: line 180, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 241, column 6:\nPLS-00904: insufficient privilege to access object RRL_STOCK_UNIT_CORE\nORA-06550: line 241, column 6:\nPL/SQL: Statement ignored\nORA-06550: line 245, column 14:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 243, column 7:\nPL/SQL: SQL Statement ignored\nORA-06550: line 251, column 5:\nPLS-00904: insufficient privilege to access object RRL_STOCK_BALANCE_CORE\nORA-06550: line 251, column 5:\nPL/SQL: Statement ignored\nORA-06550: line 253, column 5:\nPLS-00904: insufficient privilege to access object RRL_STOCK_BALANCE_CORE\nORA-06550: line 253, column 5:\nPL/SQL: Statement ignored\nORA-06550: line 262, column 5:\nPLS-00904: insufficient privilege to access object RRL_STOCK_UNIT_CORE\nORA-06550: line 262, column 5:\nPL/SQL: Statement ignored\nORA-06550: line 265, column 38:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 265, column 6:\nPL/SQL: SQL Statement ignored\nHelp: https://docs.oracle.com/error-help/db/ora-06550/"
+ }
+}

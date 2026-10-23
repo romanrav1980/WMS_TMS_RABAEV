@@ -8,8 +8,12 @@ from ..contracts_observations import CountObservation
 from ..domain.mark_identity import canonical_mark
 
 
-def resolve_count_codes(gateway: Any, lines: Sequence[CountObservation]) -> list[list[str]]:
+def resolve_count_codes(gateway: Any, lines: Sequence[CountObservation], found: list[list[str]] | None = None) -> list[list[str]]:
+    """Missing unit keys per line. With ``found`` (C-0166), a scanned code of a unit this lot lost in an earlier inventory count
+    (open inventory loss, same lot and cell) is returned there instead of being refused; every other issued unit stays refused."""
     keys = [list(line.unit_keys) for line in lines]
+    if found is not None:
+        found.extend([] for _ in lines)
     scans = []
     for index, line in enumerate(lines):
         if line.scans and line.unit_keys:
@@ -74,20 +78,54 @@ def resolve_count_codes(gateway: Any, lines: Sequence[CountObservation]) -> list
         for item in present_lines:
             index = item["line"]
             registered = by_line.get(index, {})
-            if not registered:
+            if not registered and not (found is not None and keys[index]):  # a fully lost lot may still get its found units back
                 if keys[index]:
                     raise ValueError("Scanned units have no current physical composition")
                 continue
             present = set(keys[index])
-            if any(key not in registered for key in present):
+            restored = {}
+            if found is not None and any(key not in registered for key in present):
+                restored = open_inventory_losses(gateway, item["uid"], item["cell"], sorted(present - set(registered)))
+            if any(key not in registered and key not in restored for key in present):
                 raise ValueError("Scanned unit is no longer present in the counted pallet")
-            if any(unit != lines[index].unit for quantity, unit in registered.values()):
+            if restored and set(registered) - present:
+                raise ValueError("Found and missing units of one pallet are posted by separate counts")
+            if any(unit != lines[index].unit for quantity, unit in [*registered.values(), *restored.values()]):
                 raise ValueError("Marked inventory count must use the displayed base unit")
-            measured = sum((registered[key][0] for key in present), Decimal(0))
+            measured = sum(((registered.get(key) or restored[key])[0] for key in present), Decimal(0))
             if measured != Decimal(lines[index].quantity):
                 raise ValueError("Scanned present units do not match measured quantity")
             keys[index] = sorted(set(registered) - present)
-    all_keys = [key for selected in keys for key in selected]
+            if restored:
+                found[index] = sorted(restored)
+    all_keys = [key for selected in keys + (found or []) for key in selected]
     if len(all_keys) != len(set(all_keys)):
         raise ValueError("Multiple scans identify the same physical unit")
     return [sorted(selected) for selected in keys]
+
+
+OPEN_LOSSES = """
+    select u.PHYSICAL_UNIT_KEY,to_char(u.BASE_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,'''),u.BASE_UOM
+      from json_table(:keys,'$[*]' columns(K varchar2(64) path '$')) j
+      join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=j.K
+     where u.CURRENT_UID=:p_uid and u.CURRENT_CELL=:p_cell and u.STOCK_STATUS='ISSUED'
+       and exists(select 1 from RRL_INVENTORY_LOSS_UNIT l where l.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
+         and l.UID_PALLET=:p_uid and l.CELL=:p_cell and not exists(select 1 from RRL_INVENTORY_FOUND_UNIT f
+           where f.PHYSICAL_UNIT_KEY=l.PHYSICAL_UNIT_KEY and f.LOSS_OPERATION_ID=l.LOSS_OPERATION_ID))
+"""
+
+
+def open_inventory_losses(gateway: Any, uid: str, cell: str, unit_keys: list[str]) -> dict[str, tuple[Decimal, str]]:
+    """Issued units of this lot/cell with an open inventory loss (lost, not yet found). The native writer re-checks all of it under
+    locks, including the current owner right; this read only routes a scanned code to the restoration instead of a refusal."""
+    with gateway.transaction("Resolve found inventory units READ ONLY") as cursor:
+        cursor.execute("set transaction read only")
+        payload = cursor.var(oracledb.DB_TYPE_CLOB)
+        payload.setvalue(0, json.dumps(unit_keys))
+        try:
+            cursor.execute(OPEN_LOSSES, {"keys": payload, "p_uid": uid, "p_cell": cell})
+        except oracledb.DatabaseError as exc:
+            if getattr(exc.args[0], "code", None) == 942:
+                raise ValueError("Restoration of found inventory units is not installed") from exc
+            raise
+        return {key: (Decimal(str(quantity)), unit) for key, quantity, unit in cursor.fetchall()}

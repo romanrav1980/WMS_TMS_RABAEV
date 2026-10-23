@@ -60,7 +60,14 @@
         const codes = document.createElement("textarea"); codes.dataset.units = String(index);
         codes.disabled = profiles.options.length === 0;
         codes.title = "Коды всех фактически найденных единиц, по одному в строке";
-        const unitsCell = document.createElement("td"); unitsCell.append(profiles, codes); tr.append(unitsCell);
+        const unitsCell = document.createElement("td"); unitsCell.append(profiles, codes);
+        if ((lot.lost_codes || []).length) {
+          const lost = document.createElement("p"); lost.className = "count-lost"; lost.dataset.lost = String(index);
+          lost.title = "Эти единицы списаны прежним пересчётом как не найденные. Если код нашёлся на этой паллете, отсканируйте его вместе с остальными найденными и увеличьте количество: единица вернётся в остаток с прежним собственником и сроком.";
+          lost.textContent = "Не найдены ранее (" + lot.lost_codes.length + "): " + lot.lost_codes.join(", ");
+          unitsCell.append(lost);
+        }
+        tr.append(unitsCell);
         return tr;
       });
       el("countRows").replaceChildren(...rows); message(rows.length ? "Партии загружены. Введите фактическое количество." : "В ячейке нет зарегистрированных партий.");
@@ -107,7 +114,9 @@
       localStorage.removeItem(key + ":delivery");
       localStorage.removeItem(key); pending();
       lots = []; loadedRevision = loadedCell = null; el("countRows").replaceChildren(); el("countCell").focus();
-      message("Пересчёт подтверждён сервером. Операция: " + result.operation_id);
+      const outcome = (result.counts || []).map(fact => fact.lost_units ? fact.uid + ": не найдено " + fact.lost_units + " ед., коды записаны как недостача"
+        : fact.found_units ? fact.uid + ": найдено " + fact.found_units + " ед., возвращены в остаток" : null).filter(Boolean);
+      message("Пересчёт подтверждён сервером. Операция: " + result.operation_id + (outcome.length ? "\n" + outcome.join("\n") : ""));
     } catch (error) {
       if (attempted && !priorUnknown && error.detail?.outcome_confirmed === true) {
         localStorage.removeItem(key + ":delivery");

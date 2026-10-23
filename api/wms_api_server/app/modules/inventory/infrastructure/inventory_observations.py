@@ -32,8 +32,11 @@ class InventoryObservations:
                 raise InventoryObservationError("OPERATION_CONTENT_CONFLICT",operation_id=request.operation_id)
             metadata = old
         else:
-            for index, keys in enumerate(resolve_count_codes(gateway, request.counts)):
+            found: list[list[str]] = []
+            for index, keys in enumerate(resolve_count_codes(gateway, request.counts, found)):
                 counts[index]["unit_keys"] = keys
+                if found[index]:
+                    counts[index]["found_unit_keys"] = found[index]
             metadata = {"reason": request.reason, "counts": counts, "requested_counts": requested}
             if request.inventory_task_id is not None: metadata["inventory_task_id"] = request.inventory_task_id
         return self.posting.post(StockCommand(

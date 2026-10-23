@@ -1,0 +1,25 @@
+"""C-0166 syntax check without DDL: each changed package body is compiled as an anonymous block (never executed). Expected only semantic
+errors (new tables not yet created, accessible-by callees), no PLS-00103 syntax error."""
+import json, pathlib, re, sys
+sys.path.insert(0, 'C:/projects/TMS/scripts'); sys.path.insert(0, 'C:/projects/TMS/api/wms_api_server')
+from stock_posting_environment import load_local_oracle_environment; load_local_oracle_environment()
+import oracledb
+from app.oracle_gateway import OracleGateway
+
+D = pathlib.Path("C:/projects/TMS/db/migrations/2026-10-23_inventory_found_units")
+res = {}
+with OracleGateway().transaction("C-0166 parse check READ ONLY") as cur:
+    cur.execute("set transaction read only")
+    for name in ("003_unit_core_body.sql", "004_inventory_cmd_body.sql"):
+        s = (D / name).read_text(encoding="utf-8").replace("\r\n", "\n")
+        head = re.match(r"create or replace package body \w+ as", s)
+        body = s[head.end():s.rindex("end;")]
+        try:
+            cur.execute("declare\n" + body + "begin null;\nend;"); msg = "COMPILED"
+        except oracledb.DatabaseError as exc:
+            msg = str(exc)
+        codes = sorted(set(re.findall(r"(PLS-\d+|ORA-\d+)", msg)))
+        res[name] = {"codes": codes, "syntax_error": "PLS-00103" in codes, "message": msg[:2500]}
+    cur.execute("rollback")
+pathlib.Path(__file__).resolve().parents[1].joinpath("parse-check.json").write_text(json.dumps(res, indent=1, ensure_ascii=False), encoding="utf-8")
+print(json.dumps({k: {"codes": v["codes"], "syntax_error": v["syntax_error"]} for k, v in res.items()}, indent=1))
