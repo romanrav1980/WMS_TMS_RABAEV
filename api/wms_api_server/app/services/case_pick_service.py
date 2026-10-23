@@ -187,10 +187,13 @@ class CasePickService:
         except ValueError as exc:
             raise HTTPException(422, detail={"code": "CASE_COMMAND_INVALID", "message": str(exc)}) from exc
         except StockPostingError as exc:
-            uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
-            raise HTTPException(503 if uncertain else 409, detail={"code": exc.code,
+            uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE", "POSTED_CONNECTION_RESET_FAILED"} or exc.oracle_code in (20891, 20892, 20893)
+            conflict = exc.code == "OPERATION_CONTENT_CONFLICT" or exc.oracle_code in (20872, 20873) or exc.rule_reason == "OPERATION_CONFLICT"
+            status = 503 if uncertain else 403 if exc.oracle_code == 20882 else 409
+            raise HTTPException(status, detail={"code": exc.code,
                 "operation_id": exc.operation_id, "oracle_code": exc.oracle_code, "rule_reason": exc.rule_reason,
-                "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
+                "outcome_confirmed": not (uncertain or conflict or status == 403), "retry_same_operation_id": uncertain,
+                "operation_id_conflict": conflict, "read_before_retry": uncertain or conflict or status == 403}) from exc
         return posted
 
     def short_line(self, case_pick_task_id: int, line_id: int, request: CasePickLineShortRequest) -> dict[str, Any]:
