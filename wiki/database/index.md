@@ -156,4 +156,4 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 
 
 - [Входящие визиты23.10](yard_inbound_20261023.md): применён с пустым откатом/повтором;36HTTP, настоящий UI/replay, общие ворота/машина и owner-права проверены; без товарного эффекта.
-
+[Trade shortage guard C-0170](trade_short_guard_20261023.md): NOT_APPLIED v2 kit, CASE_SHORT_APPROVE bound to own operation plan; v1 DO NOT APPLY.

@@ -226,7 +226,7 @@ function renderDetail() {
     <div class="case-actions">
       <button id="caseTransfer" type="button" title="Передать задание и паллету другому комплектовщику: форма с ресурсом, сессией и сканом паллеты" data-help-id="case.handoff.open">Передать</button>
       <button id="caseOpenTsd" type="button">Открыть ТСД</button>
-      <button id="caseApproveShort" type="button">Восстановить отбор</button><button id="caseAcceptShort" type="button">Принять недобор</button><button id="caseAcceptWeight" type="button">Завершить по допуску массы</button>
+      <button id="caseApproveShort" type="button" title="Проверить ячейку заданием инвентаризации, пополнить подходящим запасом и вернуть строку в отбор. Потерю отражает только подтверждённый пересчёт" data-help-id="case.short.restore">Восстановить отбор</button><button id="caseAcceptShort" type="button" title="Завершить строку с недобором; ячейка всё равно проверяется инвентаризацией" data-help-id="case.short.accept">Принять недобор</button><button id="caseAcceptWeight" type="button" title="Завершить весовой заказ в пределах допуска массы" data-help-id="case.short.weight">Завершить по допуску массы</button>
       <button id="caseRejectShort" class="danger" type="button">Отклонить</button>
     </div>
   `;
@@ -363,6 +363,19 @@ function caseRefreshShortRetry() {
 }
 caseRefreshShortRetry();
 
+// C-0170: plain words for refusals of a shortage decision on TRADECASE stock (owner, binding, compatibility); the code stays visible.
+const SHORT_TRADE_TEXT = [
+  ["TRADE_OWNER_ACCESS_DENIED", "Нет права на собственника товара этого задания. Решение не проведено; после выдачи права повторите то же решение."],
+  ["TRADE_SHORT_BINDING_REQUIRED", "Товар не относится к строке этой недостачи (резерв или переносчик другой строки). Обновите задание и проверьте строку."],
+  ["TRADE_ORDER_BINDING_REQUIRED", "Склад TRADECASE ещё не принимает это решение для товара заказа: нужна установка обновления стража. Решение сохранено для повтора."],
+  ["SHORT_NO_ELIGIBLE_TARGET_STOCK", "В ячейке отбора нет подходящего пополненного товара. Выполните пополнение; если подходящего запаса нет, заказ остаётся проблемным — нужен выкуп или решение по заказу."],
+  ["TRADE_", "Пополненный товар не подходит строке заказа по правилам TRADECASE (собственник, МРЦ, срок, выкуп или целый короб). Нужен другой подходящий запас или отдельное основание выкупа."],
+];
+function shortDecisionText(message) {
+  const hit = SHORT_TRADE_TEXT.find(([code]) => message.includes(code));
+  return hit ? hit[1] + " (" + message + ")" : message;
+}
+
 async function approveSelectedShort(task, decision) {
   const short = caseState.shorts.find((item) => item.case_pick_task_id === task.case_pick_task_id && item.status === "PENDING_APPROVAL");
   if (!short) {
@@ -394,10 +407,14 @@ async function approveSelectedShort(task, decision) {
   }
 
   localStorage.setItem(key, JSON.stringify(body));
-  await caseFetch(`/api/case-pick/shorts/${short.case_pick_short_id}/approve`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  try {
+    await caseFetch(`/api/case-pick/shorts/${short.case_pick_short_id}/approve`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    throw new Error(shortDecisionText(String(error.message || error)));  // the saved decision stays for an exact retry
+  }
   localStorage.removeItem(key);
   await loadCaseData();
 }

@@ -1,0 +1,5 @@
+{
+ "kit": "2026-10-23_trade_short_guard_v2",
+ "history": "PASSED (no history)",
+ "after_drift": "ORA-20999: AFTER_SOURCE_DRIFT_REFUSED:RRL_TRADE_STOCK_GUARD:PACKAGE BODY"
+}

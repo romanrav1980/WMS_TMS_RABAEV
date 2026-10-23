@@ -1,0 +1,32 @@
+{
+ "probes": [
+  {
+   "actor": "admin",
+   "call": "RRL_TRADE_CASE_ACCESS.assert_scope",
+   "outcome": "ALLOWED"
+  },
+  {
+   "actor": "admin",
+   "call": "RRL_CASE_TASK_ACCESS.assert_scope",
+   "outcome": "ALLOWED"
+  },
+  {
+   "actor": "STM3",
+   "call": "RRL_TRADE_CASE_ACCESS.assert_scope",
+   "outcome": "ORA-20882: TRADE_OWNER_ACCESS_DENIED"
+  },
+  {
+   "actor": "STM3",
+   "call": "RRL_CASE_TASK_ACCESS.assert_scope",
+   "outcome": "ORA-20882: TRADE_OWNER_ACCESS_DENIED"
+  }
+ ],
+ "task": {
+  "case_task_id": 1161,
+  "lines_total_tagged_owner": [
+   1,
+   1,
+   "SNS"
+  ]
+ }
+}
