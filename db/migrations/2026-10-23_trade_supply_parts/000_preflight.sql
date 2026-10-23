@@ -1,0 +1,19 @@
+declare s clob;n number;
+ procedure same(p_name varchar2,p_type varchar2,p_hash varchar2,p_code varchar2)is begin
+  dbms_lob.createtemporary(s,true);
+  for r in(select TEXT from USER_SOURCE where NAME=p_name and TYPE=p_type order by LINE)loop dbms_lob.append(s,replace(r.TEXT,chr(13),''));end loop;
+  if dbms_lob.getlength(s)=0 or rawtohex(sys.dbms_crypto.hash(rtrim(s,chr(10)),sys.dbms_crypto.hash_sh256))<>p_hash then raise_application_error(-20999,p_code||':'||p_name||':'||p_type);end if;
+  dbms_lob.freetemporary(s);
+ end;
+begin
+ if user<>'RABAEV' or sys_context('USERENV','SERVICE_NAME')<>'orcl' then raise_application_error(-20999,'WRONG_TARGET');end if;
+ same('RRL_TRADE_DOCUMENT_API','PACKAGE','99158EB4546B739E4E9EB3A0FAAEDCF4C6AC3F5F0A4329D15C91BDA846D1BDE0','DEPENDENCY_DRIFT');
+ same('RRL_TRADE_DOCUMENT_API','PACKAGE BODY','62B16517A661F51026B867BE6D0460A915B3AAD060D9A2740FE8339C499840BE','DEPENDENCY_DRIFT');
+ same('RRL_TRADE_STOCK_GUARD','PACKAGE','555A92C50609C9198308AE1E4129AECCB34E891ADC14170F016B739596B447AA','DEPENDENCY_DRIFT');
+ same('RRL_TRADE_STOCK_GUARD','PACKAGE BODY','7D6E1781DB7F46AC66105865B83D583C2FF35A9A905C1D8B91C97421CF0A68EE','DEPENDENCY_DRIFT');
+ same('RRL_ACCESS_API','PACKAGE','99900B1DBCF6FE74889F8E07A773224F0A25BD2B4EE5F61E57637E10BC50EFDF','DEPENDENCY_DRIFT');
+ same('RRL_ACCESS_API','PACKAGE BODY','425772EC82A57ECA90E987322CB5151B713F8B5EB4233C64A39EDCD02A038F1C','DEPENDENCY_DRIFT');
+ select count(*)into n from USER_OBJECTS where OBJECT_NAME in('RRL_TRADE_SUPPLY_TRANSFER','RRL_TRADE_SUPPLY_PART','RRL_TRADE_SUPPLY_PART_APPEND','RRL_TRADE_SUPPLY_PARTS_API');if n<>0 then raise_application_error(-20999,'SUPPLY_PARTS_OBJECT_EXISTS');end if;
+ select count(*)into n from USER_OBJECTS where STATUS='INVALID';if n<>0 then raise_application_error(-20999,'INVALID_BEFORE');end if;
+end;
+/

@@ -1,0 +1,75 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE messages tab opens with the parts panel"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE transfers: missing part, total mismatch, delivered — in plain words"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE hand-over retry posts the same transfer once"
+  },
+  {
+   "width": 1440,
+   "name": "delivered transfer opens the SUPPLY document in place"
+  },
+  {
+   "width": 1440,
+   "name": "every panel button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "static help link answers 200 with the parts section"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 clears the list (no stale rows)"
+  },
+  {
+   "width": 390,
+   "name": "LIVE messages tab opens with the parts panel"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE transfers: missing part, total mismatch, delivered — in plain words"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE hand-over retry posts the same transfer once"
+  },
+  {
+   "width": 390,
+   "name": "delivered transfer opens the SUPPLY document in place"
+  },
+  {
+   "width": 390,
+   "name": "every panel button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "static help link answers 200 with the parts section"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 clears the list (no stale rows)"
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "posts": [
+  "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/supply-transfers/TC03.SAP/T3/deliver"
+ ],
+ "status": "PASS"
+}

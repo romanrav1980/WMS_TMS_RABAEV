@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SupplyParts } from "./SupplyParts";
 import { TABS, cardPath, listPath, sitePath, tcHelp } from "./api";
 import type { Buyout, DocCard, DocRow, Kind, MsgCard, MsgRow, Page, Site, StockGroup, Tab } from "./api";
 import { useRead } from "./useRead";
@@ -84,6 +85,7 @@ export function TradecasePage({ onBack, onWorkspace }: { onBack: () => void; onW
         <section className="tc-panel" aria-label={tabLabel}>
           <h3>{tabLabel} {view.after && view.after !== "0" && <small>· не первая страница</small>}
             {view.tab === "BUYOUTS" && <label className="tc-check"><input type="checkbox" checked={view.pending} onChange={e => { setPrev([]); go({ pending: e.target.checked, after: null, open: null }); }} title={tcHelp.pending.text} data-help-id={tcHelp.pending.id} /> Есть ожидающие коды</label>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : view.tab === "NEED" ? "need" : "order"} /></h3>
+          {view.tab === "MESSAGES" && <SupplyParts key={view.wh + ":" + user} wh={view.wh} onOpen={id => go({ tab: "SUPPLY", open: id, after: null })} />}
           {list.error && <p className="tc-err" role="alert">{list.error}</p>}
           {list.loading && !list.data ? <p className="tc-note">Читаем страницу…</p> : list.data && (list.data.items.length === 0 ? <p className="tc-note">На этой странице записей нет.</p>
             : view.tab === "BUYOUTS" ? <BuyoutList rows={list.data.items as unknown as Buyout[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />

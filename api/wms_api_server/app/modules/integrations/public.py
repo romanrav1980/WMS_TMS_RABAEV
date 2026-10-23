@@ -76,6 +76,9 @@ def build_scale_evidence() -> ScaleEvidenceArchive:
 
 from .api.tradecase_routes import router as tradecase_router, tradecase_documents
 from .infrastructure.tradecase_documents import OracleTradecaseDocuments
+from .contracts_supply_parts import SupplyPartsPort, supply_parts_service
+from .api.supply_parts_routes import router as supply_parts_router
+from .infrastructure.supply_parts import OracleSupplyParts
 
 
 def build_tradecase_documents() -> OracleTradecaseDocuments:
