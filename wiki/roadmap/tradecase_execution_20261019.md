@@ -228,3 +228,5 @@ ClaudeC0155по-прежнемуTASKподтверждён, ACKнет;17заре
 # 23.10 — T11: бумажное задание, версия и чтение
 
 Read API/Code128 и5HTTP с назначенной ролью/чужим заданием/отзывом прошли. Native guard HU/CASE checkpoint14e919d7 установлен с откатом/повтором6/6/6;7READ ONLY prepare подтвердили старую и неверную подпись без товарного выполнения. Предварительный SQL443→4,51мс,7случаев области дали одинаковые результаты; warmHTTP112мс. UI C0155 ожидает ACK Claude; положительный ввод факта/печать на оборудовании ещё не приняты. См [[../database/paper_task_version_20261023]]. T11 остаётся частичным.
+
+23.10 — T11 бумага: на реальном пустом HU task1233 проверены старая подпись после START409, fresh complete200, exact replay и altered body409. Исправлен ошибочный retry stale task signature→503;7runner tests PASS. Quantity/HARD неизменны, stale journal0/open own tasks0. Полный gate PASS, UI и товарный режим остаются открытыми. API7196; доказательства/SQL решение в database/paper_task_version_20261023.md.

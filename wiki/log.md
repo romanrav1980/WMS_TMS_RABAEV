@@ -5166,3 +5166,5 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 # 23.10.2026 — бумага: native применён, чтение ускорено
 
 Checkpoint14e919d7, миграция paper-task-version: apply/rollback/reapply6/6/6 безошибок, SHA/INVALID0.7READ ONLY prepare проверили HU/CASE hash guards, прежний контракт и отсутствие physical task. Исправлен поиск разрешённого склада: same actor SQL443→4,51мс,7случаев прав совпали, fallback сохранён. После restart API81476 пять HTTP PASS, повторное чтение112мс, отзыв623мс. Решение по SQL: текущий склад первым; без нового индекса/кэша, отказы проверить в T12 под нагрузкой. Gate/UTF-8 PASS; физический ввод и UI ещё открыты. [Доказательства](database/paper_task_version_20261023.md).
+
+23.10 — T11 бумага: на реальном пустом HU task1233 проверены старая подпись после START409, fresh complete200, exact replay и altered body409. Исправлен ошибочный retry stale task signature→503;7runner tests PASS. Quantity/HARD неизменны, stale journal0/open own tasks0. Полный gate PASS, UI и товарный режим остаются открытыми. API7196; доказательства/SQL решение в database/paper_task_version_20261023.md.

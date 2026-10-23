@@ -28,6 +28,13 @@ def _oracle_code(exc: Exception) -> int | None:
     return getattr(detail, "code", None)
 
 
+def _rule_reason(exc: Exception) -> str | None:
+    detail = exc.args[0] if exc.args else exc
+    message = str(getattr(detail, "message", exc))
+    match = re.search(r"ORA-\d{5}:\s*([A-Z][A-Z0-9_]+)(?::\s*([A-Z][A-Z0-9_]+))?", message)
+    return ": ".join(x for x in match.groups() if x) if match else None
+
+
 def _discard(pool: Any, connection: Any) -> None:
     try:
         pool.drop(connection)
@@ -138,12 +145,11 @@ class StockPosting:
                     if code in {1403, 1422}:
                         raise StockPostingError("RESOURCE_NOT_FOUND" if code == 1403 else "DATA_AMBIGUOUS",
                                                 command.operation_id, code) from exc
-                    if code not in RETRY_CODES:
+                    reason = _rule_reason(exc)
+                    # A new compiled snapshot cannot repair a stale version supplied by the caller.
+                    stale_task_version = code == 20890 and reason == "TASK_EXPECTED_SIGNATURE_CHANGED"
+                    if code not in RETRY_CODES or stale_task_version:
                         if code is not None and (20800 <= code <= 20899 or code in {20911, 20912, 20913}):
-                            detail = exc.args[0] if exc.args else exc
-                            message = str(getattr(detail, "message", exc))
-                            match = re.search(r"ORA-\d{5}:\s*([A-Z][A-Z0-9_]+)(?::\s*([A-Z][A-Z0-9_]+))?", message)
-                            reason = ": ".join(x for x in match.groups() if x) if match else None
                             raise StockPostingError("STOCK_RULE_REJECTED", command.operation_id, code, reason) from exc
                         raise
                     if attempt == 2:

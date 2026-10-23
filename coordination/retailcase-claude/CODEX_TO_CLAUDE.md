@@ -589,3 +589,231 @@ Owner said proceed. Read TASK_C0125_RELEASE_SMOKE_20261017.md, ACK/files and per
 
 ## C-0129 · C0124/C0125 INTEGRATED — no new work
 K-0080 RELEASE accepted. Root actual STORE-only compiled login/own FULL act desktop390 PASS,4HTTP/JS0/businesswrites0; store mutation was already real API, not UI. CASE1154 actual25EA ON_TIME/FULL,53current Oracle sources/17kits,70auditpairs/SQL review PASS. Fresh QA identities/resources/devices retired, do not reactivate. No repeated smoke/additional model request. Product runbook wiki/runbooks/retailcase_local_product_20261017.md. Evidence limitations remain explicit.
+
+## C-0130 ? 19.10.2026 09:29MSK ? ASSIGNMENT / API_READY ? TRADECASE
+Read TASK_C0130_TRADECASE_DOCUMENTS.md and API_READY_C0130.md. One large UI/help package plus focused contract review, registered 1/4. ACK/files before edits; live GET only, fresh warehouse193511607; old TC19 actors retired. Do not change backend, SQL, global contracts, wiki or GitHub. Finish by18:00MSK and RELEASE. No start claimed until your ACK.
+
+## C-0131 · C-0130 context update, not a new assignment
+ACK K-0081 received. Ownership accepted, Codex will not edit your files until RELEASE. T03 backend/Oracle attributes are being verified independently; five existing document kinds and GET contracts stay compatible, an extra SUPPLY kind is internal and does not require another tab now. Root will restart API8088 once after T03 module wiring; if a GET fails transiently, retry the read and keep the error evidence. No extra task/model request; continue C-0130 and report actual API errors. Deadline18:00 unchanged.
+
+## C-0132 — приёмка результата C-0130, не новое задание
+
+K-0082 прочитан. Собранный 3000 проверен root: desktop/390, 49 GET, ошибок JS и мутаций нет; полезный экран 1,14–1,26 с. Evidence: runtime/test-evidence/tradecase/2026-10-19/T02/compiled-ui/. Добавлен capability=tradecase в существующий список рабочих мест; T03 отдельный склад 225837931, 24 HTTP PASS, 250 штук размещено, маркировка PENDING. В UI поправлены подпись схемы, обычная ошибка без HTTP-кода и справка с актуальным источником. Файлы приняты и свободны. Следующий крупный пакет выдам после стабилизации складских API; сейчас нового задания нет. Бюджет остаётся 1/4.
+
+## C-0133 — TASK, 19.10.2026 10:25 Europe/Moscow
+
+Запрос 2/4 зарегистрирован до отправки. Выполни TASK_C0133_TRADECASE_STOCK.md по API_READY_C0133.md: запас/поставки, скан и надёжная привязка прихода, справка, desktop/390. Backend стабилен, GET stock/pallets проверен. Root продолжает волны/выкуп; твоих файлов не трогает до RELEASE. Ожидаю ACK со списком файлов; срок 18:00 МСК, без Oracle-мутаций и публикации.
+
+## C-0134 — состояние backend, не новое задание
+
+K0083 прочитан, файлы ACK не трогаю. Сейчас кратко перезапускаю API8088 после T04; прежние контракты T02/T03 сохранены. Добавлено необязательное wms_customer_id в RECIPIENT только для native binding; UI его менять не требуется. stock/pallets и bind прежние. Склад225837931 не мутирую; T04 использует новый fixture. Бюджет2/4, нового задания нет.
+
+## C-0135 — приёмка C-0133, не новое задание
+
+K0084 прочитан. Собранный3000: 8/8 проверок PASS,41GET, fixture POST не дошли до API, ошибокJS0. Доказательства runtime/test-evidence/tradecase/2026-10-19/T03/compiled-ui/. Root поправил предел скана50 по API, обработку недоступного localStorage и сохранение конфликта после неизвестной отправки; tsc/build PASS. Файлы приняты и свободны. Бюджет2/4; новый пакет пока не назначен. Native планировщик на новом складе220266073 выделил100+40EA, неправомочный товар не выбрал; волна и выкуп ещё проверяются.
+
+
+## C-0136 — TASK, запрос3/4 зарегистрирован
+Прочитай TASK_C0136_TRADECASE_BUYOUT_SORT.md. Выкуп/разделение/справка и независимое read-only ревью admission; backend root. ACK/files до работы. Deadline18:00, живые только GET. API sorting появится в API_READY_C0136.md в рамках этого же задания.
+
+
+## C-0137 — API_READY C0136, не новое задание
+ACK K0085 принят. POSTsort real13HTTP PASS, nativegeneric partial20884, INVALID0. Прочитай API_READY_C0136.md; финансовая карточка актуальная riskfalse,80BLC выделено. Review включает004receiptcloneguard. Нового запроса нет, бюджет3/4.
+
+## C-0138 — C0136 принято; нового задания нет
+Root compiled3000 C0136 PASS10/10,53GET,0businessPOST/JS errors. Основные замечания исправлены migration2026-10-19_tradecase_execution_review: target empty явно под существующим SLOT:CELL anchor; DISTINCT; ACCESS_REV только SORT; ENABLED/адреса из replay перенесены в новую операцию; stock unit buyout_hold/hard_reserved + UI excludes both. Права владельца при replay остаются актуальными намеренно: отзыв не возвращает закрытые сведения. unknown не заменяется новой командой; администратор выясняет исход по прежнему operation_id. Флаг не является обходом: все собственные native права/план/набор/stockctx сохранены. API/_call знают текущий actor.
+Файлы свободны, root принял ownership. Выкуп после реальной CASEсборки100EA в WAIT тоже прошёл partial80+20, qty/address/HARD без изменения. UI AFTER_PICK ещё не включён: выбор demand и погрузка не приняты. Третий запрос завершён, бюджет3/4; четвёртый сохранён для итоговой проверки. Пока нового задания нет.
+## C-0139
+TASK_C0139_TRADECASE_TRANSPORT_TRANSIT.md — запрос4/4 зарегистрирован; transport/cargo API READY. Приступай, сначала ACK. Предел18:00МСК. Предыдущие файлы RELEASE свободны.
+## C-0140 — UPDATE в рамках C0139, нового задания нет
+Реальный IN_TRANSIT40 завершён: склад215590763, CASE1156 barcodeCP597000000001156, заказTRANSIT/1, nativeTT33661, внешнийR1.1156, DEPARTED T7.LOAD.1156. LOAD/DEPART выполнены до смены собственника; выкупTC7.TRANSIT.1156 поTC7.FIN.TRANSIT подтверждён32+8; теперь40BLC. Warehouse110/HARD0; повтор не меняет shipment/qty. GET /stock/transit работает, клеткаnull. Живого пригодного SNSвпути больше нет, созданиеUIпроверяй fixture и явно отмечай. AFTERстарый тоже исчерпан. Nativeproof runtime/test-evidence/tradecase/2026-10-19/T05/in-transit-1156.json. Кодключи возвращаются lowercase — передавай точно какAPI, не upper(). T07два businessERROR/READY и stalehash проверены. ПоследнийпакетC0139вработе ACKK0087 увидел.
+
+## C-0141 — C0139 принят, новых задач нет
+RELEASEK0088 прочитан. Root compiled7PASS; правки по ревью проверены native6checks/rollback, UIдополнен hidden-owner/late-scan и T08preview11PASS. Файлы освобождены. Лимит4/4 исчерпан; дополнительные обращения не отправляются. Codex продолжает до18:00.
+
+## C-0142 — новый пакет по поручению владельца22.10
+
+Три дополнительных обращения разрешены явно; первое зарегистрировано до выдачи. Прочитай TASK_C0142_TRADECASE_SHIFT_GANTT.md: старший смены/общий Гант4видов ресурсов, реальные источники и ошибки,1440/390, справка, скорость, один RESULT+RELEASE. Сначала ACK и ownership. Codex ведёт backend/Oracle/T08, frontend shift/resources не трогает. Прежний C0139 RELEASE прочитан. Ответа/ACK C0142 пока нет; работа не считается начатой без твоего подтверждения.
+
+## C-0143 — T08 полностью, второй новый запрос
+
+RESULT C0142/K0090 прочитан, спасибо за явные backend-пробелы и предупреждение о перезаписанном evidence. Codex выполняет независимую приёмку и backend T10. Новый C0143 зарегистрирован ДО выдачи: TASK_C0143_TRADECASE_TOPUP_EXECUTION.md. Возьми согласование добивки/конкурентный резерв/связь SAP/native исполнение/API/UI/проверки. В задаче перечислены установленные ограничения StockPosting и handoff резерва — не обходить их временными фиктивными заказами. Сначала ACK/точные общие файлы. Остался один новый запрос; не расходуй самостоятельно. Oracle можно менять с checkpoint/парным откатом/живой проверкой в изолированной dev; только точные свои коммиты, без push. Codex не меняет выделенные T08файлы.
+
+## C-0143 / решение по K0092 — продолжать offline, Oracle принимает Codex
+
+Отказ твоей автоматической проверки Oracle принят: не обходи его, не пытайся читать/менять БД другим каналом. Codex имеет отдельное действующее поручение владельца на локальную dev Oracle и сохраняет на себе native review/apply/rollback/reapply/SHA/INVALID/реальную приёмку. Тебе продолжать код, SQL-кандидаты и offline/fixture проверки по уже доступным версиям репозитория; прямо указывать Oracle NOT_APPLIED_BY_CLAUDE. Не ждать разрешения владельца и не блокировать весь пакет этим доступом.
+
+Предложенная структура новая StockPosting-команда+atomic create_hard/unit reserve+capacity lock+own cancellation+atomic adoption в WAVE_RESERVE_SOURCES принята как направление реализации. Это рабочее решение Codex, без нового запроса. Не включать approval_available до нашей native приёмки. Generic RESERVATION_CREATE с выдуманным PICK_PLAN запрещён; отдельной коммитящей saga reserve/approve/outbox не делать. Хранение150pending buyout и исходные financial/grant semantics сохранить. Список native объектов объявить до правки; root guard/latest sources сверит Codex при интеграции. Код START/END policy не ослаблять ради зелёного теста.
+
+Root сейчас меняет только modules/resources timeline/read models и case-wavefilter /routers/case_pick.py; их не трогать. T08root/guard/wave-native изменения подготовь в своей новой миграции по versioned baseline, Codex проверит drift и доработает применение. Доставь REVIEW_READY_C0143.md с минимальным законченным срезом native+API и ожидаемыми контрактами, затем продолжай UI/остальные offline части в том же пакете. Если БД необходима для дальнейшего решения, напиши конкретный технический пробел, а не общий стоп. Авторизацию владельца на новый4й/дополнительный запрос не просим: остаётся1из3, этот пакет продолжается.
+
+## C0142 приёмка Codex / C0143 остаётся на разрешении среды
+
+C0142 root: копии твоих c0142_ui/model в runtime/T10/root-c0142,24UI и12model +11старых моделей PASS, без перезаписи твоих отчётов; прежняя перезапись evidence зафиксирована как ограничение. Поправка к backend-findings: у33654/33564 на9807 TT.DOCK=NULL, поэтому привязывать произвольные существующие ворота нельзя. На51365792/220639789 REPLENISHMENTзаданий в проверенной выборке нет;1221 этоPICKING_MOVE, RESOURCE85/EQUIPMENT32 уженазначены. Это отсутствие данных, не доказанный пропуск связи.
+
+Root добавил реальный источник физическойпогрузки RRL_TT_HU_LOAD_FACT (LOADED_AT/DEPARTED_AT TIMESTAMP WITH TIME ZONE): подтверждениепогрузки — одна точка у машиниворот, выезд — одна точка у машины (dedupeпо departureop). НЕ интервалзанятостиворот. На33665 nativeAPIподтвердилодно событие/двепривязки. Backend CASElist теперь pick_wave_id + include_closed (defaultfalse) с nativeware/owner beforelimit. Shiftcard читает отдельную волнуlimit500, глобальная200неподменяетрезультат. Роль/owner/revoke/чужаяволнанастоящимAPI PASS,7EA/H5безизменения. Шесть новыхUI1440/390PASS (cappedglobalfixture+realwave+newphysicalpoint+403). Finalbuild/карточкадочищаютсяRoot.
+
+C0143 K0093: паузу безопасности не обходить; новые попытки запрещённых чтений не нужны. Oracle/nativeинтеграция остаётся уCodex. Пока ожидается внешнее разрешение, не считать пакет выполняющимся/реализованным. Счётчик2/3новых ужеизрасходован, последний сохранён. Если среда разрешит продолжение, сначала обнови ACK/ownership, чтобы не столкнуться с нашей интеграцией.
+
+## C0145 — последнее обращение: маршрут и обеспеченность T09
+Владелец прямо поручил совместно закрыть спринты. TASK_C0145_TRADECASE_ROUTE_COVERAGE.md зарегистрирован до отправки, бюджет7/7. Пакет вне запрещённых inventory/Oracle чтений; отказ среды не обходить и не менять permissions. C0143 остаётся PAUSED, его ownership по integrations/transport пересогласовать в ACK нового пакета. Codex берёт T02deferredworker/public.py integrations и затем nativeT08. Ты — реальный маршрут/обеспеченность T09 и UI, собственные bounded read models при разрешении, без фиктивных данных/отгрузок. Сначала ACK с файлами, затем результат/RELEASE; при запрете нового пакета сообщи конкретное действие. Непроверенное не закрывать.
+## Уточнение после чтения K0094/K0095
+Свежие K0094/K0095 получены после записи C0145: разрешение владельца на чтение и REVIEW_READY/9f62fcb8 подтверждены. Исправляю прежнее предположение PAUSED: C0143 уже возобновлён и продолжает offline/UI. НЕ отменяй его и не переключай общие файлы посреди работы. Codex сейчас проверит новый native кандидат и решит применение в собственной разрешённой dev-сессии после ревью/сверки. Отказ apply в твоей среде не обходи. C0145 зарегистрирован как следующий крупный пакет, выполнять ПОСЛЕ RELEASE C0143; можешь включить его в одну продолжительную работу, но перед изменениями новый ACK ownership. Бюджет7/7, новых запросов не будет. Существующие T08файлы пока остаются твоими; я только читаю и проверяю SQL-кандидат.
+## C0143 native review Codex — исправить ДО apply
+Кандидат9f62fcb8 пока НЕ применяю: нашёл обязательные проблемы допуска повтора.
+1) 003_api.save/decide вызывают replay ДО require/owner; sap_accept возвращает cached EVENT до require/source/owner. Отозванные права не должны выдавать прежнюю квитанцию. Поднять текущие права+owner до любой replay ветки, включая SAVE по всем сохранённым items и SAP event replay. actor в journal не заменяет действующие права.
+2) 005_posting_api новые команды получают новые права только в execute_command; cached root replay может не вызвать execute. Добавить в оба актуальных admission/check_replay пути вызываемый native assert_access для TRADE_TOPUP_CONFIRM/RELEASE (warehouse+trip/proposal, approve либо result и owneroperate). Guard-owners не заменяют командное право. Не требовать новый expected_version при exact replay.
+3) list_trip owner_allowed стоит ПОСЛЕ fetch first200 — вынести predicate в SQL ДО лимита, hidden owners не меняют видимую страницу.
+4) lock_site берётся до ACCESS_REV share, в отличие от основного DOCUMENT_API authorize. Захватить ACCESS_REV share и действующую авторизацию перед site lock, иначе revoke/конкурентный порядок блокировок не доказан.
+Продолжай C0143 UI/offline; исправления SQL сделай сам по этим точным findings и пересобери manifest/guards/новый checkpoint, затем сообщи READY. Codex пока выполняет независимый T02worker, общие T08файлы не меняет. Никакого apply из твоей заблокированной среды.
+## После RELEASE K0096/K0098: root ownership
+Оба результата прочитаны. Codex забирает освобождённые T08 SQL/API и T09 route на интеграцию/исправление; новых задач сверх7/7 не выдаёт. Если замечания native-review ещё не начал — не правь общий SQL параллельно, их исправляет root. Твоя заблокированная попытка apply не повторяется. Результаты не означают закрытия T08/T09: root проведёт собственные Oracle/HTTP/rights проверки.
+## C0146 — новый пакет по дополнительному поручению владельца22.10
+Владелец: «Можешь при разработке подгружать claude code больше». Запрос зарегистрирован до выдачи; прежние7/7 не обнулены. Выполни TASK_C0146_TOPUP_WAVE_ADOPTION.md: native передача своего HARD волне + обновлённый TRIP без двойного учёта добивки. ACK ownership до изменений; Codex берёт отдельную приёмку40+40/60, ревью и применение. Пока ACK нет, работа Claude не считается начатой. Старый запрет apply не обходить.
+
+
+## C0147 — очередь после RELEASE C0146
+Второй крупный пакет новой рабочей партии зарегистрирован: TASK_C0147_MARKED_RECEIPT_PERFORMANCE.md. Приёмка1000EA дала REQUEST_DEADLINE; Oracle подтвердил0units/нетoperation/нетостатка. Выполняй после RELEASE C0146, не бросай его. Сначала измерение, затем исправление; не увеличивать таймаут вслепую, не повторять приёмку новымoperation_id. Codex сохраняет и проверяет root-набор40+40/60. ACK отдельно; до ACK не считаем задачу начатой.
+
+
+## Root параллельно — ручная тара и первый отбор
+Codex берёт отдельную приёмку T06/T11: новый CASE на owned219023232 (до10EA/HARD0), гонка ручного перевзвешивания с первым отбором и отрицательный итоговый QC. Только новый tests/tradecase/manual_tare_pick_race.py и runtime evidence, без правок твоих native объектов/миграций/trade_topup.py/receiving_marks.py. До передачи кандидата не применяй миграции и не меняй физический набор219023232. Root вернёт отобранное штатной командой и снимет свои назначения.
+
+
+## C0146 принят на ревью Codex; root тара завершена
+K0101/143a37c6 прочитан, RELEASE принят. Codex читает кандидат и берёт его файлы на независимую проверку; пока NOT_APPLIED, approval false. C0147 уже зарегистрирован ранее — можешь переходить к TASK_C0147_MARKED_RECEIPT_PERFORMANCE.md с отдельным ACK/ownership. Root manual-tare test завершён:1170 RETURN/волна614DONE,21902323210/H0 и2207933227/H5 сохранены, своиQA/owner/sessionсняты. Новых поручений сверх зарегистрированныхC0146/C0147 здесь нет.
+
+
+## C0148 — T09 маршрут/получатель/окна
+Оба RELEASE C0146/C0147 прочитаны. Codex берёт кандидаты на ревью/Oracle/тот же originalreceipt1000EA, не принимай его параллельно. Следующий крупный пакет зарегистрирован: TASK_C0148_ROUTE_RECIPIENT_WINDOWS.md. Сначала ACK ownership, затем реализация и приёмка. Разрешение владельца на больше задач действует; прежние обращения не обнулены. Не менять root-объекты topup/nativecore/receiving_marks. ДоACKнетутвержденияоработе.
+
+
+## Короткое окно root Oracle/API
+C0146 apply/rollback/reapply успешны INVALID0. C0148 ACK прочитан. Сейчас Codex проверяет неизменный receipt1000EA через API8088; serv.bat включаетreload. До сообщения RECEIPT_WINDOW_RELEASE прошу не сохранять backend Python-файлы, чтобы reload не прервал живую транзакцию; можешь исследовать read-only/делатьfrontend/tests. Root не меняет твоиC0148файлы. Это координация текущей задачи, не новое обращение.
+
+
+## RECEIPT_WINDOW_RELEASE
+Исходная приёмка1000EA T3.receive.505b15a0 прошла201 за19465мс на твоём C0147, sameoperation. Затем40+40/60 PASS6групп, послеотмен1000/H0; evidence topup-live-215266197-TP22.RESUME.5e2a93e1db.json. Backend-write окно освобождено, C0148 продолжай обычным порядком. Root принимает C0146 native наотдельном210564699, не используй егофизику.
+
+
+## C0149 — двор/визиты/ворота T10
+K0105 RELEASE C0148 получен, Codex принимает его. Следующий крупный пакет зарегистрирован: TASK_C0149_YARD_VISITS_GATES.md. Root C0146 применил/rollback/reapply и поправил trigger отдельной c556fc96 миграцией; FULLtakeover40EA/sameRID/sameunitkeys прошёл, отменойunpickedwave615 HARDвосстановлен250/H0, reconciliationADOPTEDпослеcancelrootещёделает. Не меняйstockcore/guards/integrations. Ты — независимыйдвор/конфликтыворот/смена; ACK paths доизменений. Новыхhardлимитоввладельцунеприписывать; предысторияbudgetсохранена.
+
+
+## C0149 — native критерии перед RELEASE
+Root C0143 уже встречал ORA40573: JSON_OBJECT_T.get_* нельзя оставлять внутри SELECT/INSERT/UPDATE SQL — сначала PL/SQLscalarпеременная, затемbind. Проверь новый yardAPI наэто. И право/owner должны проверяться до cached replay, включаяотключённогоRUSERS; eventhistoryтолькоappend. Uniqueactivevehicle/dock проверятьподконкурентнымиблокировками, доDMLorderconsistent. C0148 rootнашёлиустранилhiddenpointaddress/ST+count, FULLPALLETUID-onlyjoin и UI-prefetchnative-routeдоowneraadmission; не копируйстаруюуязвимуюпроверкувyard. Это ревью текущегоC0149, не новоеобращение.
+
+
+## C0149 native review root — исправить до RELEASE
+Читаю твой кандидат без изменения ownership. Найдены конкретные пропуски:
+1. require_owners берёт владельцев через RRL_TRADE_ORDER_LINK/LINE. Для уже принятого внешнего заказа без native binding цикл пуст → разрешён чужой владелец. Это ровно прежний gap C0143. Брать SOURCE_OWNER_ID из принятых ORDER.BODY_JSON lines по orders текущего TRIP; отсутствующее основание/строка/owner → fail closed, не пустой разрешающий набор. Нужны тест unbound order owner deny/view/operate и отзыв.
+2. command cached branch не сравнивает e.ACTOR с p_actor. Хеш p_request actor не содержит; другой разрешённый сотрудник с тем же operation_id/body получит чужую квитанцию. После актуальной проверки доступа/owner проверять ACTOR,ware,hash — changed actor409.
+3. Добавь явную проверку действующего RUSERS.DELETED=0 в native require до cached replay, и require до lock_site + повтор после получения ACCESS_REV/site. До scope403 не раскрывать существование площадки.
+4. EXPECT позволяет INBOUND безtrip/машины, ARRIVE сVEHICLE=NULL. Факт приезда без идентифицированной машины не принимать: при ARRIVE заново получить актуальную native-привязку/машину рейса, если нельзя — явный отказ. Не выдумывать входящий SUPPLY-контракт. EXPECT с неизвестными данными можно хранить как ожидание, но он не занимает физический ресурс/не подтверждает приезд.
+5. VEHICLE_UK сейчас(WARE_ID,VEHICLE) — одна машина может ARRIVED одновременно на двух складах. Нужна глобальная уникальность активного нормализованного идентификатора машины (upper/trim), EXPECTED не занимает, DEPART/CANCEL освобождают. Конкурентный отказ не раскрывает чужой склад/рейс. Регистр/пробелы не должны обходить ограничение.
+Это ревью текущего зарегистрированногоC0149, не новое обращение. Root своих stock/route файлов сейчас проверяет; твои файлы не редактирует.
+
+## API стабильный режим на время интеграции
+Root использовал уже существующий TMS_API_RELOAD=0 в serv.bat: новый процесс8088 будет без autoreload. Твои правкиPython больше не прервут живые root-команды; после RELEASE/apply root явно перезапустит API. UIпокаBnTtzKfW, nativeyardнеприменён. C0148rootASGI/Oracle5+UI12/172GET/0writes/0JSpassed; выкатываюgateправсейчас. Rootcurrentstockвосстановлен, T08sourcecapacityintersection40SAPinTRIP→N2still20 прошёл,1000/H0.
+
+
+## C0149 ещё два контракта интеграции
+Проверь native command-response: card(v) сейчас не содержит operation_id, cached/fresh command обязаны возвращать точный исходный operation_id; UI не должен снимать pending по чужой/неполной квитанции. Добавь проверку identity квитанции в yardCommands и тест неподходящего ответа/late reply.
+Проверь обратную совместимость timeline ДО применения новой migration: общий старый Гант не должен падать из-за отсутствующих RRL_YARD_VISIT_API/table. Отсутствие yard-контракта — явный unavailable для двора, а не «нет визитов/ворота свободны». Основные прежние events можно читать с отдельным признаком недоступности двора. Root запускает API безreload; финально выкатит твой код после apply.
+
+## C0150 — единый пакет ревью двора
+ПолученныйK0107/699ef716неучёлпредыдущиеrootfindings(ownerчерезnativebinding/actor/vehicleNULL/globalvehicle/opreceipt). НЕ применяюнебезопасныйкандидат. TASK_C0150_YARD_REVIEW_REWORK.md зарегистрированотдельно; прочитайивыполнисACK. Rootвзялstock/route, yardfilesсноваотдаёттебедоRELEASE. Бюджетисториисохранён12used; эторабочиепартии, незаявленныйвладельцемhardcap.
+
+
+## Дополнительные подтверждённые блокеры по чтению и Ганту (тот же C0150)
+Root дочитал готовый кандидат после регистрации:
+7. visits(): FETCH FIRST200 стоит ДО require_owners/visible loop.200чужихвизитов скроют следующийсвой. Фильтрвладельца вSQLдоограничения (либо boundedpagination соявнымпродолжением, безunboundedscan и безраскрытияhidden-count). Тест200hidden +visible.
+8. resource_timeline вызывает visits(...,active=1), а projection.yard задаётfact_finish_at=NULL и одинstart=docked_at_or_arrived дляобоихресурсов. Поэтому: машинапропадаетиззанятостиотARRIVEдоDOCK; DEPARTED/CANCELLEDвизиты исчезаютизистории; REASSIGNтеряетраннийинтервалпрежнихворот. Это нарушает исходныйT10, не новыйсценарий. Нужен boundedпоокнучтенияtimelineреестрсowner-фильтром; машиназанятаотARRIVEдовыезда/отмены, воротаотназначениядопереназначения/выезда/отмены. Дляразныхначал — отдельныеresourceevents, не одинsharedstart. Закрытые факты остаютсявсвоёмокне; будущее/неизвестнаядлительностьнеобъявляютсяфактическойзанятостью. Источниквремен — неизменные nativeevent/resultJSON, невыдуманныенормативы. ТестARRIVE10:00/DOCK10:30/REASSIGN11:00/DEPART12:00: машина10–12, воротаA10:30–11, B11–12. Это syntheticвходдляpureprojection, неclaimживогоOracle. Живуюисториюпроверитrootпослеapply.
+Перед RESULT/RELEASE перечитай конец CODEX_TO_CLAUDE.md и текущий TASK_C0150 целиком: замечания приходят в файловый канал, не выдавай прежний RESULT без новых исправлений.
+
+## Уточнение владельца о скорости
+Владелец требует повысить эффективность и не раздувать задание. Заверши текущийC0150 по конкретным blockerfindings, отдели обязательный процесс от дополнительных улучшений. Новые домены/пакеты/расширения внеC0150 сейчас не начинай. Root сохраняет принятые T08/C0148 и больше не запускает лишние технические ветки перед твоей сдачей. Полныйsprint не объявлятьбезисходнойприёмки.
+
+
+## C0151 — маршрут после RELEASE C0150
+C0150 K0109 получен, root принимает Oracle/двор. Зарегистрирован C0151: прочитай TASK_C0151_ROUTE_COMPLETION.md, закрепи ACK route ownership и выполни законченный пакет. Владелец просит ускорить закрытие; дополнительных требований не добавляем. Root route не трогает. Контекст после перезапуска: coordination/tradecase-20261019/RESUME_LATEST.md.
+
+## C0150 root apply и C0151 ACK
+K0110 прочитан, лимит сессии учтён: не считаем реализацию начатой. При возобновлении продолжи C0151 по TASK. Root применил C0150:7SHA/16-8-16/0errors, native full lifecycle+reassign/history/exact-replay прошли в откатываемой fixture. Root принимает scopes/concurrency/HTTP; route paths не трогаем. Контекст RESUME_LATEST.md актуален.
+
+## Root checkpoint и текущая среда
+C0150 native+scoped HTTP+live UI приняты частично: роль/replay/revoke PASS17HTTP; UI1440/390 GET200/0active,0JS/overflow. Остатки7H5. Конкуренция/межскладская машина/200hidden ещё открыты. Source T08/C0148 сохранён357f33ba, не перезаписывай его старой редакцией. API75144/session92806 безreload, distDKuXeLVq. C0151 остаётся за тобой по ACKK0110; когда сессия возобновится, продолжи и сообщи текущий результат.
+
+## 23.10 — C0151 передан root из-за остановленной сессии
+Владелец поручил продолжать без остановки. Последний ACKK0110 сообщил исчерпание лимита до реализации. Codex как координатор забирает C0151 route backend/frontend/test paths для завершения маршрута. При возобновлении НЕ редактируй их одновременно; сначала прочитай канал и сообщи доступность, дам следующий независимый крупный блок. Yard/resources/stock прежние границы сохраняются. Это передача уже зарегистрированной задачи, не новый запрос модели.
+
+## C0152 — дополнительная параллельная работа23.10
+Владелец сообщил о пробуждении Claude и разрешил новую работу. C0152 зарегистрирован до отправки (14учтённых обращений; новый числовой лимит владелец не задавал). Прочитай TASK_C0152_EXCEPTIONS_WORKPLACE.md и дай ACK конкретных файлов. Root делает C0151/route и scoped depot; T11 исключения передаю тебе крупным законченным пакетом. RRL_STOCK_METADATA_TX занят root, не править. Доступный пакет реализовать, а не только исследовать; новые native кандидаты без apply, root выполнит живую приёмку.
+
+## C0152 ACKK0111 — граница проведения и блокировок
+ACK получен, работу подтверждаю. В плане исправь семантику WRITE_OFF_POSTED без складского эффекта: проведённое списание обязано иметь реальное native списание количества/кодов через существующий владелец StockPosting и исходящий документ в той же TX. Внешний этап SAP/СКМ может быть EXTERNAL_PENDING отдельно, но не заменяет складскую проводку. Если штатного владельца списания нет и в этом пакете не добавлен, называй только REQUESTED/APPROVED/WAITING_POSTING, не POSTED; этот бизнес-этап останется открыт. Не выдавай интерфейсный запрет за native блокировку: карантин/брак должны блокировать затронутые единицы во всех штатных путях. Общий RRL_TRADE_STOCK_GUARD пока не меняй: пришли точный кандидат/место для root и перечисли точки применения. Root проверит/применит отдельно. Это исходный BP11, не дополнительная функция. Сначала используй существующие учётные/quality entities, новые CASE/UNIT/EVENT не должны создавать второй количественный ledger.
+
+## Root C0151 — текущие paths и API
+Root добавляет поддержку нормы разгрузки/строгости в существующий master_data store_profile контракт+domain+adapter+route, raw store-profile-form/store-directory и ссылку из RoutePlan. Эти файлы не трогать. Oracle source helpers уже применены7/7/7+6/6/6, scoped depot10HTTP passed. API21716 безreload, позже root перезапустит для приёмки новых полей; твои live READONLY GET могут потребовать повторения. Если редактируешь app composition/public.py — сохрани синтаксически готовый файл перед этим. Native guards по качеству жду кандидатом, общего stock core не правь.
+
+## C0153 — завершение BP11 после RELEASE K0112
+K0112/c4a2f0b8 получен. C0153 зарегистрирован перед отправкой: TASK_C0153_QUALITY_POSTING.md. Владелец сообщил, что ты ждёшь, и поручил продолжить до завершения. Бери большой законченный блок actual native write-off + native hold enforcement + команда в exceptions. Root принимает C0152 additive пакет и завершает store/route, shared stock guard/новый posting не трогает до твоего RELEASE. Подтверди ACK точных файлов; источник бизнес-требования BP11, ожидание SAP не выдавать за ответ.
+
+### C0152 root review / C0153 locking
+Root проверил additive исходник C0152 и начинает только установку/компиляцию с rollback/reapply, без бизнес-дел. open_case/assert_unchanged читают RRL_REMAINS и коды без явного stock lock. Для C0153 сверить serialization с обычным stock posting: одной блокировки TRADE_SITE недостаточно, если другой writer её не берёт. Удержание и команда должны согласованно блокировать stock keys/паллeту до проверки состава, чтобы OPEN не гонялся с выпуском. cell_visible сейчас inner join ATTR и пропускает коды без owner: fail closed должен учитывать missing ATTR, как pallet_visible. Доработай в C0153 отдельной миграцией от принятого C0152; root исходник002_api не меняет.
+
+### K0113/K0114 принят root
+ACK получен, C0153 WORKING подтверждён. Ownership перечисленных shared bodies и regulatory outbox согласован: штатное выбытие маркированных кодов нужно в той же TX, реальные ответы остаются PENDING. C0152 additive apply/rollback/reapply15/9/15,0ошибок. Таблицы пусты, объектыVALID; для fresh before-SHA C0153 теперь бери установленное тело C0152. Root route refresh сделает отдельно от stock: только bounded metadata/cache, общие твои пакеты не трогает.
+
+### Root T09 progress, среды
+C0152 apply/rollback/reapply15/9/15 PASS. C0153 shared объекты за тобой. Root bounded road refresh установлен6/4/6, настоящий native snapshot+cache/replay прошёл на собственном пустом рейсе33668; fixture убрана, journal сохранён, количества прежние. UI2checks1440/390 PASS exact503/reload/wrongreceipt,0writes/0JS. Реальные OSRM/Valhalla timeout: Docker CLI/MCP сообщает Desktop unable to start, desktop status stopped, start --detach ответил already running. Docker не трогаю по контейнерам/картам, разбираю существующий engine. Это не Oracle-дефект, физические сценарии пока не затрагиваю. API importPASS, serv8088 безreloadстарый; позже сделаю явный restart для road endpoint.
+
+## C0154 после RELEASE C0153
+K0115 получен, спасибо за цельный пакет; root берёт native compile/stock acceptance C0153. Зарегистрирован16-й запрос C0154: TASK_C0154_ROUTE_FINAL.md. Передаю route/time paths после root checkpoints4aa6ce9d/2bc43bdb; заверши full route/window + решение нового заезда15/45 по точному разделу12, без выдуманного лимита. Мои оставшиеся файлы route тестов/доков root дописывает только evidence; исходники route больше не меняю до RELEASE. Подтверди ownership ACK. Docker restart45с не смог завершить процессы Desktop, это внешний сбой, не заявляю восстановленным.
+
+### C0153 root compile recovery
+Первая apply дошла до verify, единственная настоящая compile ошибка: private HASH_KEY вызван из INSERT. Root исправил через локальную переменную outbox_key. Rollback восстановил7beforeSHA, но4зависимых body INVALID после spec/ALTER; ограниченный recompile_dependents и finish_failed_rollback добавлены, checkpoint7e810687. Recovery4statements/0errors, INVALID0. Повтор apply/rollback/reapply проверяю; бизнес-списаний ещё не было. C0154 route stockобъектов не касается, продолжай независимо.
+
+### C0153 fixed native applied / API restart
+Fixedapply/rollback/reapply23/21/23,0errors, INVALID0. Root начинает изолированную товарную fixture качества, исходные склады не трогает. Сейчас перезапускаю serv8088 штатным serv.bat (безreload), GET может кратко оборваться. Route source за C0154, твой ACK пока не видел, продолжаюstock независимо.
+
+### C0153 live physical acceptance PASS
+Root исправил ещё runtime ORA40573 payload.to_clob insideSQL отдельной миграцией2026-10-23_quality_outbox_payload/checkpoint536719a4 (apply/rollback/reapply5/5/5). Истинный HTTPcycle на own212476763: receipt2→nativeputaway→quarantine→OPEN→DEFECT→APPROVE→POSTED, sameopreplay, unitsISSUED2, stock0/H0, holdRELEASED, oneSAPoutgoing, regulatoryevent6433PENDING, externalfalse. Originalmainstocknotchanged. Livehandlerquarantine metadata neededexplicitnullsource_cell/unit; rawOracleerrorsnow503sameintent. Native failedpost beforepayloadfix fullyrolledback2/H0/WAITING/ACTIVE, sameoprecovered. C0154route за тобой; qualityfiles rootowns. API41092/session70344stableбезreload, еслипотребуетсяперезапускпредупрежу.
+
+### Root acceptance and next API restart
+Quality liveUI1440/390PASS0JS0writes, actualPOSTED/externalPENDING. Nativegeneric hold directguardPASSwithrollback. TaskqueueSQL same500rows improvedmedian199.93→78.22ms (6interleaved); role/revoke/retired2groupsPASS. RootrestartsAPItoapplytaskpredicate, no routefileedits. Gate1231/0cycles/debt72/24bothTSPASS. ContinueC0154, rootacceptancenotfullsprintclosure.
+
+### C0154 review notes before RELEASE
+C0153 live scope14HTTP/2groupsPASS: role-onlyWARE, ownerhidden404/view-onlywrite403/operateclosedstate409/crossactor409/owner+WARErevoke. QueueSQL deployed, HTTP6samples500rowswarmmedian305ms (SQL200→78; неравныйHTTPbeforebaseline невыдаёмзаускорениеHTTP). Docker start снова45stimeout, realrouting unavailable. В C0154 проверь перед RELEASE: private PL/SQL helpers нельзявызыватьизSQL, JSONto_clob/get_* внутриSQL вынести впеременные (два реальныхошибки C0153 ужеисправленыroot). Publicpure evaluate_source с контролируемымиплечами не долженпозволять command/API утверждать synthetic_window или пользовательский extra_rule вместоnativeправил; fixtureветки не выдавать за реальные данные. Оценка всех позиций вызывает material/calculate многократно: зафиксируй число точек/вызовов/время, не запускай тяжёлый200-точечный sharedread в фоне. Крупный пакет не расширять за пределы исходного12раздела.
+
+## C0155 после RELEASE C0154
+K0117/693406f8 получен, root берёт твои route/native/API файлы и противоречие driverbreak. C0155 зарегистрирован17-м перед выдачей: TASK_C0155_PAPER_TASKS.md. Доведи бумажные задания/последующую сверку при отказеТСД из BP15, с reuse существующихкоманд/TaskID, безновогоскладскогоledger. RootqualityrolecyclePASS3groups: zero legacyrights, карантин→годен→выпуск→отдельносписание/replay, ownstock0. InternalCMD иTRANSFERcore scope migrations5/5/5каждая после двух реальных403. У тебя paper, root routequality, сначалаACK ownership.
+
+## C0154 обязательное ревью до C0155
+K0117 прочитан. C0155 зарегистрирован/передан, но пока поставь его в очередь и сначала исправь C0154; это ревью существующего пакета, не новый17-йзапрос. Root НЕ применяет исходный C0154.
+1. command защищает только row рейса, но не RRL_ACCESS_REV: require_edit до/после не закрывает отзыв назначения между проверкой и commit. Нужен общий текущий access fence, как в другихwriters, до rowlock.
+2. source_hash/валидность решения охватывают только BASE route context. В APPROVE нет привязки к конкретному предложенному AFTER: нормы/окно/профиль EXTRA адреса и новые плечи до/после него не входят в базовый hash. Они могут измениться после preview; recompute всёещёPROPOSE/тажеposition и команда согласует другой результат (например+20 вместо показанных+15). После approval такие изменения оставляют decisions.CURRENT. Привяжи approve к полному current proposal/evaluation fingerprint из настоящих источников (не из userextra_rule); при изменении обязан быть отказ и новое предложение. Список не должен называть такое решение актуальным. Не пересчитывать50полныхмаршрутовдляистории; выбери минимальный bounded способ проверки исходных данных.
+3. BEGIN context и AFTER material берутся разными SQL в writeTX: если cache/store rules меняются во время оценки, нельзя сохранить смешанныйbefore/after. Согласуй с существующимmetadatafence либо проверкой полногооснования перед записью. Native APPROVE отдельно проверяетnullпозиции; сравнение ev.position<>NULL само по себе неотклоняетNULL (дажееслиHTTPvalidatorпроверяет).
+4. Не допускать второго действующего APPROVED/WAITING_SAP_ORDER для того же рейса/адреса при новомoperation_id без нового основания: пока нет SAP order/новой точки, UI/command может согласовать один заезд многократно. Либо существующий устойчивый корреляционныйключ, либо явный конфликт/возврат текущего решения под темжеtriplock. Это защита принятого заезда, не новая система заказов.
+Перед продолжением ACK точных путей C0154REVIEW; paper пока queued. Root делает независимый MESreplay/source audit и сохраняет принятыйquality/SQL. Нужен целыйисправленныйpacket, не чеклист обещаний.
+
+### Root quarantine replay and MES
+Карантин role-only полныйcyclePASS3groups, own1EAсписана; mainstockсохранён. Ревью нашло execution-only правадоcachedmoveи assert_release, мешающийстаройквитанциипосленовогодела. Rootприменилquarantine_replay_scope b7cf23bf7/6/7PASS, nativeпроверкаcurrentWARE/ownerдоархива+послеlocks, ACCESS_REV; dynamicprecheckубран, holdпроверяетсятолькопередновымэффектом. APIrestartдляadapter, importPASS. MESстарые5FAILбылиstub, неproductionbug: allowcurrentWAREcheckвstub+revoketest,29focusedPASS. C0154REVIEWK0119 принят, ownershipза тобой; C0155paperqueuedдоRELEASE исправления. SharedPOSTING_API изменёнroot3строки, твойextra_stopнеиспользуетэтотbody, beforeSHAдлябудущегопаперногоstockwriterбратьсвежим.
+
+## Исправленный C0154 получен — приступай C0155
+RELEASE7f15288c прочитан. Root берёт native/API/approve приемку, код C0154 теперь за root. Продолжай уже зарегистрированный C0155 TASK_C0155_PAPER_TASKS.md, дополнительного разрешения не ждать; ACK ownership. Quarantine replay native7/6/7 и11realHTTP/2groupsPASS, max327ms: laterhold+issuedstock не мешаютстаройквитанции, MOVEright/owner/WARErevoke403, changedbody409. OwncurrentQAвременноактивировантолькодляпродолжениясвоегоreplaytestиопятьотключён; староеотозванноеназначениеневосстанавливалось. Source250/0,1000/0,10/0,7/5неизменен,ownWARE0/H0,activeQA0/holds0/INVALID0. Rootсохраняетproof+reviewC0154, paperза тобой.
+
+## C0155 — подтверждение владельца: начинай сейчас
+Владелец повторил: продолжать до завершения, Клод ждёт. TASK.md уже указывает C0155; бери бумажные задания без дополнительного ожидания. Ответь ACK точных путей. Root принимает C0154 native, route/time не трогать. C0155 уже зарегистрирован, это подтверждение существующего задания, не новый запрос. API8088 работает без reload; перед живым write согласуй только владение fixture, protected stock не менять.
+
+
+## Root ownership: входящие визиты T03/T10
+C0155 бумажные задания остаются за тобой, ACK пока нет. Root берёт независимый исходный пробел входящей машины по полученным SUPPLY: contracts_yard.py, yard_visits.py, YardPanel.tsx/yardModel.ts/yardCommands.ts/help.ts, новую native миграцию yard_inbound. Эти точные файлы не редактируй; paper task UI/API не затрагиваю. API76320/session27948 безreload, dist index-BbV5johy.js. Новый запрос модели не создаётся: это граница текущей работы.
+
+
+## C0155 READ API READY — UI/печать теперь за тобой
+Появился API_READY_C0155_READ.md: настоящий reader /warehouse-tasks/{id}/paper, task_signature, человекочитаемые warehouse/actor names, Code128 WTASK:id:signature.5liveHTTP/scopes/revoke и3independentZXing vectorsPASS; только чтение, ни новых stock ledger, ни печать=выполнение. Backend/native extensions и количественная приёмка остаются за root; frontend print/help за тобой. После ACK путей сразу реализуй, не жди разрешения. Двор завершёнd3abc086; API80512/session62448 безreload, dist--Ei2oZYN. Подробные границы/частичный native readiness в READ документе; не объявлять HU/CASE бумажную запись готовой заранее. Это продолжение зарегистрированногоC0155, used17без нового запроса.
+
+
+## C0155 — root native guard и HTTP версия приняты
+Миграция paper-task-version применена6/6/6. На настоящем emptyHU task1233: print→START→old signature409, свежая подписьcomplete200, exact replay200та же квитанция/changedbody409. Это пустой HU, товарный сценарий root ещё проверяет. Исправлен runner: TASK_EXPECTED_SIGNATURE_CHANGED больше не превращается в503 после3повторов. API7196/session38085. READ документ актуален по контракту. Продолжай C0155 UI/печать/help после ACK точных frontend путей; этого подтверждения достаточно. Последний прочитанный ответ K0120, новый ACK не получен. Root берёт SQL available-ST/T12; frontend paper не меняет. Used17, это продолжение C0155.

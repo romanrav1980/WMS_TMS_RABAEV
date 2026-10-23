@@ -89,6 +89,24 @@ def command():
 
 
 class StockRunnerTests(unittest.TestCase):
+    def test_stale_caller_task_version_refuses_once_but_transient_closure_still_retries(self):
+        original = Cursor.execute
+        for reason, attempts in (("TASK_EXPECTED_SIGNATURE_CHANGED", 1), ("CLOSURE_CHANGED: HU", 3)):
+            with self.subTest(reason=reason):
+                connection = Connection()
+                pool = Pool(connection)
+                def execute(cursor, sql, binds=None):
+                    if "execute_prepared" in sql:
+                        raise oracledb.DatabaseError(SimpleNamespace(code=20890, message="ORA-20890: " + reason))
+                    return original(cursor, sql, binds)
+                with patch.object(uow, "_oracle_pool", return_value=pool), patch.object(Cursor, "execute", execute):
+                    with self.assertRaises(StockPostingError) as error:
+                        uow.StockPosting(wait=lambda _: None).post(command())
+                self.assertEqual(error.exception.code, "STOCK_RULE_REJECTED" if attempts == 1 else "LOCK_RETRY_EXHAUSTED")
+                if attempts == 1:
+                    self.assertEqual(error.exception.rule_reason, reason)
+                self.assertEqual((connection.committed, connection.rollbacks, len(connection.requests)), (0, attempts, attempts))
+
     def test_deadlock_rolls_back_the_whole_attempt_and_reuses_exact_request(self):
         connection = Connection(fail_once=True)
         pool = Pool(connection)
