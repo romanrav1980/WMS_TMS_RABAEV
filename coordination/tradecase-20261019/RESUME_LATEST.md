@@ -1,3 +1,12 @@
+# Latest update 23.10.2026 14:25 Europe/Moscow
+
+Owner-view correction accepted: live inventory revision417 allowed GET -> owner revoke403 -> view-only GET200/count403. Closed revision, retired actor/RIGHTS,250/H0 and all unit identities/current lots/statuses unchanged. API81892/session45955 now loads correction. Native composition body remains DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378, INVALID0. UI C3H9nb2s unchanged.
+
+Raw inventory-count.js/html fixed: clear stale lots before read; discard late cell/actor response; forward inventory_task_id; preserve unknown intent on403; scoped mobile width390 and native details navigation.10fixture browser +2 actual served auth/navigation/help read checks1440/390 PASS;28inventory-focused and gate PASS, encoding to run at checkpoint. Scripts/tests and evidence T11/inventory-owner-scope-live.json,inventory-read-recovery-ui.json,inventory-page-read-ui.json. Prior negative revision416 FAIL_OWNER_VIEW remains evidence; do not rerun closed fixtures. Delta0 count415 used internal unit keys, not physical raw scanner.
+
+Claude C0165 still only ACK K0149, no later messages. C0166 registered28, WAITING_FOR_ACK. Root will RELEASE inventory_lot_reads.py,inventory-count.js/html,test_inventory_task_scoped_boundary.py after this checkpoint. No native count writer changes. Continue original sprint gaps; do not redo accepted metadata/stock fixtures. Full T02/T11/T12 not complete; external providers/hardware/pilot not verified. GitHub publication prohibited without new instruction.
+
+---
 # TRADECASE — продолжение 23.10.2026, 14:16 Europe/Moscow
 
 Владелец поручил работать до всех спринтов вместе с Claude. T01 завершён, T02–T12 частичные. Не объявлять DONE complete, не выполнять GitHub push/fetch/PR, исключить SAP.

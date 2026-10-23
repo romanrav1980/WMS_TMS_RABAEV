@@ -1,7 +1,8 @@
 (() => {
   "use strict";
   const el = id => document.getElementById(id);
-  let lots = [], busy = false, loadedRevision = null, loadedCell = null, loadedArticle = null;
+  if (window.matchMedia("(max-width:760px)").matches) el("countNav").open = false;
+  let lots = [], busy = false, loadedRevision = null, loadedCell = null, loadedArticle = null, loadVersion = 0;
   const message = text => { el("countMessage").textContent = text; };
   const context = () => {
     const auth = window.wmsAdminAuth;
@@ -22,11 +23,23 @@
   }
   async function load() {
     if (busy) return;
+    const version = ++loadVersion, auth = context();
+    lots = []; loadedRevision = loadedCell = loadedArticle = null;
+    el("countRows").replaceChildren();
+    message("Загружаем партии…");
     try {
       const revision = el("countRevision").value.trim(), cell = el("countCell").value.trim();
       if (!/^[1-9][0-9]*$/.test(revision) || !cell) throw new Error("Укажите документ и ячейку.");
       const article = el("countArticle").value.trim();
-      const data = await api("/api/inventory/stock-posting/inventory/" + revision + "/lots?cell=" + encodeURIComponent(cell) + (article ? "&article=" + encodeURIComponent(article) : ""));
+      const task = el("countInventoryTask").value.trim();
+      if (task && !/^[1-9][0-9]*$/.test(task)) throw new Error("Укажите корректный номер задания.");
+      const data = await api("/api/inventory/stock-posting/inventory/" + revision + "/lots?cell=" + encodeURIComponent(cell) + (article ? "&article=" + encodeURIComponent(article) : "") + (task ? "&inventory_task_id=" + encodeURIComponent(task) : ""));
+      if (version !== loadVersion) return;
+      if (auth.actor !== context().actor || auth.base !== context().base
+        || revision !== el("countRevision").value.trim() || cell !== el("countCell").value.trim()
+        || article !== el("countArticle").value.trim() || task !== el("countInventoryTask").value.trim()) {
+        message("Сеанс или параметры пересчёта изменились. Загрузите партии заново."); return;
+      }
       lots = article ? data.lots.filter(lot => lot.article === article) : data.lots;
       loadedRevision = revision; loadedCell = cell; loadedArticle = article;
       const rows = lots.map((lot, index) => {
@@ -52,7 +65,9 @@
       });
       el("countRows").replaceChildren(...rows); message(rows.length ? "Партии загружены. Введите фактическое количество." : "В ячейке нет зарегистрированных партий.");
       pending(); el("countCell").focus();
-    } catch (error) { message(error.message); }
+    } catch (error) {
+      if (version === loadVersion) message(error.status === 403 ? "Нет доступа к пересчёту или собственнику товара. Проверьте назначение задания и права." : error.message);
+    }
   }
   async function submit(retry) {
     if (busy) return;

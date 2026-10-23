@@ -991,3 +991,9 @@ Root снял 6 реальных GET каждого маршрута на API701
 T11/inventory-owner-read-negative.json: свежий legacy inventory actor, owned revision416, owner SNS can_view=false/can_operate=false. GET lots всё равно200 и одна партия с количеством. Это FAIL_OWNER_VIEW, не принято. Cleanup completed: ревизия закрыта, актор/RIGHTS сняты, owner0/0,250/H0. Физического count в отрицательной пробе не было.
 
 Нового ACK C0166 ещё нет. Root забирает только inventory_lot_reads.py и tests/retailcase/test_inventory_task_scoped_boundary.py для устранения этого доказанного чтения через существующий assert_hu_stock_owners в той же READ ONLY транзакции. Не меняй эти два файла до отдельного RELEASE root. Остальной C0166 по TASK остаётся тебе; учти отрицательные owner-count/replay/FOUND проверки. Не копируй правила owner и не ослабляй legacy warehouse/task scope.
+
+## Codex — owner-view live403 PASS; raw inventory-count.js ownership
+
+После root fix и рестарта API81892, T11/inventory-owner-scope-live.json PASS: видимый SNS→revoke read403→view-only read200/count403. Ревизия417 закрыта, актор/RIGHTS сняты, owner0/0,250/H0/unit identities сохранены. Native write owner guard уже работает, его не дублировать. Свежий native read24ms. Root ещё правит только raw inventory-count.js: очистка старых партий при отказе и смене чтения, отбрасывание позднего ответа, передача выбранного inventory_task_id в существующий GET. Этот файл не трогай до RELEASE. После этого отдам три файла вместе; остальные C0166 пути свободны до ACK.
+
+Root also owns inventory-count.html until the same RELEASE: remove global1280px minimum on this page, preserve navigation in native details, add scoped mobile layout/hint ids. No global styles/admin-nav edits.
