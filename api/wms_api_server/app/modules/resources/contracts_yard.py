@@ -9,8 +9,22 @@ Operation = Field(min_length=8, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
 class YardExpect(BaseModel):
     model_config = ConfigDict(extra="forbid")
     operation_id: str = Operation
-    trip_id: str = Field(min_length=1, max_length=100)
+    trip_id: str | None = Field(default=None, min_length=1, max_length=100)
+    supply_ids: list[str] | None = Field(default=None, min_length=1, max_length=200)
+    vehicle: str | None = Field(default=None, min_length=1, max_length=50)
     planned_arrival_at: AwareDatetime | None = None
+
+    @model_validator(mode="after")
+    def source(self) -> "YardExpect":
+        if self.trip_id is not None:
+            if self.supply_ids is not None or self.vehicle is not None:
+                raise ValueError("Outbound visit uses its trip vehicle")
+        elif self.supply_ids is None or self.vehicle is None or not self.vehicle.strip():
+            raise ValueError("Inbound visit requires supplies and the vehicle number")
+        if self.supply_ids is not None:
+            if any(not s.strip() or len(s)>100 for s in self.supply_ids) or len(set(self.supply_ids))!=len(self.supply_ids):
+                raise ValueError("Supply identifiers must be distinct and between 1 and 100 characters")
+        return self
 
 
 class YardTransition(BaseModel):

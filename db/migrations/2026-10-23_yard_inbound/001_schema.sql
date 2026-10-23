@@ -1,0 +1,6 @@
+create table RRL_YARD_VISIT_SUPPLY(
+ VISIT_ID number not null,WARE_ID number not null,SUPPLY_ID varchar2(100)not null,DOCUMENT_VERSION number not null,
+ constraint RRL_YARD_VISIT_SUPPLY_PK primary key(VISIT_ID,SUPPLY_ID),
+ constraint RRL_YARD_SUPPLY_VISIT_FK foreign key(VISIT_ID)references RRL_YARD_VISIT(VISIT_ID),
+ constraint RRL_YARD_SUPPLY_VER check(DOCUMENT_VERSION>=1 and DOCUMENT_VERSION=trunc(DOCUMENT_VERSION)));
+create index RRL_YARD_SUPPLY_SOURCE_IX on RRL_YARD_VISIT_SUPPLY(WARE_ID,SUPPLY_ID,VISIT_ID);

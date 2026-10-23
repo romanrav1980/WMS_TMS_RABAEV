@@ -48,7 +48,7 @@ class OracleYardVisits:
         return receipt
 
     def expect(self, ware: int, body: YardExpect, actor: str) -> dict[str, Any]:
-        return self._command(ware, wire(body, action="EXPECT", visit_kind="OUTBOUND"), actor)
+        return self._command(ware, wire(body, action="EXPECT", visit_kind="OUTBOUND" if body.trip_id is not None else "INBOUND"), actor)
 
     def transition(self, ware: int, visit: int, body: YardTransition, actor: str) -> dict[str, Any]:
         return self._command(ware, wire(body, visit_id=visit), actor)

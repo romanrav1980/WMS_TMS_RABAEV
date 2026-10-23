@@ -154,3 +154,6 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 
 - [Транспортный scope precheck23.10](transport_scope_precheck_20261023.md): кандидат CASE, текущий существующий склад перед прежним общим поиском; без кеша прав/количественных эффектов.
 
+
+- [Входящие визиты23.10](yard_inbound_20261023.md): кандидат по полученным SUPPLY, ручному номеру машины и прежним native командам ворот; без товарного эффекта.
+
