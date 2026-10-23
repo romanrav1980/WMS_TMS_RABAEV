@@ -1,0 +1,58 @@
+{
+ "PE23.57d55b860.final|admin": {
+  "trade_plan": true,
+  "result": "ALLOWED"
+ },
+ "PE23.57d55b860.final|DO": {
+  "trade_plan": true,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "PE23.57d55b860.parallel.1|admin": {
+  "trade_plan": true,
+  "result": "ALLOWED"
+ },
+ "PE23.57d55b860.parallel.1|DO": {
+  "trade_plan": true,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "PE23.57d55b860.parallel.0|admin": {
+  "trade_plan": true,
+  "result": "ALLOWED"
+ },
+ "PE23.57d55b860.parallel.0|DO": {
+  "trade_plan": true,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "PE23.57d55b860.short|admin": {
+  "trade_plan": true,
+  "result": "ALLOWED"
+ },
+ "PE23.57d55b860.short|DO": {
+  "trade_plan": true,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "PE23.57d55b860.allocate|admin": {
+  "trade_plan": true,
+  "result": "ALLOWED"
+ },
+ "PE23.57d55b860.allocate|DO": {
+  "trade_plan": true,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "PC23.709a1f32a.pool.final|admin": {
+  "trade_plan": false,
+  "result": "ALLOWED"
+ },
+ "PC23.709a1f32a.pool.final|DO": {
+  "trade_plan": false,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ },
+ "NEW|admin": {
+  "trade_plan": null,
+  "result": "ALLOWED"
+ },
+ "NEW|DO": {
+  "trade_plan": null,
+  "result": "ORA-20882: POOL_ALLOCATION_FORBIDDEN"
+ }
+}
