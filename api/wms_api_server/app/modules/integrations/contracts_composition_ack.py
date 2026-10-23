@@ -13,6 +13,14 @@ from .contracts_trade_base import Key, TradeModel
 class CompositionReport(TradeModel):
     warehouse_id: int = Field(strict=True, gt=0)
     order_id: Key
+    retry_system: Literal["SAP", "SKM"] | None = None
+    retry_of: int | None = Field(default=None, strict=True, ge=1)
+
+    @model_validator(mode="after")
+    def retry_identifies_attempt(self) -> "CompositionReport":
+        if (self.retry_system is None) != (self.retry_of is None):
+            raise ValueError("retry_system and retry_of must be supplied together")
+        return self
 
 
 class CompositionAck(TradeModel):

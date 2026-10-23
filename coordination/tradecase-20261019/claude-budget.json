@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 27,
-  "used": 27,
+  "limit": 28,
+  "used": 28,
   "requests": [
     {
       "id": "C-0130",
@@ -210,6 +210,13 @@
       "status": "REGISTERED; after C0164 RELEASE",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0166",
+      "task": "T11 marked inventory FOUND/LOST and operator recovery using existing commands",
+      "registered_at": "2026-10-23T13:50:40.130164+03:00",
+      "status": "REGISTERED; WAITING_FOR_ACK",
+      "delivery": "existing file channel"
     }
   ],
   "additional_grants": [
@@ -413,6 +420,16 @@
       "used": 1,
       "request_ids": [
         "C-0165"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner explicitly requested all sprints completed and further work delegated to waiting Claude",
+      "allocation_basis": "One remaining original T11 inventory package; root owns C0164 correction",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0166"
       ]
     }
   ]

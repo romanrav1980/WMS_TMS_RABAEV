@@ -52,11 +52,6 @@ class InventoryObservations:
         return {"revision_id": revision, "warehouse_id": warehouse_id}
     def register_lot(self, operation_id: str, revision_id: int, metadata: dict[str, Any], actor: str) -> dict[str, Any]:
         assert_inventory_scope(self.gateway,actor,revision=revision_id)
-        from ..contracts_stock import StockPostingError
-        try:
-            return self.posting.post(StockCommand(operation_id=operation_id,
-                command_type="INVENTORY_REGISTER_LOT",actor=actor,lines=(),
-                source={"revision_id":revision_id},metadata=metadata))
-        except StockPostingError as exc:
-            status=403 if exc.oracle_code==20882 else 409 if exc.oracle_code is not None and 20800<=exc.oracle_code<=20999 else 503
-            raise InventoryObservationError(exc.rule_reason or exc.code,status,operation_id) from exc
+        return self.posting.post(StockCommand(operation_id=operation_id,
+            command_type="INVENTORY_REGISTER_LOT",actor=actor,lines=(),
+            source={"revision_id":revision_id},metadata=metadata))

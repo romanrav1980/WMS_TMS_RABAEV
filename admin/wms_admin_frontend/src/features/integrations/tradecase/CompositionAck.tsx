@@ -17,14 +17,18 @@ const CHANGE: Record<string, string> = { ASSEMBLY_REOPENED: "сборка сно
   ORDER_VERSION_CHANGED: "пришла новая версия заказа", SOURCE_CHANGED: "сменился источник заказов", SKM_CHANGED: "сменилась действующая СКМ" };
 const help = (id: string, text: string) => ({ id: "tradecase.composition." + id, text, anchor: "composition-ack" });
 
+const retryTarget = (r: Row): "SAP" | "SKM" | undefined => r.status !== "REJECTED" ? undefined
+  : r.sap_status === "REJECTED" && ["ACCEPTED", "NOT_REQUIRED"].includes(r.skm_status ?? "") ? "SAP"
+  : r.skm_status === "REJECTED" && r.sap_status === "ACCEPTED" ? "SKM" : undefined;
+
 export function CompositionAck({ wh, onOpen }: { wh: string; onOpen: (orderId: string) => void }) {
   const [reload, setReload] = useState(0), [busy, setBusy] = useState(""), [message, setMessage] = useState("");
   const read = useRead<Page>(`/api/tradecase/warehouses/${encodeURIComponent(wh)}/order-compositions?limit=50`, reload);
-  const report = async (r: Row) => {
+  const report = async (r: Row, retry?: "SAP" | "SKM") => {
     setBusy(r.order_id); setMessage("");
     try {
-      await apiFetch("/api/tradecase/order-compositions/report", { method: "POST", body: JSON.stringify({ warehouse_id: r.warehouse_id, order_id: r.order_id }) });
-      setMessage(`Состав заказа ${r.order_id} отправлен на подтверждение.`);
+      await apiFetch("/api/tradecase/order-compositions/report", { method: "POST", body: JSON.stringify({ warehouse_id: r.warehouse_id, order_id: r.order_id, ...(retry ? { retry_system: retry, retry_of: r.composition_no } : {}) }) });
+      setMessage(retry ? `Состав заказа ${r.order_id} повторно отправлен в ${retry === "SKM" ? "СКМ" : "SAP"}.` : `Состав заказа ${r.order_id} отправлен на подтверждение.`);
     } catch (e) {
       setMessage(e instanceof ApiRequestError && e.status === 409 ? "Состав не отправлен: обновите список и проверьте сборку заказа."
         : e instanceof ApiRequestError && (e.status === 401 || e.status === 403) ? "Нет права отправлять состав этого заказа."
@@ -45,6 +49,8 @@ export function CompositionAck({ wh, onOpen }: { wh: string; onOpen: (orderId: s
           {" · СКМ "}{r.skm_id ?? "—"}: {SYSTEM[r.skm_status ?? ""] ?? r.skm_status}{r.skm_reason ? ` (${r.skm_reason})` : ""}</>}
         {r.change_reason ? " · " + (CHANGE[r.change_reason] ?? r.change_reason) + ": отправьте состав заново" : ""}</small><br />
       <Act help={help("open", "Открыть заказ в списке документов обмена.")} onClick={() => onOpen(r.order_id)}>Открыть заказ</Act>
+      {retryTarget(r) && <Act help={help("retry", "Повторить только отклонённую операцию. Принятое подтверждение другой системы сохранится.")}
+        disabled={busy === r.order_id} onClick={() => void report(r, retryTarget(r))}>Повторить в {retryTarget(r) === "SKM" ? "СКМ" : "SAP"}</Act>}
       {(r.status === "NOT_REPORTED" || r.status === "CHANGED") && r.assembly_closed && <Act help={help("report", "Отправить фактический состав собранного заказа в SAP и СКМ. Повтор того же состава не создаёт второго сообщения.")}
         disabled={busy === r.order_id} onClick={() => void report(r)}>Отправить состав</Act>}
     </li>)}</ul>}

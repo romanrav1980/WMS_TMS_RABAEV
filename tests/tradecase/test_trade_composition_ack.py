@@ -35,6 +35,17 @@ def test_ack_contract_and_hash():
     assert ack_wire(ack(outcome="REJECTED", reason="X"))["payload_hash"] != a["payload_hash"]  # changed body under one event: a conflict natively
 
 
+def test_retry_requires_original_attempt_and_keeps_it_on_wire():
+    for fields in ({'retry_system': 'SAP'}, {'retry_of': 1}, {'retry_system': 'SAP', 'retry_of': 0},
+                   {'retry_system': 'SAP', 'retry_of': True}, {'retry_system': 'OTHER', 'retry_of': 1}):
+        with pytest.raises(ValidationError):
+            CompositionReport(warehouse_id=1, order_id='O', **fields)
+    body = CompositionReport(warehouse_id=1, order_id='O', retry_system='SKM', retry_of=7)
+    g = Gateway()
+    subject.OracleCompositionAck(g).report(body, 'operator')
+    assert json.loads(g.calls[0][1][2]) == dict(warehouse_id=1, order_id='O', retry_system='SKM', retry_of=7)
+
+
 class Gateway:
     def __init__(self):
         self.calls, self.statements = [], []

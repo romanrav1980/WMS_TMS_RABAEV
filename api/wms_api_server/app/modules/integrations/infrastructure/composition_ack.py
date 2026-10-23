@@ -28,7 +28,7 @@ class OracleCompositionAck:
             raise native_error(exc) from exc
 
     def report(self, body: CompositionReport, actor: str) -> dict[str, Any]:
-        return self._call("report", body.warehouse_id, actor, body.model_dump(mode="json"))
+        return self._call("report", body.warehouse_id, actor, body.model_dump(mode="json", exclude_none=True))
 
     def acknowledge(self, body: CompositionAck, actor: str) -> dict[str, Any]:
         return self._call("acknowledge", body.warehouse_id, actor, ack_wire(body))
