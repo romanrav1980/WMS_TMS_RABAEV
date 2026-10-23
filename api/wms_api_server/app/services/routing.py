@@ -11,6 +11,7 @@ _fallback_chain() берёт первый доступный провайдер.
 
 from __future__ import annotations
 
+import atexit
 import math
 import os
 import socket
@@ -20,6 +21,10 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import httpx
+
+# Reuse the client: constructing one for each matrix took ~1.3 s in the local run.
+_HTTP_CLIENT = httpx.Client()
+atexit.register(_HTTP_CLIENT.close)
 
 
 # ---------------------------------------------------------------------------
@@ -132,7 +137,7 @@ class OsrmProvider(RoutingProvider):
         coords_str=";".join(f"{lon},{lat}"for lat,lon in points)
         radii=";".join("1000"for _ in points)
         url=f"{OSRM_URL}/table/v1/driving/{coords_str}?annotations=distance,duration&radiuses={radii}"
-        response=httpx.get(url,timeout=_OSRM_TIMEOUT);response.raise_for_status()
+        response=_HTTP_CLIENT.get(url,timeout=_OSRM_TIMEOUT);response.raise_for_status()
         return osrm_costs(response.json(),len(points))
 
 
@@ -157,7 +162,7 @@ class ValhallaProvider(RoutingProvider):
         from ..modules.transport.public import valhalla_costs,validate_points
         validate_points(points)
         locations=[{"lat":lat,"lon":lon,"radius":1000,"search_cutoff":1000}for lat,lon in points]
-        response=httpx.post(f"{VALHALLA_URL}/sources_to_targets",json={"sources":locations,"targets":locations,"costing":"truck","units":"kilometers"},timeout=_VALHALLA_TIMEOUT)
+        response=_HTTP_CLIENT.post(f"{VALHALLA_URL}/sources_to_targets",json={"sources":locations,"targets":locations,"costing":"truck","units":"kilometers"},timeout=_VALHALLA_TIMEOUT)
         response.raise_for_status();return valhalla_costs(response.json(),len(points))
 
 

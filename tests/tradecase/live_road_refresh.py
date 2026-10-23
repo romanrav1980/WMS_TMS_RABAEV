@@ -20,7 +20,7 @@ from tools.mcp.tms_mcp_server import oracle_connection
 TAG = "RD23" + uuid4().hex[:10]
 WARE = 240000000 + secrets.randbelow(9000000)
 DEPOT, STORE = TAG + ".DEPOT", TAG + ".STORE"
-report = {"status": "FAIL", "provider": "LIVE ROAD PROVIDER" if "--live-provider" in sys.argv else "CONTROLLED TEST RESPONSE, not a live road calculation", "checks": [], "timings": []}
+report = {"status": "FAIL", "provider": "LIVE ROAD PROVIDER" if any(x in sys.argv for x in ("--live-provider", "--served-api")) else "CONTROLLED TEST RESPONSE, not a live road calculation", "checks": [], "timings": []}
 trip = pallet = None
 depot_version = 0
 created = False
@@ -51,6 +51,13 @@ def provider(points):
 def command(service, operation, body):
     start = time.perf_counter()
     try:
+        if "--served-api" in sys.argv:
+            from live_document_acceptance import http
+            status,result=http('POST','/api/transport/preflight/road-refreshes',dict(body,operation_id=operation))
+            report.setdefault('http',[]).append(dict(status=status,result=result))
+            if status!=200:
+                detail=result['detail'];raise TransportPlanError(detail['code'],detail.get('message',detail['code']),status)
+            return result
         from fastapi.testclient import TestClient
         from app.main import app
         from app.modules.transport.contracts_preflight import transport_preflight_service
@@ -74,6 +81,8 @@ if __name__ == "__main__":
         with oracle_connection() as c:
             q = c.cursor(); q.execute("select user,sys_context('USERENV','SERVICE_NAME')from dual")
             assert q.fetchone() == ("RABAEV", "orcl")
+            q.execute('select (select count(*)from RRL_WARES where ID=:w)+(select count(*)from RRL_CELLS where WARE_ID=:w)+(select count(*)from RRL_TRADE_SITE where WARE_ID=:w)from dual',w=WARE)
+            assert q.fetchone()==(0,), 'Fixture warehouse must be absent before any write'
             before = stock(q)
             q.execute("select nvl(max(LOG_ID),0)from RRL_SQL_SLOW_LOG"); marker = q.fetchone()[0]
             q.execute("insert into RRL_WARES(ID,NAME)values(:w,:n)", w=WARE, n="TRADECASE QA road " + TAG)
@@ -94,9 +103,9 @@ if __name__ == "__main__":
         snapshot = service.road_legs(trip, "", 24, "admin")
         body = dict(trip_id=trip, expected_version=snapshot["route_input_version"], source_hash=snapshot["source_hash"])
         first = command(service, TAG + ".refresh", body)
-        assert first["updated_legs"] == 2 and calls == 1
-        assert command(service, TAG + ".refresh", body) == first and calls == 1
-        report["checks"].append("Actual native snapshot, atomic cache publication and exact replay without recomputation")
+        assert first["updated_legs"] == 2 and calls == (0 if "--served-api" in sys.argv else 1)
+        assert command(service, TAG + ".refresh", body) == first and calls == (0 if "--served-api" in sys.argv else 1)
+        report["checks"].append("Actual native snapshot, atomic cache publication and exact replay; provider spy confirms no recomputation only in the in-process mode")
         current = service.road_legs(trip, "", 24, "admin")
         assert current["drive_min"] > 0 and current["drive_back_min"] > 0 and current["unknown_leg_count"] == 0
         report["road_result"] = current
