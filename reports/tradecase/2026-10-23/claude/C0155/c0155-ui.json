@@ -1,0 +1,118 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE scoped queue of warehouse 9104: open tasks listed"
+  },
+  {
+   "width": 1440,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE root paper snapshot opened from the queue row"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "print sheet: all fields readable, barcode inside the page, print dialog requested"
+  },
+  {
+   "width": 1440,
+   "name": "PDF rendered with the sheet's own page size"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE barcode reference of the printed sheet is current"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE changed version is refused (409) and no task is opened"
+  },
+  {
+   "width": 1440,
+   "name": "garbage input is rejected locally"
+  },
+  {
+   "width": 1440,
+   "name": "403 clears the queue"
+  },
+  {
+   "width": 390,
+   "name": "LIVE scoped queue of warehouse 9104: open tasks listed"
+  },
+  {
+   "width": 390,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "LIVE root paper snapshot opened from the queue row"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "print sheet: all fields readable, barcode inside the page, print dialog requested"
+  },
+  {
+   "width": 390,
+   "name": "LIVE barcode reference of the printed sheet is current"
+  },
+  {
+   "width": 390,
+   "name": "LIVE changed version is refused (409) and no task is opened"
+  },
+  {
+   "width": 390,
+   "name": "garbage input is rejected locally"
+  },
+  {
+   "width": 390,
+   "name": "403 clears the queue"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "print": {
+  "popup_1440": {
+   "printed": true,
+   "img": {
+    "left": 0,
+    "right": 983,
+    "width": 983,
+    "height": 94
+   },
+   "viewport": 1120,
+   "scroll": 1120,
+   "fields": 10,
+   "clipped": 0,
+   "title": "Складское задание №5"
+  },
+  "popup_390": {
+   "printed": true,
+   "img": {
+    "left": 0,
+    "right": 983,
+    "width": 983,
+    "height": 94
+   },
+   "viewport": 1120,
+   "scroll": 1120,
+   "fields": 10,
+   "clipped": 0,
+   "title": "Складское задание №5"
+  }
+ },
+ "timings": {
+  "queue_1440": 1386,
+  "queue_390": 1848
+ },
+ "status": "PASS"
+}
