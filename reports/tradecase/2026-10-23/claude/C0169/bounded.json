@@ -1,0 +1,397 @@
+{
+ "cases": {
+  "all_500": {
+   "previous": {
+    "samples_ms": [
+     693.5,
+     460.2,
+     551.2,
+     436.4,
+     482.9,
+     432.9,
+     467.7,
+     416.2,
+     488.9,
+     444.4
+    ],
+    "first_ms": 693.5,
+    "warm_median": 460.2,
+    "warm_min": 416.2,
+    "warm_max": 551.2,
+    "n_warm": 9,
+    "rows": 367
+   },
+   "group_all": {
+    "samples_ms": [
+     84.8,
+     45.7,
+     48.2,
+     60.9,
+     55.0,
+     70.9,
+     48.8,
+     57.6,
+     45.1,
+     45.0
+    ],
+    "first_ms": 84.8,
+    "warm_median": 48.8,
+    "warm_min": 45.0,
+    "warm_max": 70.9,
+    "n_warm": 9,
+    "rows": 367
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     178.5,
+     63.4,
+     55.5,
+     61.0,
+     49.4,
+     57.0,
+     49.9,
+     48.1,
+     56.4,
+     87.5
+    ],
+    "first_ms": 178.5,
+    "warm_median": 56.4,
+    "warm_min": 48.1,
+    "warm_max": 87.5,
+    "n_warm": 9,
+    "rows": 367
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  },
+  "default_200": {
+   "previous": {
+    "samples_ms": [
+     346.3,
+     280.8,
+     296.0,
+     321.7,
+     316.4,
+     290.6,
+     381.4,
+     287.5,
+     277.4,
+     345.0
+    ],
+    "first_ms": 346.3,
+    "warm_median": 296.0,
+    "warm_min": 277.4,
+    "warm_max": 381.4,
+    "n_warm": 9,
+    "rows": 200
+   },
+   "group_all": {
+    "samples_ms": [
+     91.7,
+     34.5,
+     34.3,
+     48.0,
+     41.2,
+     34.3,
+     33.6,
+     37.8,
+     44.9,
+     39.7
+    ],
+    "first_ms": 91.7,
+    "warm_median": 37.8,
+    "warm_min": 33.6,
+    "warm_max": 48.0,
+    "n_warm": 9,
+    "rows": 200
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     135.7,
+     50.4,
+     46.2,
+     41.4,
+     47.2,
+     93.8,
+     65.7,
+     64.9,
+     97.2,
+     41.4
+    ],
+    "first_ms": 135.7,
+    "warm_median": 50.4,
+    "warm_min": 41.4,
+    "warm_max": 97.2,
+    "n_warm": 9,
+    "rows": 200
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  },
+  "limit_5": {
+   "previous": {
+    "samples_ms": [
+     77.2,
+     42.4,
+     46.0,
+     43.4,
+     48.7,
+     54.2,
+     51.7,
+     44.5,
+     56.1,
+     43.9
+    ],
+    "first_ms": 77.2,
+    "warm_median": 46.0,
+    "warm_min": 42.4,
+    "warm_max": 56.1,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "group_all": {
+    "samples_ms": [
+     75.6,
+     39.8,
+     41.3,
+     46.1,
+     51.0,
+     44.0,
+     42.1,
+     53.1,
+     36.0,
+     37.9
+    ],
+    "first_ms": 75.6,
+    "warm_median": 42.1,
+    "warm_min": 36.0,
+    "warm_max": 53.1,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     168.7,
+     39.5,
+     45.8,
+     48.7,
+     49.0,
+     49.1,
+     50.3,
+     39.4,
+     42.4,
+     41.3
+    ],
+    "first_ms": 168.7,
+    "warm_median": 45.8,
+    "warm_min": 39.4,
+    "warm_max": 50.3,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  },
+  "role_finished": {
+   "previous": {
+    "samples_ms": [
+     79.7,
+     75.9,
+     73.1,
+     75.1,
+     70.8,
+     58.8,
+     57.1,
+     66.9,
+     52.9,
+     53.4
+    ],
+    "first_ms": 79.7,
+    "warm_median": 66.9,
+    "warm_min": 52.9,
+    "warm_max": 75.9,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "group_all": {
+    "samples_ms": [
+     83.1,
+     38.6,
+     41.8,
+     49.3,
+     47.7,
+     38.8,
+     34.2,
+     42.0,
+     52.0,
+     62.2
+    ],
+    "first_ms": 83.1,
+    "warm_median": 42.0,
+    "warm_min": 34.2,
+    "warm_max": 62.2,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     244.5,
+     63.3,
+     76.7,
+     56.4,
+     51.1,
+     54.4,
+     62.2,
+     59.7,
+     54.8,
+     55.2
+    ],
+    "first_ms": 244.5,
+    "warm_median": 56.4,
+    "warm_min": 51.1,
+    "warm_max": 76.7,
+    "n_warm": 9,
+    "rows": 5
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  },
+  "mes_1": {
+   "previous": {
+    "samples_ms": [
+     23.1,
+     7.0,
+     5.8,
+     7.5,
+     9.6,
+     9.3,
+     7.8,
+     8.0,
+     7.3,
+     7.9
+    ],
+    "first_ms": 23.1,
+    "warm_median": 7.8,
+    "warm_min": 5.8,
+    "warm_max": 9.6,
+    "n_warm": 9,
+    "rows": 4
+   },
+   "group_all": {
+    "samples_ms": [
+     87.6,
+     53.1,
+     52.4,
+     45.2,
+     41.7,
+     103.4,
+     37.5,
+     41.4,
+     38.1,
+     30.6
+    ],
+    "first_ms": 87.6,
+    "warm_median": 41.7,
+    "warm_min": 30.6,
+    "warm_max": 103.4,
+    "n_warm": 9,
+    "rows": 4
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     130.3,
+     24.4,
+     26.5,
+     26.9,
+     25.3,
+     24.9,
+     26.1,
+     25.8,
+     26.1,
+     25.8
+    ],
+    "first_ms": 130.3,
+    "warm_median": 25.8,
+    "warm_min": 24.4,
+    "warm_max": 26.9,
+    "n_warm": 9,
+    "rows": 4
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  },
+  "mes_0": {
+   "previous": {
+    "samples_ms": [
+     474.5,
+     404.2,
+     477.5,
+     421.5,
+     618.9,
+     518.8,
+     519.2,
+     440.8,
+     447.0,
+     477.9
+    ],
+    "first_ms": 474.5,
+    "warm_median": 477.5,
+    "warm_min": 404.2,
+    "warm_max": 618.9,
+    "n_warm": 9,
+    "rows": 363
+   },
+   "group_all": {
+    "samples_ms": [
+     88.5,
+     40.5,
+     39.4,
+     39.9,
+     40.5,
+     42.4,
+     48.3,
+     60.0,
+     70.0,
+     69.0
+    ],
+    "first_ms": 88.5,
+    "warm_median": 42.4,
+    "warm_min": 39.4,
+    "warm_max": 70.0,
+    "n_warm": 9,
+    "rows": 363
+   },
+   "bounded_cte": {
+    "samples_ms": [
+     196.4,
+     56.8,
+     70.7,
+     45.4,
+     51.5,
+     49.5,
+     51.4,
+     51.8,
+     55.3,
+     47.5
+    ],
+    "first_ms": 196.4,
+    "warm_median": 51.5,
+    "warm_min": 45.4,
+    "warm_max": 70.7,
+    "n_warm": 9,
+    "rows": 363
+   },
+   "group_all_equal": true,
+   "bounded_equal": true
+  }
+ },
+ "plans": {
+  "unavailable": "ORA-00942: table or view does not exist"
+ },
+ "remains_rows_negative_null": [
+  1544,
+  0,
+  0
+ ],
+ "all_equal": true
+}

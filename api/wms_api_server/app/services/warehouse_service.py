@@ -24,38 +24,47 @@ class WarehouseService:
             conditions.append("nvl(MES_ENABLED, 0) = :mes_enabled")
             params["mes_enabled"] = 1 if int(mes_enabled) == 1 else 0
         where_sql = " where " + " and ".join(conditions) if conditions else ""
+        # C-0169: the same filtered/ordered/limited warehouse set first; cells and remains are aggregated only for that set and
+        # left-joined (was three correlated subqueries per row: ~460 ms for all warehouses, now ~50 ms; small filtered sets ~8 -> ~25 ms).
         return self.gateway.fetch_all(
             f"""
-            select *
-              from (
-                select ID,
-                       NAME,
-                       PREFIX,
-                       nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,
-                       nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,
-                       nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,
-                       nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,
-                       nvl(MES_ENABLED, 0) MES_ENABLED,
-                       DEFAULT_RECEIVE_CELL,
-                       DEFAULT_ISSUE_CELL,
-                       WARE_COMMENT,
-                       OVERFLOW_CELL_NAME,
-                       PARENT_WARE_ID,
-                       ORD2,
-                       (select count(*) from RRL_CELLS c where c.WARE_ID = w.ID) CELL_COUNT,
-                       (select count(distinct r.UID_POLETA)
-                          from RRL_CELLS c
-                          join RRL_REMAINS r on r.CELL = c.CELL
-                         where c.WARE_ID = w.ID) PALLET_COUNT,
-                       (select nvl(sum(r.REMAIN), 0)
-                          from RRL_CELLS c
-                          join RRL_REMAINS r on r.CELL = c.CELL
-                         where c.WARE_ID = w.ID) TOTAL_REMAIN
-                  from RRL_WARES w
-                  {where_sql}
-                 order by nvl(ORD2, ID), ID
-              )
-             where rownum <= :limit
+            with sel as (
+                select *
+                  from (
+                    select ID,
+                           NAME,
+                           PREFIX,
+                           nvl(FLAG_RAW_MATERIAL, 0) FLAG_RAW_MATERIAL,
+                           nvl(FLAG_PRODUCTION, 0) FLAG_PRODUCTION,
+                           nvl(FLAG_PRODUCTION_BUFFER, 0) FLAG_PRODUCTION_BUFFER,
+                           nvl(FLAG_FINISHED_GOODS, 0) FLAG_FINISHED_GOODS,
+                           nvl(MES_ENABLED, 0) MES_ENABLED,
+                           DEFAULT_RECEIVE_CELL,
+                           DEFAULT_ISSUE_CELL,
+                           WARE_COMMENT,
+                           OVERFLOW_CELL_NAME,
+                           PARENT_WARE_ID,
+                           ORD2
+                      from RRL_WARES w
+                      {where_sql}
+                     order by nvl(ORD2, ID), ID
+                  )
+                 where rownum <= :limit
+            ),
+            cc as (select c.WARE_ID, count(*) CELL_COUNT from RRL_CELLS c where c.WARE_ID in (select ID from sel) group by c.WARE_ID),
+            st as (select c.WARE_ID, count(distinct r.UID_POLETA) PALLET_COUNT, sum(r.REMAIN) TOTAL_REMAIN
+                     from RRL_REMAINS r
+                     join RRL_CELLS c on c.CELL = r.CELL
+                    where c.WARE_ID in (select ID from sel)
+                    group by c.WARE_ID)
+            select sel.*,
+                   nvl(cc.CELL_COUNT, 0) CELL_COUNT,
+                   nvl(st.PALLET_COUNT, 0) PALLET_COUNT,
+                   nvl(st.TOTAL_REMAIN, 0) TOTAL_REMAIN
+              from sel
+              left join cc on cc.WARE_ID = sel.ID
+              left join st on st.WARE_ID = sel.ID
+             order by nvl(sel.ORD2, sel.ID), sel.ID
             """,
             params,
         )

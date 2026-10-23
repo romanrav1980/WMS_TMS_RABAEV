@@ -1,0 +1,68 @@
+{
+ "base": {
+  "first_ms": 18.9,
+  "warm_median": 9.5,
+  "warm_min": 9.2,
+  "warm_max": 10.2,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "+cells": {
+  "first_ms": 28.7,
+  "warm_median": 22.9,
+  "warm_min": 18.0,
+  "warm_max": 33.4,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "+pallets": {
+  "first_ms": 319.2,
+  "warm_median": 211.5,
+  "warm_min": 200.6,
+  "warm_max": 251.4,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "+remain": {
+  "first_ms": 182.2,
+  "warm_median": 198.5,
+  "warm_min": 171.6,
+  "warm_max": 260.2,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "full": {
+  "first_ms": 408.5,
+  "warm_median": 392.9,
+  "warm_min": 362.5,
+  "warm_max": 427.2,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "indexes": [
+  [
+   "BIN$UX1xZvTvS6/gYw8CAAo/Yg==$0",
+   "CELL,UID_POLETA"
+  ],
+  [
+   "BIN$UX1xZvURS6/gYw8CAAo/Yg==$0",
+   "EXPEDITION_GROUP"
+  ],
+  [
+   "BIN$UX1xZvUSS6/gYw8CAAo/Yg==$0",
+   "CELL"
+  ],
+  [
+   "BIN$UX1xZvUTS6/gYw8CAAo/Yg==$0",
+   "WARE_ID"
+  ]
+ ],
+ "service_list_warehouses": {
+  "first_ms": 379.6,
+  "warm_median": 434.1,
+  "warm_min": 369.2,
+  "warm_max": 443.2,
+  "n_warm": 5,
+  "rows": 367
+ }
+}

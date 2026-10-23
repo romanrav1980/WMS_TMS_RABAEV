@@ -1,0 +1,48 @@
+{
+ "label": "before",
+ "sql_options_warehouses": {
+  "first_ms": 17.7,
+  "warm_min": 6.5,
+  "warm_median": 8.0,
+  "warm_max": 15.8,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "sql_drivers": {
+  "first_ms": 83.4,
+  "warm_min": 59.8,
+  "warm_median": 64.5,
+  "warm_max": 73.3,
+  "n_warm": 5,
+  "rows": 1869
+ },
+ "wares": 367,
+ "cells": 67519,
+ "remains": 1544,
+ "http_full_warehouses": {
+  "first_ms": 728.5,
+  "warm_min": 479.3,
+  "warm_median": 524.1,
+  "warm_max": 624.4,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "http_options_all_pages": {
+  "first_ms": 349.9,
+  "warm_min": 295.5,
+  "warm_median": 388.8,
+  "warm_max": 1326.5,
+  "n_warm": 5,
+  "rows": 367
+ },
+ "http_drivers": {
+  "first_ms": 149.3,
+  "warm_min": 43.2,
+  "warm_median": 52.3,
+  "warm_max": 60.3,
+  "n_warm": 5,
+  "rows": 1869
+ },
+ "http_same_id_name_set": true,
+ "http_full_results_stable": true
+}

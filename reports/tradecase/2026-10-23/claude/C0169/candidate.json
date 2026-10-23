@@ -1,0 +1,100 @@
+{
+ "cases": {
+  "all_500": {
+   "current": {
+    "first_ms": 408.2,
+    "warm_median": 412.8,
+    "warm_min": 368.5,
+    "warm_max": 469.7,
+    "n_warm": 5,
+    "rows": 367
+   },
+   "candidate": {
+    "first_ms": 113.5,
+    "warm_median": 48.7,
+    "warm_min": 37.9,
+    "warm_max": 53.0,
+    "n_warm": 5,
+    "rows": 367
+   },
+   "equal_rows_in_order": true
+  },
+  "limit_200": {
+   "current": {
+    "first_ms": 335.0,
+    "warm_median": 283.4,
+    "warm_min": 260.8,
+    "warm_max": 454.8,
+    "n_warm": 5,
+    "rows": 200
+   },
+   "candidate": {
+    "first_ms": 42.0,
+    "warm_median": 45.1,
+    "warm_min": 38.2,
+    "warm_max": 116.2,
+    "n_warm": 5,
+    "rows": 200
+   },
+   "equal_rows_in_order": true
+  },
+  "limit_5": {
+   "current": {
+    "first_ms": 50.1,
+    "warm_median": 44.3,
+    "warm_min": 42.7,
+    "warm_max": 59.4,
+    "n_warm": 5,
+    "rows": 5
+   },
+   "candidate": {
+    "first_ms": 31.1,
+    "warm_median": 30.3,
+    "warm_min": 29.3,
+    "warm_max": 32.4,
+    "n_warm": 5,
+    "rows": 5
+   },
+   "equal_rows_in_order": true
+  },
+  "role_finished": {
+   "current": {
+    "first_ms": 44.3,
+    "warm_median": 73.7,
+    "warm_min": 59.7,
+    "warm_max": 111.5,
+    "n_warm": 5,
+    "rows": 5
+   },
+   "candidate": {
+    "first_ms": 49.8,
+    "warm_median": 51.7,
+    "warm_min": 38.8,
+    "warm_max": 57.0,
+    "n_warm": 5,
+    "rows": 5
+   },
+   "equal_rows_in_order": true
+  },
+  "mes_1": {
+   "current": {
+    "first_ms": 9.3,
+    "warm_median": 8.7,
+    "warm_min": 7.9,
+    "warm_max": 9.6,
+    "n_warm": 5,
+    "rows": 4
+   },
+   "candidate": {
+    "first_ms": 70.6,
+    "warm_median": 32.0,
+    "warm_min": 30.2,
+    "warm_max": 34.0,
+    "n_warm": 5,
+    "rows": 4
+   },
+   "equal_rows_in_order": true
+  }
+ },
+ "all_equal": true
+}
