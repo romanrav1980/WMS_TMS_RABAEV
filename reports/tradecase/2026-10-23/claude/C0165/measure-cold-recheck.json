@@ -1,0 +1,897 @@
+{
+ "label": "cold-recheck",
+ "identifier": "099999990000026027",
+ "actor": "admin",
+ "probes": {
+  "bulk-box-preview": {
+   "first_ms": 1057.6,
+   "warm_min": 126.1,
+   "warm_median": 130.9,
+   "warm_max": 134.0,
+   "n_warm": 5,
+   "results_identical": true,
+   "probes": [
+    {
+     "probe": 0,
+     "total_ms": 1057.6,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       2.6
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.4
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       2.1
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       6.1
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       2.8
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       791.2
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       1.9
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       10.8
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       18.8
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       25.2
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       8.3
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       21.5
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.4
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.4
+      ]
+     ],
+     "result_sha": null
+    },
+    {
+     "probe": 1,
+     "total_ms": 130.9,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.3
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       0.9
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       1.8
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       1.2
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       2.1
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       79.3
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       1.7
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       10.7
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       3.8
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       1.9
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       1.5
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       5.5
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.6
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.6
+      ]
+     ],
+     "result_sha": null
+    },
+    {
+     "probe": 2,
+     "total_ms": 134.0,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       2.0
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.9
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       1.8
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       1.4
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       1.8
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       72.9
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       2.2
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       13.8
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       9.1
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       1.3
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       1.7
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       6.0
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.6
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.6
+      ]
+     ],
+     "result_sha": null
+    },
+    {
+     "probe": 3,
+     "total_ms": 131.7,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.5
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.5
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       1.6
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       1.1
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       1.5
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       72.4
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       2.5
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       14.7
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       4.6
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       1.4
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       1.7
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       5.3
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.8
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.8
+      ]
+     ],
+     "result_sha": null
+    },
+    {
+     "probe": 4,
+     "total_ms": 126.1,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.3
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.1
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       1.7
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       1.7
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       13.2
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       57.4
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       2.0
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       14.1
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       3.3
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       1.5
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       1.5
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       5.3
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       9.5
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       9.5
+      ]
+     ],
+     "result_sha": null
+    },
+    {
+     "probe": 5,
+     "total_ms": 130.0,
+     "error": "TransportLoadingError: Сначала освободите короб из родительского места.",
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.6
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       0.9
+      ],
+      [
+       "SQL",
+       "select p.UID_PALLET,cast(null as number) CASE_TASK_ID,p.HU_SHIPPED_OPERATION from RRL_PALLETS p where p.UID_PA",
+       1.5
+      ],
+      [
+       "SQL",
+       "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task",
+       1.4
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       9.4
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual",
+       69.0
+      ],
+      [
+       "SQL",
+       "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual",
+       1.9
+      ],
+      [
+       "SQL",
+       "with owners as(select a.OWNER_ID,count(u.PHYSICAL_UNIT_KEY) TOTAL, count(a.PHYSICAL_UNIT_KEY) TAGGED,count(*)-",
+       15.1
+      ],
+      [
+       "SQL",
+       "begin :retval := RRL_HU_THERMAL_READ.admission_json(:1,:2,:3,:4); end;",
+       6.5
+      ],
+      [
+       "SQL",
+       "select cl.TASK_ID,cl.CELL_SLOT_ID,sl.SLOT_CODE,cl.HU_COMPOSITION_VERSION, to_char(cl.HU_GROSS_WEIGHT_KG,'TM9',",
+       2.3
+      ],
+      [
+       "SQL",
+       "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_cas",
+       1.3
+      ],
+      [
+       "SQL",
+       "insert into RRL_SQL_SLOW_LOG ( LOG_ID, CREATED_AT, MODULE, ACTION, API_CALL_ID, REQUEST_ID, API_METHOD, API_PA",
+       5.7
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.5
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.5
+      ]
+     ],
+     "result_sha": null
+    }
+   ]
+  },
+  "outgoing-quality": {
+   "first_ms": 179.8,
+   "warm_min": 66.5,
+   "warm_median": 87.3,
+   "warm_max": 109.0,
+   "n_warm": 5,
+   "results_identical": true,
+   "probes": [
+    {
+     "probe": 0,
+     "total_ms": 179.8,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.6
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.2
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       5.1
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       15.8
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       31.4
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       31.5
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       78.5
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       15.0
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       9.0
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       9.1
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    },
+    {
+     "probe": 1,
+     "total_ms": 109.0,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.8
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       2.4
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       2.2
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       1.7
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       4.0
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       4.0
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       77.8
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       3.6
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.8
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.9
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    },
+    {
+     "probe": 2,
+     "total_ms": 96.7,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.6
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.3
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       1.7
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       2.5
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       2.3
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       2.3
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       73.7
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       1.2
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.2
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.3
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    },
+    {
+     "probe": 3,
+     "total_ms": 87.3,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.4
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.1
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       1.6
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       1.8
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       2.7
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       2.8
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       58.9
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       1.4
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       7.8
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       7.9
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    },
+    {
+     "probe": 4,
+     "total_ms": 67.9,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.6
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.0
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       1.1
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       1.3
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       2.3
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       2.4
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       48.5
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       1.5
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.3
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.3
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    },
+    {
+     "probe": 5,
+     "total_ms": 66.5,
+     "error": null,
+     "steps": [
+      [
+       "SQL",
+       "begin dbms_application_info.set_module(:module_name, :action_name); dbms_session.set_identifier(:client_identi",
+       1.3
+      ],
+      [
+       "SQL",
+       "set transaction read only",
+       1.3
+      ],
+      [
+       "SQL",
+       "select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0",
+       1.5
+      ],
+      [
+       "SQL",
+       "select distinct PALLET_UID from ( select s.PALLET_UID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:p_code uni",
+       1.5
+      ],
+      [
+       "SQL",
+       "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;",
+       2.5
+      ],
+      [
+       "CALL",
+       "RRL_OUTGOING_QC_ACCESS.assert_identifier",
+       2.5
+      ],
+      [
+       "SQL",
+       "select RRL_STOCK_QC_GATE.status_json(:p_identifier) from dual",
+       45.7
+      ],
+      [
+       "SQL",
+       "select s.ID,s.TRANSTASK_ID from RRL_SBORKA_PALLETS s where s.PALLET_UID=:identifier and RRL_HAS_WRIGHT(:actor,",
+       1.6
+      ],
+      [
+       "SQL",
+       "begin RRL_STOCK_POSTING_API.reset_connection(); end;",
+       1.1
+      ],
+      [
+       "CALL",
+       "RRL_STOCK_POSTING_API.reset_connection",
+       1.2
+      ]
+     ],
+     "result_sha": "f3e3208fb727e4cc09320143933116c4705dc0072b258252597b8055b8a5a14e"
+    }
+   ]
+  }
+ },
+ "results": {
+  "bulk-box-preview": null,
+  "outgoing-quality": {
+   "shipment_identifier": "NB22.ST.1169",
+   "document_id": 641548,
+   "case_content_version": 6,
+   "composition_signature_version": 3,
+   "final_scale_required": true,
+   "required": true,
+   "control_mode": "WEIGHT",
+   "independent_controller_required": false,
+   "quality_policy": {
+    "warehouse_id": 220793322,
+    "mode": "NONE",
+    "independent": 0,
+    "sample_percent": 0,
+    "exempt_whole": 0,
+    "exempt_storage": 0,
+    "scoped_rule": false
+   },
+   "weight_exemption": {
+    "eligible": false,
+    "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+   },
+   "unique_mark_control_required": true,
+   "mark_profiles": [
+    {
+     "system_code": "CRPT",
+     "profile_code": "TOBACCO"
+    }
+   ],
+   "case_task_id": 1169,
+   "case_status": "CONTROLLED",
+   "physical_unit_count": 1,
+   "composition_signature": "B8B460AA429BC6CA0F6998C665DE25E6824116B5262EA05BE2DEE3ACA120600F",
+   "weight_exemption_recorded": false,
+   "sample_percent": 0,
+   "sample_selected": false,
+   "rescan_required": false,
+   "control_plan_required": false,
+   "full_scan_required": false,
+   "scan_matches": true,
+   "weight_matches": true,
+   "expected_weight_kg": "1",
+   "tolerance_kg": "5",
+   "ready": true,
+   "transport_assignment": {
+    "state": "ASSIGNED",
+    "shipment_id": 641548,
+    "transport_task_id": 33666
+   },
+   "requested_identifier": "099999990000026027"
+  }
+ }
+}

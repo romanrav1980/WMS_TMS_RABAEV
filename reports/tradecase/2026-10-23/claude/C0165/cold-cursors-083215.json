@@ -1,0 +1,273 @@
+{
+ "window": [
+  "2026-10-23/08:32:15",
+  "2026-10-23/08:32:20"
+ ],
+ "cursors": 28,
+ "total_ms": 1344.2,
+ "by_unit": {
+  "(top level)": {
+   "cursors": 4,
+   "total_ms": 1163.8
+  },
+  "RRL_WH_FINAL_SCALE_ADMISSION": {
+   "cursors": 4,
+   "total_ms": 51.8
+  },
+  "RRL_STOCK_HU_READ": {
+   "cursors": 8,
+   "total_ms": 47.0
+  },
+  "RRL_STOCK_QC_GATE": {
+   "cursors": 4,
+   "total_ms": 26.0
+  },
+  "RRL_STOCK_CASE_PICK_CMD": {
+   "cursors": 1,
+   "total_ms": 25.2
+  },
+  "RRL_HU_THERMAL_READ": {
+   "cursors": 4,
+   "total_ms": 17.3
+  },
+  "RRL_STOCK_QC_POLICY": {
+   "cursors": 1,
+   "total_ms": 4.8
+  },
+  "RRL_STOCK_HU_PLACEMENT_CORE": {
+   "cursors": 1,
+   "total_ms": 4.7
+  },
+  "RRL_STOCK_SHIPPING_CORE": {
+   "cursors": 1,
+   "total_ms": 3.6
+  }
+ },
+ "top": [
+  {
+   "unit": "(top level)",
+   "program_line#": 0,
+   "executions": 6,
+   "total_ms": 1116.5,
+   "per_exec_ms": 186.1,
+   "loads": 1,
+   "text": "select RRL_STOCK_HU_READ.case_snapshot_json(:p_task) SNAPSHOT from dual"
+  },
+  {
+   "unit": "(top level)",
+   "program_line#": 0,
+   "executions": 6,
+   "total_ms": 35.3,
+   "per_exec_ms": 5.9,
+   "loads": 1,
+   "text": "begin RRL_OUTGOING_QC_ACCESS.assert_identifier(:1,:2); end;"
+  },
+  {
+   "unit": "RRL_STOCK_CASE_PICK_CMD",
+   "program_line#": 5,
+   "executions": 18,
+   "total_ms": 25.2,
+   "per_exec_ms": 1.4,
+   "loads": 1,
+   "text": "SELECT H.LOT_UID,S.CELL,S.REMAIN,S.STOCK_VERSION,S.BASE_UOM,P.ARTICUL,H.CASE_PICK_LINE_ID "
+  },
+  {
+   "unit": "RRL_WH_FINAL_SCALE_ADMISSION",
+   "program_line#": 146,
+   "executions": 9,
+   "total_ms": 21.4,
+   "per_exec_ms": 2.4,
+   "loads": 1,
+   "text": "SELECT A.SESSION_ID,A.FINAL_CAPTURE_KEY,C.RESULT_JSON FROM RRL_ASSEMBLY_SESSION A JOIN RRL"
+  },
+  {
+   "unit": "RRL_WH_FINAL_SCALE_ADMISSION",
+   "program_line#": 128,
+   "executions": 9,
+   "total_ms": 20.1,
+   "per_exec_ms": 2.2,
+   "loads": 1,
+   "text": "SELECT CASE WHEN P.FINAL_WEIGHT_REQUIRED=1 AND UPPER(P.LOAD_UNIT_CLASS)='CONTAINER'THEN 1 "
+  },
+  {
+   "unit": "RRL_STOCK_HU_READ",
+   "program_line#": 12,
+   "executions": 9,
+   "total_ms": 15,
+   "per_exec_ms": 1.7,
+   "loads": 1,
+   "text": "SELECT * FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 "
+  },
+  {
+   "unit": "RRL_STOCK_QC_GATE",
+   "program_line#": 6,
+   "executions": 189,
+   "total_ms": 11.7,
+   "per_exec_ms": 0.1,
+   "loads": 1,
+   "text": "SELECT CASE WHEN P.FINAL_WEIGHT_REQUIRED=1 AND UPPER(P.LOAD_UNIT_CLASS)='CONTAINER'THEN 3 "
+  },
+  {
+   "unit": "RRL_STOCK_HU_READ",
+   "program_line#": 84,
+   "executions": 9,
+   "total_ms": 9.3,
+   "per_exec_ms": 1,
+   "loads": 1,
+   "text": "SELECT PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH (C"
+  },
+  {
+   "unit": "RRL_STOCK_HU_READ",
+   "program_line#": 76,
+   "executions": 9,
+   "total_ms": 7.9,
+   "per_exec_ms": 0.9,
+   "loads": 1,
+   "text": "SELECT * FROM RRL_WMS_HU_LINK WHERE PARENT_UID=:B1 AND ACTIVE_FLAG=1 ORDER BY HU_LINK_ID"
+  },
+  {
+   "unit": "(top level)",
+   "program_line#": 0,
+   "executions": 6,
+   "total_ms": 7.3,
+   "per_exec_ms": 1.2,
+   "loads": 1,
+   "text": "select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE"
+  },
+  {
+   "unit": "RRL_HU_THERMAL_READ",
+   "program_line#": 30,
+   "executions": 4,
+   "total_ms": 6.4,
+   "per_exec_ms": 1.6,
+   "loads": 1,
+   "text": "SELECT ARTICLE FROM(SELECT DISTINCT ARTICLE FROM( SELECT ARTICLE FROM JSON_TABLE(:B1 ,'$[*"
+  },
+  {
+   "unit": "RRL_STOCK_QC_GATE",
+   "program_line#": 129,
+   "executions": 36,
+   "total_ms": 5.9,
+   "per_exec_ms": 0.2,
+   "loads": 1,
+   "text": "SELECT CASE WHEN P.FINAL_WEIGHT_REQUIRED=1 AND UPPER(P.LOAD_UNIT_CLASS)='CONTAINER'THEN 1 "
+  },
+  {
+   "unit": "RRL_STOCK_QC_GATE",
+   "program_line#": 17,
+   "executions": 90,
+   "total_ms": 5.3,
+   "per_exec_ms": 0.1,
+   "loads": 1,
+   "text": "SELECT SSCC,PALLET_TYPE_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 "
+  },
+  {
+   "unit": "RRL_WH_FINAL_SCALE_ADMISSION",
+   "program_line#": 13,
+   "executions": 27,
+   "total_ms": 5.3,
+   "per_exec_ms": 0.2,
+   "loads": 1,
+   "text": "SELECT CANONICAL_REQUEST,RESOLVED_PLAN_JSON,RESULT_JSON,STATE,COMMAND_TYPE FROM RRL_STOCK_"
+  },
+  {
+   "unit": "RRL_HU_THERMAL_READ",
+   "program_line#": 25,
+   "executions": 6,
+   "total_ms": 5,
+   "per_exec_ms": 0.8,
+   "loads": 1,
+   "text": "SELECT COUNT(*)FROM( SELECT KIND,ARTICLE FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(KIND VARCHAR2("
+  },
+  {
+   "unit": "RRL_WH_FINAL_SCALE_ADMISSION",
+   "program_line#": 136,
+   "executions": 9,
+   "total_ms": 5,
+   "per_exec_ms": 0.6,
+   "loads": 1,
+   "text": "SELECT CANONICAL_REQUEST,RESOLVED_PLAN_JSON,ACTOR FROM RRL_STOCK_OPERATION WHERE OPERATION"
+  },
+  {
+   "unit": "RRL_STOCK_QC_POLICY",
+   "program_line#": 13,
+   "executions": 54,
+   "total_ms": 4.8,
+   "per_exec_ms": 0.1,
+   "loads": 1,
+   "text": "SELECT T.FINAL_WEIGHT_REQUIRED FROM RRL_CASE_PICK_TASK C JOIN RRL_PALLET_TYPE T ON T.PALLE"
+  },
+  {
+   "unit": "RRL_STOCK_HU_PLACEMENT_CORE",
+   "program_line#": 44,
+   "executions": 18,
+   "total_ms": 4.7,
+   "per_exec_ms": 0.3,
+   "loads": 1,
+   "text": "SELECT TASK_ID,CELL_SLOT_ID FROM RRL_RECEIPT_SLOT_CLAIM WHERE HU_CASE_TASK_ID=:B1 AND STAT"
+  },
+  {
+   "unit": "RRL_STOCK_HU_READ",
+   "program_line#": 62,
+   "executions": 9,
+   "total_ms": 4.7,
+   "per_exec_ms": 0.5,
+   "loads": 1,
+   "text": "SELECT * FROM RRL_REMAINS WHERE UID_POLETA=:B1 AND REMAIN>0"
+  },
+  {
+   "unit": "(top level)",
+   "program_line#": 0,
+   "executions": 6,
+   "total_ms": 4.7,
+   "per_exec_ms": 0.8,
+   "loads": 1,
+   "text": "select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:p_task"
+  },
+  {
+   "unit": "RRL_STOCK_SHIPPING_CORE",
+   "program_line#": 99,
+   "executions": 18,
+   "total_ms": 3.6,
+   "per_exec_ms": 0.2,
+   "loads": 1,
+   "text": "SELECT BASE_UOM,NUMERATOR,DENOMINATOR,BASE_SCALE FROM RRL_STOCK_UOM_CONVERSION WHERE ARTIC"
+  },
+  {
+   "unit": "RRL_STOCK_HU_READ",
+   "program_line#": 23,
+   "executions": 9,
+   "total_ms": 3.4,
+   "per_exec_ms": 0.4,
+   "loads": 1,
+   "text": "SELECT LOT_UID FROM RRL_CASE_CARRIER_LOT WHERE CASE_PICK_TASK_ID=:B1 ORDER BY LOT_UID FETC"
+  },
+  {
+   "unit": "RRL_HU_THERMAL_READ",
+   "program_line#": 30,
+   "executions": 2,
+   "total_ms": 3.2,
+   "per_exec_ms": 1.6,
+   "loads": 1,
+   "text": "SELECT ARTICLE FROM(SELECT DISTINCT ARTICLE FROM( SELECT ARTICLE FROM JSON_TABLE(:B1 ,'$[*"
+  },
+  {
+   "unit": "RRL_STOCK_QC_GATE",
+   "program_line#": 143,
+   "executions": 18,
+   "total_ms": 3.1,
+   "per_exec_ms": 0.2,
+   "loads": 1,
+   "text": "SELECT STATUS FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 "
+  },
+  {
+   "unit": "RRL_HU_THERMAL_READ",
+   "program_line#": 35,
+   "executions": 6,
+   "total_ms": 2.7,
+   "per_exec_ms": 0.4,
+   "loads": 1,
+   "text": "SELECT TEMP_MIN,TEMP_MAX FROM RRL_RECEIPT_SKU_RULE WHERE WARE_ID=:B2 AND ARTICUL=:B1 "
+  }
+ ]
+}

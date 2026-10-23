@@ -1,0 +1,32 @@
+[
+ {
+  "call": "hu",
+  "attempt": "same text warm",
+  "ms": 134.1
+ },
+ {
+  "call": "hu",
+  "attempt": "new text hard parse",
+  "ms": 97.9
+ },
+ {
+  "call": "hu",
+  "attempt": "new text hard parse",
+  "ms": 85.6
+ },
+ {
+  "call": "qc",
+  "attempt": "same text warm",
+  "ms": 74.4
+ },
+ {
+  "call": "qc",
+  "attempt": "new text hard parse",
+  "ms": 87.1
+ },
+ {
+  "call": "qc",
+  "attempt": "new text hard parse",
+  "ms": 112.1
+ }
+]
