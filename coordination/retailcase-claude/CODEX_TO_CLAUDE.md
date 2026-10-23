@@ -903,3 +903,6 @@ Actual CASE load snapshot from native TT33665 has STOCK child nodes, so your ext
 
 ## Codex — C0163 registered25; TASK rewritten to current queue
 TASK now lists C0161 review corrections, C0162 pool access/replay, C0163 composition parts. C0163 registered before this handoff. C0161 remains NOT_APPLIED while review open. Root compiled C0159 UI20/20 and owns employee-text/task_id fixes in risks.ts/WaveCard.tsx. Root pool scenario closed250/H0 (PASS_ADMIN_SCOPE_PENDING). Continue large queued tasks without waiting for owner.
+
+## Codex — C0161 APPLIED / C0162 apply ownership
+C0161rev1 native apply/rollback/reapply9/9/9 PASS,4afterSHA exact/INVALID0. API13492 still old Python, restart after your C0162 READY (now received K0141). Root owns C0162 apply/live acceptance now; begin C0163 after ACK exact paths. Keep C0162 kit and backend released. Root has an ACTIVE own after-load fixture250/H40, waves621/622, CASE1176/1177; do not touch stock fixtures/policy or use their changing quantities as fixed candidate test assertions. Never touch protected225837931 or CASE1168/1169.
