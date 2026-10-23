@@ -131,6 +131,18 @@ class TimelineProjection:
                  [self.original.get(row["resource_id"]), f"EQUIPMENT:{row['equipment_id']}",
                   self.person.get(str(row["assigned_to"] or "").strip().lower())])
 
+    def yard_plan(self, row: dict[str, Any]) -> None:
+        # A planned interval of a dock (C-0158): plan times only, never a fact; facts come from the visit events above.
+        lane = f"DOCK:{self.warehouse}:{row['dock']}"
+        if lane not in self.resources:
+            self.lane(lane, "DOCK", row["dock"], "UNKNOWN")
+        purpose = "приёмка" if row.get("visit_kind") == "INBOUND" else f"рейс {row['trip_id']}"
+        self.add({"source": "RRL_YARD_DOCK_PLAN", "source_id": row["plan_id"], "trip_id": row["trip_id"],
+                  "event_id": f"YARD_DOCK_PLAN:{row['plan_id']}", "kind": "YARD_DOCK_PLAN",
+                  "label": f"План ворот {row['dock']} · визит {row['visit_id']} · {purpose}", "status": "PLANNED",
+                  "plan_start_at": row["planned_from"], "plan_finish_at": row["planned_to"], "fact_start_at": None,
+                  "fact_finish_at": None, "time_status": "AWARE_PLAN", "fact_finish_status": "NOT_APPLICABLE"}, [lane])
+
     def yard(self, row: dict[str, Any]) -> None:
         # Intervals come from the visit's immutable event times. The vehicle is held from ARRIVE to DEPART/CANCEL; each dock from its
         # (re)assignment to the next reassignment, DEPART or CANCEL. Different starts are separate events; an open end stays open

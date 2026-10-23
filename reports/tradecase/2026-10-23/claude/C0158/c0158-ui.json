@@ -1,0 +1,131 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "FIXTURE plans listed next to visit facts; lateness and occupied dock from real-shaped facts, plan marked as not a fact"
+  },
+  {
+   "width": 1440,
+   "name": "read window within the server's 7-day bound"
+  },
+  {
+   "width": 1440,
+   "name": "every yard/plan button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE PLAN: visit, dock and an exact UTC interval from the browser time zone are sent"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE conflict: readable refusal, journal cleared"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE unknown outcome: command survives reload"
+  },
+  {
+   "width": 1440,
+   "name": "account switched: the stored command is not sent under another login"
+  },
+  {
+   "width": 1440,
+   "name": "exact replay: identical bytes and operation id, own receipt clears"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE MOVE carries plan version; version conflict is shown"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE CANCEL with reason; visit facts untouched"
+  },
+  {
+   "width": 1440,
+   "name": "plan objects absent: unknown, never 'docks free'"
+  },
+  {
+   "width": 1440,
+   "name": "403 clears the plans"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE plans listed next to visit facts; lateness and occupied dock from real-shaped facts, plan marked as not a fact"
+  },
+  {
+   "width": 390,
+   "name": "read window within the server's 7-day bound"
+  },
+  {
+   "width": 390,
+   "name": "every yard/plan button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE PLAN: visit, dock and an exact UTC interval from the browser time zone are sent"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE conflict: readable refusal, journal cleared"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE unknown outcome: command survives reload"
+  },
+  {
+   "width": 390,
+   "name": "account switched: the stored command is not sent under another login"
+  },
+  {
+   "width": 390,
+   "name": "exact replay: identical bytes and operation id, own receipt clears"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE MOVE carries plan version; version conflict is shown"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE CANCEL with reason; visit facts untouched"
+  },
+  {
+   "width": 390,
+   "name": "plan objects absent: unknown, never 'docks free'"
+  },
+  {
+   "width": 390,
+   "name": "403 clears the plans"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "posts": [
+  {
+   "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/72/move",
+   "body": "{\"operation_id\":\"yard-plan-0264b81c-61a8-45df-9121-760170fa28ec\",\"expected_version\":1,\"dock\":\"18\",\"planned_from\":\"2026-10-23T06:20:00.000Z\",\"planned_to\":\"2026-10-23T07:20:00.000Z\"}"
+  },
+  {
+   "path": "/api/tradecase/warehouses/220793322/yard/dock-plans/71/cancel",
+   "body": "{\"operation_id\":\"yard-plan-86eefd73-8b04-40e8-984b-010e8d1c8b58\",\"expected_version\":1,\"reason\":\"рейс перенесён\"}"
+  }
+ ],
+ "timings": {
+  "plan_ready_1440": 1516,
+  "plan_ready_390": 1292
+ },
+ "window": [
+  "2026-10-22T05:20:01.548Z",
+  "2026-10-29T05:20:01.548Z"
+ ],
+ "liveReadPosts": 3,
+ "status": "PASS"
+}

@@ -80,3 +80,45 @@ const REFUSAL: Record<string, string> = {
   YARD_SUPPLY_CHANGED: "Основание поставки изменилось. Отмените ожидание и создайте визит по актуальным данным.",
 };
 export const refusalText = (code: string) => REFUSAL[code] ?? `Сервер отклонил действие (${code}). Обновите двор и проверьте данные.`;
+
+// Плановые интервалы ворот (C-0158): GET …/yard/dock-plans?from&to. План — не факт и не гарантия свободных ворот; факты визита
+// приходят рядом с планом и никогда из него не выводятся. Автоматического пересчёта плана при задержке нет.
+export type DockPlan = { plan_id: number; warehouse_id: number; visit_id: number; dock: string; planned_from: string; planned_to: string;
+  status: "ACTIVE"; version: number; visit_kind: "OUTBOUND" | "INBOUND"; trip_id: string | null; vehicle: string | null; visit_state: YardState;
+  fact_dock: string | null; arrived_at: string | null; docked_at: string | null; work_started_at: string | null; departed_at: string | null };
+export type DockPlans = { warehouse_id: number; observed_at: string; plans: DockPlan[] };
+export const PLANNABLE = new Set<YardState>(["EXPECTED", "ARRIVED"]);  // как native: план ставится и переносится до постановки к воротам
+
+export function parsePlans(raw: unknown, warehouse: number): DockPlans {
+  const s = raw as DockPlans;
+  const ok = s && typeof s === "object" && s.warehouse_id === warehouse && typeof s.observed_at === "string" && Array.isArray(s.plans)
+    && s.plans.every(p => p && typeof p.plan_id === "number" && p.warehouse_id === warehouse && typeof p.version === "number" && STATES.has(p.visit_state)
+      && typeof p.dock === "string" && !Number.isNaN(Date.parse(p.planned_from)) && Date.parse(p.planned_to) > Date.parse(p.planned_from));
+  if (!ok) throw new YardShapeError("Неожиданный ответ плана ворот");
+  return s;
+}
+
+/** Отклонения от плана только по фактам визита и часам сервера; пустой список — отклонений по имеющимся данным нет. */
+export function planDeviation(p: DockPlan, observedAt: string, visits: YardVisit[]): string[] {
+  const out: string[] = [], late = minutes(p.planned_from, observedAt);
+  if (p.visit_state === "EXPECTED" && late > 0) out.push(`машина не приехала, план начала прошёл ${late} мин назад`);
+  if (p.visit_state === "ARRIVED" && late > 0) out.push(`машина на площадке, к воротам не поставлена; план начала прошёл ${late} мин назад`);
+  if (p.docked_at && p.fact_dock === p.dock && minutes(p.planned_from, p.docked_at) > 0) out.push(`встала к воротам на ${minutes(p.planned_from, p.docked_at)} мин позже плана`);
+  if (p.fact_dock && p.fact_dock !== p.dock) out.push(`фактически стоит у ворот ${p.fact_dock}`);
+  if (["AT_DOCK", "WORKING", "WORK_DONE"].includes(p.visit_state) && p.fact_dock === p.dock && minutes(p.planned_to, observedAt) > 0)
+    out.push(`занимает ворота дольше плана на ${minutes(p.planned_to, observedAt)} мин`);
+  const holder = visits.find(v => v.dock === p.dock && v.visit_id !== p.visit_id && ["AT_DOCK", "WORKING", "WORK_DONE"].includes(v.state));
+  if (holder && late > -60) out.push(`ворота сейчас занимает визит ${holder.visit_id}`);
+  return out;
+}
+
+const PLAN_REFUSAL: Record<string, string> = {
+  YARD_DOCK_PLAN_CONFLICT: "На эти ворота уже запланирована другая машина на пересекающееся время.",
+  YARD_VEHICLE_PLAN_CONFLICT: "Эта машина уже запланирована на пересекающееся время (возможно, на другом складе).",
+  YARD_PLAN_EXISTS: "У визита уже есть план ворот — перенесите его.", YARD_PLAN_IN_PAST: "Начало плана уже прошло. Планируются только будущие интервалы.",
+  YARD_PLAN_RANGE_INVALID: "Конец плана должен быть позже начала.", YARD_PLAN_VISIT_STATE: "Машина уже у ворот или визит закрыт — план не меняется, действуют факты двора.",
+  YARD_PLAN_STATE_CONFLICT: "План уже отменён.", YARD_PLAN_NOT_FOUND: "План не найден или недоступен.", YARD_PLAN_TIME_INVALID: "Время плана не распознано.",
+  YARD_PLAN_REASON_REQUIRED: "Укажите причину отмены плана.", YARD_PLAN_BUSY: "Машину сейчас планирует другой сотрудник. Повторите.",
+  YARD_PLAN_NOT_AVAILABLE: "План ворот на сервере ещё не включён.",
+};
+export const planRefusalText = (code: string) => PLAN_REFUSAL[code] ?? refusalText(code);

@@ -192,7 +192,10 @@ class TimelineCur:
         self.error = error
 
     def callfunc(self, name, _type, args):
-        assert name == "RRL_YARD_VISIT_API.history" and args == [7, "boss", "2026-10-22T00:00:00+00:00", "2026-10-23T00:00:00+00:00"]
+        assert args == [7, "boss", "2026-10-22T00:00:00+00:00", "2026-10-23T00:00:00+00:00"]
+        if name == "RRL_YARD_DOCK_PLAN_API.plans":  # C-0158: plans read after the visits; absent plan objects never hide visits
+            raise ora(4043, "ORA-04043")
+        assert name == "RRL_YARD_VISIT_API.history"
         if self.error:
             raise self.error
         return '{"observed_at":"2026-10-22T08:00:00Z","visits":[]}'

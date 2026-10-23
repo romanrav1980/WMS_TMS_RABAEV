@@ -49,6 +49,7 @@ function eventOf(e: ServerEvent): TimelineEvent {
   if (e.fact_finish_status === "UNRESOLVED") details.push(["Окончание факта", "не известно у источника"]);
   if (e.kind === "YARD_VISIT" || e.kind === "YARD_DOCK") details.push(["Окончание", !e.fact_start_at ? "визит не начат" : e.fact_finish_at ? "закрыто фактом визита"
     : e.kind === "YARD_DOCK" ? "открыто до смены ворот или выезда — ворота заняты" : "открыто до выезда — машина на площадке"]);
+  if (e.kind === "YARD_DOCK_PLAN") details.push(["План ворот", "намерение диспетчера, не факт и не гарантия свободных ворот; факты — в визите"]);
   if (e.approval_status) details.push(["Утверждение времени", APPROVAL[e.approval_status] ?? "состояние не распознано"]);
   return { event_id: e.event_id, event_kind: e.kind, title: e.label, status: e.status ?? null, wave_id: e.wave_id ?? null,
     task_id: e.kind === "LOAD_CONFIRMATION" || e.kind === "TRIP_DEPARTURE" || e.kind.startsWith("YARD_") ? null : e.source_id, trip_id: e.trip_id ?? null,

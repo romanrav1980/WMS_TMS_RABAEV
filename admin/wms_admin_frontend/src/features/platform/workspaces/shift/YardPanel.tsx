@@ -3,6 +3,7 @@ import { useApiRead } from "../../access-admin";
 import { HelpButton } from "../../help/HelpButton";
 import { fmtTime } from "../resources/timelineModel";
 import { shiftHelp } from "./help";
+import { YardDockPlan } from "./YardDockPlan";
 import { readPending, savePending, sendPending } from "./yardCommands";
 import type { YardIntent } from "./yardCommands";
 import { ACTIONS, ACTION_TITLE, GROUPS, STATE_TITLE, conflicts, delay, missing, parseSnapshot, queue, refusalText } from "./yardModel";
@@ -83,6 +84,7 @@ export function YardPanel({ wh, reload, onGantt }: { wh: string; reload: number;
         })}</ul></div>;
     })}
     {snap && snap.visits.length === 0 && <p className="ops-note">Активных визитов нет (визиты недоступных владельцев не показываются).</p>}
+    {snap && <YardDockPlan wh={wh} reload={reload + local} visits={snap.visits} onGantt={onGantt} />}
     <h4>Ожидать машину</h4>
     <p><a href="/help/tradecase-documents.html#yard-inbound" target="_blank" rel="noopener" title="Открыть порядок записи машины и назначения ворот" data-help-id="shift.yard.inbound.help">Как зарегистрировать машину на приёмку</a></p>
     <label>Назначение визита{" "}<select aria-label="Назначение визита" title={shiftHelp.yardExpect.text} data-help-id={shiftHelp.yardExpect.id}

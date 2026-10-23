@@ -1,0 +1,38 @@
+{
+ "site_dock": [
+  215590763,
+  "TC7D1155"
+ ],
+ "moment_ok": {
+  "result": "OK",
+  "ms": 42.2
+ },
+ "moment_bad:2026-10-24 08:00": {
+  "result": "ORA-20911: YARD_PLAN_TIME_INVALID",
+  "ms": 53.5
+ },
+ "moment_bad:2026-10-24T08:00:00Z": {
+  "result": "ORA-20911: YARD_PLAN_TIME_INVALID",
+  "ms": 26.9
+ },
+ "moment_bad:2026-13-40T08:00:00+03:00": {
+  "result": "ORA-20911: YARD_PLAN_TIME_INVALID",
+  "ms": 85.7
+ },
+ "moment_bad:None": {
+  "result": "ORA-20911: YARD_PLAN_TIME_INVALID",
+  "ms": 49.9
+ },
+ "dock_known": {
+  "result": "OK",
+  "ms": 15.1
+ },
+ "dock_other_site": {
+  "result": "ORA-20911: YARD_DOCK_UNKNOWN",
+  "ms": 24.6
+ },
+ "vehicle_lock": {
+  "result": "OK",
+  "ms": 18.2
+ }
+}

@@ -6,6 +6,7 @@ from ..contracts_timeline import TimelineError, TimelineClockReader
 from ..domain.timeline_intervals import overlap_candidates, overlaps
 from ...platform.public import read_oracle_json
 from .timeline_projection import TimelineProjection
+from .yard_dock_plans import window as plan_window
 from .timeline_queries import resource_rows, attendance_rows, task_rows, dock_rows, transport_rows, case_rows
 from .timeline_queries import qualification_rows, session_rows, loading_rows
 
@@ -125,6 +126,15 @@ class ResourceTimeline:
             else:
                 for row in rows["visits"]:
                     projection.yard(row)
+                # C-0158: planned dock intervals next to the facts; absent plan objects mean no plans here (never a free dock).
+                try:
+                    plans = plan_window(cur, warehouse, actor, start, finish)
+                except oracledb.DatabaseError as error:
+                    if getattr(error.args[0], "code", 0) not in (942, 4043, 6550):
+                        raise
+                else:
+                    for row in plans["plans"]:
+                        projection.yard_plan(row)
         completed_at = datetime.now(timezone.utc).isoformat()
         for source in sources:
             source["observed_at"] = completed_at if source["status"] == "READY" else None

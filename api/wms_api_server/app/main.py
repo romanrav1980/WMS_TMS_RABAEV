@@ -399,6 +399,8 @@ from .extra_stop_composition import register_extra_stop
 register_extra_stop(app)
 from .case_paper_composition import register_case_paper
 register_case_paper(app)
+from .yard_plan_composition import register_yard_plans
+register_yard_plans(app)
 
 from .modules.resources.public import case_read_service,case_carrier_lookup_router
 app.include_router(case_carrier_lookup_router)

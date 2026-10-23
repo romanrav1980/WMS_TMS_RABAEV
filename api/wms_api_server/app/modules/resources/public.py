@@ -150,6 +150,9 @@ from .api.case_carrier_lookup_routes import router as case_carrier_lookup_router
 
 from .contracts_yard import YardPort, yard_service
 from .api.yard_routes import router as yard_router
+from .contracts_yard_plan import YardPlanPort, yard_plan_service
+from .api.yard_plan_routes import router as yard_plan_router
+from .infrastructure.yard_dock_plans import OracleYardDockPlans
 
 
 def build_yard_service() -> YardPort:
