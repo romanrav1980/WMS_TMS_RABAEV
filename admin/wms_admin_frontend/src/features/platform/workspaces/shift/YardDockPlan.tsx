@@ -86,7 +86,7 @@ function PlanForm({ edit, setEdit, free, blocked, onSubmit }: { edit: NonNullabl
     {edit.action === "CANCEL"
       ? <label>Причина отмены плана <input value={edit.reason} maxLength={500} onChange={e => set({ reason: e.target.value })} title={shiftHelp.yardPlanCancel.text} data-help-id={shiftHelp.yardPlanCancel.id} /></label>
       : <>
-        {edit.action === "PLAN" && <label>Визит <select value={edit.visit} onChange={e => set({ visit: e.target.value })} title={shiftHelp.yardPlanVisit.text} data-help-id={shiftHelp.yardPlanVisit.id}>
+        {edit.action === "PLAN" && <label>Визит <select aria-label="Визит" value={edit.visit} onChange={e => set({ visit: e.target.value })} title={shiftHelp.yardPlanVisit.text} data-help-id={shiftHelp.yardPlanVisit.id}>
           <option value="">выберите визит</option>
           {free.map(v => <option key={v.visit_id} value={v.visit_id}>Визит {v.visit_id} · {v.visit_kind === "INBOUND" ? "приёмка" : `рейс ${v.trip_id ?? "?"}`} · {v.vehicle ?? "машина ?"}</option>)}</select></label>}
         <label>Ворота <input value={edit.dock} maxLength={50} onChange={e => set({ dock: e.target.value })} title={shiftHelp.yardPlanDock.text} data-help-id={shiftHelp.yardPlanDock.id} /></label>

@@ -102,8 +102,8 @@ export function savePlanPending(ware: string, plan: number, action: PlanAction, 
 }
 
 const ownPlan = (intent: PlanIntent) => {
-  if (intent.scope !== apiOperationScope()) return false;
-  try { return localStorage.getItem(planKey(intent.ware)) === JSON.stringify(intent); } catch { return false; }
+  try { return intent.scope === apiOperationScope() && localStorage.getItem(planKey(intent.ware)) === JSON.stringify(intent); }
+  catch { return false; }
 };
 const clearPlan = (intent: PlanIntent) => { try { if (ownPlan(intent)) localStorage.removeItem(planKey(intent.ware)); } catch { /* останется до повтора */ } };
 const FOREIGN: PlanSend = { kind: "foreign", message: "Вход сменился: сохранённая команда прежнего входа не отправлена и не показана." };
@@ -112,13 +112,13 @@ export async function sendPlanPending(intent: PlanIntent, retry: boolean): Promi
   if (!ownPlan(intent)) return FOREIGN;
   try {
     const v = await apiFetch<{ operation_id?: string; plan_id?: number }>(intent.path, { method: "POST", body: intent.wire });
-    if (intent.scope !== apiOperationScope()) return FOREIGN;
+    if (!ownPlan(intent)) return FOREIGN;
     if (v?.operation_id !== intent.operation_id || typeof v.plan_id !== "number" || (intent.plan_id && v.plan_id !== intent.plan_id))
       return { kind: "unknown", message: "Ответ сервера не относится к этому плану. Команда сохранена; повторите её." };
     clearPlan(intent);
     return { kind: "ack" };
   } catch (error) {
-    if (intent.scope !== apiOperationScope()) return FOREIGN;
+    if (!ownPlan(intent)) return FOREIGN;
     if (error instanceof ApiRequestError) {
       const d = (typeof error.detail === "object" && error.detail ? error.detail : {}) as { code?: string; outcome_confirmed?: boolean };
       if (retry && ([401, 403, 404, 422].includes(error.status) || ["YARD_VISIT_NOT_FOUND", "YARD_PLAN_NOT_FOUND"].includes(d.code ?? "")))

@@ -1,52 +1,54 @@
 {
- "target": "RABAEV/orcl",
- "migration_id": "2026-10-23-yard-dock-plan",
- "revision": "C-0158",
- "status": "NOT_APPLIED",
- "applied_by_claude": false,
- "new_objects": [
-  "RRL_YARD_DOCK_PLAN",
-  "RRL_YARD_DOCK_PLAN_EVENT (+trigger RRL_YARD_DOCK_PLAN_EVENT_APPEND)",
-  "RRL_YARD_DOCK_PLAN_SQ",
-  "RRL_YARD_DOCK_PLAN_API"
- ],
- "shared_objects_changed": {
-  "RRL_YARD_VISIT_API (PACKAGE + BODY)": "+1 public procedure assert_visit_owners wrapping the existing private require_visit_owners; nothing else changed"
- },
- "existing_objects_called": [
-  "RRL_ACCESS_API.allowed",
-  "RRL_TT_DOCK",
-  "RRL_TRADE_SITE (FOR UPDATE)",
-  "RRL_ACCESS_REV (share)",
-  "RRL_YARD_VISIT_API.visit_visible/assert_visit_owners",
-  "RRL_STOCK_LOCK_API.resource_lock_id/resource_key",
-  "SYS.DBMS_LOCK.request",
-  "SYS.DBMS_CRYPTO.hash"
- ],
- "lock_order": "tradecase_yard_operate -> RRL_ACCESS_REV share -> RRL_TRADE_SITE row -> right again -> visit row -> plan row -> vehicle lock (dbms_lock rank 90 key YARD.PLAN.VEHICLE)",
- "before_sha256": {
-  "RRL_YARD_VISIT_API:PACKAGE": "1BD9DF2572541AE6FB058DA42D4E600B3D3579213894C35F4E05952BA306798A",
-  "RRL_YARD_VISIT_API:PACKAGE BODY": "C3FF494DB2DF2F6D5AAB8C87918537BD71D82EB6CDDB874E5D82E54D59E7EC84"
- },
- "after_sha256": {
-  "RRL_YARD_VISIT_API:PACKAGE": "FF8BFA09875F6E47F9DCF54442D5DF732994D613480B234CFFDA1F0198B20EB3",
-  "RRL_YARD_VISIT_API:PACKAGE BODY": "400EAF0A207CA3F2683642BA3EF3597E40A2E25351F2A4DCA5FB2ADEBBD523DB",
-  "RRL_YARD_DOCK_PLAN_API:PACKAGE": "BECD3CD395011A915DD2E34BE1C386BB2B48F3788A04119F5594A64C1AD8A5E6",
-  "RRL_YARD_DOCK_PLAN_API:PACKAGE BODY": "002C1C1326BE53B74BCAAA8723CE17D97563D5CF784918ECC259A2F26FA17D39"
- },
- "rollback": "refuses when plan events exist (working history)",
- "compile_evidence": "not compiled: new tables are required; the visit API diff is +5 body / +2 spec lines (see RESULT). Root compiles on apply (verify checks USER_ERRORS/INVALID).",
- "files_sha256": {
-  "000_preflight.sql": "542e249da27b5c3e469a5f2f35172eaa8393c425560ecf2b5742456caa88b789",
-  "001_schema.sql": "0adc8d45f4093ee00b88da2743ff4b641498cb149ab133954c1281f70157a243",
-  "002_visit_spec.sql": "8d6fced16e749e63ae38d3b418b9fcb72dbfd3b214774b3169741519946d464b",
-  "003_visit_body.sql": "29dcda561712f38fdb1d6fbcf3482f440132c0139e9646bfcea182a221601a81",
-  "004_plan_api.sql": "22f37afbe3b3087c40ba982155b1cce62c96022794b315f427c2cb2c937bb12d",
-  "apply.sql": "8353a5ad13c409fc6bc5589502dd25566c263488c2aad5e977a9c76c099e77b2",
-  "before_visit_body.sql": "606015d58febd8006f8c90abcca761d6c741dbf52be0790d6fbeecc3d2c38dc5",
-  "before_visit_spec.sql": "44cf54581e126ec271aedd13d572d6a546f9a81c384ba325e4dd8bb9f208986b",
-  "rollback.sql": "106a50f22d355ac0950a6c242948d4e5f15f738a83b2630e5a9625b8a5cf7707",
-  "rollback_verify.sql": "cebfb08c37dcbe4306fc4349fdb2bdcab5a0935bc4e049f73b01996429082981",
-  "verify.sql": "24595403d2693da4255260953e68956db4aab9c2a20ef8434bbd22c20265b126"
- }
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-23-yard-dock-plan",
+  "revision": "C-0158",
+  "status": "APPLIED",
+  "applied_by_claude": false,
+  "new_objects": [
+    "RRL_YARD_DOCK_PLAN",
+    "RRL_YARD_DOCK_PLAN_EVENT (+trigger RRL_YARD_DOCK_PLAN_EVENT_APPEND)",
+    "RRL_YARD_DOCK_PLAN_SQ",
+    "RRL_YARD_DOCK_PLAN_API"
+  ],
+  "shared_objects_changed": {
+    "RRL_YARD_VISIT_API (PACKAGE + BODY)": "+1 public procedure assert_visit_owners wrapping the existing private require_visit_owners; nothing else changed"
+  },
+  "existing_objects_called": [
+    "RRL_ACCESS_API.allowed",
+    "RRL_TT_DOCK",
+    "RRL_TRADE_SITE (FOR UPDATE)",
+    "RRL_ACCESS_REV (share)",
+    "RRL_YARD_VISIT_API.visit_visible/assert_visit_owners",
+    "RRL_STOCK_LOCK_API.resource_lock_id/resource_key",
+    "SYS.DBMS_LOCK.request",
+    "SYS.DBMS_CRYPTO.hash"
+  ],
+  "lock_order": "tradecase_yard_operate -> RRL_ACCESS_REV share -> RRL_TRADE_SITE row -> right again -> visit row -> plan row -> vehicle lock (dbms_lock rank 90 key YARD.PLAN.VEHICLE)",
+  "before_sha256": {
+    "RRL_YARD_VISIT_API:PACKAGE": "1BD9DF2572541AE6FB058DA42D4E600B3D3579213894C35F4E05952BA306798A",
+    "RRL_YARD_VISIT_API:PACKAGE BODY": "C3FF494DB2DF2F6D5AAB8C87918537BD71D82EB6CDDB874E5D82E54D59E7EC84"
+  },
+  "after_sha256": {
+    "RRL_YARD_VISIT_API:PACKAGE": "FF8BFA09875F6E47F9DCF54442D5DF732994D613480B234CFFDA1F0198B20EB3",
+    "RRL_YARD_VISIT_API:PACKAGE BODY": "400EAF0A207CA3F2683642BA3EF3597E40A2E25351F2A4DCA5FB2ADEBBD523DB",
+    "RRL_YARD_DOCK_PLAN_API:PACKAGE": "BECD3CD395011A915DD2E34BE1C386BB2B48F3788A04119F5594A64C1AD8A5E6",
+    "RRL_YARD_DOCK_PLAN_API:PACKAGE BODY": "002C1C1326BE53B74BCAAA8723CE17D97563D5CF784918ECC259A2F26FA17D39"
+  },
+  "rollback": "refuses when plan events exist (working history)",
+  "compile_evidence": "not compiled: new tables are required; the visit API diff is +5 body / +2 spec lines (see RESULT). Root compiles on apply (verify checks USER_ERRORS/INVALID).",
+  "files_sha256": {
+    "000_preflight.sql": "542e249da27b5c3e469a5f2f35172eaa8393c425560ecf2b5742456caa88b789",
+    "001_schema.sql": "0adc8d45f4093ee00b88da2743ff4b641498cb149ab133954c1281f70157a243",
+    "002_visit_spec.sql": "8d6fced16e749e63ae38d3b418b9fcb72dbfd3b214774b3169741519946d464b",
+    "003_visit_body.sql": "29dcda561712f38fdb1d6fbcf3482f440132c0139e9646bfcea182a221601a81",
+    "004_plan_api.sql": "22f37afbe3b3087c40ba982155b1cce62c96022794b315f427c2cb2c937bb12d",
+    "apply.sql": "8353a5ad13c409fc6bc5589502dd25566c263488c2aad5e977a9c76c099e77b2",
+    "before_visit_body.sql": "606015d58febd8006f8c90abcca761d6c741dbf52be0790d6fbeecc3d2c38dc5",
+    "before_visit_spec.sql": "44cf54581e126ec271aedd13d572d6a546f9a81c384ba325e4dd8bb9f208986b",
+    "rollback.sql": "106a50f22d355ac0950a6c242948d4e5f15f738a83b2630e5a9625b8a5cf7707",
+    "rollback_verify.sql": "cebfb08c37dcbe4306fc4349fdb2bdcab5a0935bc4e049f73b01996429082981",
+    "verify.sql": "24595403d2693da4255260953e68956db4aab9c2a20ef8434bbd22c20265b126"
+  },
+  "applied_by": "Codex",
+  "superseded_body_by": "2026-10-23-yard-plan-scalar-fix"
 }

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 21,
-  "used": 21,
+  "limit": 22,
+  "used": 22,
   "requests": [
     {
       "id": "C-0130",
@@ -151,7 +151,7 @@
     {
       "id": "C-0158",
       "registered_at": "2026-10-23T07:55:09.9971136+03:00",
-      "status": "ACK K0131: planned dock intervals native/UI in progress",
+      "status": "RESULT + RELEASE K0132; root native16/11/16 PASS, live API acceptance pending",
       "delivery": "existing file channel",
       "task": "T10 planned dock intervals in real resource Gantt using existing yard/native authority, conflict protection, UI/help and evidence"
     },
@@ -159,7 +159,15 @@
       "id": "C-0159",
       "task": "T10 shift wave readiness and remaining source-backed risks",
       "registered_at": "2026-10-23T05:26:54.395994+00:00",
-      "status": "REGISTERED; awaiting ACK",
+      "status": "ACK K0133; UI-only risk completion in progress",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0160",
+      "task": "T08 trade-aware ordinary common-pool allocation; actual root failure TRADE_ORDER_BINDING_REQUIRED",
+      "registered_at": "2026-10-23T05:49:04.117542+00:00",
+      "status": "REGISTERED; queued after C0159 RELEASE",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
     }
@@ -305,6 +313,16 @@
       "used": 1,
       "request_ids": [
         "C-0159"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner requested all sprints completed with additional Claude delegation",
+      "allocation_basis": "One substantial correction of the live T08 acceptance gap; no owner numeric cap",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0160"
       ]
     }
   ]

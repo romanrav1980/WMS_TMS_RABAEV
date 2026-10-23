@@ -9,12 +9,17 @@ from ..contracts_yard_plan import YardError, YardPlanCancel, YardPlanCreate, Yar
 router = APIRouter(prefix="/api/tradecase/warehouses/{warehouse}/yard/dock-plans", tags=["tradecase-yard"])
 
 
-def _call(run: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+def _call(run: Callable[[], dict[str, Any]], operation_id: str | None = None) -> dict[str, Any]:
     try:
         return run()
     except YardError as exc:
-        raise HTTPException(exc.status, {"code": exc.code, "outcome_confirmed": exc.status != 503,
-                                         "retry_same_operation_id": exc.status == 503}) from exc
+        uncertain = exc.status in (401, 403, 404, 503) or exc.code in {
+            "YARD_OPERATION_CONFLICT", "YARD_VISIT_NOT_FOUND", "YARD_PLAN_NOT_FOUND"}
+        detail: dict[str, Any] = {"code": exc.code, "outcome_confirmed": not uncertain,
+                                  "retry_same_operation_id": uncertain}
+        if operation_id is not None:
+            detail["operation_id"] = operation_id
+        raise HTTPException(exc.status, detail) from exc
 
 
 @router.get("")
@@ -28,16 +33,16 @@ def plans(warehouse: int = Path(gt=0), start: datetime = Query(alias="from"), fi
 @router.post("")
 def plan(body: YardPlanCreate, warehouse: int = Path(gt=0), user: AdminUser = Depends(get_current_user),
          service: YardPlanPort = Depends(yard_plan_service)) -> dict[str, Any]:
-    return _call(lambda: service.plan(warehouse, body, user.username))
+    return _call(lambda: service.plan(warehouse, body, user.username), body.operation_id)
 
 
 @router.post("/{plan_id}/move")
 def move(body: YardPlanMove, warehouse: int = Path(gt=0), plan_id: int = Path(gt=0), user: AdminUser = Depends(get_current_user),
          service: YardPlanPort = Depends(yard_plan_service)) -> dict[str, Any]:
-    return _call(lambda: service.move(warehouse, plan_id, body, user.username))
+    return _call(lambda: service.move(warehouse, plan_id, body, user.username), body.operation_id)
 
 
 @router.post("/{plan_id}/cancel")
 def cancel(body: YardPlanCancel, warehouse: int = Path(gt=0), plan_id: int = Path(gt=0), user: AdminUser = Depends(get_current_user),
            service: YardPlanPort = Depends(yard_plan_service)) -> dict[str, Any]:
-    return _call(lambda: service.cancel(warehouse, plan_id, body, user.username))
+    return _call(lambda: service.cancel(warehouse, plan_id, body, user.username), body.operation_id)

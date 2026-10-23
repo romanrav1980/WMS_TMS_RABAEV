@@ -1,7 +1,7 @@
 {
   "migration_id": "2026-10-23-yard-plan-scalar-fix",
   "target": "RABAEV/orcl",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "before_sha256": {
     "RRL_YARD_DOCK_PLAN_API:PACKAGE BODY": "002C1C1326BE53B74BCAAA8723CE17D97563D5CF784918ECC259A2F26FA17D39"
   },
@@ -16,5 +16,6 @@
     "rollback.sql": "4851a0411e6054370415c4cc2231a1afd239fa2280b834d0410a19ba7429ca83",
     "rollback_verify.sql": "9bed7ff6420d9c6bd3d0f37ce30d3e891d6b4495f287bcf0667f8ad0e6de12f6",
     "verify.sql": "374442c6bcaf9aaa1ca9b43b0c20f1209d11a697339b853c2669069617cb1492"
-  }
+  },
+  "applied_by": "Codex"
 }

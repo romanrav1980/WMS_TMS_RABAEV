@@ -145,7 +145,7 @@ def test_routes_map_errors_and_require_timezone():
     assert c.get(base, params={"from": "2026-10-24T00:00:00+03:00", "to": "2026-10-25T00:00:00+03:00"}).json() == {"warehouse_id": 1, "actor": "op"}
     assert c.get(base, params={"from": "2026-10-24T00:00:00", "to": "2026-10-25T00:00:00"}).status_code == 422
     r = c.post(base, json={"operation_id": OP, "visit_id": 5, "dock": "15", "planned_from": "2026-10-24T08:00:00+03:00", "planned_to": "2026-10-24T09:00:00+03:00"})
-    assert r.status_code == 409 and r.json()["detail"] == {"code": "YARD_DOCK_PLAN_CONFLICT", "outcome_confirmed": True, "retry_same_operation_id": False}
+    assert r.status_code == 409 and r.json()["detail"] == {"code": "YARD_DOCK_PLAN_CONFLICT", "operation_id": OP, "outcome_confirmed": True, "retry_same_operation_id": False}
     r = c.post(base + "/7/cancel", json={"operation_id": OP, "expected_version": 1, "reason": "перенос"})
     assert r.status_code == 503 and r.json()["detail"]["retry_same_operation_id"] is True
 
@@ -192,10 +192,26 @@ def test_schema_and_kit():
     assert len(text("002_visit_spec.sql").splitlines()) == len(text("before_visit_spec.sql").splitlines()) + 2
     assert "DOCK_PLAN_HISTORY_PRESENT" in text("rollback.sql")
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False
+    assert m["status"] in {"NOT_APPLIED", "APPLIED"} and m["applied_by_claude"] is False
     for k, v in m["before_sha256"].items():
         assert v in text("000_preflight.sql") and v in text("rollback_verify.sql")
     for v in m["after_sha256"].values():
         assert v in text("verify.sql")
     for name, sha in m["files_sha256"].items():
         assert hashlib.sha256((KIT / name).read_bytes()).hexdigest() == sha, name
+
+
+@pytest.mark.parametrize("status,code,confirmed", [
+    (403, "YARD_ACCESS_DENIED", False), (409, "YARD_OPERATION_CONFLICT", False),
+    (409, "YARD_VISIT_NOT_FOUND", False), (409, "YARD_PLAN_NOT_FOUND", False),
+    (503, "YARD_RESULT_UNKNOWN", False), (409, "YARD_DOCK_PLAN_CONFLICT", True),
+])
+def test_plan_refusal_does_not_erase_an_unknown_original_outcome(status, code, confirmed):
+    from fastapi import HTTPException
+    from app.modules.resources.api.yard_plan_routes import _call
+    def refuse():
+        raise YardError(code, status)
+    with pytest.raises(HTTPException) as result:
+        _call(refuse, OP)
+    assert result.value.detail == {"code": code, "operation_id": OP,
+        "outcome_confirmed": confirmed, "retry_same_operation_id": not confirmed}
