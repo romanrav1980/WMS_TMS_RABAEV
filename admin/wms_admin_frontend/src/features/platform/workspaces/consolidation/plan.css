@@ -25,3 +25,9 @@
 .cp-pending{border-color:#f0a531}
 .ops-consolidation .ops-left,.ops-consolidation .ops-right{max-height:none}
 .ops-consolidation .cp-center{padding:12px;overflow:visible;min-height:0}
+.cp-plan-section{grid-column:1/-1}
+.cp-plan-section>summary{cursor:pointer;font-weight:600}
+.cp-plan-section[open]>summary{margin-bottom:10px}
+.cp-plan-grid{display:grid;grid-template-columns:minmax(180px,300px) minmax(0,1fr);gap:10px}
+.cp-plan-grid.cp-plan-editing{grid-template-columns:minmax(180px,300px) minmax(0,1fr) minmax(220px,380px)}
+@media(max-width:1100px){.cp-plan-grid,.cp-plan-grid.cp-plan-editing{grid-template-columns:minmax(0,1fr)}}

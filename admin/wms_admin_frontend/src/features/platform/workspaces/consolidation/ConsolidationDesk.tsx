@@ -21,7 +21,7 @@ const h = (id: string, text: string): HelpEntry => ({ id: "consolidation." + id,
 const help = {
   filter: h("filter", "Какие планы показать: действующие, отменённые или все."),
   plan: h("plan", "Открыть план: ожидаемый состав и готовность."),
-  more: h("more", `Загрузить следующие ${PLAN_PAGE} планов. Итога по складу API не даёт.`),
+  more: h("more", `Показать следующие ${PLAN_PAGE} планов выбранного склада.`),
   create: h("create", "Создать новый план ожидаемого состава для выбранного склада."),
   retry: h("retry", "Повторить сохранённую команду с тем же номером и телом: второй раз изменение не применится."),
   reread: h("reread", "Перечитать план с сервера и проверить, применилась ли команда."),
@@ -37,6 +37,7 @@ export function ConsolidationDesk() {
   const [planId, setPlanId] = useState<string | null>(null), [plan, setPlan] = useState<PlanDetail | null>(null), [planError, setPlanError] = useState("");
   const [editing, setEditing] = useState<"edit" | "new" | null>(null), [draftId, setDraftId] = useState(""), [tree, setTree] = useState("");
   const [pending, setPending] = useState(readPending()), [busy, setBusy] = useState(false), [note, setNote] = useState("");
+  const [plansOpen, setPlansOpen] = useState(() => !!pending.intent || !!pending.damaged);
   const list = usePlanList(wh, filter, scope, reload);
   const chooseWh = (id: string) => { setWh(id); setPlanId(null); setPlan(null); setEditing(null); setTree(""); writeUrlWarehouse(id); };
   useEffect(() => { // карточка плана: ответ другого плана/склада не применяется; 401/403/404 очищают
@@ -51,7 +52,7 @@ export function ConsolidationDesk() {
     setBusy(true); setNote("");
     const r = await sendPending(intent);
     setBusy(false); setPending(readPending());
-    if (r.kind === "ack") { setNote(`Сохранено: план ${r.ack.plan_id}, версия ${r.ack.version}${r.ack.status === "CANCELLED" ? " (отменён)" : ""}.`); setEditing(null); setPlanId(r.ack.plan_id); setReload(n => n + 1); }
+    if (r.kind === "ack") { setNote(`Сохранено: план ${r.ack.plan_id}, версия ${r.ack.version}${r.ack.status === "CANCELLED" ? " (отменён)" : ""}.`); setPlansOpen(true); setEditing(null); setPlanId(r.ack.plan_id); setReload(n => n + 1); }
     else if (r.kind === "refused") { setNote(refusalText(r.code) + " Изменение не применено."); setEditing(null); setReload(n => n + 1); }
     else setNote(r.message);
   }
@@ -68,7 +69,7 @@ export function ConsolidationDesk() {
       <WarehousePicker capability="warehouse_tasks" value={wh} onChange={chooseWh} />
       <label>Планы <select value={filter} onChange={e => setFilter(e.target.value as PlanFilter)} title={help.filter.text} data-help-id={help.filter.id}>
         <option value="ACTIVE">действующие</option><option value="CANCELLED">отменённые</option><option value="ALL">все</option></select></label>
-      <HelpButton help={help.create} unavailable={!wh && "выберите склад"} disabled={blocked} onClick={() => { setDraftId(newPlanId(wh)); setEditing("new"); setPlanId(null); }}>Новый план</HelpButton>
+      <HelpButton help={help.create} unavailable={!wh && "выберите склад"} disabled={blocked} onClick={() => { setPlansOpen(true); setDraftId(newPlanId(wh)); setEditing("new"); setPlanId(null); }}>Новый план</HelpButton>
       {wh && <HelpButton help={help.shift} onClick={() => { location.href = `?page=workspace&workspace=shift&warehouse_id=${wh}`; }}>Старший смены</HelpButton>}
       <a href={planHelpUrl("save")} target="_blank" rel="noopener" title="Справка по плану ожидаемого состава; откроется в новой вкладке" data-help-id="consolidation.help">Справка</a>
     </div>
@@ -76,10 +77,13 @@ export function ConsolidationDesk() {
       {pending.damaged ? <p className="ops-err">{pending.damaged}</p> : <>
         <b>Команда плана ожидает подтверждения</b> · {pending.intent!.kind === "SAVE" ? "сохранение" : "отмена"} плана {pending.intent!.plan_id}. Новые изменения заблокированы.
         <div className="cp-actions"><HelpButton help={help.retry} disabled={busy} onClick={() => void run(pending.intent!)}>Повторить ту же команду</HelpButton>
-          <HelpButton help={help.reread} disabled={busy} onClick={() => { setPlanId(pending.intent!.plan_id); setReload(n => n + 1); }}>Перечитать план</HelpButton>
+          <HelpButton help={help.reread} disabled={busy} onClick={() => { setPlansOpen(true); setPlanId(pending.intent!.plan_id); setReload(n => n + 1); }}>Перечитать план</HelpButton>
           <a href={planHelpUrl("conflict")} target="_blank" rel="noopener" title="Справка: потеря ответа и конфликт версии" data-help-id="consolidation.pending.help">Справка</a></div></>}
     </section>}
     {note && <p className="ops-panel ops-note" style={{ gridColumn: "1/-1" }} role="status">{note}</p>}
+    <details className="ops-panel cp-plan-section" open={plansOpen} onToggle={e => setPlansOpen(e.currentTarget.open)}>
+      <summary title="Открыть или свернуть список и редактор планов консолидации" data-help-id="consolidation.plans.toggle">Планы консолидации{list.error ? " · недоступны" : ""}</summary>
+      <div className={"cp-plan-grid" + (editing ? " cp-plan-editing" : "")}>
     <aside className="ops-panel ops-left" aria-label="Планы склада">
       <h3>Планы <small>{wh ? `загружено ${list.items.length}${list.hasMore ? ", есть ещё" : ""} · время UTC` : "выберите склад"}</small></h3>
       {list.error && <p className="ops-err">{list.error}</p>}
@@ -95,11 +99,12 @@ export function ConsolidationDesk() {
       {plan ? <PlanView plan={plan} busy={blocked} onTree={() => setTree(plan.root_identifier)} onEdit={() => setEditing("edit")} onRefresh={() => setReload(n => n + 1)} />
         : !planError && <p className="ops-note">{wh ? "Выберите план слева или создайте новый." : "Выберите склад."}</p>}
     </section>
-    <aside className="ops-panel ops-right" aria-label="Изменение плана">
-      {editing ? <PlanEditor key={(editing === "new" ? draftId : planId) + ":" + (plan?.version ?? 0)} plan={editing === "edit" ? plan : null} warehouseId={wh}
+    {editing && <aside className="ops-panel ops-right" aria-label="Изменение плана">
+      <PlanEditor key={(editing === "new" ? draftId : planId) + ":" + (plan?.version ?? 0)} plan={editing === "edit" ? plan : null} warehouseId={wh}
         planId={editing === "new" ? draftId : planId ?? ""} busy={blocked} onSave={save} onCancelPlan={cancelPlan} onClose={() => setEditing(null)} />
-        : <p className="ops-note">План — ожидаемый состав. Фактическое дерево корня — ниже, отдельным чтением.</p>}
-    </aside>
+    </aside>}
+      </div>
+    </details>
     <HuTreeDesk identifier={tree} />
   </>;
 }

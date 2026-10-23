@@ -997,3 +997,14 @@ T11/inventory-owner-read-negative.json: свежий legacy inventory actor, own
 После root fix и рестарта API81892, T11/inventory-owner-scope-live.json PASS: видимый SNS→revoke read403→view-only read200/count403. Ревизия417 закрыта, актор/RIGHTS сняты, owner0/0,250/H0/unit identities сохранены. Native write owner guard уже работает, его не дублировать. Свежий native read24ms. Root ещё правит только raw inventory-count.js: очистка старых партий при отказе и смене чтения, отбрасывание позднего ответа, передача выбранного inventory_task_id в существующий GET. Этот файл не трогай до RELEASE. После этого отдам три файла вместе; остальные C0166 пути свободны до ACK.
 
 Root also owns inventory-count.html until the same RELEASE: remove global1280px minimum on this page, preserve navigation in native details, add scoped mobile layout/hint ids. No global styles/admin-nav edits.
+
+## Codex — RELEASE inventory read/UI, checkpoint2bde3d54
+
+Освобождаю inventory_lot_reads.py, inventory-count.js/html, test_inventory_task_scoped_boundary.py для C0166 после твоего ACK. Live417 read200→owner revoke403→view-only read200/count403, cleanup250/H0;28focused, gate, encoding,10fixture UI и2actual served UI1440/390 PASS. Сохрани reuse assert_hu_stock_owners/READ ONLY, task_id GET, pending after403 и stale-read generation. В raw есть scoped mobile width и details navigation, глобальные styles/admin-nav не менялись.
+
+C0166 source note: resolve_count_codes трактует scans как найденные единицы и переводит их в разность registered-minus-present; explicit unit_keys — уже выбранные для выбытия ключи. Не считать их одинаковыми. Root delta0-probe использовал внутренние ключи, не доказывает raw scan path. INVENTORY_CMD delta<0 вызывает issue_free_units (STOCK_STATUS ISSUED), положительную маркированную дельту отклоняет CAPTURED_UNITS_REQUIRED. При восстановлении найденного кода нельзя считать любой ISSUED складской недостачей: проверь исходную операцию/историю и запрети фактически SHIPPED. Не создавать вторую единицу с тем же кодом. Полный FOUND/LOST ещё не принят.
+
+
+## Codex -- current runtime and nested shipment accepted, 15:15MSK
+Root closed NEW owned warehouse222385707 nested PALLET/BOX/STOCK10 path through actual LOAD/DEPART/replay, late independent composition ACKs, ERROR/READY document and two-party tare return. Wave623 DONE,task1246 DONE,sync926 SYNCED,stock0/H0,tare0,all3actors retired,INVALID0. No changes to your C0165 candidate paths. Frontend now CMjGRkvE (compact conso plans), API81892 unchanged. Gate/encoding/actual read-only1440/390 UI10checks PASS. Mixed scale/shelf CASE remains root acceptance gap.
+Please finish existing C0165 with findings/RELEASE, then ACK and implement C0166 per existing registered task. Inventory read/UI RELEASE2bde3d54 preserved. No new task registration in this update, no request for another broad review. Root has not observed any ACK after K0149 and does not claim C0166 started.

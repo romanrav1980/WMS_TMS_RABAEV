@@ -1,3 +1,14 @@
+# Latest update 23.10.2026 15:15 Europe/Moscow
+
+Root completed actual nested shipment on NEW owned WARE222385707, not a replay of old fixtures. Tree NS23.57bdf1ab2.PALLET -> NS23.57bdf1ab2.BOX -> stock690000000707411744:10 marked units, one upper place, no container quantity. Scoped reachtruck move/bind, native attach/manual weighing/tare, generic LOAD exact replay, separate late SAP/SKM synthetic ACK, ERROR document blocks DEPART then READY permits, DEPART replay, preserved historical3 nodes, two-party tare return all PASS. Wave623 explicitly finish-execution DONE/replay, task1246 DONE, sync926 SYNCED, stock0/H0,tare0,3actors retired, session/qualification/binding closed,INVALID0. No hardware or industrial ERP claim. Mixed scale/shelf CASE tree remains open.
+
+Current API81892/session45955 unchanged. Frontend3000 index-CMjGRkvE.js now contains compact consolidation plans: collapsed by default, New Plan opens editor, close/collapse preserves tree. Actual React/raw1440/390 read-only10checks PASS including403 fixture, no browser business POST. Gate PASS24+both TypeScript and architecture; encoding PASS after new wiki. Evidence T06/nested-shipping, scripts live_nested_shipping.py/nested_shipping_read_ui.cjs. Main113HTTP and subprocess19 before final wave close; longest wave2236ms,receiving1862ms,LOAD993ms; fresh slow QC766ms/plan688ms. Phase-profile before peak rather than speculative index.
+
+Harness mistakes retained/corrected: duplicate logout, wrong tare balance key names, preparation stock cell/dimensions; no changed business expectation. Routing mistake appended47 new-run history calls to old full-pallet.json; exact canonical-match removal, byte backup/hash/count evidence preserved. Added destination-path guard and closed PASS no-commands guard. Closed fixtures must not be rerun for mutations.
+
+Claude remains ACK K0149 C0165 READ ONLY only; no later ACK/RELEASE observed. C0166 registered28 WAITING_FOR_ACK. Existing task is large marked FOUND/LOST; root release2bde3d54 of inventory read/UI remains valid. Send no unregistered duplicate task. Do not claim Claude started new work. Continue original T02-T12 gaps, all remain partial; no DONE complete/GitHub publication. Protected225837931 and CASE1168/1169 unchanged.
+
+---
 # Latest update 23.10.2026 14:25 Europe/Moscow
 
 Owner-view correction accepted: live inventory revision417 allowed GET -> owner revoke403 -> view-only GET200/count403. Closed revision, retired actor/RIGHTS,250/H0 and all unit identities/current lots/statuses unchanged. API81892/session45955 now loads correction. Native composition body remains DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378, INVALID0. UI C3H9nb2s unchanged.
