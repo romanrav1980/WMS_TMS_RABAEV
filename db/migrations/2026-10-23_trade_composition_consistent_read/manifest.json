@@ -1,6 +1,6 @@
 {
   "migration_id": "2026-10-23-trade-composition-consistent-read",
-  "status": "NOT_APPLIED",
+  "status": "ROLLED_BACK",
   "target": "RABAEV/orcl",
   "before_sha256": {
     "RRL_TRADE_COMPOSITION_API:PACKAGE BODY": "4BA06B1C7846AD701472ED50387E3B5CB08867D4EF89FBC04B097091F68865E3"
@@ -16,5 +16,7 @@
     "rollback.sql": "6317667f38dee4cd317b91200fc12a983e3f16bed006d77971f0367bdfce18e6",
     "rollback_verify.sql": "5ef2ecbe5d2bf8fb532383a297090e586df69ac0d19979f7d0f99fbc66a1a9ff",
     "verify.sql": "a542735349b198604191dd0e695daf40ccd7ae8b74cf168e656e71e40874b389"
-  }
+  },
+  "failed_apply": "ORA00984 flashback join parser; original body restored INVALID0",
+  "superseded_by": "2026-10-23-trade-composition-consistent-read-v2"
 }
