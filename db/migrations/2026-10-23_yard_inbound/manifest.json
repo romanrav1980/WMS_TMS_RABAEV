@@ -1,20 +1,20 @@
 {
-    "migration_id":  "2026-10-23-yard-inbound",
-    "target":  "RABAEV/orcl",
-    "before":  {
-                   "PACKAGE":  "4F481E4B97E3C3F7DC892C1F8A8EAF98A96D3A2C4EAB219EA87DC55F9AE4D52D",
-                   "PACKAGE BODY":  "46E4C481E76CCDD5E62B0023AE96BB995C115561B209638F22A942E0D0C5BADA"
-               },
-    "after":  {
-                  "PACKAGE":  "1BD9DF2572541AE6FB058DA42D4E600B3D3579213894C35F4E05952BA306798A",
-                  "PACKAGE BODY":  "9C855CBA13AD7664E0E776AF473F96F5A2F1D4C119335C772988B81EE2E3F4BD"
-              },
-    "recompile":  [
-                      [
-                          "RRL_YARD_VISIT_API",
-                          "PACKAGE BODY"
-                      ]
-                  ],
-    "quantity_changes":  false,
-    "source":  "TRADECASE program revision27: arrival planning, vehicle/window/dock; existing accepted SUPPLY documents; manual operator vehicle, no invented ERP field"
+  "migration_id": "2026-10-23-yard-inbound",
+  "target": "RABAEV/orcl",
+  "before": {
+    "PACKAGE": "4F481E4B97E3C3F7DC892C1F8A8EAF98A96D3A2C4EAB219EA87DC55F9AE4D52D",
+    "PACKAGE BODY": "46E4C481E76CCDD5E62B0023AE96BB995C115561B209638F22A942E0D0C5BADA"
+  },
+  "after": {
+    "PACKAGE": "1BD9DF2572541AE6FB058DA42D4E600B3D3579213894C35F4E05952BA306798A",
+    "PACKAGE BODY": "C3FF494DB2DF2F6D5AAB8C87918537BD71D82EB6CDDB874E5D82E54D59E7EC84"
+  },
+  "recompile": [
+    [
+      "RRL_YARD_VISIT_API",
+      "PACKAGE BODY"
+    ]
+  ],
+  "quantity_changes": false,
+  "source": "TRADECASE program revision27: arrival planning, vehicle/window/dock; existing accepted SUPPLY documents; manual operator vehicle, no invented ERP field"
 }
