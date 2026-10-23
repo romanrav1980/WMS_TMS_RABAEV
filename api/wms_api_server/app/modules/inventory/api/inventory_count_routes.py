@@ -6,7 +6,6 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 from ...platform.public import AdminUser, get_current_user, require_permission
-from ..contracts_stock import StockPostingError
 
 from ..contracts_observations import (CountSubmission, InventoryObservationsPort, InventoryObservationError, inventory_observations_service)
 
@@ -70,11 +69,6 @@ def inventory_count(request: CountRequest, user: AdminUser = Depends(get_current
         raise HTTPException(exc.status,detail={"code":exc.code,"operation_id":exc.operation_id}) from exc
     except ValueError as exc:
         raise HTTPException(422, detail={"code": "COMMAND_INVALID", "message": str(exc)}) from exc
-    except StockPostingError as exc:
-        status = 403 if exc.oracle_code == 20882 else 503 if exc.code in {"STOCK_RELEASE_NOT_ACTIVE", "REQUEST_DEADLINE", "LOCK_RETRY_EXHAUSTED", "CONNECTION_UNUSABLE", "RESULT_UNCERTAIN"} else 409
-        raise HTTPException(status, detail={"code": exc.code, "operation_id": exc.operation_id,
-            "oracle_code": exc.oracle_code, "retry_same_operation_id": True,
-            "outcome_confirmed": exc.code != "RESULT_UNCERTAIN"}) from exc
 
 
 class RevisionRequest(BaseModel):
