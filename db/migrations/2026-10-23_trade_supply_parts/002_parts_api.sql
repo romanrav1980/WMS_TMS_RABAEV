@@ -1,5 +1,5 @@
 create or replace package RRL_TRADE_SUPPLY_PARTS_API authid definer as
- -- C-0163: SUPPLY composition in parts. put_part / put_end record durably and answer the transfer state (missing parts, mismatch);
+ -- C-0163: SUPPLY composition in parts. put_part / put_end record durably (END may arrive first: it repeats the header) and answer the transfer state;
  -- assembled returns the verified header and codes in part order for the caller to pass through the existing receive_document;
  -- mark_delivered records that outcome once. transfers lists transfers of visible owners (filtered before the bound).
  procedure put_part(p_ware number,p_actor nvarchar2,p_json clob,p_result out clob);
@@ -115,21 +115,28 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
   j json_object_t:=json_object_t.parse(p_json);site RRL_TRADE_SITE%rowtype;t RRL_TRADE_SUPPLY_TRANSFER%rowtype;
   src varchar2(100):=j.get_string('source_id');tr varchar2(100):=j.get_string('transfer_id');ev varchar2(100):=j.get_string('event_id');
   eh varchar2(64):=j.get_string('end_hash');tot number:=j.get_number('total_codes');csha varchar2(64):=j.get_string('codes_sha256');
-  occ varchar2(40):=j.get_string('occurred_at');  -- JSON object methods never inside SQL (ORA-40573)
+  occ varchar2(40):=j.get_string('occurred_at');doc varchar2(100):=j.get_string('document_id');ver number:=j.get_number('version');
+  cnt number:=j.get_number('part_count');hh varchar2(64):=j.get_string('header_hash');header clob:=j.get_object('header').to_clob;
+  -- JSON object methods never inside SQL (ORA-40573)
  begin
   if j.get_number('warehouse_id')<>p_ware then fail('SOURCE_MISMATCH');end if;
   site:=lock_site(p_ware,p_actor,'tradecase_import',src);
+  require_owner(p_actor,p_ware,header,1);  -- END repeats the SUPPLY header, so the owner is known even before the first part
   begin select*into t from RRL_TRADE_SUPPLY_TRANSFER where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr for update;
-  exception when no_data_found then fail('SUPPLY_TRANSFER_NOT_STARTED');end;  -- END before any part: nothing to bind the summary to yet
-  require_owner(p_actor,p_ware,t.HEADER_JSON,1);
-  if t.END_EVENT_ID is not null then
-   if t.END_EVENT_ID=ev and t.END_HASH=eh then p_result:=state(p_ware,src,tr,true);return;end if;
-   fail('SUPPLY_END_CONFLICT');
-  end if;
-  if t.DOCUMENT_ID<>j.get_string('document_id')or t.VERSION_NO<>j.get_number('version')or t.PART_COUNT<>j.get_number('part_count')then fail('SUPPLY_PART_HEADER_CONFLICT');end if;
-  assert_current(p_ware,src,t.DOCUMENT_ID,t.VERSION_NO);
-  update RRL_TRADE_SUPPLY_TRANSFER set END_EVENT_ID=ev,END_HASH=eh,END_TOTAL=tot,END_CODES_SHA=csha,
-   END_OCCURRED_AT=occ,UPDATED_AT=systimestamp where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr;
+   if t.END_EVENT_ID is not null then
+    if t.END_EVENT_ID=ev and t.END_HASH=eh then p_result:=state(p_ware,src,tr,true);return;end if;
+    fail('SUPPLY_END_CONFLICT');
+   end if;
+   if t.DOCUMENT_ID<>doc or t.VERSION_NO<>ver or t.PART_COUNT<>cnt or t.HEADER_HASH<>hh then fail('SUPPLY_PART_HEADER_CONFLICT');end if;
+   assert_current(p_ware,src,doc,ver);
+   update RRL_TRADE_SUPPLY_TRANSFER set END_EVENT_ID=ev,END_HASH=eh,END_TOTAL=tot,END_CODES_SHA=csha,
+    END_OCCURRED_AT=occ,UPDATED_AT=systimestamp where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr;
+  exception when no_data_found then
+   -- END before any part is stored durably: the transfer starts with zero parts and every part is missing.
+   assert_current(p_ware,src,doc,ver);
+   insert into RRL_TRADE_SUPPLY_TRANSFER(WARE_ID,SOURCE_ID,TRANSFER_ID,DOCUMENT_ID,VERSION_NO,PART_COUNT,HEADER_JSON,HEADER_HASH,STATUS,CREATED_BY,
+    END_EVENT_ID,END_HASH,END_TOTAL,END_CODES_SHA,END_OCCURRED_AT)values(p_ware,src,tr,doc,ver,cnt,header,hh,'OPEN',p_actor,ev,eh,tot,csha,occ);
+  end;
   evaluate(p_ware,src,tr);
   p_result:=state(p_ware,src,tr,false);
  end;

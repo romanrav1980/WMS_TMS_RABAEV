@@ -7,11 +7,11 @@
   },
   {
    "width": 1440,
-   "name": "FIXTURE transfers: missing part, total mismatch, delivered — in plain words"
+   "name": "FIXTURE transfers: missing part, END before parts, total mismatch, too large, delivered — in plain words"
   },
   {
    "width": 1440,
-   "name": "FIXTURE hand-over retry posts the same transfer once"
+   "name": "FIXTURE hand-over retry posts the same transfer once, slash source in the body"
   },
   {
    "width": 1440,
@@ -39,11 +39,11 @@
   },
   {
    "width": 390,
-   "name": "FIXTURE transfers: missing part, total mismatch, delivered — in plain words"
+   "name": "FIXTURE transfers: missing part, END before parts, total mismatch, too large, delivered — in plain words"
   },
   {
    "width": 390,
-   "name": "FIXTURE hand-over retry posts the same transfer once"
+   "name": "FIXTURE hand-over retry posts the same transfer once, slash source in the body"
   },
   {
    "width": 390,
@@ -69,7 +69,10 @@
  "writes": [],
  "errors": [],
  "posts": [
-  "http://127.0.0.1:8088/api/tradecase/warehouses/210564699/supply-transfers/TC03.SAP/T3/deliver"
+  {
+   "source_id": "TC03/SAP",
+   "transfer_id": "T3"
+  }
  ],
  "status": "PASS"
 }

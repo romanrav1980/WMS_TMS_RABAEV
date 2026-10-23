@@ -19,10 +19,11 @@ async function route(r) {
     if (fx.denied) return r.fulfill({ status: 403, headers: cors, json: { detail: { code: "TRADECASE_ACCESS_DENIED" } } });
     return r.fulfill({ status: 200, headers: cors, json: { warehouse_id: WH, has_more: false, items: [
       row("T1", "OPEN", { missing_parts: [1], end_received: true, received_codes: 4 }),
-      row("T2", "MISMATCH", { status_reason: "TOTAL_MISMATCH:7/8", received_codes: 7 }),
-      row("T3", "COMPLETE", { received_codes: 7 }), row("T4", "DELIVERED", { received_codes: 7 })] } });
+      row("T2", "MISMATCH", { status_reason: "TOTAL_MISMATCH:7/8", received_codes: 7 }), row("T5", "OPEN", { missing_parts: [1, 2, 3], received_codes: 0 }),
+      row("T6", "DELIVERY_REJECTED", { status_reason: "SUPPLY_ASSEMBLED_TOO_LARGE" }),
+      row("T3", "COMPLETE", { received_codes: 7, source_id: "TC03/SAP" }), row("T4", "DELIVERED", { received_codes: 7 })] } });
   }
-  if (u.includes("/supply-transfers/") && u.endsWith("/deliver") && m === "POST") { res.posts.push(u); return r.fulfill({ status: 200, headers: cors, json: row("T3", "DELIVERED") }); }
+  if (u.endsWith("/supply-transfers/deliver") && m === "POST") { res.posts.push(req.postDataJSON()); return r.fulfill({ status: 200, headers: cors, json: row("T3", "DELIVERED") }); }
   if (m !== "GET" && !u.includes("/auth/")) { res.writes.push(m + " " + u); return r.abort(); }
   return r.continue();
 }
@@ -39,10 +40,10 @@ async function width(b, w, h) {
   if (await login.count()) { await p.fill("input[autocomplete=username]", "admin"); await login.fill(pass); await p.click("button[type=submit]"); }
   await panel.getByText("SUP.T1").waitFor({ timeout: 45000 }); ok(w, "LIVE messages tab opens with the parts panel");
   const t = await panel.innerText();
-  assert(/нет частей: 1/.test(t) && /состав не сходится/.test(t) && /число кодов не сходится \(получено\/заявлено 7\/8\)/.test(t) && /передан в приём/.test(t), t);
-  ok(w, "FIXTURE transfers: missing part, total mismatch, delivered — in plain words");
+  assert(/нет частей: 1/.test(t) && /состав не сходится/.test(t) && /число кодов не сходится \(получено\/заявлено 7\/8\)/.test(t) && /передан в приём/.test(t) && /нет частей: 1, 2, 3 · завершение получено/.test(t) && /больше предела приёма 1 МБ/.test(t), t);
+  ok(w, "FIXTURE transfers: missing part, END before parts, total mismatch, too large, delivered — in plain words");
   await panel.locator("li", { hasText: "SUP.T3" }).getByRole("button", { name: "Передать в приём" }).click();
-  await panel.getByText("Состав T3 передан в приём.").waitFor(); assert(res.posts.length === 1 && res.posts[0].includes("/TC03.SAP/T3/deliver")); ok(w, "FIXTURE hand-over retry posts the same transfer once");
+  await panel.getByText("Состав T3 передан в приём.").waitFor(); assert.deepStrictEqual(res.posts, [{ source_id: "TC03/SAP", transfer_id: "T3" }]); ok(w, "FIXTURE hand-over retry posts the same transfer once, slash source in the body");
   await panel.locator("li", { hasText: "SUP.T4" }).getByRole("button", { name: "Открыть поставку" }).click();
   await p.waitForFunction(() => /tc_tab=SUPPLY/.test(location.search) && /tc_open=SUP\.T4/.test(location.search), null, { timeout: 15000 });
   ok(w, "delivered transfer opens the SUPPLY document in place");

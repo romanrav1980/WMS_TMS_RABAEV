@@ -14,7 +14,8 @@ const STATUS: Record<string, string> = { OPEN: "ждёт данных", MISMATCH
 const help = (id: string, text: string) => ({ id: "tradecase.supply.parts." + id, text, anchor: "supply-parts" });
 const reason = (t: Transfer) => !t.status_reason ? "" : t.status_reason === "WAITING_END" ? "нет уведомления о завершении"
   : t.status_reason.startsWith("TOTAL_MISMATCH") ? `число кодов не сходится (получено/заявлено ${t.status_reason.split(":")[1]})`
-  : t.status_reason === "CODES_HASH_MISMATCH" ? "контрольная сумма кодов не сходится с уведомлением о завершении" : t.status_reason;
+  : t.status_reason === "CODES_HASH_MISMATCH" ? "контрольная сумма кодов не сходится с уведомлением о завершении"
+  : t.status_reason === "SUPPLY_ASSEMBLED_TOO_LARGE" ? "собранный документ больше предела приёма 1 МБ" : t.status_reason;
 
 export function SupplyParts({ wh, onOpen }: { wh: string; onOpen: (documentId: string) => void }) {
   const [reload, setReload] = useState(0), [busy, setBusy] = useState(""), [message, setMessage] = useState("");
@@ -22,7 +23,9 @@ export function SupplyParts({ wh, onOpen }: { wh: string; onOpen: (documentId: s
   const deliver = async (t: Transfer) => {
     setBusy(t.transfer_id); setMessage("");
     try {
-      await apiFetch(`/api/tradecase/warehouses/${encodeURIComponent(wh)}/supply-transfers/${encodeURIComponent(t.source_id)}/${encodeURIComponent(t.transfer_id)}/deliver`, { method: "POST" });
+      // Identifiers may contain "/": they go in the body, not in the path.
+      await apiFetch(`/api/tradecase/warehouses/${encodeURIComponent(wh)}/supply-transfers/deliver`, { method: "POST",
+        body: JSON.stringify({ source_id: t.source_id, transfer_id: t.transfer_id }) });
       setMessage(`Состав ${t.transfer_id} передан в приём.`);
     } catch (e) {
       setMessage(e instanceof ApiRequestError && e.status === 409 ? "Передача отклонена: обновите список и проверьте причину." : "Исход передачи не подтверждён — повторите: повтор не создаст второй документ.");

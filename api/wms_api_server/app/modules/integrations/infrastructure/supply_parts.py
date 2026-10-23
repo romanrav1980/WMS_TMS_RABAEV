@@ -1,12 +1,16 @@
 """SUPPLY parts adapter (C-0163). Parts/END are stored by RRL_TRADE_SUPPLY_PARTS_API in one native transaction each. A complete
 transfer is handed to the existing intake as the same canonical SUPPLY under a deterministic event id, then marked delivered in a
-separate transaction: a lost response or restart repeats the hand-over with the same event id, which the intake answers idempotently."""
+separate transaction: a lost response or restart repeats the hand-over with the same event id, which the intake answers idempotently.
+An assembled SUPPLY over the existing 1 MB intake limit is recorded as a bounded rejection; the limit is not raised."""
 from typing import Any
 import oracledb
 from ...platform.public import read_oracle_json
 from ..contracts_supply_parts import (TradeSupplyPart, TradeSupplyPartsEnd, assembled_event_id, canonical, end_wire, part_wire)
 from ..contracts_tradecase import TradecaseError, TradeEnvelope
 from .tradecase_documents import OracleTradecaseDocuments, native_error
+
+LIMIT = 1024 * 1024
+HASH_FIELDS = len(',"payload_hash":"","business_hash":""') + 2 * 64  # added by the intake before its own limit check
 
 
 class OracleSupplyParts:
@@ -15,7 +19,7 @@ class OracleSupplyParts:
 
     def _call(self, procedure: str, warehouse: int, actor: str, value: dict[str, Any]) -> dict[str, Any]:
         raw = canonical(value)
-        if len(raw.encode()) > 1024 * 1024:
+        if len(raw.encode()) > LIMIT:
             raise TradecaseError("TRADECASE_MESSAGE_TOO_LARGE", 413)
         try:
             with self.gateway.transaction("TRADECASE supply parts " + procedure) as cur:
@@ -54,6 +58,8 @@ class OracleSupplyParts:
                                                  "document_id": state["document_id"], "version": state["version"],
                                                  "occurred_at": packed["end_occurred_at"], "payload": {**packed["header"], "codes": packed["codes"]}})
         try:
+            if len(canonical(envelope.model_dump(mode="json")).encode()) + HASH_FIELDS > LIMIT:
+                raise TradecaseError("SUPPLY_ASSEMBLED_TOO_LARGE", 409)  # deterministic: the same parts never fit, so not retried
             receipt, outcome, reason = OracleTradecaseDocuments(self.gateway).receive(envelope, actor), "DELIVERED", None
         except TradecaseError as exc:
             if exc.status != 409:

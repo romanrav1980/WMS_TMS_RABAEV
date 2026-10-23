@@ -1,7 +1,8 @@
 """SUPPLY composition in parts (C-0163): an additive WMS intake contract, not a declared SAP wire format.
 
 A transfer binds source/warehouse/document/version/transfer_id. Every part repeats the SUPPLY header (all fields except codes) and
-carries part_no of part_count; END states the total code count and the SHA-256 of all codes joined by LF in part order. Only a complete,
+carries part_no of part_count; END repeats the same header and states the total code count and the SHA-256 of all codes joined by LF
+in part order, so END may arrive before any part. Only a complete,
 verified transfer becomes the same canonical SUPPLY document through the existing intake."""
 from hashlib import sha256
 import json
@@ -56,6 +57,7 @@ class TradeSupplyPartsEnd(TradeModel):
     total_codes: int = Field(strict=True, ge=1, le=10000)
     codes_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     occurred_at: AwareDatetime
+    header: TradeSupplyHeader  # type: ignore[valid-type]
 
 
 def part_wire(body: TradeSupplyPart) -> dict[str, Any]:
@@ -66,12 +68,18 @@ def part_wire(body: TradeSupplyPart) -> dict[str, Any]:
 
 def end_wire(body: TradeSupplyPartsEnd) -> dict[str, Any]:
     value = body.model_dump(mode="json")
-    content = {k: value[k] for k in ("document_id", "version", "transfer_id", "part_count", "total_codes", "codes_sha256")}
-    return {**value, "end_hash": digest(content)}
+    content = {k: value[k] for k in ("document_id", "version", "transfer_id", "part_count", "total_codes", "codes_sha256", "header")}
+    return {**value, "end_hash": digest(content), "header_hash": digest(value["header"])}
 
 
 def codes_sha256(codes: list[str]) -> str:
     return sha256("\n".join(codes).encode()).hexdigest()
+
+
+class SupplyTransferKey(TradeModel):
+    """Hand-over retry target in the body: Key identifiers may contain '/', which a path segment cannot carry."""
+    source_id: Key
+    transfer_id: Key
 
 
 def assembled_event_id(source: str, warehouse: int, transfer: str) -> str:

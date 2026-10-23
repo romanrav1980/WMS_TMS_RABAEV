@@ -5,8 +5,13 @@ import json
 import pathlib
 import re
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from pydantic import ValidationError
-from app.modules.integrations.contracts_supply_parts import (TradeSupplyPart, TradeSupplyPartsEnd, assembled_event_id, codes_sha256, end_wire, part_wire)
+from app.modules.integrations.api.supply_parts_routes import router
+from app.modules.platform.public import get_current_user
+from app.modules.integrations.contracts_supply_parts import (TradeSupplyPart, TradeSupplyPartsEnd, assembled_event_id, codes_sha256, end_wire, part_wire,
+                                                             supply_parts_service)
 from app.modules.integrations.contracts_tradecase import TradecaseError, TradeSupply
 from app.modules.integrations.infrastructure import supply_parts as subject
 
@@ -27,7 +32,7 @@ def part(no, event=None, codes=None, **kw):
 def end(**kw):
     return TradeSupplyPartsEnd.model_validate({"schema_version": 1, "event_id": "E.END", "source_id": "TC03.SAP", "warehouse_id": 210564699, "document_id": "SUP.1",
                                                "version": 2, "transfer_id": "T1", "part_count": 3, "total_codes": 7, "codes_sha256": codes_sha256(CODES),
-                                               "occurred_at": "2026-10-23T10:05:00+00:00", **kw})
+                                               "occurred_at": "2026-10-23T10:05:00+00:00", "header": HEADER, **kw})
 
 
 def test_header_is_the_supply_without_codes_and_parts_are_numbered():
@@ -46,6 +51,8 @@ def test_hashes_bind_content_not_delivery_details():
     assert a["part_hash"] == b["part_hash"] and a["header_hash"] == b["header_hash"]  # same content, other event: a repeat
     assert part_wire(part(2, codes=SPLIT[3]))["part_hash"] != a["part_hash"]  # same number, other codes: a conflict natively
     assert end_wire(end())["end_hash"] == end_wire(end(event_id="E.END2"))["end_hash"]
+    assert end_wire(end())["header_hash"] == a["header_hash"]  # END repeats the part header: one header hash binds both
+    assert end_wire(end(header={**HEADER, "mrc": "201"}))["end_hash"] != end_wire(end())["end_hash"]
     assert assembled_event_id("TC03.SAP", 210564699, "T1") == assembled_event_id("TC03.SAP", 210564699, "T1") != assembled_event_id("TC03.SAP", 210564699, "T2")
     assert len(assembled_event_id("S" * 100, 1, "T" * 100)) <= 100
 
@@ -157,6 +164,45 @@ def test_order_2_end_1_hands_over_once_with_codes_in_part_order(received):
     assert len(received) == 1
 
 
+def test_end_first_then_2_then_1_hands_over_once(received):
+    native = Native(); svc = subject.OracleSupplyParts(Gateway(native))
+    first = svc.put_end(end(), "sap")
+    assert first["status"] == "OPEN" and first["missing_parts"] == [1, 2, 3] and first["end_received"] and received == []
+    assert svc.put_part(part(2), "sap")["missing_parts"] == [1, 3]
+    svc.put_part(part(3), "sap")
+    assert svc.put_part(part(1), "sap")["status"] == "DELIVERED" and [c.code for c in received[0].payload.codes] == CODES
+    svc.put_end(end(), "sap")  # a repeated END after delivery hands nothing over again
+    assert len(received) == 1
+
+
+def test_assembled_over_the_existing_limit_is_a_bounded_rejection(received, monkeypatch):
+    native = Native(); svc = subject.OracleSupplyParts(Gateway(native))
+    for n in (1, 2, 3):
+        native.parts[n] = SPLIT[n]
+    native.end, native.status = {"x": 1}, "COMPLETE"
+    monkeypatch.setattr(subject, "LIMIT", 500)  # the same rule as the 1 MB intake limit, with a small payload
+    r = svc.deliver(210564699, "TC03.SAP", "T1", "sap")
+    assert r["status"] == "DELIVERY_REJECTED" and native.delivered["reason"] == "SUPPLY_ASSEMBLED_TOO_LARGE" and received == []
+    assert subject.HASH_FIELDS == len(',"payload_hash":"' + "0" * 64 + '","business_hash":"' + "0" * 64 + '"')
+
+
+def test_deliver_route_carries_slash_identifiers_in_the_body():
+    calls = []
+
+    class Service:
+        def deliver(self, warehouse, source, transfer, actor):
+            calls.append((warehouse, source, transfer, actor))
+            return {"status": "DELIVERED"}
+    app = FastAPI(); app.include_router(router)
+    app.dependency_overrides[get_current_user] = lambda: type("U", (), {"username": "op"})()
+    app.dependency_overrides[supply_parts_service] = Service
+    client = TestClient(app)
+    r = client.post("/api/tradecase/warehouses/210564699/supply-transfers/deliver", json={"source_id": "TC03/SAP", "transfer_id": "T/1/2"})
+    assert r.status_code == 200 and calls == [(210564699, "TC03/SAP", "T/1/2", "op")]
+    assert client.post("/api/tradecase/warehouses/210564699/supply-transfers/deliver", json={"source_id": "TC03/SAP"}).status_code == 422
+    assert client.post("/api/tradecase/warehouses/210564699/supply-transfers/deliver", json={"source_id": "a b", "transfer_id": "T"}).status_code == 422
+
+
 def test_unknown_outcome_keeps_the_transfer_and_the_same_event_is_repeated(received):
     native = Native(); svc = subject.OracleSupplyParts(Gateway(native))
     for n in (1, 2, 3):
@@ -205,6 +251,11 @@ def test_native_rules():
         assert not re.search(r"\b[a-z]\.get_(string|number|object|array)\(", stmt), stmt[:120]  # JSON object methods never inside SQL
     assert "RRL_TRADE_SUPPLY_PART_APPEND before update or delete" in text("001_schema.sql")
     assert "SUPPLY_PART_HISTORY_PRESENT" in text("rollback.sql")
+    fin = body[body.index(" procedure put_end("):body.index(" procedure assembled(")]
+    assert "SUPPLY_TRANSFER_NOT_STARTED" not in fin  # END before the first part is stored, not refused
+    assert fin.index("lock_site(") < fin.index("require_owner(p_actor,p_ware,header,1)") < fin.index("for update")
+    assert fin.index("t.END_EVENT_ID=ev and t.END_HASH=eh") < fin.index("fail('SUPPLY_END_CONFLICT')") < fin.index("t.HEADER_HASH<>hh then fail('SUPPLY_PART_HEADER_CONFLICT')")
+    assert "insert into RRL_TRADE_SUPPLY_TRANSFER" in fin and "'OPEN',p_actor,ev,eh,tot,csha,occ" in fin and fin.count("assert_current(") == 2
 
 
 def test_kit_and_live_proofs():

@@ -3,7 +3,7 @@ from collections.abc import Callable
 from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from ...platform.public import AdminUser, get_current_user
-from ..contracts_supply_parts import SupplyPartsPort, TradeSupplyPart, TradeSupplyPartsEnd, supply_parts_service
+from ..contracts_supply_parts import SupplyPartsPort, SupplyTransferKey, TradeSupplyPart, TradeSupplyPartsEnd, supply_parts_service
 from ..contracts_tradecase import TradecaseError
 
 router = APIRouter(prefix="/api/tradecase", tags=["tradecase"])
@@ -34,7 +34,7 @@ def transfers(warehouse_id: int = Path(gt=0), limit: int = Query(default=50, ge=
     return _call(lambda: service.transfers(warehouse_id, limit, user.username))
 
 
-@router.post("/warehouses/{warehouse_id}/supply-transfers/{source_id}/{transfer_id}/deliver")
-def deliver(warehouse_id: int = Path(gt=0), source_id: str = Path(min_length=1, max_length=100), transfer_id: str = Path(min_length=1, max_length=100),
-            user: AdminUser = Depends(get_current_user), service: SupplyPartsPort = Depends(supply_parts_service)) -> dict[str, Any]:
-    return _call(lambda: service.deliver(warehouse_id, source_id, transfer_id, user.username))
+@router.post("/warehouses/{warehouse_id}/supply-transfers/deliver")
+def deliver(body: SupplyTransferKey, warehouse_id: int = Path(gt=0), user: AdminUser = Depends(get_current_user),
+            service: SupplyPartsPort = Depends(supply_parts_service)) -> dict[str, Any]:
+    return _call(lambda: service.deliver(warehouse_id, body.source_id, body.transfer_id, user.username))
