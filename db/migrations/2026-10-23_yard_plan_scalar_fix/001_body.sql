@@ -93,14 +93,14 @@ create or replace package body RRL_YARD_DOCK_PLAN_API as
   plan_value:=d.get_number('plan_id');
   if action='PLAN'then visit_value:=d.get_number('visit_id');
   else
-   begin select VISIT_ID into visit_value from RRL_YARD_DOCK_PLAN where PLAN_ID=plan_valueand WARE_ID=p_ware;
+   begin select VISIT_ID into visit_value from RRL_YARD_DOCK_PLAN where PLAN_ID=plan_value and WARE_ID=p_ware;
    exception when no_data_found then fail('YARD_PLAN_NOT_FOUND');end;
   end if;
   -- Visit before plan, as in every command. A plan of a hidden visit answers like a missing plan.
   begin lock_visit(p_ware,visit_value,p_actor,v);
   exception when others then if action<>'PLAN'and sqlerrm like '%YARD_VISIT_NOT_FOUND%'then fail('YARD_PLAN_NOT_FOUND');end if;raise;end;
   if action<>'PLAN'then
-   select*into p from RRL_YARD_DOCK_PLAN where PLAN_ID=plan_valuefor update;
+   select*into p from RRL_YARD_DOCK_PLAN where PLAN_ID=plan_value for update;
    if p.STATUS<>'ACTIVE'then fail('YARD_PLAN_STATE_CONFLICT');end if;
    if d.get_number('expected_version')is null or d.get_number('expected_version')<>p.VERSION_NO then fail('VERSION_CONFLICT');end if;
   end if;
