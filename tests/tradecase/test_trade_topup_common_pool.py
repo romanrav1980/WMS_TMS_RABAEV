@@ -78,7 +78,7 @@ def test_no_private_helpers_or_json_methods_inside_new_sql_statements():
 
 def test_kit_hashes_and_scripts():
     manifest = json.loads(text("manifest.json"))
-    assert manifest["status"] == "NOT_APPLIED" and manifest["applied_by_claude"] is False and manifest["specs_changed"] == []
+    assert manifest["status"] in ("NOT_APPLIED", "APPLIED") and manifest["applied_by_claude"] is False and manifest["specs_changed"] == []  # root applied it 23.10
     for name, (before, after) in PAIRS.items():
         b, a = hashlib.sha256(body(before).encode()).hexdigest().upper(), hashlib.sha256(body(after).encode()).hexdigest().upper()
         assert manifest["before_sha256"][name + ":PACKAGE BODY"] == b and manifest["after_sha256"][name + ":PACKAGE BODY"] == a

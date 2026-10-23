@@ -56,3 +56,72 @@ def allocate_pool(demands: tuple[PoolDemand,...], available: Decimal, step: Deci
                         heappush(recipients,(-(budget*units[i]-assigned[i]*total),ordered[i].dispatch_order,ordered[i].line_id,i))
         quantities={d.line_id:step*u for d,u in zip(ordered,assigned)}
         return PoolAllocation(quantities,available-step*sum(assigned))
+
+
+@dataclass(frozen=True)
+class TradeDemand:
+    line_id: int
+    quantity: Decimal
+    dispatch_order: int
+    classes: tuple[str, ...]  # physical classes (owner|SKU|MRC|expiry) this row's trade terms accept
+
+
+@dataclass(frozen=True)
+class TradeAllocation:
+    quantities: dict[int, Decimal]
+    sources: dict[int, dict[str, Decimal]]
+
+
+def _fefo(key: str) -> tuple[str, str]:
+    return key.rsplit("|", 1)[-1], key  # earliest expiry first, then the key itself
+
+
+def allocate_trade_pool(demands: tuple[TradeDemand, ...], free: dict[str, Decimal], step: Decimal) -> TradeAllocation:
+    """C-0160: whole-step shares of a trade site; a row draws only on the classes it accepts. Rows that accept exactly the same classes
+    share them proportionally (the existing algorithm); rows with overlapping but different class sets are served in dispatch order,
+    FEFO within each row. Every split is proven again by the native pool command; nothing here is trusted on its own."""
+    if len(demands) > 2000 or len({d.line_id for d in demands}) != len(demands):
+        raise ValueError("Pool must contain at most 2000 distinct order lines")
+    left = dict(free)
+    quantities = {d.line_id: Decimal(0) for d in demands}
+    sources: dict[int, dict[str, Decimal]] = {}
+    active = [d for d in demands if d.quantity >= step and d.classes]
+    parent = {d.line_id: d.line_id for d in active}
+
+    def root(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    owner: dict[str, int] = {}
+    for d in active:
+        for key in d.classes:
+            if key in owner:
+                parent[root(d.line_id)] = root(owner[key])
+            else:
+                owner[key] = d.line_id
+    groups: dict[int, list[TradeDemand]] = {}
+    for d in active:
+        groups.setdefault(root(d.line_id), []).append(d)
+
+    def draw(d: TradeDemand, want: Decimal) -> None:
+        for key in sorted(d.classes, key=_fefo):
+            take = min(want, (left.get(key, Decimal(0)) // step) * step)
+            if take > 0:
+                left[key] -= take
+                want -= take
+                quantities[d.line_id] += take
+                sources.setdefault(d.line_id, {})[key] = sources.get(d.line_id, {}).get(key, Decimal(0)) + take
+            if want <= 0:
+                break
+    for rows in groups.values():
+        rows.sort(key=lambda d: (d.dispatch_order, d.line_id))
+        if len({frozenset(d.classes) for d in rows}) == 1:
+            shared = sum((left.get(k, Decimal(0)) for k in rows[0].classes), Decimal(0))
+            split = allocate_pool(tuple(PoolDemand(d.line_id, d.quantity, d.dispatch_order) for d in rows), shared, step)
+            for d in rows:
+                draw(d, split.quantities[d.line_id])
+        else:
+            for d in rows:
+                draw(d, (d.quantity // step) * step)
+    return TradeAllocation(quantities, sources)

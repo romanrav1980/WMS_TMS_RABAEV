@@ -1,0 +1,157 @@
+{
+ "snapshots": {
+  "1:QPOOL104dbfb271": {
+   "after": {
+    "ms": 139.2,
+    "sha": "7399838e214874617c91d4b415b442cbc293b94281bbaa135fa852e7a29cae5c"
+   },
+   "trade": null,
+   "classes": null,
+   "available": "0",
+   "stocks": [],
+   "orders": [],
+   "before": {
+    "ms": 6.4,
+    "sha": "7399838e214874617c91d4b415b442cbc293b94281bbaa135fa852e7a29cae5c"
+   },
+   "forced_pool": {
+    "ms": 124.6,
+    "sha": "7399838e214874617c91d4b415b442cbc293b94281bbaa135fa852e7a29cae5c"
+   },
+   "forced_trade": null,
+   "forced_classes": null,
+   "forced_available": "0",
+   "forced_stocks": [],
+   "forced_orders": [],
+   "same_as_before": true
+  },
+  "1:QPOOLd03d25fda8": {
+   "after": {
+    "ms": 6.7,
+    "sha": "2e944d198b904dbfa39d04df203a3f8a7f803b962ca86ccfc0fb3092e7e4ade7"
+   },
+   "trade": null,
+   "classes": null,
+   "available": "0",
+   "stocks": [],
+   "orders": [],
+   "before": {
+    "ms": 6.8,
+    "sha": "2e944d198b904dbfa39d04df203a3f8a7f803b962ca86ccfc0fb3092e7e4ade7"
+   },
+   "forced_pool": {
+    "ms": 6.1,
+    "sha": "2e944d198b904dbfa39d04df203a3f8a7f803b962ca86ccfc0fb3092e7e4ade7"
+   },
+   "forced_trade": null,
+   "forced_classes": null,
+   "forced_available": "0",
+   "forced_stocks": [],
+   "forced_orders": [],
+   "same_as_before": true
+  },
+  "210564699:TC03089DDB36": {
+   "after": {
+    "ms": 34.8,
+    "sha": "8a9cf5ecd0b972c928c04480ed60193f523caa05155eebaad3c765ab6c92912e"
+   },
+   "trade": 1,
+   "classes": [],
+   "available": "0",
+   "stocks": [
+    {
+     "uid": "690000000445629982",
+     "free": "0",
+     "reason": null,
+     "class": null
+    }
+   ],
+   "orders": [
+    {
+     "line_id": 3687,
+     "quantity": "0",
+     "classes": null,
+     "pool_reason": null
+    },
+    {
+     "line_id": 3690,
+     "quantity": "20",
+     "classes": null,
+     "pool_reason": null
+    },
+    {
+     "line_id": 3691,
+     "quantity": "0",
+     "classes": null,
+     "pool_reason": null
+    },
+    {
+     "line_id": 3692,
+     "quantity": "10",
+     "classes": null,
+     "pool_reason": null
+    }
+   ],
+   "before": {
+    "ms": 21.6,
+    "sha": "3f5f69ca5e1c0b7f06de50a2185b12c3fd73d2a0978b438f303718be5115311c"
+   },
+   "forced_pool": {
+    "ms": 67.9,
+    "sha": "e970a62a0ca004d5730aa6d135ec1094fe156750b4f12d01f8450c45ed58a326"
+   },
+   "forced_trade": 1,
+   "forced_classes": [
+    {
+     "key": "SNS|A|200|2030-01-01",
+     "owner": "SNS",
+     "free": "250"
+    }
+   ],
+   "forced_available": "250",
+   "forced_stocks": [
+    {
+     "uid": "690000000445629982",
+     "free": "250",
+     "reason": null,
+     "class": "SNS|A|200|2030-01-01"
+    }
+   ],
+   "forced_orders": [
+    {
+     "line_id": 3687,
+     "quantity": "0",
+     "classes": null,
+     "pool_reason": null
+    },
+    {
+     "line_id": 3690,
+     "quantity": "20",
+     "classes": [],
+     "pool_reason": "TRADE_ORDER_BINDING_STALE"
+    },
+    {
+     "line_id": 3691,
+     "quantity": "0",
+     "classes": null,
+     "pool_reason": null
+    },
+    {
+     "line_id": 3692,
+     "quantity": "10",
+     "classes": [],
+     "pool_reason": "TRADE_ORDER_BINDING_STALE"
+    }
+   ],
+   "same_as_before": false
+  }
+ },
+ "prove": {
+  "accepted": "ACCEPTED",
+  "incompatible_class": "ORA-20881: POOL_TRADE_SOURCE_INCOMPATIBLE",
+  "class_overallocated": "ORA-20881: POOL_TRADE_CLASS_OVERALLOCATED",
+  "split_mismatch": "ORA-20881: POOL_TRADE_SOURCE_SPLIT_INVALID",
+  "reason_row_allocated": "ORA-20881: POOL_TRADE_LINE_NOT_ALLOCATABLE",
+  "missing_sources": "ORA-20881: POOL_TRADE_SOURCES_REQUIRED"
+ }
+}
