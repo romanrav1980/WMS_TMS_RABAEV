@@ -1,0 +1,68 @@
+[
+ {
+  "warehouse": 1,
+  "article": "DS-BASE-D10",
+  "open_rows": 44,
+  "before": {
+   "ms": [
+    12.7,
+    10.6,
+    9.2
+   ],
+   "result": "ORA-20868: POOL_ORDER_UOM_REQUIRED"
+  },
+  "after": {
+   "ms": [
+    12.7,
+    20.9,
+    9.2
+   ],
+   "result": "ORA-20868: POOL_ORDER_UOM_REQUIRED"
+  },
+  "same_result": true
+ },
+ {
+  "warehouse": 20052672,
+  "article": "QC16700CDC0EF51",
+  "open_rows": 9,
+  "before": {
+   "ms": [
+    35.4,
+    28.8,
+    23.7
+   ],
+   "result": "d6b44f54daecf32d18dd2dc6477b877a11d4e89531fd53d62a06de88063500d1"
+  },
+  "after": {
+   "ms": [
+    32.3,
+    32.1,
+    27.4
+   ],
+   "result": "d6b44f54daecf32d18dd2dc6477b877a11d4e89531fd53d62a06de88063500d1"
+  },
+  "same_result": true
+ },
+ {
+  "warehouse": 220266073,
+  "article": "TC039CA5D9A2",
+  "open_rows": 6,
+  "before": {
+   "ms": [
+    33.8,
+    23.1,
+    18.0
+   ],
+   "result": "403e3b508cfecf8a012f1ffb0b3fb072ae81bdbd226a512461079b688070407b"
+  },
+  "after": {
+   "ms": [
+    23.7,
+    24.0,
+    26.9
+   ],
+   "result": "403e3b508cfecf8a012f1ffb0b3fb072ae81bdbd226a512461079b688070407b"
+  },
+  "same_result": true
+ }
+]
