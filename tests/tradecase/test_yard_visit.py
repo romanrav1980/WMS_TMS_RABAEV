@@ -44,6 +44,16 @@ def test_wire_times_are_second_precision_aware_strings():
         YardExpect(operation_id="op-00001", trip_id="T1", planned_arrival_at="2026-10-22T09:30:00")
 
 
+def test_inbound_sources_and_outbound_trip_are_separate_business_inputs():
+    body = YardExpect(operation_id="op-00001", supply_ids=["S1", "S2"], vehicle="A123")
+    assert wire(body, action="EXPECT")["supply_ids"] == ["S1", "S2"]
+    for bad in [{}, {"supply_ids": ["S1"]}, {"supply_ids": ["S1"], "vehicle": " "},
+                {"trip_id": "T1", "supply_ids": ["S1"], "vehicle": "A123"},
+                {"supply_ids": ["S1", "S1"], "vehicle": "A123"}, {"supply_ids": [""], "vehicle": "A123"}]:
+        with pytest.raises(ValidationError):
+            YardExpect(operation_id="op-00001", **bad)
+
+
 @pytest.mark.parametrize("code,text,expected", [
     (20901, "ORA-20901: YARD_DOCK_OR_VEHICLE_OCCUPIED\nORA-06512: at line 1", ("YARD_DOCK_OR_VEHICLE_OCCUPIED", 409)),
     (20882, "ORA-20882: YARD_ACCESS_DENIED", ("YARD_ACCESS_DENIED", 403)),

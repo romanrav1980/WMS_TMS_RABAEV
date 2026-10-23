@@ -4,6 +4,7 @@
 export type YardState = "EXPECTED" | "ARRIVED" | "AT_DOCK" | "WORKING" | "WORK_DONE" | "DEPARTED" | "CANCELLED";
 export type YardAction = "ARRIVE" | "ASSIGN_DOCK" | "REASSIGN_DOCK" | "START" | "FINISH" | "DEPART" | "CANCEL";
 export type YardVisit = { visit_id: number; warehouse_id: number; trip_id: string | null; vehicle: string | null; dock: string | null;
+  visit_kind?: "OUTBOUND" | "INBOUND"; supply_ids?: string[];
   planned_dock: string | null; state: YardState; version: number; planned_arrival_at: string | null; arrived_at: string | null;
   docked_at: string | null; work_started_at: string | null; work_finished_at: string | null; updated_by: string | null };
 export type YardSnapshot = { warehouse_id: number; observed_at: string; visits: YardVisit[] };
@@ -41,9 +42,9 @@ export function delay(v: YardVisit, observedAt: string): { kind: "LATE" | "WAITI
 /** Чего не хватает визиту, чтобы им можно было управлять без догадок. */
 export function missing(v: YardVisit): string[] {
   const out: string[] = [];
-  if (!v.vehicle) out.push("машина в рейсе не указана");
+  if (!v.vehicle) out.push(v.visit_kind === "INBOUND" ? "не указан номер машины" : "машина в рейсе не указана");
   if (v.state === "EXPECTED" && !v.planned_arrival_at) out.push("нет плана приезда — опоздание не определяется");
-  if ((v.state === "EXPECTED" || v.state === "ARRIVED") && !v.planned_dock) out.push("ворота в рейсе не запланированы");
+  if (v.visit_kind !== "INBOUND" && (v.state === "EXPECTED" || v.state === "ARRIVED") && !v.planned_dock) out.push("ворота в рейсе не запланированы");
   return out;
 }
 
@@ -73,6 +74,9 @@ const REFUSAL: Record<string, string> = {
   YARD_TRIP_VISIT_ACTIVE: "У рейса уже есть активный визит.", YARD_VEHICLE_OCCUPIED: "Машина уже на площадке в другом визите.",
   YARD_VISIT_NOT_FOUND: "Визит не найден или недоступен.", YARD_OPERATION_CONFLICT: "Этот номер операции уже использован другим действием или пользователем.",
   YARD_TRIP_BINDING_REQUIRED: "Рейс не привязан к транспортному заданию — приезд не подтверждается.",
-  YARD_VEHICLE_REQUIRED: "В рейсе не указана машина — приезд не подтверждается.", YARD_INBOUND_UNSUPPORTED: "Входящие визиты пока не поддерживаются.", YARD_TRIP_REQUIRED: "Рейс не найден или недоступен.", YARD_ACCESS_DENIED: "Нет права управлять двором на этом складе.",
+  YARD_VEHICLE_REQUIRED: "Укажите машину перед регистрацией приезда.", YARD_TRIP_REQUIRED: "Рейс не найден или недоступен.", YARD_ACCESS_DENIED: "Нет права управлять двором на этом складе.",
+  YARD_SUPPLIES_REQUIRED: "Укажите основания поставки.", YARD_SUPPLY_NOT_FOUND: "Основание поставки не получено или недоступно.",
+  YARD_SUPPLY_VISIT_ACTIVE: "Основание поставки уже назначено активному визиту.",
+  YARD_SUPPLY_CHANGED: "Основание поставки изменилось. Отмените ожидание и создайте визит по актуальным данным.",
 };
 export const refusalText = (code: string) => REFUSAL[code] ?? `Сервер отклонил действие (${code}). Обновите двор и проверьте данные.`;

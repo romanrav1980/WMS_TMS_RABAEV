@@ -47,6 +47,10 @@
 .ops-chip.bad{background:#3d1717;color:#ffb0b0}
 .ops-card dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:8px 0}
 .ops-card dt{color:var(--ops-dim)}.ops-card dd{margin:0;overflow-wrap:anywhere}
+.ops-yard label{display:block;margin:8px 0;color:var(--ops-dim);font-size:12px}
+.ops-yard input,.ops-yard select,.ops-yard textarea{display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:44px;padding:8px;border:1px solid var(--ops-line);border-radius:8px;background:#0d141d;color:var(--ops-text);color-scheme:dark;font:14px system-ui}
+.ops-yard textarea{resize:vertical}.ops-yard a{color:#8ec5ff;text-underline-offset:3px}.ops-yard button{min-height:44px}
+.ops-yard select:focus-visible,.ops-yard textarea:focus-visible{outline:3px solid #8ec5ff;outline-offset:2px}
 .ops-bar{height:6px;border-radius:3px;background:#24364b;overflow:hidden}.ops-bar>span{display:block;height:100%;background:var(--ops-ok)}
 .ops-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .ops-list li{display:grid;grid-template-columns:1fr auto;gap:6px;padding:8px;border-radius:8px;background:#172334;align-items:start}

@@ -5154,3 +5154,9 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 
 23.10 inbound: первая apply скомпилировала все объекты, INVALID0, но verify остановил ledger из-за CRLF в локально рассчитанном body SHA. Свежий live источник побайтно совпал с нормализованным файломC3FF494D...; исправляется verifier/manifest, отдельный finish_failed_apply перед пустым rollback/reapply. Входящих визитов ещё нет.
 
+
+23.10: входящие визиты приняты: recovery3/0, пустойrollback10/0/reapply12/0,36HTTP/3группы, настоящие UI1440/390 с потерей ответа послеcommit и exact retry, immutable link guard/общий Гант,27unit и итоговый quality gatePASS. Остатки прежние, QA retired. Транзакции двора≤103мс;614мс available-ST — прежний отдельный T12 backlog, не yard. Индекс wiki сокращён144→63строки с сохранением старых ссылок/статусов в sources/wiki_index_history_20261023.md; последние противоречивые статусы исправлены. RESUME_LATEST заменён текущим компактным состоянием; источники и прежняя история сохранены в git. C0155 ждёт ACK, работа дальше по бумажному режиму.
+
+
+
+23.10 final inbound UI: неизвестный первый исход сохраняется при403/404/422 на повтор; текущий отказ доступа не удаляет исходный operation_id. Браузер503aftercommit→подставной403→native exactreplay прошёл на1440/390.27unit и итоговый gatePASS, build--Ei2oZYN. Основной yardSQL≤91мс, backgroundavailable-ST614мс остаётся отдельным T12 backlog. Найден готовый API task_signature для следующего бумажного блока; новый ledger не создаётся.

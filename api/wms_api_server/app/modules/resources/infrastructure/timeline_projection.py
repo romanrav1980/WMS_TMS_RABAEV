@@ -153,8 +153,9 @@ class TimelineProjection:
                 if docks and docks[-1][2] is None:
                     docks[-1][2] = finished
         plan = row.get("planned_arrival_at") if state == "EXPECTED" else None
+        purpose = "приёмка" if row.get("visit_kind") == "INBOUND" else f"рейс {row['trip_id']}"
         base = {"source": "RRL_YARD_VISIT", "source_id": visit, "trip_id": row["trip_id"], "plan_start_at": None, "plan_finish_at": None}
-        self.add({**base, "event_id": f"YARD_VISIT:{visit}", "kind": "YARD_VISIT", "label": f"Визит {visit} · рейс {row['trip_id']}",
+        self.add({**base, "event_id": f"YARD_VISIT:{visit}", "kind": "YARD_VISIT", "label": f"Визит {visit} · {purpose}",
                   "status": state, "plan_start_at": plan, "plan_finish_at": plan, "fact_start_at": arrived,
                   "fact_finish_at": finished if arrived else None,
                   "time_status": "AWARE_FACT" if arrived else "AWARE_PLAN" if plan else "TIME_UNRESOLVED",

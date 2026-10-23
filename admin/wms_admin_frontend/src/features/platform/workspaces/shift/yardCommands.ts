@@ -25,7 +25,7 @@ export function readPending(ware: string): { intent: YardIntent | null; damaged:
 
 /** Сохранить намерение до отправки; сбой записи — отправки нет. */
 export function savePending(ware: string, visit: number, version: number, action: YardAction | "EXPECT",
-  extra: { dock?: string; reason?: string; trip_id?: string; planned_arrival_at?: string }): YardIntent {
+  extra: { dock?: string; reason?: string; trip_id?: string; supply_ids?: string[]; vehicle?: string; planned_arrival_at?: string }): YardIntent {
   const saved = readPending(ware);
   if (saved.damaged) throw new Error(saved.damaged);
   if (saved.intent) throw new Error("Сначала завершите ранее сохранённую команду двора.");
@@ -43,7 +43,7 @@ function clearIfSame(intent: YardIntent) {
 }
 
 /** Отправить ровно сохранённые байты. */
-export async function sendPending(intent: YardIntent): Promise<YardSend> {
+export async function sendPending(intent: YardIntent, retry = true): Promise<YardSend> {
   try {
     const v = await apiFetch<{ visit_id?: number; operation_id?: string }>(intent.path, { method: "POST", body: intent.wire });
     // Квитанция принимается только своей операции и своего визита: чужой/неполный/поздний ответ команду не снимает.
@@ -53,6 +53,10 @@ export async function sendPending(intent: YardIntent): Promise<YardSend> {
   } catch (error) {
     if (error instanceof ApiRequestError) {
       const d = (typeof error.detail === "object" && error.detail ? error.detail : {}) as { code?: string; outcome_confirmed?: boolean };
+      // A current access/validation refusal cannot establish the outcome of an earlier unacknowledged request.
+      if (retry && ([401, 403, 404, 422].includes(error.status) || ["YARD_SUPPLY_NOT_FOUND", "YARD_VISIT_NOT_FOUND", "YARD_TRIP_REQUIRED"].includes(d.code ?? ""))) {
+        return { kind: "unknown", message: "Сервер не разрешил повтор сохранённой команды. Её первоначальный результат не подтверждён; восстановите доступ или обратитесь к администратору. Номер команды сохранён." };
+      }
       if (d.outcome_confirmed === true && error.status !== 503) { clearIfSame(intent); return { kind: "refused", code: d.code ?? `HTTP ${error.status}` }; }
       if (error.status === 422) { clearIfSame(intent); return { kind: "refused", code: "YARD_REQUEST_INVALID" }; } // тело не принято — исполнения не было
       return { kind: "unknown", message: error.status === 401 || error.status === 403 ? "Доступ закрыт или сессия завершена. Команда сохранена; войдите снова и повторите её."
