@@ -112,7 +112,7 @@ create or replace package body RRL_TRADE_COMPOSITION_API as
    j.put('composition_state',c.STATE);
    why:=case when closed<>1 then 'ASSEMBLY_REOPENED' when sig is null or sig<>c.SIGNATURE then 'COMPOSITION_CHANGED'
     when l.DOCUMENT_VERSION<>c.ORDER_VERSION then 'ORDER_VERSION_CHANGED' when c.SOURCE_ID<>site.SOURCE_ID then 'SOURCE_CHANGED'
-    when c.SKM_STATUS='WAITING'and decode(c.SKM_ID,site.ACTIVE_SKM,1,0)=0 then 'SKM_CHANGED' end;
+    when c.SKM_STATUS='WAITING'and (case when c.SKM_ID=site.ACTIVE_SKM or(c.SKM_ID is null and site.ACTIVE_SKM is null)then 1 else 0 end)=0 then 'SKM_CHANGED' end;
    st:=case when why is not null then 'CHANGED' when 'REJECTED'in(c.SAP_STATUS,c.SKM_STATUS)then 'REJECTED'
     when 'WAITING'in(c.SAP_STATUS,c.SKM_STATUS)then 'WAITING' else 'CONFIRMED' end;
    j.put('change_reason',why);

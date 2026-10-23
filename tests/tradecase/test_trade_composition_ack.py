@@ -14,7 +14,7 @@ from app.modules.integrations.infrastructure import composition_ack as subject
 from app.modules.platform.public import get_current_user
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-KIT = ROOT / "db/migrations/2026-10-23_trade_composition_ack"
+KIT = ROOT / "db/migrations/2026-10-23_trade_composition_ack_v2"
 SIG = "a" * 64
 
 

@@ -2,7 +2,7 @@
   "target": "RABAEV/orcl",
   "migration_id": "2026-10-23-trade-composition-ack",
   "revision": "C-0164",
-  "status": "NOT_APPLIED",
+  "status": "ROLLED_BACK",
   "applied_by_claude": false,
   "new_objects": [
     "RRL_TRADE_ORDER_COMPOSITION (+index RRL_TRADE_ORDER_COMP_CUR_UK, trigger RRL_TRADE_ORDER_COMP_FROZEN)",
@@ -33,5 +33,9 @@
     "rollback_verify.sql": "8eeec2436713027ea7b224f51ab9748fc3c7658703a82de34bab8c38336ab11e",
     "verify.sql": "f49ec56b1f0711c2aa314bd3130adae3c24d81b0ffff43622f79827ab68d82c1"
   },
-  "root_review": "Before first apply: signature includes live unit/code identities; report and ack use one SERIALIZABLE transaction snapshot."
+  "root_review": "Before first apply: signature includes live unit/code identities; report and ack use one SERIALIZABLE transaction snapshot.",
+  "failed_apply_by_root": true,
+  "failed_apply_evidence": "runtime/test-evidence/tradecase/2026-10-23/T02/composition-ack-first-compile-errors.json",
+  "recovery": "runtime/test-evidence/tradecase/2026-10-23/T02/composition-ack-failed-apply-recovery.txt",
+  "superseded_by": "2026-10-23-trade-composition-ack-v2"
 }
