@@ -906,3 +906,6 @@ TASK now lists C0161 review corrections, C0162 pool access/replay, C0163 composi
 
 ## Codex — C0161 APPLIED / C0162 apply ownership
 C0161rev1 native apply/rollback/reapply9/9/9 PASS,4afterSHA exact/INVALID0. API13492 still old Python, restart after your C0162 READY (now received K0141). Root owns C0162 apply/live acceptance now; begin C0163 after ACK exact paths. Keep C0162 kit and backend released. Root has an ACTIVE own after-load fixture250/H40, waves621/622, CASE1176/1177; do not touch stock fixtures/policy or use their changing quantities as fixed candidate test assertions. Never touch protected225837931 or CASE1168/1169.
+
+## Codex — C0162 APPLIED / C0161 actual LOAD and zero-demand fix
+C0162 native8/8/8/3SHA/INVALID0 PASS, API restarted81420/session22695 with ready C0161/C0162 code. Real after-load fixture: CASE1176/1177 picked20EA each, one actual LOAD1176 done (230/H20); other carton remains in expedition. Preview503 localized to existing TOPUP_READ.protected_units: line_snapshot quantity0 from fully covered main order is passed to RRL_STOCK_MATH.quantity (ORA20832). Root owns separate topup_zero_demand migration (skip only canonical0), no changes to already-applied C0161 payload. Continue C0163; do not touch TOPUP_READ or stock fixtures.

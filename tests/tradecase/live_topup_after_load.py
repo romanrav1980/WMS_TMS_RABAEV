@@ -32,6 +32,29 @@ def configure_case(i):
 
 
 def pick_cases():
+    s.setdefault('expedition', 'ALE' + qa.TAG[-9:])
+    s.setdefault('dock', 'ALD' + qa.TAG[-9:]); qa.save()
+    if 'locations' not in s:
+        with qa.oracle_connection() as conn:
+            q = conn.cursor(); q.callproc('RRL_STOCK_CONFIG_API.begin_change', ['admin', 'warehouse_settings_edit'])
+            try:
+                q.execute('select WARE_ID from RRL_CELLS where CELL=:c', c=s['expedition']); old = q.fetchone()
+                if old:
+                    assert old == (qa.W,)
+                else:
+                    q.execute('insert into RRL_CELLS(CELL,WARE_ID,X,Y,Z,OTBOR,IS_SYSTEM,LIMIT_WEIGHT,LIMIT_HEIGHT)values(:c,:w,10,10,0,0,1,0,0)', c=s['expedition'], w=qa.W)
+                    q.execute("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('CELL',:c),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD", c=s['expedition'])
+                q.execute('select WARE_ID from RRL_TT_DOCK where DOCK=:d', d=s['dock']); old = q.fetchone()
+                if old:
+                    assert old == (qa.W,)
+                else:
+                    q.execute('insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,10,0)', d=s['dock'], w=qa.W)
+                conn.commit()
+            finally:
+                q.callproc('RRL_STOCK_CONFIG_API.end_change')
+        s['locations'] = True; qa.save()
+    qa.step('expedition_policy', qa.BASE + '/stock/cells/' + s['expedition'], dict(operation_id=qa.TAG + '.expedition',
+        expected_version=0, zone_kind='EXPEDITION', reason='Own isolated partial-loading proof'), method='PUT')
     if 'settings_before' not in s:
         settings = qa.expect(200, qa.http('GET', f'/api/receiving/warehouses/{qa.W}/settings'))
         fields = ['company_prefix', 'extension_digit', 'coordinate_unit_m', 'reachtruck_mps', 'lift_mps',
@@ -69,7 +92,7 @@ def pick_cases():
             case.save()
         version = qa.query('select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t', t=own['case'])[0][0]
         case.step('moved', path + '/move-carrier', dict(operation_id=case.tag + '.move', scan_container=label['sscc'],
-            scanned_to_cell='T3E089ddb36', expected_content_version=version))
+            scanned_to_cell=s['expedition'], expected_content_version=version))
         version = qa.query('select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t', t=own['case'])[0][0]
         case.step('bound', path + '/bind-shipment', dict(pallet_identifier=own['shipment']['shipment_identifier'],
             scan_container=label['sscc'], expected_content_version=version))
@@ -105,6 +128,100 @@ def prepare():
     s['status'] = 'WAVES_READY'; qa.save()
 
 
+def load_one():
+    vehicle = 10125
+    if 'vehicle_before' not in s:
+        s['vehicle_before'] = qa.expect(200, qa.http('GET', f'/api/admin/transport/vehicles/{vehicle}/profile'))
+        s['weight_before'] = qa.expect(200, qa.http('GET', f'/api/sku-quality-weight/{qa.W}/{qa.ARTICLE}')); qa.save()
+    before = s['vehicle_before']; p = before['profile']
+    qa.step('vehicle_profile', '/api/admin/transport/vehicle-profiles', dict(operation_id=qa.TAG + '.vehicle', vehicle_id=vehicle,
+        expected_source_hash=before['base_hash'], expected_version=before['version'], vehicle_size_class=p['vehicle_size_class'],
+        cargo_length_mm=p['cargo_length_mm'], cargo_width_mm=p['cargo_width_mm'], cargo_height_mm=p['cargo_height_mm'],
+        outer_height_mm=p['outer_height_mm'], outer_length_mm=p['outer_length_mm'],
+        floor_variants=p['floor_capacity']['variants'] + [dict(code='QA_AFTER_LOAD_BOXES', limits=[dict(pallet_type_id=33, max_places=2)])],
+        reason='Synthetic two-carton partial-load proof', evidence_reference='TEST_NOT_HARDWARE:' + qa.TAG))
+    qa.step('weight_policy', f'/api/sku-quality-weight/{qa.W}/{qa.ARTICLE}', dict(expected_version=s['weight_before']['version'],
+        base_uom='EA', base_weight_kg='1', box_weight_kg='10'), method='PUT')
+    for i in range(2):
+        own = configure_case(i); carrier = own['label']['sscc']; path = '/api/outgoing-quality/' + carrier
+        if 'scan_qc' not in own:
+            current = qa.expect(200, qa.http('GET', path))
+            case.step('scan_qc', path + '/scan', dict(operation_id=case.tag + '.scanqc', expected_composition_signature=current['composition_signature'],
+                error_count=0, scans=own['pick_body']['unit_scans']))
+        if 'weight_qc' not in own:
+            current = qa.expect(200, qa.http('GET', path))
+            case.step('weight_qc', path + '/weight', dict(operation_id=case.tag + '.weightqc', expected_composition_signature=current['composition_signature'],
+                quality_kind='WEIGHT', gross_weight='20.1', wood_weight='0.1', measurement_origin='MANUAL_CONFIRMED'))
+        assert qa.expect(200, qa.http('GET', path))['ready']
+    if 'next_departure' not in s:
+        s['next_departure'] = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat(); qa.save()
+    qa.send('trip_v3', 'TRIP', qa.TAG, dict(s['requests']['trip_v2']['body']['payload'], planned_departure_at=s['next_departure']), 3)
+    task = qa.step('native_trip', '/api/admin/transport/tasks', dict(transtype='10', shipment_date=s['next_departure'][:10]))['task_id']
+    s['native_task'] = task; qa.save()
+    qa.step('native_configured', f'/api/admin/transport/tasks/{task}', dict(transport='TP22.089ddb36', dock=s['dock'],
+        shipment_time=s['next_departure'][11:16], primechanie='Owned synthetic after-load proof; no real dispatch'), method='PATCH')
+    qa.step('native_assigned', f'/api/admin/transport/tasks/{task}/sts', dict(st_numbers=['AL' + qa.TAG[-9:] + str(i) for i in range(2)]))
+    qa.step('trade_bound', qa.TRIP + '/binding', dict(operation_id=qa.TAG + '.trip.bind', native_task_id=task,
+        expected_trip_version=3, expected_binding_version=0))
+    own = configure_case(0); carrier = own['label']['sscc']
+    if 'loaded' not in s['requests']:
+        preview = qa.expect(200, qa.http('GET', '/api/transport/loading/bulk-box-preview?identifier=' + carrier))
+        assert preview['source_kind'] == 'SINGLE', preview
+        s['load_preview'] = preview; qa.save()
+        version = preview['snapshot']['nodes'][0]['version']
+        body = dict(operation_id=qa.TAG + '.load', source_kind='SINGLE', identifier=preview['identifier'], expected_version=version,
+            expected_composition_signature=preview['composition_signature'], scan_container=carrier, scan_cell=preview['snapshot']['cell'],
+            transport_task_id=task, scan_vehicle='TP22.089ddb36', scan_dock=s['dock'], measurements=dict(origin='MANUAL_CONFIRMED',
+                content_version=version, gross_weight_kg='20.1', width_m='0.4', depth_m='0.5', height_m='0.5'))
+    else:
+        body = s['requests']['loaded']['body']
+    loaded = qa.step('loaded', '/api/transport/loading/confirm-bulk-box', body)
+    assert qa.expect(200, qa.http('POST', '/api/transport/loading/confirm-bulk-box', body)) == loaded
+    assert qa.query("select STATUS from RRL_TT_HU_LOAD_FACT where TT_ID=:t order by LOAD_OPERATION_ID", t=task) == [('LOADED',)]
+    s['status'] = 'PARTIALLY_LOADED'; qa.save()
+
+
+def prove_topup():
+    if 'load_need_time' not in s:
+        s['load_need_time'] = datetime.now(timezone.utc).isoformat(); qa.save()
+    now = datetime.fromisoformat(s['load_need_time'])
+    qa.send('load_need', 'NEED', qa.TAG + '.LOAD_NEED', dict(recipient_id='C1', sku_id='A', recipient_version=2, sku_version=1,
+        snapshot_at=s['load_need_time'], period_from=s['load_need_time'], period_until=(now + timedelta(days=2)).isoformat(),
+        uom='BOX', forecast_quantity='8', target_quantity='0', available_quantity='0', received_in_available=True,
+        supplies=[dict(supply_id=qa.TAG + '.MAIN_SUPPLY', version=1, quantity='4', uom='BOX', status='PLANNED',
+            confirmed=True, current_trip=True, expected_at=s['next_departure'])]))
+    preview = qa.step('topup_preview', qa.TRIP + '/topup-preview', dict(need_ids=[qa.TAG + '.LOAD_NEED'], max_age_minutes=1440), qa=True)
+    saved = qa.step('topup_saved', qa.TRIP + '/topup-proposals', dict(operation_id=qa.TAG + '.topup.save',
+        need_ids=[qa.TAG + '.LOAD_NEED'], max_age_minutes=1440), qa=True)
+    proposal = saved['proposals'][0]
+    assert proposal['approved_boxes'] == 4, saved
+    s['proposal'] = proposal['proposal_id']; qa.save()
+    confirmed = qa.step('topup_confirmed', qa.TRIP + f"/topup-proposals/{s['proposal']}/confirm",
+        dict(operation_id=qa.TAG + '.topup.confirm', expected_version=proposal['version']), qa=True)
+    request = s['requests']['topup_confirmed']
+    assert qa.expect(200, qa.http('POST', request['path'], request['body'], s['actor'], s['password'])) == confirmed
+    s['stock_after_confirm'] = qa.stock()
+    assert s['stock_after_confirm'] == [(230, 60)], s['stock_after_confirm']
+    s['checks'].append('Actual one of two cartons loaded: main40 counted once; top-up4BOX/HARD40 confirmed and replayed without new hold')
+    qa.step('topup_released', qa.TRIP + f"/topup-proposals/{s['proposal']}/release",
+        dict(operation_id=qa.TAG + '.topup.release', expected_version=confirmed['version']), qa=True)
+    saved2 = qa.step('before_unload_saved', qa.TRIP + '/topup-proposals', dict(operation_id=qa.TAG + '.before.unload',
+        need_ids=[qa.TAG + '.LOAD_NEED'], max_age_minutes=1440), qa=True)
+    proposal2 = saved2['proposals'][0]; s['proposal2'] = proposal2; qa.save()
+    body = s['requests']['loaded']['body']
+    qa.step('unloaded', '/api/transport/loading/unload', dict(operation_id=qa.TAG + '.unload', load_operation_id=body['operation_id'],
+        expected_version=body['expected_version'], scan_container=body['scan_container'], scan_cell=body['scan_cell'],
+        scan_vehicle=body['scan_vehicle'], scan_dock=body['scan_dock'], reason='Actual removal invalidates prior top-up basis'))
+    rejected = qa.step('stale_confirm', qa.TRIP + f"/topup-proposals/{proposal2['proposal_id']}/confirm",
+        dict(operation_id=qa.TAG + '.stale.confirm', expected_version=proposal2['version']), qa=True, status=409)
+    assert 'STALE' in str(rejected) or 'CHANGED' in str(rejected), rejected
+    qa.step('stale_rejected', qa.TRIP + f"/topup-proposals/{proposal2['proposal_id']}/decision",
+        dict(operation_id=qa.TAG + '.reject.stale', expected_version=proposal2['version'], action='REJECT'), qa=True)
+    assert qa.stock() == [(250, 40)]
+    s['checks'].append('Actual UNLOAD makes saved calculation stale; stale confirm produces no new reserve; own proposals released/rejected')
+    s['status'] = 'AFTER_LOAD_PASS_CLEANUP_REQUIRED'; qa.save()
+
+
 def cleanup_empty():
     """Only before picking/loading. Refuse to erase evidence or cancel a populated carrier."""
     for i in range(2):
@@ -138,6 +255,10 @@ if __name__ == '__main__':
             print('Closed; no commands sent')
         elif sys.argv[-1] == 'pick':
             pick_cases()
+        elif sys.argv[-1] == 'load':
+            load_one()
+        elif sys.argv[-1] == 'prove':
+            prove_topup()
         elif sys.argv[-1] == 'cleanup-empty':
             cleanup_empty()
         else:
