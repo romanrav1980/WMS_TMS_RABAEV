@@ -1,0 +1,10 @@
+{
+ "status": "PASS",
+ "checks": [
+  "control: visible WAIT_CONTROL/CONTROL_IN_PROGRESS of a launched wave are one warning; CONTROLLED/SHIPPED are not",
+  "unassigned: only NEW without assignee, only after picking is released; session fact in impact, never a free resource",
+  "truncated CASE sample says 'не меньше'; closed and preview waves get no progress risks; unread tasks → none (gap elsewhere)",
+  "deadline only from APPROVED plan vs server clock: finish passed on LAUNCHED, start passed on PREVIEW; no plan → no lateness",
+  "hook: new risks join the list; sessions read failure and truncation are listed as verification gaps"
+ ]
+}

@@ -105,7 +105,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
       <p className="ops-note" title={shiftHelp.details.text} data-help-id={shiftHelp.details.id}>Подробные проверки — {coverage.read} из {coverage.requested} видимых волн{loading || data.future.loading || data.launched.loading ? " (загрузка…)" : ""}
         {coverage.batches > 1 ? `, ${coverage.batches} снимков (не единый снимок смены)` : ""}{coverage.observed.length ? `, прочитано ${coverage.observed.map(o => fmtTime(null, o)).join(", ")}` : ""}.
         {coverage.failed > 0 && <span className="ops-err"> Не прочитано батчей: {coverage.failed} — {coverage.error}</span>}
-        {" "}Список волн сам ограничен выборкой (до {SHIFT_LIMITS.future} будущих и {SHIFT_LIMITS.launched} в работе). Риски — только с основанием из источника; проценты и сроки не рассчитываются.</p>
+        {" "}Список волн сам ограничен выборкой (до {SHIFT_LIMITS.future} будущих и {SHIFT_LIMITS.launched} в работе). Риски — только с основанием из источника; проценты не рассчитываются, сроки — только по утверждённому плану времени волны.</p>
     </aside>
     <section className="ops-panel ops-center" aria-label="Поток волн по складу">
       <span className="ops-scene-title">Поток волн по этапам склада · схема условная</span>

@@ -1,5 +1,5 @@
 import { isClosedWave, isOpenCase, isOpenReplenishment, isPendingShort } from "./executionState";
-import type { CaseTask, Wave } from "../types";
+import type { CaseTask, Session, Wave } from "../types";
 import type { CaseShort, Risk, WaveDetail } from "./types";
 
 const BLOCKER_TEXT: Record<string, string> = {
@@ -13,6 +13,7 @@ const BLOCKER_ACTION: Record<string, { label: string; page: string }> = {
 };
 const num = (v: string | null | undefined) => { const n = Number(v); return Number.isFinite(n) ? n : null; };
 const uom = (u: string | null) => u ?? "баз. ед. (не указана)";
+const minutes = (from: string, to: string) => Math.floor((Date.parse(to) - Date.parse(from)) / 60000);
 
 /** Риски по волне из фактических данных источников. Владелец — только если источник его называет (иначе null).
  *  Нет экрана-владельца действия в приложении — action null (не ссылка обратно на это же рабочее место). */
@@ -38,6 +39,16 @@ export function waveRisks(wave: Wave, d: WaveDetail): Risk[] {
   if (d.time.data?.plan_status === "NO_APPROVED_PLAN") out.push({ key: `${w}:T`, wave_id: w, task_id: null, severity: "WARNING",
     basis: "Время волны не утверждено (NO_APPROVED_PLAN)", source: "time-context", impact: "нет утверждённого окна для расчёта загрузки людей и техники", owner: null,
     action: { label: "Загрузка ресурсов", page: "resource-workload.html", params: { wave_id: w } } });
+  // C-0159: срок — только утверждённый план времени (APPROVED, моменты с поясом) против часов сервера этого снимка.
+  const t = d.time.data, now = d.observed_at;
+  if (t?.plan_status === "APPROVED" && now) {
+    if (wave.status === "LAUNCHED" && t.finish_at && minutes(t.finish_at, now) > 0) out.push({ key: `${w}:TF`, wave_id: w, task_id: null, severity: "BLOCKER",
+      basis: `Утверждённое окончание волны прошло ${minutes(t.finish_at, now)} мин назад`, source: "time-context", impact: "волна не завершена; утверждённое время её не покрывает", owner: null,
+      action: { label: "Загрузка ресурсов", page: "resource-workload.html", params: { wave_id: w } } });
+    if (wave.status === "PREVIEW" && t.start_at && minutes(t.start_at, now) > 0) out.push({ key: `${w}:TS`, wave_id: w, task_id: null, severity: "WARNING",
+      basis: `Утверждённое начало волны прошло ${minutes(t.start_at, now)} мин назад, волна не запущена`, source: "time-context", impact: "сборка начнётся позже утверждённого времени", owner: null,
+      action: { label: "Загрузка ресурсов", page: "resource-workload.html", params: { wave_id: w } } });
+  }
   for (const r of d.replenishment.data ?? []) if (r.wait_reason && isOpenReplenishment(r.status)) out.push({ key: `${w}:P:${r.pick_wave_replenish_task_id}`, wave_id: w, task_id: r.pick_wave_replenish_task_id, severity: "WARNING",
     basis: `Пополнение ждёт: ${r.wait_reason} · ${r.articul}`, source: "replenishment-progress", impact: `осталось ${r.demand_remaining_base ?? "нет данных"} баз. ед.`, owner: null,
     action: { label: "Пополнение волны", page: "wave-replenishment.html", params: { wave_id: w } } });
@@ -52,5 +63,30 @@ export function executionRisks(tasks: CaseTask[], shorts: CaseShort[]): Risk[] {
   for (const s of shorts.filter(x => isPendingShort(x.status))) out.push({ key: `S:${s.case_pick_short_id}`, wave_id: s.pick_wave_id, task_id: s.case_pick_task_id,
     severity: "WARNING", basis: `Недостача ждёт решения: ${s.articul}${s.reason_code ? " · " + s.reason_code : ""}`, source: "case-pick/shorts",
     impact: `не собрано ${s.short_qty}`, owner: null, action: { label: "Разбор недостачи", page: "short-investigation.html" } });
+  return out;
+}
+
+const CONTROL = new Set(["WAIT_CONTROL", "CONTROL_IN_PROGRESS"]);
+
+/** C-0159: ход сборки запущенной волны — контроль и назначение. Считаются только видимые сотруднику задания (сервер фильтрует
+ *  владельцев до лимита); при обрезанной выборке число — «не меньше». Свободность ресурсов не выводится: открытые сессии — факт. */
+export function progressRisks(waves: Wave[], details: Map<number, WaveDetail>, tasks: CaseTask[] | null, truncated: boolean,
+  sessions: Session[] | null, sessionsTruncated: boolean): Risk[] {
+  if (!tasks) return [];
+  const out: Risk[] = [], prefix = truncated ? "не меньше " : "";
+  const pickers = sessions && !sessionsTruncated ? sessions.filter(s => s.status === "ACTIVE" && s.resource_type === "CASE_PICKER").length : null;
+  for (const wave of waves.filter(x => x.status === "LAUNCHED")) {
+    const w = wave.pick_wave_id, own = tasks.filter(t => t.pick_wave_id === w);
+    const control = own.filter(t => CONTROL.has(t.status));
+    if (control.length) out.push({ key: `${w}:CTL`, wave_id: w, task_id: null, severity: "WARNING",
+      basis: `Ждут контроля: ${prefix}${control.length} коробов`, source: "case-pick/tasks", impact: "волна не завершится, пока контроль не выполнен",
+      owner: null, action: { label: "Управление сборкой", page: "case-pick-management.html" } });
+    const released = details.get(w)?.pick.data?.released_at;  // неразрешённый отбор — отдельный риск выше
+    const free = own.filter(t => t.status === "NEW" && !t.assigned_to);
+    if (released && free.length) out.push({ key: `${w}:UNA`, wave_id: w, task_id: null, severity: "WARNING",
+      basis: `Задания без исполнителя: ${prefix}${free.length}`, source: "case-pick/tasks",
+      impact: pickers == null ? "сессии комплектовщиков не проверены полностью" : pickers === 0 ? "открытых сессий комплектовщиков на складе нет" : `открытых сессий комплектовщиков: ${pickers}`,
+      owner: null, action: { label: "Управление сборкой", page: "case-pick-management.html" } });
+  }
   return out;
 }

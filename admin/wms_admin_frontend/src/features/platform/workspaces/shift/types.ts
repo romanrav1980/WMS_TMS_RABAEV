@@ -7,7 +7,9 @@ export type PickReadinessTask = { pick_task_id: number; wave_task_id: number; ar
   required_base: string; covered_base: string; missing_base: string; base_uom: string | null };
 export type PickReadiness = { wave_id: number; warehouse: number; status: string; released_at: string | null; released_by: string | null;
   release_operation_id: string | null; ready: boolean; tasks: PickReadinessTask[]; open_replenishments: unknown[] };
-export type TimeContext = { wave_id: number; warehouse_id: number; wave_status: string; version: number; plan_status: string };
+// APPROVED несёт утверждённые моменты с поясом (RRL_WAVE_TIME_API.context); без утверждения сроков нет.
+export type TimeContext = { wave_id: number; warehouse_id: number; wave_status: string; version: number; plan_status: string;
+  time_zone?: string; start_at?: string; finish_at?: string };
 export type ReplenishmentRow = { pick_wave_replenish_task_id: number; pick_wave_id: number; articul: string; target_cell_code: string | null; source_cell_code: string | null;
   status: string; wait_reason: string | null; planned_base: string | null; demand_base: string | null; confirmed_base: string | null; demand_remaining_base: string | null };
 export type CaseShort = { case_pick_short_id: number; pick_wave_id: number; case_pick_task_id: number; articul: string; cell_code: string | null;
@@ -16,6 +18,7 @@ export type CaseShort = { case_pick_short_id: number; pick_wave_id: number; case
 /** Детали волны из пяти независимых чтений; ошибка одного не скрывает остальные. */
 export type WaveDetail = {
   wave_id: number;
+  observed_at?: string;  // часы сервера снимка обзора этой волны (C-0159): сроки сравниваются с ними, не с браузером
   readiness: { data: WaveReadiness | null; error: string };
   pick: { data: PickReadiness | null; error: string };
   time: { data: TimeContext | null; error: string };

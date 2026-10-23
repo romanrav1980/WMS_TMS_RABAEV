@@ -5,7 +5,7 @@ import type { ReadState } from "../../access-admin/useApiRead";
 import type { CaseTask, Session, Wave } from "../types";
 import type { CaseShort, PickReadiness, ReplenishmentRow, TimeContext, WaveDetail, WaveReadiness } from "./types";
 
-export const SHIFT_LIMITS = { future: 50, launched: 100, caseTasks: 200 } as const;
+export const SHIFT_LIMITS = { future: 50, launched: 100, caseTasks: 200, sessions: 100 } as const;  // sessions: limit API по умолчанию
 
 export type ShiftData = { future: ReadState<Wave[]>; launched: ReadState<Wave[]>; caseTasks: ReadState<CaseTask[]>; sessions: ReadState<Session[]>;
   shorts: ReadState<CaseShort[]> };
@@ -68,7 +68,7 @@ export function useWaveDetails(ids: number[], warehouseId: string, reload: numbe
       try {
         const r = await apiFetch<Overview>("/api/picking/shift-overview", { method: "POST", signal: controller.signal,
           headers: { "Content-Type": "application/json" }, body: JSON.stringify({ warehouse_id: Number(warehouseId), wave_ids: batch }) });
-        for (const w of r.waves) details.set(w.wave_id, { wave_id: w.wave_id, readiness: part(w.readiness), pick: part(w.pick), time: part(w.time), replenishment: part(w.replenishment) });
+        for (const w of r.waves) details.set(w.wave_id, { wave_id: w.wave_id, observed_at: r.observed_at, readiness: part(w.readiness), pick: part(w.pick), time: part(w.time), replenishment: part(w.replenishment) });
         cov.read += r.waves.length; cov.observed.push(r.observed_at);
       } catch (reason) { cov.failed++; cov.error = readError(reason); }
     } };
