@@ -46,7 +46,13 @@ def scoped_task_detail(gateway: Any, actor: str, task: int) -> dict[str, Any]:
         cur.execute("""select
             (select max(NAME) from RRL_WARES where ID=t.FROM_WARE_ID),
             (select max(NAME) from RRL_WARES where ID=t.TO_WARE_ID),
-            (select case when count(*)=1 then max(NAME)end from RUSERS where ID=t.ASSIGNED_TO)
+            (select case when count(*)=1 then max(NAME)end from RUSERS where ID=t.ASSIGNED_TO),
+            (select case when count(*)=1 then max(NAME)end from RRL_ARTICULS
+                where ACTICUL=coalesce(t.RAW_ARTICUL,t.TARGET_ARTICUL,
+                    (select max(p.ARTICUL)from RRL_PALLETS p where p.UID_PALLET=t.UID_PALLET))),
+            (select max(SLOT_CODE)from RRL_TOPOLOGY_CELL_SLOT where CELL_SLOT_ID=t.FROM_CELL_SLOT_ID),
+            (select max(SLOT_CODE)from RRL_TOPOLOGY_CELL_SLOT where CELL_SLOT_ID=t.TO_CELL_SLOT_ID)
             from RRL_WAREHOUSE_TASK t where t.TASK_ID=:task""", task=task)
-        result["from_warehouse_name"], result["to_warehouse_name"], result["assigned_to_name"] = cur.fetchone()
+        names = ("from_warehouse_name", "to_warehouse_name", "assigned_to_name", "product_name", "from_slot_code", "to_slot_code")
+        result.update(zip(names, cur.fetchone()))
         return result

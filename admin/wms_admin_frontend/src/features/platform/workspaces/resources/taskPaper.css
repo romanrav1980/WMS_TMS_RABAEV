@@ -1,0 +1,12 @@
+.task-paper{margin-top:16px;padding-top:14px;border-top:1px solid #33435d;min-width:0}
+.task-paper-actions{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:10px 0}
+.task-paper label{display:grid;gap:7px;font-size:14px;margin-top:14px}
+.task-paper input{width:100%;box-sizing:border-box;min-width:0;min-height:44px;background:#111c30;color:#eef4ff;border:1px solid #526483;border-radius:8px;padding:10px;font:inherit}
+.ops .task-paper .help-action button{min-height:44px;white-space:normal}
+.task-paper-fields{display:grid!important;grid-template-columns:minmax(90px,1fr) minmax(0,1.4fr);gap:7px;margin:16px 0}
+.task-paper-fields dt{color:#9cb2d2;font-size:13px}
+.task-paper-fields dd{margin:0;overflow-wrap:anywhere}
+.task-paper code{display:block;overflow-wrap:anywhere;white-space:normal;font-size:11px;padding:8px 0}
+.task-paper-verified{color:#66e2b2}
+.task-paper>a{display:inline-block;margin:14px 0;min-height:44px;color:#9dbfff}
+@media(max-width:480px){.task-paper-actions{align-items:stretch}.task-paper-actions .help-action{flex:1}.task-paper-actions button{width:100%}.task-paper-fields{grid-template-columns:1fr!important;gap:4px}.task-paper-fields dd{margin-bottom:8px}}

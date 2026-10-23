@@ -4,6 +4,7 @@ import { HelpButton } from "../../help/HelpButton";
 import { appLink, rawLink, openShift } from "../OpsParts";
 import { wsHelp } from "../help";
 import { ganttHelp } from "./ganttHelp";
+import { TaskPaperPanel } from "./TaskPaperPanel";
 import { buildRows, fmtAxis, fmtTime, nowAxis, stateNow, zoneKnown } from "./timelineModel";
 import type { Bar, Row } from "./timelineModel";
 import { RESOURCE_TYPES } from "./timelineTypes";
@@ -57,6 +58,7 @@ export function ResourceCard({ timeline, selection, onSelect, onOpenWave }: { ti
       {(event.details ?? []).map(([k, v]) => <Fragment key={k}><dt>{k}</dt><dd>{v}</dd></Fragment>)}
       {Object.entries(event.legacy_time ?? {}).filter(([, v]) => v).map(([k, v]) => <Fragment key={k}><dt>{LEGACY[k] ?? k}</dt><dd>{String(v).replace("T", " ").slice(0, 16)} <small className="ops-note">местное время источника без пояса — на шкалу не ставится</small></dd></Fragment>)}
     </dl>
+    {event.source === "RRL_WAREHOUSE_TASK" && Number.isSafeInteger(Number(event.task_id)) && Number(event.task_id) > 0 && <TaskPaperPanel key={String(event.task_id)} taskId={Number(event.task_id)} />}
     <details className="ops-note"><summary title="Показать исходные идентификаторы события для обращения в поддержку">Технические данные</summary><p>{event.event_kind} · {event.event_id}<br />{event.source} · {event.status ?? "—"}</p></details>
     <h3>Ресурсы работы <small>{total}</small></h3>
     {total === 0 ? <p className="ops-note">Ресурс не назначен — работа в очереди «без ресурса».</p> :

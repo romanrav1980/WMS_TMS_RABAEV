@@ -11,3 +11,10 @@ for(const [reference,svg]of vectors){
  assert.equal(new Code128Reader().decodeRow(0,row,new Map()).getText(),reference);
 }
 console.log('Independent ZXing Code128 decode: PASS '+vectors.length);
+// Optional rows are extracted from actual PDF rasters by the visual QA step, not from SVG patterns.
+for(const file of process.argv.slice(2)){
+ const source=JSON.parse(require('fs').readFileSync(file,'utf8')),row=new BitArray(source.bits.length);
+ source.bits.forEach((black,i)=>{if(black)row.set(i);});
+ assert.equal(new Code128Reader().decodeRow(0,row,new Map()).getText(),source.expected);
+ console.log('Actual PDF raster Code128 decode: PASS '+file);
+}

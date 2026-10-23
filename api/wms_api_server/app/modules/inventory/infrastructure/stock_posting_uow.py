@@ -133,7 +133,9 @@ class StockPosting:
         lease = _Lease(pool.acquire())
         old_timeout = lease.connection.call_timeout
         try:
-            for attempt in range(3):
+            attempt = 0
+            stale_receipt_rechecked = False
+            while attempt < 3:
                 try:
                     return _attempt(lease, payload, command.actor, command.operation_id, deadline)
                 except oracledb.DatabaseError as exc:
@@ -148,6 +150,11 @@ class StockPosting:
                     reason = _rule_reason(exc)
                     # A new compiled snapshot cannot repair a stale version supplied by the caller.
                     stale_task_version = code == 20890 and reason == "TASK_EXPECTED_SIGNATURE_CHANGED"
+                    if stale_task_version and not stale_receipt_rechecked:
+                        # A concurrent commit may land between prepare's receipt lookup and task read.
+                        # Identical bytes must recover its receipt before a final stale-version refusal.
+                        stale_receipt_rechecked = True
+                        continue
                     if code not in RETRY_CODES or stale_task_version:
                         if code is not None and (20800 <= code <= 20899 or code in {20911, 20912, 20913}):
                             raise StockPostingError("STOCK_RULE_REJECTED", command.operation_id, code, reason) from exc
@@ -158,6 +165,7 @@ class StockPosting:
                     if monotonic() + delay >= deadline:
                         raise StockPostingError("REQUEST_DEADLINE", command.operation_id) from exc
                     self.wait(delay)
+                    attempt += 1
             raise StockPostingError("REQUEST_DEADLINE", command.operation_id)
         finally:
             if lease.discard:
