@@ -19,7 +19,7 @@ export const WORKING = new Set(["IN_PROGRESS", "PARTIAL", "WAIT_REPLENISHMENT"])
 export const CASE_STATE: Record<string, string> = { NEW: "Новое", ASSIGNED: "Назначено", IN_PROGRESS: "В работе", PARTIAL: "Частично",
   WAIT_REPLENISHMENT: "Ждёт пополнения" };
 const DONE_LINE = new Set(["PICKED", "DONE", "SHORT_PICKED", "CANCELLED"]);
-export const DEVICE: Record<string, string> = { MARKING_SCAN_REQUIRED: "нужны коды маркировки — только ТСД",
+export const DEVICE: Record<string, string> = { MARKING_SCAN_REQUIRED: "нужен код маркировки каждой единицы — сканером",
   WEIGHT_LABEL_SCAN_REQUIRED: "нужна весовая этикетка короба — только ТСД" };  // весовой товар без этикетки — показание весов, как и сейчас
 
 export function openCaseTasks(raw: unknown): CaseTask[] {
@@ -46,7 +46,14 @@ export function parseCaseReference(text: string): { taskId: number; lineId: numb
 
 export type CaseIntent = { task: number; line: number; path: string; wire: string; operation_id: string; scope: string; created_at: string };
 export type CaseSend = { kind: "ack" } | { kind: "refused"; code: string } | { kind: "unknown"; message: string };
-export type CaseFact = { fact_qty: string; scan_cell: string; scan_container: string; scan_product: string; expected_case_signature: string };
+export type UnitScan = { system_code: string; profile_code: string; code: string };
+export type CaseFact = { fact_qty: string; scan_cell: string; scan_container: string; scan_product: string; expected_case_signature: string; unit_scans?: UnitScan[] };
+/** Профили маркировки строки из существующего marking-policy; неизвестная форма — ошибка. */
+export function markingProfiles(raw: unknown): { system_code: string; profile_code: string }[] {
+  const v = raw as { marking_required?: boolean; profiles?: { system_code: string; profile_code: string }[] };
+  if (!v || !Array.isArray(v.profiles) || !v.profiles.every(p => typeof p.system_code === "string" && typeof p.profile_code === "string")) throw new Error("Неожиданный ответ правил маркировки");
+  return v.profiles;
+}
 
 const key = (task: number, line: number) => `retailcase.casepaper.pending.v1:${apiOperationScope()}:${task}:${line}`;
 const pathOf = (task: number, line: number) => `/api/case-pick/tasks/${task}/lines/${line}/confirm`;
@@ -68,11 +75,14 @@ export function saveCasePending(task: number, line: number, fact: CaseFact): Cas
   if (saved.damaged) throw new Error(saved.damaged);
   if (saved.intent) throw new Error("Сначала завершите ранее сохранённый факт этой строки.");
   if (!/^\d{1,18}(\.\d{1,9})?$/.test(fact.fact_qty)) throw new Error("Количество — число, до 9 знаков после точки.");
-  if (!fact.scan_cell.trim() || !fact.scan_container.trim() || !fact.scan_product.trim()) throw new Error("Отсканируйте ячейку, короб (SSCC) и товар.");
+  const units = fact.unit_scans ?? [];
+  if (units.length > 10000 || new Set(units.map(u => `${u.system_code}|${u.profile_code}|${u.code}`)).size !== units.length) throw new Error("Коды маркировки повторяются или их больше 10000.");
+  // С кодами маркировки товар определяется кодами (native не требует скан товара); без кодов скан товара обязателен.
+  if (!fact.scan_cell.trim() || !fact.scan_container.trim() || (!units.length && !fact.scan_product.trim())) throw new Error("Отсканируйте ячейку, короб (SSCC) и товар.");
   const operation = `case-paper-${crypto.randomUUID()}`;
   const intent: CaseIntent = { task, line, path: pathOf(task, line), operation_id: operation, scope: apiOperationScope(), created_at: new Date().toISOString(),
     wire: JSON.stringify({ operation_id: operation, fact_qty: fact.fact_qty, scan_cell: fact.scan_cell.trim(), scan_container: fact.scan_container.trim(),
-      scan_product: fact.scan_product.trim(), expected_case_signature: fact.expected_case_signature }) };
+      scan_product: fact.scan_product.trim() || null, expected_case_signature: fact.expected_case_signature, ...(units.length ? { unit_scans: units } : {}) }) };
   const raw = JSON.stringify(intent);
   try { localStorage.setItem(key(task, line), raw); } catch { throw new Error("Не удалось сохранить факт в браузере. Отправка не выполнена."); }
   if (localStorage.getItem(key(task, line)) !== raw) throw new Error("Не удалось надёжно сохранить факт. Отправка не выполнена.");

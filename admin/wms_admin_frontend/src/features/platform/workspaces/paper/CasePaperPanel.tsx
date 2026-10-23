@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ApiRequestError, apiFetch } from "../../../../api";
 import { useApiRead } from "../../access-admin";
 import { HelpButton } from "../../help/HelpButton";
-import { CASE_STATE, DEVICE, LIMIT, WORKING, casePaper, lineOpen, openCaseTasks, parseCaseReference, qty, readCasePending, refusal,
+import { CASE_STATE, DEVICE, LIMIT, WORKING, casePaper, lineOpen, markingProfiles, openCaseTasks, parseCaseReference, qty, readCasePending, refusal,
   saveCasePending, sendCasePending, type CaseIntent, type CaseLine, type CasePaper } from "./casePaper";
 import { paperHelp } from "./help";
 
@@ -69,7 +69,7 @@ function printSheet(p: CasePaper) {
   const rows = p.lines.filter(lineOpen).map(l => `<section><h2>Ячейка ${esc(l.cell_code)} · ${esc(l.articul)} ${esc(l.product_name)}</h2>
     <dl><dt>План</dt><dd>${esc(qty(l.planned_qty))}</dd><dt>Уже собрано</dt><dd>${esc(qty(l.picked_qty))}</dd>
     <dt>Собрано всего${l.scale_reading ? ", кг с весов" : ""} (вписать)</dt><dd class="blank"></dd><dt>Время / подпись</dt><dd class="blank"></dd></dl>
-    ${l.device_required ? `<p class="warn">${esc(DEVICE[l.device_required])}: на бумаге не подтверждается</p>` : ""}${l.barcode_svg}<code>${esc(l.reference)}</code></section>`).join("");
+    ${l.device_required ? `<p class="warn">${esc(DEVICE[l.device_required])}${l.device_required === "WEIGHT_LABEL_SCAN_REQUIRED" ? ": на бумаге не подтверждается" : ": при вводе факта"}</p>` : ""}${l.barcode_svg}<code>${esc(l.reference)}</code></section>`).join("");
   w.document.write(`<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>CASE ${p.task.task_id}</title><style>
     @page{size:A4 portrait;margin:10mm}body{font:12px system-ui,sans-serif;margin:0}h1{font-size:16px}h2{font-size:13px;margin:0 0 4px}
     section{border:1px solid #000;padding:6px;margin:0 0 6px;break-inside:avoid}dl{display:grid;grid-template-columns:repeat(4,auto 1fr);gap:4px;margin:0 0 4px}
@@ -116,7 +116,18 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
   const [pending, setPending] = useState(() => readCasePending(taskId, line.line_id));
   const [form, setForm] = useState({ fact_qty: "", scan_cell: "", scan_container: "", scan_product: "" });
   const [msg, setMsg] = useState<{ text: string; tone: "ok" | "err" }>({ text: "", tone: "ok" }), [busy, setBusy] = useState(false);
-  const blocked = !lineOpen(line) ? "строка уже закрыта" : line.device_required ? DEVICE[line.device_required]
+  const marked = line.device_required === "MARKING_SCAN_REQUIRED";
+  const [codes, setCodes] = useState<string[]>([]), [code, setCode] = useState("");
+  const [profiles, setProfiles] = useState<{ list: { system_code: string; profile_code: string }[]; error: string } | null>(null), [profile, setProfile] = useState(0);
+  useEffect(() => {
+    if (!marked) return;
+    let live = true;
+    apiFetch<unknown>(`/api/case-pick/tasks/${taskId}/lines/${line.line_id}/marking-policy`).then(r => { if (live) setProfiles({ list: markingProfiles(r), error: "" }); })
+      .catch(e => { if (live) setProfiles({ list: [], error: e instanceof Error && e.message.startsWith("Неожиданный") ? e.message : "Правила маркировки не прочитаны." }); });
+    return () => { live = false; };
+  }, [marked, taskId, line.line_id]);
+  const blocked = !lineOpen(line) ? "строка уже закрыта" : line.device_required === "WEIGHT_LABEL_SCAN_REQUIRED" ? DEVICE[line.device_required]
+    : marked && profiles && !profiles.list.length ? (profiles.error || "у товара нет профиля маркировки")
     : !WORKING.has(status) ? "задание не начато — начните его штатно в карточке CASE" : "";
   const send = async (intent: CaseIntent) => {
     setBusy(true);
@@ -126,7 +137,12 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
     setMsg(r.kind === "ack" ? { text: "Факт строки принят сервером.", tone: "ok" } : r.kind === "refused" ? { text: refusal(r.code), tone: "err" } : { text: r.message, tone: "err" });
   };
   const submit = () => {
-    try { const intent = saveCasePending(taskId, line.line_id, { ...form, expected_case_signature: signature }); setPending({ intent, damaged: "" }); void send(intent); }
+    try {
+      const p = profiles?.list[profile];
+      if (marked && (!p || !codes.length)) throw new Error("Отсканируйте код маркировки каждой собранной единицы.");
+      const intent = saveCasePending(taskId, line.line_id, { ...form, expected_case_signature: signature, unit_scans: marked && p ? codes.map(c => ({ ...p, code: c })) : undefined });
+      setPending({ intent, damaged: "" }); void send(intent);
+    }
     catch (e) { setMsg({ text: (e as Error).message, tone: "err" }); }
   };
   const field = (k: keyof typeof form, label: string, help: { id: string; text: string }) =>
@@ -138,7 +154,15 @@ function LineFact({ taskId, signature, line, status }: { taskId: number; signatu
     {blocked && <p role="alert" className="ops-err">С бумаги не вносится: {blocked}.</p>}
     {pending.damaged && <p role="alert" className="ops-err">{pending.damaged}</p>}
     {field("scan_cell", "Скан ячейки", paperHelp.caseCell)}{field("scan_container", "Скан короба (SSCC)", paperHelp.caseContainer)}
-    {field("scan_product", "Скан товара", paperHelp.caseProduct)}{field("fact_qty", line.scale_reading ? "Собрано всего по строке, кг (показание весов)" : "Собрано всего по строке", paperHelp.caseQty)}
+    {marked ? <>
+      {profiles && profiles.list.length > 1 && <label>Профиль маркировки <select value={profile} onChange={e => setProfile(Number(e.target.value))} title={paperHelp.caseProfile.text} data-help-id={paperHelp.caseProfile.id}
+        disabled={Boolean(pending.intent) || busy}>{profiles.list.map((p, i) => <option key={i} value={i}>{p.system_code} / {p.profile_code}</option>)}</select></label>}
+      <label>Код маркировки (сканер, Enter после каждого) <input value={code} onChange={e => setCode(e.target.value)} autoComplete="off" spellCheck={false}
+        title={paperHelp.caseCode.text} data-help-id={paperHelp.caseCode.id} disabled={Boolean(blocked) || Boolean(pending.intent) || busy}
+        onKeyDown={e => { if (e.key !== "Enter") return; e.preventDefault(); const c = code.trim(); if (c && !codes.includes(c)) setCodes(v => [...v, c]); setCode(""); }} /></label>
+      <p className="ops-note">Отсканировано кодов: {codes.length}{codes.length ? ` · последний …${codes[codes.length - 1].slice(-8)}` : ""}</p>
+      {codes.length > 0 && !pending.intent && <HelpButton help={paperHelp.caseCodesClear} type="button" onClick={() => setCodes([])}>Очистить коды</HelpButton>}
+    </> : field("scan_product", "Скан товара", paperHelp.caseProduct)}{field("fact_qty", line.scale_reading ? "Собрано всего по строке, кг (показание весов)" : "Собрано всего по строке", paperHelp.caseQty)}
     {pending.intent ? <HelpButton help={paperHelp.caseRetry} type="button" disabled={busy} onClick={() => void send(pending.intent!)}>Повторить отправку</HelpButton>
       : <HelpButton help={paperHelp.caseSend} type="submit" disabled={busy || Boolean(blocked) || Boolean(pending.damaged)}>Внести факт</HelpButton>}
     {pending.intent && <p className="ops-note">Сохранённый факт {pending.intent.operation_id} ждёт подтверждения; повтор отправит те же данные.</p>}

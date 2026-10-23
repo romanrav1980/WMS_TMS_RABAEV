@@ -63,7 +63,11 @@
   },
   {
    "width": 1440,
-   "name": "marked line: paper entry blocked (device required)"
+   "name": "FIXTURE marked line: HID codes (duplicate ignored) go as existing unit_scans with the line's marking profile"
+  },
+  {
+   "width": 1440,
+   "name": "weight-label line: paper entry blocked (TSD only)"
   },
   {
    "width": 1440,
@@ -131,7 +135,11 @@
   },
   {
    "width": 390,
-   "name": "marked line: paper entry blocked (device required)"
+   "name": "FIXTURE marked line: HID codes (duplicate ignored) go as existing unit_scans with the line's marking profile"
+  },
+  {
+   "width": 390,
+   "name": "weight-label line: paper entry blocked (TSD only)"
   },
   {
    "width": 390,
@@ -145,15 +153,11 @@
  "liveWrites": [],
  "errors": [],
  "posts": [
-  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
-  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
-  "{\"operation_id\":\"case-paper-08342ed9-1ff1-4a15-abff-aa2d6601150a\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
-  "{\"operation_id\":\"case-paper-2a011f53-21da-41d7-a13f-a88fbd4dfe32\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}",
-  "{\"operation_id\":\"case-paper-e835a7b3-3a83-4e23-8735-af8df87c6eb7\",\"fact_qty\":\"5\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":\"4600000000000\",\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\"}"
+  "{\"operation_id\":\"case-paper-31be2503-0ad2-4360-9123-92f5fbc4f893\",\"fact_qty\":\"2\",\"scan_cell\":\"QG6436439964\",\"scan_container\":\"CP369000000001019\",\"scan_product\":null,\"expected_case_signature\":\"6432726F6E79E3ABEA16AD7E2BEA6C712B9EAE6124AE28477407EB06C34FB35A\",\"unit_scans\":[{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215abcDEF\"},{\"system_code\":\"CRPT\",\"profile_code\":\"WATER\",\"code\":\"0104600000000001215ghiJKL\"}]}"
  ],
  "timings": {
-  "case_queue_1440": 1827,
-  "case_queue_390": 2049
+  "case_queue_1440": 1644,
+  "case_queue_390": 1610
  },
  "print_1440": {
   "printed": true,

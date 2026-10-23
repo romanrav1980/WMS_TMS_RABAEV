@@ -23,7 +23,7 @@ async function route(r) {
     const sig = u.searchParams.get("expected_signature"), line = u.searchParams.get("line");
     const delay = fx.delayStale && sig !== L.signature ? fx.delayStale : 0; if (delay) await new Promise(ok => setTimeout(ok, delay));
     if (sig && sig !== p.lines.find(x => String(x.line_id) === line)?.signature) return r.fulfill({ status: 409, json: { detail: { code: "CASE_PAPER_LINE_CHANGED" } }, headers: cors });
-    const body = fx.device ? { ...p, lines: p.lines.map(x => ({ ...x, device_required: "MARKING_SCAN_REQUIRED" })) } : p;
+    const body = fx.device ? { ...p, lines: p.lines.map(x => ({ ...x, device_required: fx.device })) } : p;
     return r.fulfill({ status: 200, json: line ? { ...body, lines: body.lines.filter(x => String(x.line_id) === line) } : body, headers: cors });
   }
   if (m === "POST" && /\/api\/case-pick\/tasks\/\d+\/lines\/\d+\/confirm$/.test(u.pathname)) {
@@ -34,6 +34,7 @@ async function route(r) {
     if (next === "stale") return r.fulfill({ status: 409, json: { detail: { code: "STOCK_RULE_REJECTED", rule_reason: "ORA-20886: CASE_PAPER_LINE_CHANGED", operation_id: op, outcome_confirmed: true } }, headers: cors });
     if (next === "conflict") return r.fulfill({ status: 409, json: { detail: { code: "OPERATION_CONTENT_CONFLICT", operation_id: op, outcome_confirmed: true } }, headers: cors });
   }
+  if (m === "GET" && /\/marking-policy$/.test(u.pathname)) return r.fulfill({ status: 200, json: { article: L.articul, marking_required: true, profiles: [{ system_code: "CRPT", profile_code: "WATER" }], serialized_weight_boxes: false, loose_weight_kg: false }, headers: cors });
   if (m !== "GET") { res.liveWrites.push(m + " " + u.href); return r.abort(); }
   if (fx.queue403 && /\/api\/case-pick\/tasks$/.test(u.pathname)) return r.fulfill({ status: 403, json: { detail: { code: "CASE_CURRENT_WARE_VIEWER_REQUIRED" } }, headers: cors });
   return r.continue();
@@ -109,8 +110,17 @@ async function width(b, w, h) {
   fx.confirm = ["conflict"]; await fill(p); await fact(p).getByText("OPERATION_CONTENT_CONFLICT").waitFor(); ok(w, "FIXTURE conflict is confirmed and shown");
   await fact(p).screenshot({ path: path.join(SHOTS, `case-paper-fact-${w}.png`) });
 
-  fx.device = true; await scan(p, CUR); await fact(p).getByText("нужны коды маркировки").waitFor();
-  assert(await fact(p).getByRole("button", { name: "Внести факт" }).isDisabled()); fx.device = false; ok(w, "marked line: paper entry blocked (device required)");
+  fx.device = "MARKING_SCAN_REQUIRED"; await scan(p, CUR);
+  const codeBox = fact(p).getByLabel("Код маркировки (сканер, Enter после каждого)"); await codeBox.waitFor();
+  for (const c of ["0104600000000001215abcDEF", "0104600000000001215ghiJKL", "0104600000000001215abcDEF"]) { await codeBox.fill(c); await codeBox.press("Enter"); }
+  await fact(p).getByText("Отсканировано кодов: 2").waitFor(); assert(await fact(p).getByLabel("Скан товара").count() === 0);
+  fx.confirm = ["ack"]; res.posts = [];
+  await fact(p).getByLabel("Скан ячейки").fill(L.cell_code); await fact(p).getByLabel("Скан короба (SSCC)").fill(PAPER["1019"].task.sscc);
+  await fact(p).getByLabel("Собрано всего по строке").fill("2"); await fact(p).getByRole("button", { name: "Внести факт" }).click(); await fact(p).getByText("Факт строки принят").waitFor();
+  const marked = JSON.parse(res.posts[0]); assert(marked.unit_scans.length === 2 && marked.unit_scans.every(x => x.system_code === "CRPT" && x.profile_code === "WATER") && marked.scan_product === null && marked.expected_case_signature === L.signature, res.posts[0]);
+  ok(w, "FIXTURE marked line: HID codes (duplicate ignored) go as existing unit_scans with the line's marking profile");
+  fx.device = "WEIGHT_LABEL_SCAN_REQUIRED"; await scan(p, CUR); await fact(p).getByText("весовая этикетка").waitFor();
+  assert(await fact(p).getByRole("button", { name: "Внести факт" }).isDisabled()); fx.device = false; ok(w, "weight-label line: paper entry blocked (TSD only)");
   await scan(p, PAPER["1020"].lines[0].reference); await fact(p).getByText("задание не начато").waitFor(); ok(w, "task not started: paper entry blocked, start stays the normal action");
 
   fx.queue403 = true; await desk(p).getByRole("button", { name: "Показать задания CASE" }).click();
