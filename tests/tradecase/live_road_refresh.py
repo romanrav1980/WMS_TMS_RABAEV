@@ -115,7 +115,7 @@ if __name__ == "__main__":
             raise AssertionError("Stale basis accepted")
         except TransportPlanError as error:
             assert error.code == "ROAD_REFRESH_SOURCE_CHANGED"
-        report["checks"].append("Stale source rejected; no extra provider call; native read returns the two directed legs")
+        report["checks"].append("Stale source rejected; native read returns two directed legs; no extra provider call observed only in the in-process spy mode")
         changed = dict(body, expected_version=body["expected_version"] + 1)
         try:
             command(service, TAG + ".refresh", changed)
