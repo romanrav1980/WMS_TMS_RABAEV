@@ -20,14 +20,18 @@ def rejection(code):
 
 
 class Cursor:
-    def __init__(self,denied=False):
-        self.calls=[];self.denied=denied;self.description=[];self.rows=[]
+    def __init__(self,denied=False,owner_denied=False):
+        self.calls=[];self.denied=denied;self.owner_denied=owner_denied;self.description=[];self.rows=[]
     def callproc(self,name,args):
         self.calls.append((name,args))
         if self.denied:raise rejection(20882)
     def execute(self,sql,*args,**kwargs):
         self.calls.append((sql,kwargs or args))
-        if 'RRL_REMAINS' in sql:
+        if 'with owners as' in sql:
+            self.rows=[(1,1,int(self.owner_denied),0,1)]
+        elif 'select WARE_ID from RRL_REVIZION' in sql:
+            self.rows=[(42,)]
+        elif 'RRL_REMAINS' in sql:
             self.description=[(v,)for v in ['LOT_UID','ARTICLE','CELL','UNIT']]
             self.rows=[('L','A','C','EA')]
         elif 'RRL_SKU_RECEIPT_PROFILE'in sql:
@@ -36,10 +40,12 @@ class Cursor:
         elif 'it.INVENTORY_TASK_ID=:task_id'in sql:
             self.description=[('INVENTORY_TASK_ID',),('ASSIGNED_TO',)];self.rows=[(8,'auditor')]
     def fetchall(self):return self.rows
+    def fetchone(self):return self.rows[0] if self.rows else None
+    def setinputsizes(self,**kwargs):pass
 
 
 class Gateway:
-    def __init__(self,denied=False):self.cursor=Cursor(denied);self.transactions=0
+    def __init__(self,denied=False,owner_denied=False):self.cursor=Cursor(denied,owner_denied);self.transactions=0
     @contextmanager
     def transaction(self,purpose):
         self.transactions+=1;yield self.cursor
@@ -58,6 +64,16 @@ def test_denied_scope_never_reads_lots_or_profiles():
     gateway=Gateway(True)
     with pytest.raises(InventoryObservationError)as error:inventory_lots(gateway,4,'FOREIGN','A','auditor',8)
     assert error.value.status==403 and len(gateway.cursor.calls)==2
+
+
+def test_owner_denial_never_returns_lots_or_queries_marking_profiles():
+    from fastapi import HTTPException
+    gateway=Gateway(owner_denied=True)
+    with pytest.raises(HTTPException) as error:
+        inventory_lots(gateway,4,'C','A','auditor',8)
+    assert error.value.status_code==403
+    assert gateway.transactions==1
+    assert not any('RRL_SKU_RECEIPT_PROFILE' in call[0] for call in gateway.cursor.calls)
 
 
 def test_claim_uses_native_owner_then_returns_inside_same_uow():

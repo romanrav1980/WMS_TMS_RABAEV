@@ -199,7 +199,7 @@
       "id": "C-0164",
       "task": "T02 original outgoing composition confirmation and early assembly closure ordering",
       "registered_at": "2026-10-23T08:57:18.899924+00:00",
-      "status": "REGISTERED; after C0163 rev1 RELEASE",
+      "status": "RELEASE K0147 + root corrections APPLIED/live HTTP and built UI accepted; full T02 remains partial",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
     },

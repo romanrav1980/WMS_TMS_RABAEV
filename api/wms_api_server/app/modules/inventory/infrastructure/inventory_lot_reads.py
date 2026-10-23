@@ -3,6 +3,7 @@ from typing import Any
 from ....db import rows_as_dicts
 from ..contracts_observations import InventoryObservationError
 from .inventory_scope import assert_inventory_cursor_scope
+from .hu_view_access import assert_hu_stock_owners
 
 
 def inventory_lots(gateway: Any, revision: int, cell: str, article: str | None, actor: str,
@@ -23,6 +24,13 @@ def inventory_lots(gateway: Any, revision: int, cell: str, article: str | None, 
         rows = rows_as_dicts(cursor)
         if len(rows) > 200:
             raise InventoryObservationError("INVENTORY_CELL_BATCH_BOUND")
+        if rows:
+            cursor.execute("select WARE_ID from RRL_REVIZION where ID=:revision", revision=revision)
+            warehouse = cursor.fetchone()[0]
+            assert_hu_stock_owners(cursor, actor, {
+                "warehouse": int(warehouse),
+                "nodes": [{"kind": "STOCK", "uid": row["lot_uid"]} for row in rows],
+            })
         for row in rows:
             row["uid"] = row.pop("lot_uid")
         articles = sorted({row["article"] for row in rows})

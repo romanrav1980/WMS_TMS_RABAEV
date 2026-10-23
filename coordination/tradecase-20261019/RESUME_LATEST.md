@@ -1,3 +1,31 @@
+# TRADECASE — продолжение 23.10.2026, 14:16 Europe/Moscow
+
+Владелец поручил работать до всех спринтов вместе с Claude. T01 завершён, T02–T12 частичные. Не объявлять DONE complete, не выполнять GitHub push/fetch/PR, исключить SAP.
+
+## Текущий следующий шаг
+
+Root закончил C0164 targeted retry и теперь исправляет доказанный owner-view leak в inventory_lot_reads.py. Код изменён,28 ASGI/scope PASS; нужен рестарт root serv.bat и реальная отрицательная проверка свежим актором. Предыдущий FAIL_OWNER_VIEW сохранён в T11/inventory-owner-read-negative.json (revision416 уже закрыта/actor retired, не возобновлять). Native не менялся для этого чтения. Root владеет inventory_lot_reads.py и test_inventory_task_scoped_boundary.py до своего RELEASE, Claude уведомлён.
+
+## Готовые новые результаты
+
+- Native composition_retry APPLIED5/6/5, текущий RRL_TRADE_COMPOSITION_API BODY DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378, INVALID0. Откат после retry history отказал до DDL, source unchanged. Не запускать старые комплекты поверх него.
+- Основной V2 ранее11/8/11; consistent_read_v2 ранее5/5/5. До них были compile DECODE и SERIALIZABLE CLOB ошибки, все сохранены/устранены. Физический compose читает fulfillment/units/codes на одном SCN, запись обычная. Старые SQL не переписывались.
+- composition-retry-live.json: concurrent retry1→2 SKM only, SAP event сохранён; после отказа2 повтор исходной команды вернул2 без3; owner revoke/restore/replay. Actor retired. live UI затем retry2→3 и реальная потеря ответа после commit восстановилась чтением; ack3 ACCEPTED. WARE221164919/FP21.221164919.ORDER current3 CONFIRMED,stock0/H0.
+- composition-retry-boundaries.json: запрет retry при другой WAITING, потом оба направления SKM/SAP; другая accepted event сохранена. WARE220639789 current7 CONFIRMED,site restored,stock0/H0. Ни одна новая проверка состава не двигала товар.
+- API текущий PID70172/session83244 (после следующего рестарта обновить). UI3000 index-C3H9nb2s. Реальный UI targeted retry3checks1440/390 PASS; ранее parts/composition6 +risks20 PASS. Дубликаты React keys исправлены parts:/composition:.
+- T11 equal inventory: revision415,20+20+210=250 маркированных единиц,delta0; exact/changed/revoke checks; закрытаREVIZION.close_revision,actor/RIGHTS retired,units/UID/status сохранены. Register_lot catch удалён,общий error handler,27ASGI/task scope PASS,загруженAPI. FOUND/LOST не выполнялся.
+- Последний общий quality gate PASS после targeted retry,36focused до owner-read fix;28 inventory-focused после него PASS. Encoding PASS до последней wiki-правки, повторить перед checkpoint.
+- Независимые perf GET12 на API70172: bulk first1986ms/warmmedian225/max273,QC first229/warm155/max228,полные ответыравны. Bulk409 из-за parent HU, неpositive preview. Slow6711=1712ms. T12/loading-qc-independent-read.json. Oracle cache не чистился. Тяжёлый WarehouseHu.preview вызывается до отказа по parent; Claude направлены эти evidence.
+
+## Claude
+
+28 зарегистрированных обращений, CLI model calls0. C0165 ACK K0149 только READ ONLY измерений; после него новых ACK/RELEASE нет. C0166 зарегистрирован28 до выдачи: T11 marked FOUND/LOST через существующий writer, taskfile и TASK обновлены. Не утверждать фактический старт C0166. Исправление C0164 root забрал из-за отсутствия ACK коррекции и уже принял. Claude зарезервировал возможные perf файлы: bulk_loading_read.py и inventory outgoing_quality/quality_identifier/quality_transport_read/warehouse_hu; не редактировать до RELEASE. Root передал новый замер и suggested early authorized parent denial, не копировать owner policy.
+
+Дальше: закончить owner-read live403 и сохранить checkpoint/RELEASE; принять Claude C0165/166; продолжать исходную acceptance revision27 без искусственных новых нормативов. Реальные провайдеры/оборудование/пилот остаются недоступными, не считать их готовыми.
+
+Защита:225837931 не трогать. CASE1168/1169 и их маршруты не менять; только разрешённые READ на1169. WARE210564699=250/H0 в3лотах после законного возврата40EA,не исходный один UID. WARE215266197=1000/H0;219023232=10/H0;220793322=7/H5. Старые роли/fixtures закрыты. Состояние прежних рабочих задач ниже.
+
+---
 # Продолжение TRADECASE — 23.10.2026, 13:38 Europe/Moscow
 
 Поручение владельца: продолжать все спринты совместно с Claude. T01 завершён, T02–T12 частичные; DONE complete не создавать. GitHub не обновлять, SAP исключён.

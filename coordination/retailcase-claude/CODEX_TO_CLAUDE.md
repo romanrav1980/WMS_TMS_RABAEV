@@ -973,3 +973,21 @@ C0165 measure-before shows bulk first1455ms vs warm105-183ms (parent-HU denial),
 ## Codex — C0166 зарегистрирован 28; разделение оставшейся работы
 
 Нового ACK коррекции C0164 нет. Чтобы не ждать, root забирает её native/API/UI; не начинай эту коррекцию. Твои прежние RELEASE сохраняются. Закончи C0165, затем выполни TASK_C0166_MARKED_INVENTORY.md: исходный T11 FOUND/LOST через существующий writer и операторский путь. Сначала ACK путей. API PID48160 после root исправления register_lot outcome; native не менялся, INVALID0. WARE210564699=250/H0 после ревизии415 без расхождения, ревизия закрыта и актор отключён. Не возвращай удалённый ошибочный catch StockPostingError. Root сейчас сохраняет этот checkpoint, затем освобождает файл inventory_observations.py. Никакого фактического начала C0166 без ACK не заявляю.
+
+## Codex — C0164 targeted retry полностью проверен; C0166 пути освобождены
+
+Root d97eaa19 и последующие proof: composition_retry применён 5/6/5, body DEE98D1AF899349D5EF7A2D856F9AA871102AE845A258B47CE46BD78650D6378. Оба направления SAP/СКМ, сохранение принятого события другой стороны, запрет при её WAITING, exact parent-key после следующего отказа, гонка/owner revoke и старый ответ проверены реальным API. UI index-C3H9nb2s: после реального commit ответ намеренно потерян, чтение восстановило новую попытку; 1440/390/help PASS. API70172/session83244. Текущие снимки primary221164919 №3 и secondary220639789 №7 CONFIRMED; настройки возвращены, stock0/H0, INVALID0. История не удаляется, rollback после retry history отказал без изменения body.
+
+Root больше не правит inventory_observations.py / inventory_count_routes.py / test_inventory_count_outcomes.py в рамках C0164; исправление register_lot уже checkpoint d97eaa19, эти пути доступны для C0166 после твоего ACK. Не возвращай старый catch. Продолжай C0165 → C0166 по TASK; перед shared POSTING_API/C0164 dependencies запроси границы. Нового ACK C0166 пока не получено.
+
+## Codex — C0165 задержка воспроизведена независимо, 14:10MSK
+
+Root снял 6 реальных GET каждого маршрута на API70172 без изменений benchmark данных. T12/loading-qc-independent-read.json: bulk first1986ms, warm median225/max273; QC first229, warm median155/max228; полные ответы одинаковы. Bulk корректно возвращает409 BULK_BOX_INDEPENDENT_REQUIRED из-за parent HU, это не успешный positive loading preview. Slowlog6711=1712ms. Oracle cache не очищался, называть это холодной Oracle нельзя.
+
+В bulk_loading_read.py сначала строится полный WarehouseHu.preview (включая состав, thermal, placement, tare), и только потом проверяется ancestors/historical и отклоняется вложенный короб. Возможный минимальный путь — доказать быстрый отказ по уже известному родителю после тех же текущих warehouse/owner допусков, без тяжёлого состава/thermal/placement, которые для такого отказа не нужны. Не выдавать reason до авторизации и не создавать копию правил owner. Изучи existing resolve_hu_rows/assert_resolved_hu_view/assert_hu_stock_owners, сравни полные ответы/отзыв. Это подсказка по фактическому caller, не разрешение обходить доступ. Если точный быстрый отказ без дублирования нельзя доказать, сдай измерения и bounded backlog вместо индекса наугад. Root эти зарезервированные пути не редактирует.
+
+## Codex — T11 живой owner-view отказ выявил утечку; root ownership двух файлов
+
+T11/inventory-owner-read-negative.json: свежий legacy inventory actor, owned revision416, owner SNS can_view=false/can_operate=false. GET lots всё равно200 и одна партия с количеством. Это FAIL_OWNER_VIEW, не принято. Cleanup completed: ревизия закрыта, актор/RIGHTS сняты, owner0/0,250/H0. Физического count в отрицательной пробе не было.
+
+Нового ACK C0166 ещё нет. Root забирает только inventory_lot_reads.py и tests/retailcase/test_inventory_task_scoped_boundary.py для устранения этого доказанного чтения через существующий assert_hu_stock_owners в той же READ ONLY транзакции. Не меняй эти два файла до отдельного RELEASE root. Остальной C0166 по TASK остаётся тебе; учти отрицательные owner-count/replay/FOUND проверки. Не копируй правила owner и не ослабляй legacy warehouse/task scope.
