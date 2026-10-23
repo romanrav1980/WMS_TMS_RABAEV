@@ -1,45 +1,48 @@
 {
- "target": "RABAEV/orcl",
- "migration_id": "2026-10-23-trade-topup-common-pool",
- "revision": "C-0157",
- "status": "NOT_APPLIED",
- "applied_by_claude": false,
- "shared_objects_changed": {
-  "RRL_STOCK_POOL_READ (PACKAGE BODY)": "snapshot_json: a top-up row's pool demand minus its ACTIVE hold; blocked top-up row 0. line_snapshot_json unchanged (create_plan uses it).",
-  "RRL_STOCK_POOL_CMD (PACKAGE BODY)": "compile_wave_pool: rows with RRL_TRADE_TOPUP_ADOPT.line_proposal>0 need no pool share (their hold is taken over by adopt_hold); anchors/row keys kept",
-  "RRL_TRADE_TOPUP_ADOPT (PACKAGE BODY)": "compile_wave: TRADE_TOPUP_COMMON_POOL_UNSUPPORTED replaced by TRADE_TOPUP_POOL_SHARE_RECALC_REQUIRED when the row still has an active pool SOFT share"
- },
- "specs_changed": [],
- "not_changed": [
-  "RRL_STOCK_POOL_READ.line_snapshot_json",
-  "RRL_PICKING_API",
-  "RRL_STOCK_WAVE_LAUNCH_CMD",
-  "RRL_STOCK_RESERVE_CORE",
-  "RRL_TRADE_TOPUP_CMD",
-  "RRL_STOCK_CASE_PICK_CMD"
- ],
- "before_sha256": {
-  "RRL_STOCK_POOL_READ:PACKAGE BODY": "3C4BE33AD22ACCC12CCD4E4157A66508F7FC4914C04C3C94CB3577C23E29BE3B",
-  "RRL_STOCK_POOL_CMD:PACKAGE BODY": "35BFECEC73FB5D0CB4C7041D9D05623BA6079D0044899B86C0CAF78889F0A477",
-  "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "94B1F0CF2C0B5F693A3BF6E7CF75B56343850576DD27B8588730A28FC085E294"
- },
- "after_sha256": {
-  "RRL_STOCK_POOL_READ:PACKAGE BODY": "761B51CA2258159170DD40C50C988CAD6C1B706FE7577A31CD439C4A9DA126C1",
-  "RRL_STOCK_POOL_CMD:PACKAGE BODY": "76AC3806FD7FF7C41D02B318D6A373694B3D364D36C7508C0162A6DE3621A6B3",
-  "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "8AA8EBBAA8C2BE720B7ABD6D78106E128F0213E1F2E12D378629BB73D2AD454A"
- },
- "compile_evidence": "changed functions executed unchanged as READ ONLY anonymous blocks: identical to live on 2 pool SKUs and 12 waves; row 3687 (cancelled proposal 10) pool demand 40 -> 0 (reports/tradecase/2026-10-23/claude/C0157/candidate-logic-live.json)",
- "files_sha256": {
-  "000_preflight.sql": "e1213f9c8e69f4f1f0743b7b05531bf196e04f117c9f30b396d1522f041dd46a",
-  "001_pool_read.sql": "6951a24251106425e41f101e1befcaa19359fa951f965396f5a20c65f0a02d10",
-  "002_pool_cmd.sql": "ce9a429532d5853fabcc8e77adb1649b5f07462773df8eb1cccc89cb3b724b4d",
-  "003_topup_adopt.sql": "6be7958dbe7a0bb892d947ee3d32276446a84fb7cf2f6d36ed95969ff0645c13",
-  "apply.sql": "a6345d49eb93e8afdb9ed5270938c30ccef1a926f236b6884d26ce06d4e632ff",
-  "before_rrl_stock_pool_cmd.sql": "d6da7ed9bca8d2c549482b6b5a0e9d445c64445595fee1207be50cb2d00c2040",
-  "before_rrl_stock_pool_read.sql": "e5a5f228a2c18239448f0fb9a2e8232e796d18e1be726dcaa868c59a6ff8b2b7",
-  "before_rrl_trade_topup_adopt.sql": "e3bb38ec24743074b626496cf000364bb81998bad5f23d17315132dd99a4b381",
-  "rollback.sql": "90ae93af47b0c5a13f1d8fadf6453e4e53b165f4ef04dfff0f130cd3e9a8e700",
-  "rollback_verify.sql": "d52f0323813d74ee9fb48329b387fceecd0fc5624b6dc054317d0518df353db2",
-  "verify.sql": "2f30349b924e64147e467bac6a24adceea8ab236f6bca830e5a876094bc02f4a"
- }
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-23-trade-topup-common-pool",
+  "revision": "C-0157",
+  "status": "APPLIED",
+  "applied_by_claude": false,
+  "shared_objects_changed": {
+    "RRL_STOCK_POOL_READ (PACKAGE BODY)": "snapshot_json: a top-up row's pool demand minus its ACTIVE hold; blocked top-up row 0. line_snapshot_json unchanged (create_plan uses it).",
+    "RRL_STOCK_POOL_CMD (PACKAGE BODY)": "compile_wave_pool: rows with RRL_TRADE_TOPUP_ADOPT.line_proposal>0 need no pool share (their hold is taken over by adopt_hold); anchors/row keys kept",
+    "RRL_TRADE_TOPUP_ADOPT (PACKAGE BODY)": "compile_wave: TRADE_TOPUP_COMMON_POOL_UNSUPPORTED replaced by TRADE_TOPUP_POOL_SHARE_RECALC_REQUIRED when the row still has an active pool SOFT share"
+  },
+  "specs_changed": [],
+  "not_changed": [
+    "RRL_STOCK_POOL_READ.line_snapshot_json",
+    "RRL_PICKING_API",
+    "RRL_STOCK_WAVE_LAUNCH_CMD",
+    "RRL_STOCK_RESERVE_CORE",
+    "RRL_TRADE_TOPUP_CMD",
+    "RRL_STOCK_CASE_PICK_CMD"
+  ],
+  "before_sha256": {
+    "RRL_STOCK_POOL_READ:PACKAGE BODY": "3C4BE33AD22ACCC12CCD4E4157A66508F7FC4914C04C3C94CB3577C23E29BE3B",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "35BFECEC73FB5D0CB4C7041D9D05623BA6079D0044899B86C0CAF78889F0A477",
+    "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "94B1F0CF2C0B5F693A3BF6E7CF75B56343850576DD27B8588730A28FC085E294"
+  },
+  "after_sha256": {
+    "RRL_STOCK_POOL_READ:PACKAGE BODY": "761B51CA2258159170DD40C50C988CAD6C1B706FE7577A31CD439C4A9DA126C1",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "76AC3806FD7FF7C41D02B318D6A373694B3D364D36C7508C0162A6DE3621A6B3",
+    "RRL_TRADE_TOPUP_ADOPT:PACKAGE BODY": "8AA8EBBAA8C2BE720B7ABD6D78106E128F0213E1F2E12D378629BB73D2AD454A"
+  },
+  "compile_evidence": "changed functions executed unchanged as READ ONLY anonymous blocks: identical to live on 2 pool SKUs and 12 waves; row 3687 (cancelled proposal 10) pool demand 40 -> 0 (reports/tradecase/2026-10-23/claude/C0157/candidate-logic-live.json)",
+  "files_sha256": {
+    "000_preflight.sql": "e1213f9c8e69f4f1f0743b7b05531bf196e04f117c9f30b396d1522f041dd46a",
+    "001_pool_read.sql": "6951a24251106425e41f101e1befcaa19359fa951f965396f5a20c65f0a02d10",
+    "002_pool_cmd.sql": "ce9a429532d5853fabcc8e77adb1649b5f07462773df8eb1cccc89cb3b724b4d",
+    "003_topup_adopt.sql": "6be7958dbe7a0bb892d947ee3d32276446a84fb7cf2f6d36ed95969ff0645c13",
+    "apply.sql": "a6345d49eb93e8afdb9ed5270938c30ccef1a926f236b6884d26ce06d4e632ff",
+    "before_rrl_stock_pool_cmd.sql": "d6da7ed9bca8d2c549482b6b5a0e9d445c64445595fee1207be50cb2d00c2040",
+    "before_rrl_stock_pool_read.sql": "e5a5f228a2c18239448f0fb9a2e8232e796d18e1be726dcaa868c59a6ff8b2b7",
+    "before_rrl_trade_topup_adopt.sql": "e3bb38ec24743074b626496cf000364bb81998bad5f23d17315132dd99a4b381",
+    "rollback.sql": "90ae93af47b0c5a13f1d8fadf6453e4e53b165f4ef04dfff0f130cd3e9a8e700",
+    "rollback_verify.sql": "d52f0323813d74ee9fb48329b387fceecd0fc5624b6dc054317d0518df353db2",
+    "verify.sql": "2f30349b924e64147e467bac6a24adceea8ab236f6bca830e5a876094bc02f4a"
+  },
+  "applied_by": "Codex",
+  "native_evidence": "runtime/test-evidence/tradecase/2026-10-23/T08/common-pool-native-result.json",
+  "live_acceptance": "ADOPTION_PASS_PRIMARY_POOL_OPEN"
 }
