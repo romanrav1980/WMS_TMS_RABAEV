@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 26,
-  "used": 26,
+  "limit": 27,
+  "used": 27,
   "requests": [
     {
       "id": "C-0130",
@@ -202,6 +202,14 @@
       "status": "REGISTERED; after C0163 rev1 RELEASE",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0165",
+      "task": "T12 actual slow loading preview and outgoing quality read performance without rights regressions",
+      "registered_at": "2026-10-23T09:25:53.928195+00:00",
+      "status": "REGISTERED; after C0164 RELEASE",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
     }
   ],
   "additional_grants": [
@@ -395,6 +403,16 @@
       "used": 1,
       "request_ids": [
         "C-0164"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner required performance investigation and authorized further parallel Claude work until all sprints complete",
+      "allocation_basis": "One consolidated measured T12 SQL/API bottleneck; root accepts composition features in parallel",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0165"
       ]
     }
   ]

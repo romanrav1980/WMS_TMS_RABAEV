@@ -13,3 +13,5 @@ Root выполняет настоящую Oracle/API приёмку. Native н�
 C0163 RELEASE received; before apply, do rev1 corrections in CODEX_TO_CLAUDE: END before first with repeated header, slash-safe deliver, explicit existing1MB bound. Root accepts C0162 in parallel. This is correction of C0163, no new request.
 
 4. C0163rev1 RELEASE received: root accepts its native/API. Begin registered26 TASK_C0164_COMPOSITION_ACK.md; inspect existing outgoing acknowledgment before adding anything. Root owns C0163 kit during apply.
+
+5. C0164 RELEASE24eb9c24 received; root owns apply/acceptance. Begin registered27 TASK_C0165_LOADING_READ_PERFORMANCE.md. Source is actual slowlog6635/6633 from root after-load proof. No new feature, business writes or API/dist restart; ACK paths first.

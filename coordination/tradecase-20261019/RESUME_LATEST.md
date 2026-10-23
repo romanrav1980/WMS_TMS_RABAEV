@@ -1,3 +1,33 @@
+# Продолжение 23.10.2026, 12:35 Europe/Moscow
+
+Поручение владельца — продолжать все спринты вместе с Claude. Старые пределы 19.10 сняты поздними сообщениями. T01 завершён, T02–T12 остаются частичными; DONE complete не создавать. GitHub/SAP не публиковать: нового разрешения нет.
+
+## Текущее состояние
+
+- API8088: PID12624, exec session54098, serv.bat безreload. Загружен C0163rev1, но последние root изменения composition_ack.py (SERIALIZABLE) ещё требуют restart после native C0164. Frontend3000 — прежний dist CyAZvAfh; новые UI ещё не собраны. Собрать после приёмки native.
+- C0163 native применён11/9/11, зависимости и SHA совпали, INVALID0. Body2F87360A101194058C4B532E4D45E2C02BA5860AE580524F0DCD90AA7304AD48. Не менять применённые SQL. Root до apply защитил END-only историю при rollback, namespace событий PART/END и текущего owner при mark_delivered. Повтор части сохраняет исходный event_id; другой event с тем же номером части отклоняется.
+- C0163 реальные T02/supply-parts-live.json PASS:33HTTP, END→2→1, conflicts, v2/позднийv1, гонка END/последняя часть. Два отдельных adapter-процесса завершены os._exit(96/97) до/после настоящего canonical commit; HTTP другого процесса восстановил ровно один intake event.
+- C0163 T02/supply-parts-boundaries.json PASS:19HTTP, END-only, отказ rollback при истории, неверные count/hash без SUPPLY,3000кодов ~1.2МБ отклонены без canonical event. При недостающем SKU состав передан в существующее ожидание; загрузка SKU и штатный retry завершили приём. Собственный SKU затем отключён. Это metadata, не приход товара и не реальный SAP.
+- C0163 UI root заменил прямую ссылку DELIVERED→SUPPLY на «Результат приёма»→существующее сообщение. Причина: приём может ждать справочник; документ ещё не существует. Из MessageView принятый документ уже открывается. Нужны TS/build/реальный UI с новой ссылкой. Добавлен запрет CR/LF в кодах частей (LF участвует в digest); API422 проверен.
+- C0164 RELEASE24eb9c24 у root, native NOT_APPLIED. Root ещё НЕ применял. В неприменённый кандидат добавлены unit/code identities в подпись; обновлены manifest/verify, body71341703FB13715652D257BE0385D0C6E600BB6DAC133E08463214D75982244C. Adapter report/ack теперь SET TRANSACTION ISOLATION LEVEL SERIALIZABLE, чтобы fulfillment и единицы читались одним снимком.8focused PASS после обновления ожидаемых SQL. Следующий шаг — wiki/checkpoint, fresh dependency SHA, apply/empty rollback/reapply, реальные report/ack и owner/role/provider switch. Авторский candidate-live относится к прежней подписи, не выдавать его за root live proof.
+- C0165 зарегистрирован27-м, передан и ACK получен: Claude исследует реальные slowlog6635/6633 (bulk-box-preview1118мс/QC1061мс). Только READ CASE1169/SSCC099999990000026027, ничего физически там не менять. Пути возможной правки — в канале, фактический READY/RELEASE ещё не получен. Не считать запрос подтверждением работы без ACK. Не менять его perf paths.
+
+## Закрытые собственные fixtures
+
+- after-load-live.json PASS: реальные CASE1176/1177 по20EA; первая LOADED, вторая оставалась в экспедиции. Добивка вместила2из4BOX, создала HARD20; replay прежний. UNLOAD сделал следующий расчёт устаревшим. Все предложения освобождены/отклонены; обе CASE возвращены, волны621/622 DONE, nativeTT33675 отменён,3актора отключены.
+- Склад210564699=250/H0, теперь3обычных storage-лота:210EA исходная690000000445629982 вT3S089ddb36;20EA CASELOT65A5… вALS303760e2f0;20EA CASELOTA537… вALS303760e2f1. Все250unit keys/owner/MRC/expiry/mark сохранены. Не утверждать возврат40EA в исходный UID. Собственные ALS-ячейки исправлены с IS_SYSTEM1 на0: системный адрес правильно запрещал allocation; продуктовый guard не менялся. Все три источника теперь требуют только контекста заказа. Старые closed paper-wave/after-load fixtures не возобновлять.
+- C0160 обычный pool: native9/9/9 + root guard5/4/5 + empty5/4/5. Настоящий MAIN20 SOFT→HARD раз, shortage230/300, OSG0, конкурентный пересчёт; cleanup250/H0. C0162 access native8/8/8 и реальные роль/legacy/WARE/owner/replay пройдены. Root main pool_view/pool_edit=get_current_user; истинный warehouse scope проверяют service/native, глобальный require_permission отсекал роли. API это загрузил.7ASGI outcome +10fixture browser recovery PASS. Ошибки до исправлений сохранены.
+- Остальные защищённые количества:215266197=1000/H0;219023232=10/H0;220793322=7/H5.225837931 не трогать. CASE1168 выехала,1169 ожидает — не отменять. Все свои роли/сеансы в новых pool/parts/after-load тестах retired; частей metadata history не удалять.
+
+## Проверки и дальнейшая работа
+
+55focused (47+8), raw pool UI10fixture checks и shift model5 PASS. C0159 compiled20/20 уже был принят до root text/task_id правок; повторить собранный UI после build. Russian encoding и полный quality gate после текущего пакета ещё нужны. Старый test_case_paper падал только из-за status NOT_APPLIED при реальном APPLIED; допускаются оба статуса, SHA проверки не снимались.
+
+Скорость: parts3кода максимум339мс HTTP/50мс native на33запросах; граница3000кодов/1.2МБ —1318мс HTTP, assembled708мс/store653мс. Решение Codex/T12: сохранять1МБ предел, профилировать/ограничить сборку сверхлимитного payload до дорогой материализации; индекс без плана не добавлять. Чтения погрузки/QC исследует C0165. API pool27HTTP включают исходный403 до main fix; итоговые проверки ожидаемых отказов/восстановления прошли. Не называть выборкуSLA.
+
+Файловый канал coordination/retailcase-claude. Budget27 зарегистрированных запросов, новые регистрировать до передачи; поздняя открытая авторизация владельца сохраняется, старый дневной лимит не сбрасывать. CLI model calls0; external Claude подтверждается только его сообщениями. Не использовать git add all: чужие reports/CLAUDE_STATUS/CLAUDE_TO_CODEX и старые тесты dirty сохранены. Относиться к старым сведениям ниже как к истории.
+
+---
 # Продолжение СНС/BLC — текущее состояние 23.10.2026
 
 Владелец поручил продолжать до завершения всех спринтов совместно с Claude Code. Прежний предел19.10 18:00 отменён последующими поручениями. Все спринты ещё не завершены: T01 завершён; T02–T12 частичны. DONE.json со статусом complete не создавать. Работать дальше, не заканчивать обычным промежуточным отчётом.

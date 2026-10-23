@@ -44,6 +44,9 @@ def test_header_is_the_supply_without_codes_and_parts_are_numbered():
         part(1, codes=["short"])  # the same code rule as a full SUPPLY
     with pytest.raises(ValidationError):
         end(total_codes=10001)
+    for separator in ("\n", "\r"):
+        with pytest.raises(ValidationError):
+            part(1, codes=[CODES[0] + separator + CODES[1]])
 
 
 def test_hashes_bind_content_not_delivery_details():

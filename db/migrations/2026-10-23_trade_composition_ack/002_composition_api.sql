@@ -43,7 +43,7 @@ create or replace package body RRL_TRADE_COMPOSITION_API as
  -- PICKED_STOCK_VERSION), with their fact quantity and FACT_COMPOSITION_JSON. No second versioning of HU membership: the signature is the
  -- SHA-256 of these fact lines only, so shipping (status, HU unlink after load) keeps it and a re-pick (new version) changes it.
  -- Closed = at least one fulfillment and every one PICKED or SHIPPED. Marked codes of the units in the CASE carrier lots and directly on
- -- picked pallets go into the message (and decide whether SKM must answer) but not into the signature.
+ -- picked pallets and their unit/code identities are part of the signed message.
  procedure compose(p_order number,p_items boolean,sig out varchar2,units out number,carriers out number,codes out number,closed out number,
                    items out json_array_t)is
   joined clob;u json_object_t;h json_array_t;f json_object_t;prev_key varchar2(64);prev_carrier varchar2(200);n_all number:=0;n_open number:=0;
@@ -72,8 +72,6 @@ create or replace package body RRL_TRADE_COMPOSITION_API as
    end if;
   end loop;
   closed:=case when n_all>0 and n_open=0 then 1 else 0 end;
-  if carriers>0 then sig:=sha(joined);end if;
-  dbms_lob.freetemporary(joined);
   for r in(select x.CARRIER,un.PHYSICAL_UNIT_KEY UNIT_KEY,cd.CODE_HASH from(
      select nvl(fo.PICKED_PALLET_UID,fo.PALLET_UID)CARRIER,lot.LOT_UID UID_VALUE from RRL_CUSTOMER_ORDER_FULFILLMENT fo
       join RRL_CASE_CARRIER_LOT lot on lot.CASE_PICK_TASK_ID=fo.PICKED_CASE_TASK_ID where fo.CUSTOMER_ORDER_ID=p_order and fo.STATUS in('PICKED','SHIPPED')
@@ -82,6 +80,7 @@ create or replace package body RRL_TRADE_COMPOSITION_API as
     join RRL_WMS_RECEIPT_UNIT un on un.CURRENT_UID=x.UID_VALUE
     left join RRL_WMS_RECEIPT_CODE cd on cd.UID_PALLET=un.UID_PALLET and cd.UNIT_ID=un.UNIT_ID
     order by x.CARRIER,un.PHYSICAL_UNIT_KEY,cd.CODE_HASH)loop
+   line('U|'||r.CARRIER||'|'||r.UNIT_KEY||'|'||nvl(r.CODE_HASH,'-'));
    if prev_key is null or r.UNIT_KEY<>prev_key or r.CARRIER<>prev_carrier then
     units:=units+1;if units>10000 then fail('TRADE_COMPOSITION_UNIT_BOUND');end if;
     if p_items then
@@ -93,6 +92,8 @@ create or replace package body RRL_TRADE_COMPOSITION_API as
    if r.CODE_HASH is not null then codes:=codes+1;if p_items then h.append(r.CODE_HASH);end if;end if;
   end loop;
   if p_items and u is not null then u.put('code_hashes',h);items.append(u);end if;
+  if carriers>0 then sig:=sha(joined);end if;
+  dbms_lob.freetemporary(joined);
  end;
 
  -- Stored snapshot + live reconciliation: why the order waits, what each system answered, and whether the physical facts still match.

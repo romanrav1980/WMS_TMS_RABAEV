@@ -4,9 +4,9 @@ import { Act, HelpLink } from "./ui";
 import { useRead } from "./useRead";
 
 // Состав поставки частями (C-0163): какие части и подтверждения ещё не пришли, несовпадение итога и передача в приём.
-// Список приходит с сервера уже без недоступных собственников; принятая поставка открывается как обычный документ SUPPLY.
+// Список приходит с сервера без недоступных собственников; результат приёма показывает и ожидание справочников.
 type Transfer = { warehouse_id: number; source_id: string; transfer_id: string; document_id: string; version: number; part_count: number;
-  received_codes: number; missing_parts: number[]; end_received: boolean; status: string; status_reason: string | null; owner_id: string | null };
+  received_codes: number; missing_parts: number[]; end_received: boolean; status: string; status_reason: string | null; owner_id: string | null; delivered_event_id: string | null };
 type Page = { items: Transfer[]; has_more: boolean };
 
 const STATUS: Record<string, string> = { OPEN: "ждёт данных", MISMATCH: "состав не сходится", COMPLETE: "собран, передаётся в приём",
@@ -17,7 +17,7 @@ const reason = (t: Transfer) => !t.status_reason ? "" : t.status_reason === "WAI
   : t.status_reason === "CODES_HASH_MISMATCH" ? "контрольная сумма кодов не сходится с уведомлением о завершении"
   : t.status_reason === "SUPPLY_ASSEMBLED_TOO_LARGE" ? "собранный документ больше предела приёма 1 МБ" : t.status_reason;
 
-export function SupplyParts({ wh, onOpen }: { wh: string; onOpen: (documentId: string) => void }) {
+export function SupplyParts({ wh, onResult }: { wh: string; onResult: (eventId: string) => void }) {
   const [reload, setReload] = useState(0), [busy, setBusy] = useState(""), [message, setMessage] = useState("");
   const read = useRead<Page>(`/api/tradecase/warehouses/${encodeURIComponent(wh)}/supply-transfers?limit=50`, reload);
   const deliver = async (t: Transfer) => {
@@ -41,7 +41,7 @@ export function SupplyParts({ wh, onOpen }: { wh: string; onOpen: (documentId: s
       <b>{t.document_id}</b> версия {t.version} · {STATUS[t.status] ?? t.status}<br />
       <small>частей {t.missing_parts.length >= 50 ? "?" : t.part_count - t.missing_parts.length}/{t.part_count}{t.missing_parts.length ? ` · нет частей: ${t.missing_parts.join(", ")}${t.missing_parts.length >= 50 ? "…" : ""}` : ""}
         {" · "}{t.end_received ? "завершение получено" : "завершения ещё нет"} · кодов {t.received_codes}{reason(t) ? " · " + reason(t) : ""}</small><br />
-      {t.status === "DELIVERED" && <Act help={help("open", "Открыть принятый документ поставки.")} onClick={() => onOpen(t.document_id)}>Открыть поставку</Act>}
+      {t.status === "DELIVERED" && t.delivered_event_id && <Act help={help("open", "Показать результат приёма и ожидание справочников. После приёма здесь можно открыть поставку.")} onClick={() => onResult(t.delivered_event_id!)}>Результат приёма</Act>}
       {t.status === "COMPLETE" && <Act help={help("deliver", "Передать собранный состав в приём ещё раз тем же сообщением: если он уже принят, второй документ не появится.")}
         disabled={busy === t.transfer_id} onClick={() => void deliver(t)}>Передать в приём</Act>}
     </li>)}</ul>}

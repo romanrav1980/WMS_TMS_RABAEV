@@ -42,6 +42,8 @@ class TradeSupplyPart(TradeModel):
     def numbered(self) -> "TradeSupplyPart":
         if self.part_no > self.part_count:
             raise ValueError("part_no must not exceed part_count")
+        if any("\n" in item.code or "\r" in item.code for item in self.codes):
+            raise ValueError("Part codes must not contain line breaks used by the transfer digest")
         return self
 
 
