@@ -1,0 +1,106 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "trip": 33664,
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE dispatcher opens trip 33664 by deep link"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE not loaded: change allowed, assignments kept"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE loaded: unload first, list of places, link to the existing unload screen"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE refusal in plain words; edit draft kept for retry (no [object Object])"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE departed: change unavailable"
+  },
+  {
+   "width": 1440,
+   "name": "every block button/link has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "local help answers 200"
+  },
+  {
+   "width": 1440,
+   "name": "the block adds no horizontal scroll (page baseline 0px)"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 403 clears the places (no stale data)"
+  },
+  {
+   "width": 390,
+   "name": "LIVE dispatcher opens trip 33664 by deep link"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE not loaded: change allowed, assignments kept"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE loaded: unload first, list of places, link to the existing unload screen"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE refusal in plain words; edit draft kept for retry (no [object Object])"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE departed: change unavailable"
+  },
+  {
+   "width": 390,
+   "name": "every block button/link has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "local help answers 200"
+  },
+  {
+   "width": 390,
+   "name": "the block adds no horizontal scroll (page baseline 1050px)"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 403 clears the places (no stale data)"
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "patches": [
+  {
+   "transport": "-948-"
+  }
+ ],
+ "overflow": {
+  "390": {
+   "page_before_block": 1050,
+   "page_with_block": 1050,
+   "block": {
+    "right": 1219,
+    "width": 1260,
+    "client": 1260
+   }
+  },
+  "1440": {
+   "page_before_block": 0,
+   "page_with_block": 0,
+   "block": {
+    "right": 1268,
+    "width": 1260,
+    "client": 1260
+   }
+  }
+ },
+ "status": "PASS"
+}

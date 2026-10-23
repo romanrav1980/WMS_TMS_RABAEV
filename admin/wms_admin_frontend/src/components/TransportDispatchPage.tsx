@@ -1,5 +1,5 @@
 import { adminAuthorization, adminBasicAuth, currentSessionCredentials } from "../api";
-import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
+import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError } from "../features/transport";
 import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
@@ -169,7 +169,7 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { ...init, headers: apiHeaders() });
   if (!res.ok) {
     let detail = res.statusText;
-    try { const b = await res.json(); detail = b?.detail || detail; } catch { /* */ }
+    try { const b = await res.json(); detail = typeof b?.detail === "object" && b.detail ? JSON.stringify(b.detail) : b?.detail || detail; } catch { /* */ }
     throw new Error(`${res.status}: ${detail}`);
   }
   return res.json() as Promise<T>;
@@ -905,7 +905,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const updated = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${selectedTask.ID}`);
       setSelectedTask(updated);
       setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
-    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+    } catch (e) { setError(vehicleChangeError(String(e))); } finally { setLoading(false); }  // the draft stays for a retry
   }
 
   async function handleClose() {
@@ -2005,8 +2005,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     : <span>{selectedTask.PRIMECHANIE ?? "—"}</span>
                   }
                 </div>
+                {editMode && <VehicleChange key={selectedTask.ID} taskId={selectedTask.ID} reload={0} />}
               </div>
-
               {/* Sprint 74 — collapsible STs section */}
               {!tripDetailCollapsed && <>
 

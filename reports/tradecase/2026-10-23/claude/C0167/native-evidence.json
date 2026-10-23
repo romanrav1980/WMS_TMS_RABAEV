@@ -1,0 +1,50 @@
+{
+ "objects": {
+  "RRL_TRANSPORT_EDIT_API:PACKAGE BODY": {
+   "sha256": "A16B9EA6EF9CBD509C435D427BD1DDAEE4961046EBBCC054EAE43CBBF6C6CF17",
+   "checks": {
+    "loaded_or_departed_refused": true,
+    "capacity_check_of_new_vehicle": true,
+    "concurrent_vehicle_change": true,
+    "frozen_after_shipping": true,
+    "assignments_untouched": true
+   }
+  },
+  "RRL_STOCK_HU_LOAD_CORE:PACKAGE BODY": {
+   "sha256": "AADD00C4352E21FFB17F4F6836955B3D1BBF31D3003780DE597C7E296A98C3D1",
+   "checks": {
+    "scan_must_be_current_vehicle": true,
+    "execute_closure_on_vehicle": true,
+    "vehicle_capacity": true
+   }
+  },
+  "RRL_STOCK_TRIP_DEPART_CMD:PACKAGE BODY": {
+   "sha256": "0BC5B3C7C13D6C4A403D2A84A6EF85D959AFCD8B76D12E316B713F9F5D43272F",
+   "checks": {
+    "loads_on_current_vehicle": true
+   }
+  },
+  "RRL_STOCK_UNLOAD_CMD:PACKAGE BODY": {
+   "sha256": "16E6AF272C795A63F77ABADB175F02C985C735662A57D9BE8095059498E609A3",
+   "checks": {
+    "unload_scan_vehicle_dock_cell_reason": true,
+    "unload_only_on_current_undeparted_vehicle": true
+   }
+  },
+  "RRL_TRADE_TRANSPORT_CORE:PACKAGE BODY": {
+   "sha256": "283127E6FB8931716D5B94DAF7656BC9D1FDD4AC1BF48191B20A5B9B4DEB52FE",
+   "checks": {
+    "manifest_contains_vehicle": true,
+    "departure_needs_document_of_current_manifest": true
+   }
+  }
+ },
+ "trigger": {
+  "name": "RRL_TT_PHYSICAL_DEPART_GUARD",
+  "event": "UPDATE OR DELETE",
+  "status": "ENABLED",
+  "sha256": "719187BD790AD0767CFDF5AEF0D4E46CD9120F2641527E9968FC36D3D1A9E511",
+  "refuses_vehicle_change_when_loaded": true
+ },
+ "all_true": true
+}
