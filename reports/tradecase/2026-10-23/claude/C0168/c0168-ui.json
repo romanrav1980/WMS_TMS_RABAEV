@@ -1,0 +1,22 @@
+{
+ "kind": "FIXTURE_MARKUP",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "factory pallet hint present; does not widen the page",
+   "page_scroll_width_with": 1440,
+   "page_scroll_width_without": 1440,
+   "hint_right": 1380,
+   "container_right": 1399
+  },
+  {
+   "width": 390,
+   "name": "factory pallet hint present; does not widen the page",
+   "page_scroll_width_with": 1280,
+   "page_scroll_width_without": 1280,
+   "hint_right": 1220,
+   "container_right": 1239
+  }
+ ],
+ "status": "PASS"
+}

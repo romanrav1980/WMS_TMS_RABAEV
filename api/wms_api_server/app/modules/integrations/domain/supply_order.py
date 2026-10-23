@@ -97,6 +97,7 @@ def read_supply_aggregations(root: ET.Element,numbers: set[str],value: Callable[
             return result
 
         identities = set()
+        children: dict[tuple[str, str, str], list[str]] = {}
         for aggregation in manifests[0]:
             if local_name(aggregation.tag) != "Aggregation":
                 raise ValueError("Unexpected aggregation element")
@@ -109,7 +110,19 @@ def read_supply_aggregations(root: ET.Element,numbers: set[str],value: Callable[
             if line not in numbers or level not in {"BOX", "PALLET"} or identity in identities:
                 raise ValueError("Invalid line, level or duplicate source aggregation")
             identities.add(identity)
+            # C-0168: a factory pallet (SSCC) may list its boxes; boxes themselves are leaves of the hierarchy.
+            nested = [n for n in aggregation if local_name(n.tag) == "Children"]
+            if len(nested) > 1 or (nested and (level != "PALLET" or not 1 <= len(nested[0]) <= 1000)):
+                raise ValueError("Only a PALLET aggregation may list 1..1000 child boxes")
+            if nested:
+                if any(local_name(child.tag) != "Child" for child in nested[0]):
+                    raise ValueError("Unexpected child aggregation element")
+                children[identity] = [code(child) for child in nested[0]]
             containers = [n for n in aggregation if local_name(n.tag) == "Units"]
+            if nested and not containers:
+                aggregations.append({"line_number": line, "system": system, "profile": profile,
+                                     "level": level, "code": aggregate_code, "units": []})
+                continue
             if len(containers) != 1 or not 1 <= len(containers[0]) <= 10000:
                 raise ValueError("Aggregation requires known 1..10000 unit members")
             members, member_ids = [], set()
@@ -130,4 +143,33 @@ def read_supply_aggregations(root: ET.Element,numbers: set[str],value: Callable[
                 members.append(item)
             aggregations.append({"line_number": line, "system": system, "profile": profile,
                                  "level": level, "code": aggregate_code, "units": members})
+        expand_factory_pallets(aggregations, children)
     return aggregations
+
+
+def expand_factory_pallets(aggregations: list[dict[str, Any]], children: dict[tuple[str, str, str], list[str]]) -> None:
+    """A PALLET lists BOX codes of the same message, line, system and profile; each box belongs to one pallet. The stored
+    composition of the pallet is its own units plus all box units, so one SSCC scan receives the whole factory pallet."""
+    by_identity = {(a["system"], a["profile"], a["code"]): a for a in aggregations}
+    owner: dict[tuple[str, str, str], tuple[str, str, str]] = {}
+    for parent_identity, codes in children.items():
+        parent = by_identity[parent_identity]
+        members = list(parent["units"])
+        seen = {item["unit_id"] for item in members}
+        codes_seen = {item["code"] for item in members}
+        for child_code in codes:
+            child_identity = (parent["system"], parent["profile"], child_code)
+            child = by_identity.get(child_identity)
+            if child is None or child["level"] != "BOX" or child["line_number"] != parent["line_number"]:
+                raise ValueError("A pallet child must be a BOX aggregation of the same line and profile in this message")
+            if child_identity in owner:
+                raise ValueError("A box belongs to one factory pallet only")
+            owner[child_identity] = parent_identity
+            for item in child["units"]:
+                if item["unit_id"] in seen or item["code"] in codes_seen:
+                    raise ValueError("Factory pallet units overlap between boxes")
+                seen.add(item["unit_id"]); codes_seen.add(item["code"])
+                members.append(item)
+        if not 1 <= len(members) <= 10000:
+            raise ValueError("Factory pallet requires 1..10000 units")
+        parent["units"] = members
