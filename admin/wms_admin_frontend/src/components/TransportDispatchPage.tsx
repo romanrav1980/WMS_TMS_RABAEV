@@ -1,5 +1,5 @@
 import { adminAuthorization, adminBasicAuth, currentSessionCredentials } from "../api";
-import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError } from "../features/transport";
+import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError, saveTripEdit } from "../features/transport";
 import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
@@ -283,6 +283,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [editMode, setEditMode] = useState(false);
   const [editDraft, setEditDraft] = useState<TaskUpdateDraft>({});
   const editRef = useRef(editDraft);
+  const refreshTask = useCallback((t: TransportTask) => { setSelectedTask(t); setTasks(prev => prev.map(x => x.ID === t.ID ? t : x)); }, []);
   editRef.current = editDraft;
   const lastClickedIdxRef = useRef<number | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -897,10 +898,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     if (!selectedTask) return;
     setLoading(true);
     try {
-      await apiFetch(
-        `/api/admin/transport/tasks/${selectedTask.ID}`,
-        { method: "PATCH", body: JSON.stringify(editRef.current) }
-      );
+      await saveTripEdit(selectedTask, editRef.current);  // stored first; an unknown outcome stays until read back
       setEditMode(false);
       const updated = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${selectedTask.ID}`);
       setSelectedTask(updated);
@@ -2005,8 +2003,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     : <span>{selectedTask.PRIMECHANIE ?? "—"}</span>
                   }
                 </div>
-                {editMode && <VehicleChange key={selectedTask.ID} taskId={selectedTask.ID} reload={0} />}
+                <VehicleChange key={selectedTask.ID} taskId={selectedTask.ID} editing={editMode} onTask={refreshTask} />
               </div>
+
               {/* Sprint 74 — collapsible STs section */}
               {!tripDetailCollapsed && <>
 

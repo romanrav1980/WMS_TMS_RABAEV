@@ -1,0 +1,12 @@
+/* C-0167: the dispatcher on a narrow screen (390 px). The global body min-width (1440 px) is lifted only while the dispatcher is shown;
+   panels stack, wide ST/route tables scroll inside their own panel, the trip card and vehicle controls stay within the viewport.
+   Desktop (> 760 px) is unchanged. */
+@media (max-width: 760px) {
+  body:has(.dispatch-shell) { min-width: 0; }
+  .dispatch-shell { height: auto; min-height: 100vh; overflow: visible; }
+  .dispatch-workspace { flex-direction: column; overflow: visible; }
+  .dispatch-center { overflow: visible; width: 100%; }
+  .dispatch-trips-toolbar, .dispatch-trip-title-row, .dispatch-trip-meta-row, .dispatch-tabs { flex-wrap: wrap; }
+  .dispatch-trip-meta-row input, .dispatch-trip-meta-row select { max-width: 100%; min-width: 0; }
+  .dispatch-right-panel { width: auto; min-width: 0; border-left: 0; border-top: 1px solid #c8d8c8; }
+}

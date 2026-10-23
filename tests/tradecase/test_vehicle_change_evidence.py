@@ -34,8 +34,20 @@ def test_dispatcher_block_reads_only_and_explains_each_state():
 
 def test_dispatch_page_wiring_is_narrow():
     p = (UI / "components/TransportDispatchPage.tsx").read_text(encoding="utf-8")
-    assert "{editMode && <VehicleChange key={selectedTask.ID} taskId={selectedTask.ID} reload={0} />}" in p
-    assert "setError(vehicleChangeError(String(e)))" in p
+    assert "<VehicleChange key={selectedTask.ID} taskId={selectedTask.ID} editing={editMode} onTask={refreshTask} />" in p
+    assert "await saveTripEdit(selectedTask, editRef.current);" in p and "setError(vehicleChangeError(String(e)))" in p
     assert 'typeof b?.detail === "object" && b.detail ? JSON.stringify(b.detail)' in p  # no more "409: [object Object]"
     help_page = (ROOT / "admin/wms_admin_frontend/public/help/transport-vehicle-change.html").read_text(encoding="utf-8")
     assert "Рейс выехал" in help_page and "Открыть выгрузку рейса" in help_page and "одной кнопкой" in help_page
+
+
+def test_unknown_outcome_intent_rules():
+    s = (UI / "features/transport/vehicleEditIntent.ts").read_text(encoding="utf-8")
+    assert "localStorage.setItem(key, raw); if (localStorage.getItem(key) === raw)" in s  # stored and verified before sending
+    assert "if (readIntent(trip.ID)) throw" in s  # no new edit replaces an unresolved original
+    assert s.index("if (!intent.unknown) { settle(intent.trip_id, raw); throw e; }") < s.index("markUnknown(intent, raw);")
+    assert "operation_id" not in s  # a metadata SET: no invented operation id or exactly-once claim
+    v = (UI / "features/transport/VehicleChange.tsx").read_text(encoding="utf-8")
+    assert "disabled={busy || !readOk}" in v and v.count("disabled={busy || !readOk}") == 2  # retry/discard only after a successful read
+    css = (UI / "features/transport/dispatchNarrow.css").read_text(encoding="utf-8")
+    assert "@media (max-width: 760px)" in css and "body:has(.dispatch-shell) { min-width: 0; }" in css

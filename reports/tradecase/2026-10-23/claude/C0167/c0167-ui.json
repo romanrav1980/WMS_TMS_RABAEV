@@ -4,7 +4,7 @@
  "checks": [
   {
    "width": 1440,
-   "name": "LIVE dispatcher opens trip 33664 by deep link"
+   "name": "LIVE dispatcher opens trip 33664 on the tasks tab"
   },
   {
    "width": 1440,
@@ -16,11 +16,43 @@
   },
   {
    "width": 1440,
-   "name": "FIXTURE refusal in plain words; edit draft kept for retry (no [object Object])"
+   "name": "FIXTURE departed: change unavailable"
   },
   {
    "width": 1440,
-   "name": "FIXTURE departed: change unavailable"
+   "name": "FIXTURE first confirmed 409: plain refusal, no pending intent"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE 503 then reload: the original request survives and is read back as not saved"
+  },
+  {
+   "width": 1440,
+   "name": "a new edit is refused while the original is unresolved"
+  },
+  {
+   "width": 1440,
+   "name": "after an unknown outcome a later 409 keeps the original request"
+  },
+  {
+   "width": 1440,
+   "name": "readback shows the earlier attempt saved: resolved without a further PATCH"
+  },
+  {
+   "width": 1440,
+   "name": "retry sends the same bytes; success settles"
+  },
+  {
+   "width": 1440,
+   "name": "connection abort then reload: readback shows it saved, no second PATCH"
+  },
+  {
+   "width": 1440,
+   "name": "403: intent kept, server data not shown, retry/discard disabled until a successful read"
+  },
+  {
+   "width": 1440,
+   "name": "after rights return and a read: discard clears the intent"
   },
   {
    "width": 1440,
@@ -28,19 +60,19 @@
   },
   {
    "width": 1440,
-   "name": "local help answers 200"
+   "name": "local help answers 200 and covers the unknown outcome"
   },
   {
    "width": 1440,
-   "name": "the block adds no horizontal scroll (page baseline 0px)"
+   "name": "no horizontal page scroll; block and vehicle select within the viewport"
   },
   {
    "width": 1440,
-   "name": "FIXTURE 403 clears the places (no stale data)"
+   "name": "FIXTURE 403 on loading clears the places (no stale data)"
   },
   {
    "width": 390,
-   "name": "LIVE dispatcher opens trip 33664 by deep link"
+   "name": "LIVE dispatcher opens trip 33664 on the tasks tab"
   },
   {
    "width": 390,
@@ -52,11 +84,43 @@
   },
   {
    "width": 390,
-   "name": "FIXTURE refusal in plain words; edit draft kept for retry (no [object Object])"
+   "name": "FIXTURE departed: change unavailable"
   },
   {
    "width": 390,
-   "name": "FIXTURE departed: change unavailable"
+   "name": "FIXTURE first confirmed 409: plain refusal, no pending intent"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE 503 then reload: the original request survives and is read back as not saved"
+  },
+  {
+   "width": 390,
+   "name": "a new edit is refused while the original is unresolved"
+  },
+  {
+   "width": 390,
+   "name": "after an unknown outcome a later 409 keeps the original request"
+  },
+  {
+   "width": 390,
+   "name": "readback shows the earlier attempt saved: resolved without a further PATCH"
+  },
+  {
+   "width": 390,
+   "name": "retry sends the same bytes; success settles"
+  },
+  {
+   "width": 390,
+   "name": "connection abort then reload: readback shows it saved, no second PATCH"
+  },
+  {
+   "width": 390,
+   "name": "403: intent kept, server data not shown, retry/discard disabled until a successful read"
+  },
+  {
+   "width": 390,
+   "name": "after rights return and a read: discard clears the intent"
   },
   {
    "width": 390,
@@ -64,42 +128,39 @@
   },
   {
    "width": 390,
-   "name": "local help answers 200"
+   "name": "local help answers 200 and covers the unknown outcome"
   },
   {
    "width": 390,
-   "name": "the block adds no horizontal scroll (page baseline 1050px)"
+   "name": "no horizontal page scroll; block and vehicle select within the viewport"
   },
   {
    "width": 390,
-   "name": "FIXTURE 403 clears the places (no stale data)"
+   "name": "FIXTURE 403 on loading clears the places (no stale data)"
   }
  ],
  "writes": [],
  "errors": [],
- "patches": [
-  {
-   "transport": "-948-"
-  }
- ],
  "overflow": {
   "390": {
-   "page_before_block": 1050,
-   "page_with_block": 1050,
+   "page_before_block": 0,
+   "page_with_block": 0,
    "block": {
-    "right": 1219,
-    "width": 1260,
-    "client": 1260
-   }
+    "right": 382,
+    "scroll": 374,
+    "client": 374
+   },
+   "vehicle_select_right": 307
   },
   "1440": {
    "page_before_block": 0,
    "page_with_block": 0,
    "block": {
     "right": 1268,
-    "width": 1260,
+    "scroll": 1260,
     "client": 1260
-   }
+   },
+   "vehicle_select_right": 272
   }
  },
  "status": "PASS"
