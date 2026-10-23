@@ -30,11 +30,11 @@ def prepare():
         ship_from_stock=True, pick_step=p['pick_step']), method='PUT')
 
 
-def order(key, quantity, owner='SNS'):
+def order(key, quantity, min_osg_days=0):
     external = qa.TAG + '.' + key
     qa.send('doc_' + key, 'ORDER', external, dict(order_kind='OUTBOUND', recipient_id='C1', planned_ship_at=s['departure'],
-        lines=[dict(line_id='1', sku_id='A', source_owner_id=owner, target_owner_id=owner, mrc='200',
-                    quantity=str(quantity), uom='EA', min_osg_days=0)]))
+        lines=[dict(line_id='1', sku_id='A', source_owner_id='SNS', target_owner_id='SNS', mrc='200',
+                    quantity=str(quantity), uom='EA', min_osg_days=min_osg_days)]))
     return qa.native_order('native_' + key, external, quantity)
 
 
@@ -57,14 +57,14 @@ def run():
     assert qa.stock() == [(250, 20)]
     assert qa.query("select QTY,STATUS from RRL_STOCK_RESERVATION where POOL_WARE_ID=:w and SOURCE_LINE_ID=:r and RESERVATION_KIND='SOFT'order by RESERVATION_ID", w=qa.W, r=main['row']) == [(0, 'CONSUMED')]
     other = order('SHORT', 300)
-    incompatible = order('OWNER', 10, 'BLC')
+    incompatible = order('OSG', 10, 3650)
     current = qa.step('after_hard', qa.POOL, method='GET')
     assert current['available_quantity'] == '230', current
     assert current['allocations'][str(main['row'])] == '0'
     assert current['allocations'][str(other['row'])] == '230'
     assert current['allocations'][str(incompatible['row'])] == '0'
     blocked = next(x for x in current['orders'] if x['line_id'] == incompatible['row'])
-    assert blocked['pool_reason'] == 'TRADE_ORDER_OWNER_MISMATCH', blocked
+    assert blocked['pool_reason'] == 'TRADE_ORDER_OSG_NOT_MET', blocked
     qa.step('short_allocated', qa.POOL + '/allocate', dict(operation_id=qa.TAG + '.short'))
     if 'concurrency' not in s:
         bodies = [dict(operation_id=qa.TAG + '.parallel.' + str(i)) for i in range(2)]
@@ -75,7 +75,7 @@ def run():
         assert all(x[0] == 200 for x in results), results
     assert qa.stock() == [(250, 20)]
     assert qa.query("select sum(QTY)from RRL_STOCK_RESERVATION where POOL_WARE_ID=:w and ARTICUL=:a and RESERVATION_KIND='SOFT'and STATUS in('ACTIVE','ALLOCATED')", w=qa.W, a=qa.ARTICLE) == [(230,)]
-    s['checks'].append('20 consumed once at launch; 230 shared from remaining stock; incompatible owner0; concurrent recalculations did not duplicate shares')
+    s['checks'].append('20 consumed once at launch; 230 shared from remaining stock; incompatible expiry0; concurrent recalculations did not duplicate shares')
     s['status'] = 'BUSINESS_PASS_CLEANUP_REQUIRED'; qa.save()
     cleanup()
 
@@ -86,7 +86,7 @@ def cleanup():
         assert qa.query('select count(*)from RRL_CASE_CARRIER_LOT where CASE_PICK_TASK_ID=:t', t=task) == [(0,)]
         qa.step('empty_' + str(task), f'/api/case-pick/tasks/{task}/return-carrier', dict(operation_id=qa.TAG + '.empty.' + str(task),
             scan_container=sscc, expected_content_version=version, destinations={}, allow_empty=True, reason='Cancel own empty carrier'))
-    for key in ('MAIN', 'SHORT', 'OWNER'):
+    for key in ('MAIN', 'SHORT', 'OSG'):
         if 'doc_' + key in s['results']:
             body = s['requests']['doc_' + key]['body']['payload']
             qa.send('cancel_' + key, 'ORDER', qa.TAG + '.' + key, dict(body, cancelled=True), 2)
