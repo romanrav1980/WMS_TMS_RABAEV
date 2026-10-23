@@ -1,8 +1,8 @@
 whenever sqlerror exit failure rollback
 declare begin if user<>'RABAEV' or sys_context('USERENV','SERVICE_NAME')<>'orcl' then raise_application_error(-20999,'WRONG_TARGET');end if;end;
 /
--- Recorded parts are working history: once any part exists the rollback refuses instead of deleting it.
-declare n number;begin select count(*)into n from RRL_TRADE_SUPPLY_PART;if n<>0 then raise_application_error(-20999,'SUPPLY_PART_HISTORY_PRESENT');end if;end;
+-- END before the first part is working history too; never erase any transfer.
+declare n number;begin select count(*)into n from RRL_TRADE_SUPPLY_TRANSFER;if n<>0 then raise_application_error(-20999,'SUPPLY_PART_HISTORY_PRESENT');end if;end;
 /
 drop package RRL_TRADE_SUPPLY_PARTS_API;
 drop trigger RRL_TRADE_SUPPLY_PART_APPEND;

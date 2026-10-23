@@ -10,6 +10,7 @@ create table RRL_TRADE_SUPPLY_TRANSFER(
  DELIVERED_EVENT_ID varchar2(100),DELIVERY_RESULT clob,CREATED_BY varchar2(50)not null,
  CREATED_AT timestamp with time zone default systimestamp not null,UPDATED_AT timestamp with time zone default systimestamp not null,
  constraint RRL_TRADE_SUPPLY_TRANSFER_PK primary key(WARE_ID,SOURCE_ID,TRANSFER_ID),
+ constraint RRL_TRADE_SUPPLY_TRANSFER_END_EV unique(WARE_ID,SOURCE_ID,END_EVENT_ID),
  constraint RRL_TRADE_SUPPLY_TRANSFER_ST check(STATUS in('OPEN','MISMATCH','COMPLETE','DELIVERED','DELIVERY_REJECTED','SUPERSEDED')),
  constraint RRL_TRADE_SUPPLY_TRANSFER_PC check(PART_COUNT between 1 and 1000 and PART_COUNT=trunc(PART_COUNT)),
  constraint RRL_TRADE_SUPPLY_TRANSFER_VER check(VERSION_NO>0 and VERSION_NO=trunc(VERSION_NO)),

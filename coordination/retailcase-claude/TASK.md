@@ -9,3 +9,7 @@
 C0159 RELEASE b664f757 принят root20compiled UI проверками1440/390. Root теперь правит shift risks.ts/WaveCard.tsx: убирает технические коды/пустые подписи и направляет действие к конкретному CASE task_id. Эти пути не трогай. C0158 план ворот принят native/API/compiledUI ранее.
 
 Root выполняет настоящую Oracle/API приёмку. Native не применять, stock fixtures не создавать, API не перезапускать, dist не собирать. SAP/SAP_INTEGRATION не публиковать. Нового поручения на GitHub нет.
+
+C0163 RELEASE received; before apply, do rev1 corrections in CODEX_TO_CLAUDE: END before first with repeated header, slash-safe deliver, explicit existing1MB bound. Root accepts C0162 in parallel. This is correction of C0163, no new request.
+
+4. C0163rev1 RELEASE received: root accepts its native/API. Begin registered26 TASK_C0164_COMPOSITION_ACK.md; inspect existing outgoing acknowledgment before adding anything. Root owns C0163 kit during apply.

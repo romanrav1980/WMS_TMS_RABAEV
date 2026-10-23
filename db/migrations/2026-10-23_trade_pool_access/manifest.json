@@ -1,37 +1,39 @@
 {
- "target": "RABAEV/orcl",
- "migration_id": "2026-10-23-trade-pool-access",
- "revision": "C-0162",
- "status": "NOT_APPLIED",
- "applied_by_claude": false,
- "shared_objects_changed": {
-  "RRL_STOCK_POOL_CMD (PACKAGE)": "+procedure assert_access",
-  "RRL_STOCK_POOL_CMD (PACKAGE BODY)": "require_edit = RRL_ACCESS_API.allowed(stock_reservation_edit, WAREHOUSE of the plan) instead of RRL_HAS_WRIGHT; assert_access = warehouse right + operate on owners of the recorded trade plan",
-  "RRL_STOCK_POSTING_API (PACKAGE BODY)": "+1 line: RESERVATION_ALLOCATE_POOL calls RRL_STOCK_POOL_CMD.assert_access among the scope hooks before the committed-replay branch; posting, planning and locks of other commands unchanged"
- },
- "before_sha256": {
-  "RRL_STOCK_POOL_CMD:PACKAGE": "E1091C7662A9EFBE69E56CD6FF99CD783945B56C8F1B1CC75EC449DBE6DE57D9",
-  "RRL_STOCK_POOL_CMD:PACKAGE BODY": "4ABD6C109C87870EF6D042B1F03D25FE7A60F64E7E58EB4A39DA1C45F4DE796F",
-  "RRL_STOCK_POSTING_API:PACKAGE BODY": "6DAA16DD11152C696B6B20D5E10247BF59F36D2E94BB08489402516D0082BC81"
- },
- "after_sha256": {
-  "RRL_STOCK_POOL_CMD:PACKAGE": "769D85923F70ED3F013445588657B17140166FC526B88D988A7CBF8F2528F0C8",
-  "RRL_STOCK_POOL_CMD:PACKAGE BODY": "5CB7000E457D8C5BF8D9BDA4BF820BA62F74DF243E1BDA2511E573EC74B62652",
-  "RRL_STOCK_POSTING_API:PACKAGE BODY": "EB97721019B0177F4077C6DF224F3707D10F51DAFCD104EF0EE78D83FE56FA48"
- },
- "evidence": "reports/tradecase/2026-10-23/claude/C0162/candidate-live.json (READ ONLY anonymous blocks)",
- "files_sha256": {
-  "000_preflight.sql": "7bcf2fad282268928dae5f4b127a8a27a6c69a3a5904599bb6f547a5e5ada2af",
-  "001_pool_cmd_spec.sql": "6da08634e793d31e004d57097b6645b41420ba7bd242b27621fd313f278ab1b8",
-  "002_pool_cmd_body.sql": "0a809a63159ecc396acb0116233f2e7b90545bc2a6e2b15e937f5f6c0d5f0ab7",
-  "003_posting_api_body.sql": "1c1e33f0aa2906942bf138855ea7dd672044c68439bae306daede812980641ae",
-  "apply.sql": "4f9cbe403a5055e0b0cf0ac8755853ebea3e8f2ce7c2376ea3083d82d6b0aa33",
-  "before_pool_cmd_body.sql": "b83c3366393c27751f686a19916b1e719ffecfce0c80d1c9cea865d4f7b4d085",
-  "before_pool_cmd_spec.sql": "1fb475e1542742f4efc14645a91740e3e783350fd28dd5ea4999c05fb3dff57c",
-  "before_posting_api_body.sql": "27f0dfd826d374d1fe3b985795b13ae3c7f6c6b9099dc5d744d2391aadfbefac",
-  "recompile.sql": "bd7dcaaa6ab07837099a9e5c38e21c87b0b740dce62a291bec24892eaf07fda1",
-  "rollback.sql": "e30c0528d74b28fab04ed2fcb633f9cfccc4b7949ca08a202fea187c7232d539",
-  "rollback_verify.sql": "b3fa0fd6d5349139ccb458d8bb822207e2471b0264a98ff82daf02277c7dd225",
-  "verify.sql": "b1aacc63f256e46b60058fcc22ab933244e959710b21080dd802f15ecdabadb8"
- }
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-23-trade-pool-access",
+  "revision": "C-0162",
+  "status": "APPLIED",
+  "applied_by_claude": false,
+  "shared_objects_changed": {
+    "RRL_STOCK_POOL_CMD (PACKAGE)": "+procedure assert_access",
+    "RRL_STOCK_POOL_CMD (PACKAGE BODY)": "require_edit = RRL_ACCESS_API.allowed(stock_reservation_edit, WAREHOUSE of the plan) instead of RRL_HAS_WRIGHT; assert_access = warehouse right + operate on owners of the recorded trade plan",
+    "RRL_STOCK_POSTING_API (PACKAGE BODY)": "+1 line: RESERVATION_ALLOCATE_POOL calls RRL_STOCK_POOL_CMD.assert_access among the scope hooks before the committed-replay branch; posting, planning and locks of other commands unchanged"
+  },
+  "before_sha256": {
+    "RRL_STOCK_POOL_CMD:PACKAGE": "E1091C7662A9EFBE69E56CD6FF99CD783945B56C8F1B1CC75EC449DBE6DE57D9",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "4ABD6C109C87870EF6D042B1F03D25FE7A60F64E7E58EB4A39DA1C45F4DE796F",
+    "RRL_STOCK_POSTING_API:PACKAGE BODY": "6DAA16DD11152C696B6B20D5E10247BF59F36D2E94BB08489402516D0082BC81"
+  },
+  "after_sha256": {
+    "RRL_STOCK_POOL_CMD:PACKAGE": "769D85923F70ED3F013445588657B17140166FC526B88D988A7CBF8F2528F0C8",
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "5CB7000E457D8C5BF8D9BDA4BF820BA62F74DF243E1BDA2511E573EC74B62652",
+    "RRL_STOCK_POSTING_API:PACKAGE BODY": "EB97721019B0177F4077C6DF224F3707D10F51DAFCD104EF0EE78D83FE56FA48"
+  },
+  "evidence": "reports/tradecase/2026-10-23/claude/C0162/candidate-live.json (READ ONLY anonymous blocks)",
+  "files_sha256": {
+    "000_preflight.sql": "7bcf2fad282268928dae5f4b127a8a27a6c69a3a5904599bb6f547a5e5ada2af",
+    "001_pool_cmd_spec.sql": "6da08634e793d31e004d57097b6645b41420ba7bd242b27621fd313f278ab1b8",
+    "002_pool_cmd_body.sql": "0a809a63159ecc396acb0116233f2e7b90545bc2a6e2b15e937f5f6c0d5f0ab7",
+    "003_posting_api_body.sql": "1c1e33f0aa2906942bf138855ea7dd672044c68439bae306daede812980641ae",
+    "apply.sql": "4f9cbe403a5055e0b0cf0ac8755853ebea3e8f2ce7c2376ea3083d82d6b0aa33",
+    "before_pool_cmd_body.sql": "b83c3366393c27751f686a19916b1e719ffecfce0c80d1c9cea865d4f7b4d085",
+    "before_pool_cmd_spec.sql": "1fb475e1542742f4efc14645a91740e3e783350fd28dd5ea4999c05fb3dff57c",
+    "before_posting_api_body.sql": "27f0dfd826d374d1fe3b985795b13ae3c7f6c6b9099dc5d744d2391aadfbefac",
+    "recompile.sql": "bd7dcaaa6ab07837099a9e5c38e21c87b0b740dce62a291bec24892eaf07fda1",
+    "rollback.sql": "e30c0528d74b28fab04ed2fcb633f9cfccc4b7949ca08a202fea187c7232d539",
+    "rollback_verify.sql": "b3fa0fd6d5349139ccb458d8bb822207e2471b0264a98ff82daf02277c7dd225",
+    "verify.sql": "b1aacc63f256e46b60058fcc22ab933244e959710b21080dd802f15ecdabadb8"
+  },
+  "applied_by_root": true,
+  "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T08/trade-pool-access-native-result.json"
 }

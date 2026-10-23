@@ -16,14 +16,16 @@
       {method,headers:auth().headers(body?{"Content-Type":"application/json"}:{}),body:body?JSON.stringify(body):undefined});
     const data=await response.json();
     if(!response.ok) {
+      if(response.status===401||response.status===403){policy=null;e("poolRows").replaceChildren();e("poolAvailable").textContent="Данные пула недоступны.";}
       const error=Error(typeof data.detail==="string"?data.detail:JSON.stringify(data.detail));
+      error.status=response.status;
       error.confirmed=response.status<500 && data.detail?.outcome_confirmed!==false;
       throw error;
     }
     return data;
   }
   function render(data) {
-    e("poolAvailable").textContent="Доступно "+data.available_quantity+" "+data.unit+
+    e("poolAvailable").textContent=(data.complete===false?"Показана доступная вам часть пула; общий остаток скрыт":"Доступно "+data.available_quantity+" "+data.unit)+
       (data.from_stock?" · обеспечение из наличия":" · плановое обеспечение")+" · предпросмотр";
     const rows=e("poolRows");rows.replaceChildren();
     for(const order of data.orders) {
@@ -36,10 +38,14 @@
   }
   async function load() {
     const s=selected(), token=++serial;selection=s;policy=null;
-    const [p,pool]=await Promise.all([request("/api/sku-allocation"+path(s)),request("/api/inventory/soft-pools"+path(s))]);
+    e("poolRows").replaceChildren();e("poolAvailable").textContent="Загрузка…";
+    for(const id of ["poolClass","poolFlag","poolStep"])e(id).value="";
+    const [p,pool]=await Promise.all([request("/api/sku-allocation"+path(s)).catch(error=>{if(error.status===403)return null;throw error;}),request("/api/inventory/soft-pools"+path(s))]);
     if(token!==serial)return;
+    render(pool);
+    if(!p){msg("Настройка обеспечения недоступна. Показаны разрешённые строки пула.");return;}
     policy=p;e("poolClass").value=p.stock_class;e("poolFlag").value=p.ship_from_stock===null?"":String(p.ship_from_stock);
-    e("poolStep").value=p.pick_step;render(pool);
+    e("poolStep").value=p.pick_step;
     msg(p.policy_version===0?"Сначала сохраните ячейку отбора товара в настройках приёмки.":"Версия настройки "+p.policy_version+". Мягкий резерв не закрепляет паллету и не увеличивает жёсткий резерв.");
   }
   async function save() {
@@ -51,6 +57,7 @@
   }
   async function allocate() {
     let pending=JSON.parse(localStorage.getItem(key)||"null");
+    const retrying=Boolean(pending);
     const s=selected();
     if(pending&&JSON.stringify(s)!==JSON.stringify(pending.selection))throw Error("Сначала повторите незавершённый расчёт склада "+pending.selection.warehouse+", товара "+pending.selection.article+".");
     if(!pending){pending={selection:s,body:{operation_id:"POOL.UI:"+crypto.randomUUID()}};localStorage.setItem(key,JSON.stringify(pending));}
@@ -58,7 +65,7 @@
       const result=await request("/api/inventory/soft-pools"+path(s)+"/allocate","POST",pending.body);
       localStorage.removeItem(key);await load();
       msg("Расчёт сохранён: "+result.allocated_quantity+" "+result.unit+". Операция "+result.operation_id);
-    } catch(error){if(error.confirmed)localStorage.removeItem(key);throw error;}
+    } catch(error){if(error.confirmed&&!retrying)localStorage.removeItem(key);throw error;}
   }
   function action(id,permission,fn) {
     e(id).addEventListener("click",async()=>{

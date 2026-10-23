@@ -102,7 +102,7 @@ def test_kit_gates_basis_and_lock_order():
 
 def test_kit_hashes_and_live_evidence():
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False
+    assert m["status"] in ("NOT_APPLIED", "APPLIED") and m["applied_by_claude"] is False
     for v in m["before_sha256"].values():
         assert v in text("000_preflight.sql") and v in text("rollback_verify.sql")
     for v in m["after_sha256"].values():

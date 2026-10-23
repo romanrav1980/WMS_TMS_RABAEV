@@ -136,7 +136,7 @@ def test_pool_command_rights_and_replay_owner_check():
 
 def test_kit_hashes_and_live_evidence():
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False
+    assert m["status"] in ("NOT_APPLIED", "APPLIED") and m["applied_by_claude"] is False
     assert m["before_sha256"]["RRL_STOCK_POOL_CMD:PACKAGE BODY"] == "4ABD6C109C87870EF6D042B1F03D25FE7A60F64E7E58EB4A39DA1C45F4DE796F"
     for v in m["before_sha256"].values():
         assert v in text("000_preflight.sql") and v in text("rollback_verify.sql")

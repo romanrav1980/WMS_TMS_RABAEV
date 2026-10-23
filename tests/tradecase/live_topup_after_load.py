@@ -194,15 +194,16 @@ def prove_topup():
     saved = qa.step('topup_saved', qa.TRIP + '/topup-proposals', dict(operation_id=qa.TAG + '.topup.save',
         need_ids=[qa.TAG + '.LOAD_NEED'], max_age_minutes=1440), qa=True)
     proposal = saved['proposals'][0]
-    assert proposal['approved_boxes'] == 4, saved
+    assert proposal['approved_boxes'] == 2, saved
+    assert proposal['calculation']['limited_by'] == 'CAPACITY'
     s['proposal'] = proposal['proposal_id']; qa.save()
     confirmed = qa.step('topup_confirmed', qa.TRIP + f"/topup-proposals/{s['proposal']}/confirm",
         dict(operation_id=qa.TAG + '.topup.confirm', expected_version=proposal['version']), qa=True)
     request = s['requests']['topup_confirmed']
     assert qa.expect(200, qa.http('POST', request['path'], request['body'], s['actor'], s['password'])) == confirmed
     s['stock_after_confirm'] = qa.stock()
-    assert s['stock_after_confirm'] == [(230, 60)], s['stock_after_confirm']
-    s['checks'].append('Actual one of two cartons loaded: main40 counted once; top-up4BOX/HARD40 confirmed and replayed without new hold')
+    assert s['stock_after_confirm'] == [(230, 40)], s['stock_after_confirm']
+    s['checks'].append('Actual one of two cartons loaded: main40 counted once; capacity admits2 of4BOX, HARD20 confirmed/replayed without new hold')
     qa.step('topup_released', qa.TRIP + f"/topup-proposals/{s['proposal']}/release",
         dict(operation_id=qa.TAG + '.topup.release', expected_version=confirmed['version']), qa=True)
     saved2 = qa.step('before_unload_saved', qa.TRIP + '/topup-proposals', dict(operation_id=qa.TAG + '.before.unload',
@@ -248,6 +249,100 @@ def cleanup_empty():
     s['status'] = 'EMPTY_PREPARATION_CLOSED'; qa.save()
 
 
+def cleanup_full():
+    assert qa.query("select count(*)from RRL_TT_HU_LOAD_FACT where TT_ID=:t and STATUS in('LOADED','DEPARTED')", t=s['native_task']) == [(0,)]
+    qa.step('native_cancelled', f"/api/admin/transport/tasks/{s['native_task']}/cancel")
+    for i in range(2):
+        own = configure_case(i); key = 'case' + str(i)
+        sscc, version = qa.query('select SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t', t=own['case'])[0]
+        destinations = dict(qa.query('select lot.LOT_UID,l.CELL_CODE from RRL_CASE_CARRIER_LOT lot join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=lot.CASE_PICK_LINE_ID where lot.CASE_PICK_TASK_ID=:t', t=own['case']))
+        qa.step(key + '_returned', f"/api/case-pick/tasks/{own['case']}/return-carrier", dict(operation_id=qa.TAG + '.' + key + '.return',
+            scan_container=sscc, expected_content_version=version, destinations=destinations))
+        qa.step(key + '_logout', f"/api/resources/sessions/{own['session']['id']}/logout", dict(reason='End owned partial-load proof'))
+        qa.step(key + '_owner_retired', qa.BASE + '/stock/owner-grants', dict(operation_id=qa.TAG + '.' + key + '.owner.retire',
+            expected_version=1, username=own['actor'], owner_id='SNS', can_view=False, can_operate=False, reason='End owned partial-load proof'), method='PUT')
+        qa.step(key + '_qualification_off', f"/api/resources/{own['resource']['id']}/qualifications", dict(task_type='CASE_PICK', active=False), method='PUT')
+        qa.step(key + '_book_cancelled', '/api/inventory/tare/book-cancel', dict(operation_id=qa.TAG + '.' + key + '.book.cancel',
+            booking_operation_id=own['tare_book']['operation_id']))
+        qa.step(key + '_finished', f"/api/picking/waves/{own['wave']}/finish-execution", dict(operation_id=qa.TAG + '.' + key + '.finish',
+            disposition='RETURNED_TO_PLANNING', reason='Actual picked goods returned; no departure'))
+        with qa.oracle_connection() as conn:
+            q = conn.cursor(); q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=own['actor'])
+            q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:a and REVOKED_AT is null', a=own['actor']); conn.commit()
+    assert qa.stock() == [(250, 0)]
+    grain = qa.query('select r.UID_POLETA,r.CELL,r.REMAIN from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0 order by r.UID_POLETA,r.CELL', w=qa.W)
+    if 'restore_targets' not in s:
+        returned = [uid for uid, _, _ in grain if uid != '690000000445629982']
+        assert len(returned) == 2 and len(grain) == 3
+        s['restore_targets'] = dict(zip(returned, ['ALS' + qa.TAG[-9:] + str(i) for i in range(2)]))
+        s['restore_targets']['690000000445629982'] = 'T3S089ddb36'; qa.save()
+    for target in s['restore_targets'].values():
+        if target == 'T3S089ddb36':
+            continue
+        with qa.oracle_connection() as conn:
+            q = conn.cursor(); q.callproc('RRL_STOCK_CONFIG_API.begin_change', ['admin', 'warehouse_settings_edit'])
+            try:
+                q.execute('select WARE_ID from RRL_CELLS where CELL=:c', c=target); old = q.fetchone()
+                if old:
+                    assert old == (qa.W,)
+                else:
+                    q.execute('insert into RRL_CELLS(CELL,WARE_ID,X,Y,Z,OTBOR,IS_SYSTEM,LIMIT_WEIGHT,LIMIT_HEIGHT)values(:c,:w,11,11,0,0,0,0,0)', c=target, w=qa.W)
+                    q.execute("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('CELL',:c),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD", c=target)
+                conn.commit()
+            finally:
+                q.callproc('RRL_STOCK_CONFIG_API.end_change')
+        qa.step('storage_policy_' + target, qa.BASE + '/stock/cells/' + target, dict(operation_id=qa.TAG + '.' + target,
+            expected_version=0, zone_kind='STORAGE', reason='Store returned own CASE lots without merging identities'), method='PUT')
+    for uid, cell, qty in grain:
+        target = s['restore_targets'][uid]
+        if cell == target:
+            continue
+        chosen = {}
+        for key, system, raw, profiles in qa.query("select u.PHYSICAL_UNIT_KEY,c.SYSTEM_CODE,c.RAW_CODE,c.PROFILES_JSON from RRL_WMS_RECEIPT_UNIT u join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID where u.CURRENT_UID=:u and u.CURRENT_CELL=:c and u.STOCK_STATUS='AVAILABLE'order by u.PHYSICAL_UNIT_KEY,c.SYSTEM_CODE", u=uid, c=cell):
+            profiles = json.loads(profiles) if isinstance(profiles, str) else profiles
+            chosen.setdefault(key, dict(system_code=system, profile_code=profiles[0]['profile'], code=raw))
+        assert len(chosen) == qty, (uid, qty, len(chosen))
+        qa.step('restore_storage_' + uid, qa.BASE + '/stock/sort', dict(operation_id=qa.TAG + '.storage.' + str(len(s['requests'])),
+            source_pallet=uid, source_cell=cell, target_cell=target, scans=list(chosen.values())))
+    qa.send('trip_cancelled', 'TRIP', qa.TAG, dict(s['requests']['trip_v3']['body']['payload'], cancelled=True), 4)
+    for key, suffix in [('primary_doc', '.MAIN'), ('second_doc', '.SECOND')]:
+        qa.send('cancel_after_trip_' + key, 'ORDER', qa.TAG + suffix, dict(s['requests'][key]['body']['payload'], cancelled=True), 2)
+    qa.step('pool_cleaned', qa.POOL + '/allocate', dict(operation_id=qa.TAG + '.pool.cleaned'))
+    policy = qa.expect(200, qa.http('GET', qa.POLICY)); before = s['policy_before']
+    qa.step('policy_restored', qa.POLICY, dict(expected_version=policy['policy_version'], stock_class=before['stock_class'],
+        ship_from_stock=before['ship_from_stock'], pick_step=before['pick_step']), method='PUT')
+    qa.step('settings_restored', f'/api/receiving/warehouses/{qa.W}/settings', s['settings_before'], method='PUT')
+    balances = qa.expect(200, qa.http('GET', f'/api/inventory/tare/warehouses/{qa.W}/balances'))
+    balance = next(b for b in balances if b['pallet_type_id'] == 33 and b['custodian_kind'] == 'WAREHOUSE' and b['condition_code'] == 'GOOD')
+    qa.step('tare_restored', '/api/inventory/tare/count', dict(operation_id=qa.TAG + '.tare.restore', owner_ware_id=qa.W,
+        pallet_type_id=33, condition='GOOD', observed_quantity=str(s['tare_before']['quantity']), expected_version=balance['balance_version'],
+        reason='Restore prior unbooked synthetic carton balance', decision_reference='TEST_RESTORE:' + qa.TAG))
+    current = qa.expect(200, qa.http('GET', f'/api/sku-quality-weight/{qa.W}/{qa.ARTICLE}')); before = s['weight_before']
+    qa.step('weight_restored', f'/api/sku-quality-weight/{qa.W}/{qa.ARTICLE}', dict(expected_version=current['version'],
+        base_uom=before['base_uom'] or 'EA', base_weight_kg=before['base_weight_kg'], box_weight_kg=before['box_weight_kg']), method='PUT')
+    current = qa.expect(200, qa.http('GET', '/api/admin/transport/vehicles/10125/profile')); p = s['vehicle_before']['profile']
+    qa.step('vehicle_restored', '/api/admin/transport/vehicle-profiles', dict(operation_id=qa.TAG + '.vehicle.restore', vehicle_id=10125,
+        expected_source_hash=current['base_hash'], expected_version=current['version'], vehicle_size_class=p['vehicle_size_class'],
+        cargo_length_mm=p['cargo_length_mm'], cargo_width_mm=p['cargo_width_mm'], cargo_height_mm=p['cargo_height_mm'],
+        outer_height_mm=p['outer_height_mm'], outer_length_mm=p['outer_length_mm'], floor_variants=p['floor_capacity']['variants'],
+        reason='Restore prior synthetic vehicle profile after unloading', evidence_reference='TEST_RESTORE:' + qa.TAG))
+    qa.step('owner_retired', qa.BASE + '/stock/owner-grants', dict(operation_id=qa.TAG + '.owner.retire', expected_version=1,
+        username=s['actor'], owner_id='SNS', can_view=False, can_operate=False, reason='End own top-up proof'), method='PUT')
+    with qa.oracle_connection() as conn:
+        q = conn.cursor(); q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='QA_ONLY'", a=s['actor'])
+        q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:a and REVOKED_AT is null', a=s['actor']); conn.commit()
+    assert qa.stock() == [(250, 0)]
+    assert qa.query("select count(*)from USER_OBJECTS where STATUS='INVALID'") == [(0,)]
+    original = json.loads((qa.ROOT / 'runtime/test-evidence/tradecase/2026-10-23/T11/paper-wave-state.json').read_text(encoding='utf-8'))['before_units']
+    current = qa.query('select a.PHYSICAL_UNIT_KEY,u.CURRENT_UID,u.CURRENT_CELL,u.STOCK_STATUS,u.HARD_RESERVATION_ID,a.OWNER_ID,a.MRC,a.EXPIRY_DATE,a.MARK_STATE from RRL_TRADE_STOCK_ATTR a join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=a.PHYSICAL_UNIT_KEY where a.CAPTURE_WARE_ID=:w order by a.PHYSICAL_UNIT_KEY', w=qa.W)
+    assert len(current) == 250 and all(r[2] in s['restore_targets'].values() and r[3] == 'AVAILABLE' and r[4] is None for r in current)
+    attributes = lambda rows: [[r[i] for i in (0, 5, 6, 7, 8)] for r in rows]
+    assert json.loads(json.dumps(attributes(current), default=str)) == attributes(original)
+    s['restored_stock_grain'] = qa.query('select r.UID_POLETA,r.CELL,r.REMAIN,r.HARD_RESERVED_BASE from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0 order by r.UID_POLETA,r.CELL', w=qa.W)
+    s['slow_sql'] = qa.query('select LOG_ID,ELAPSED_MS,API_PATH,SQL_TEXT from RRL_SQL_SLOW_LOG where LOG_ID>:n order by ELAPSED_MS desc fetch first 30 rows only', n=s['slow_marker'])
+    s['status'] = 'PASS'; s.pop('error', None); qa.save()
+
+
 if __name__ == '__main__':
     s['previous_calls'] = s.get('calls', [])
     try:
@@ -259,6 +354,8 @@ if __name__ == '__main__':
             load_one()
         elif sys.argv[-1] == 'prove':
             prove_topup()
+        elif sys.argv[-1] == 'cleanup':
+            cleanup_full()
         elif sys.argv[-1] == 'cleanup-empty':
             cleanup_empty()
         else:

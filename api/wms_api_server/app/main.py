@@ -85,8 +85,8 @@ app.dependency_overrides[inventory_receiving.investigation_edit]=require_permiss
 app.dependency_overrides[inventory_receiving.camera_edit]=require_permission("warehouse_settings_edit")
 app.dependency_overrides[inventory_receiving.investigation_service]=inventory_receiving.build_short_investigation
 app.include_router(inventory_receiving.pool_router)
-app.dependency_overrides[inventory_receiving.pool_view]=require_permission("stock_reservation_view")
-app.dependency_overrides[inventory_receiving.pool_edit]=require_permission("stock_reservation_edit")
+app.dependency_overrides[inventory_receiving.pool_view]=get_current_user
+app.dependency_overrides[inventory_receiving.pool_edit]=get_current_user
 app.dependency_overrides[inventory_receiving.pool_service]=inventory_receiving.build_pool_service
 app.include_router(sku_receiving.allocation_router)
 app.dependency_overrides[sku_receiving.allocation_policy_view]=require_permission("stock_reservation_view")

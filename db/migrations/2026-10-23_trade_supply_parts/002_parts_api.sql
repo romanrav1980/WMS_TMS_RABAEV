@@ -85,6 +85,8 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
   if j.get_number('warehouse_id')<>p_ware then fail('SOURCE_MISMATCH');end if;
   site:=lock_site(p_ware,p_actor,'tradecase_import',src);
   require_owner(p_actor,p_ware,header,1);
+  select count(*)into total from RRL_TRADE_SUPPLY_TRANSFER where WARE_ID=p_ware and SOURCE_ID=src and END_EVENT_ID=ev;
+  if total>0 then fail('SUPPLY_PART_EVENT_CONFLICT');end if;
   -- Exact replay of a recorded part (by event) answers the current transfer state; another body under that event is refused.
   begin select PART_HASH,PART_NO into prior_hash,prior_part from RRL_TRADE_SUPPLY_PART where WARE_ID=p_ware and SOURCE_ID=src and EVENT_ID=ev;
    if prior_hash<>ph then fail('SUPPLY_PART_EVENT_CONFLICT');end if;
@@ -97,10 +99,9 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
    insert into RRL_TRADE_SUPPLY_TRANSFER(WARE_ID,SOURCE_ID,TRANSFER_ID,DOCUMENT_ID,VERSION_NO,PART_COUNT,HEADER_JSON,HEADER_HASH,STATUS,CREATED_BY)
     values(p_ware,src,tr,doc,ver,cnt,header,hh,'OPEN',p_actor);
   end;
-  -- The same part number with the same codes (other event id) is a repeat; with other codes it is a conflict.
+  -- Retransmission keeps its event id; another event cannot reuse the recorded part number.
   begin select PART_HASH into prior_hash from RRL_TRADE_SUPPLY_PART where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr and PART_NO=part;
-   if prior_hash<>ph then fail('SUPPLY_PART_CONFLICT');end if;
-   p_result:=state(p_ware,src,tr,true);return;
+   fail('SUPPLY_PART_CONFLICT');
   exception when no_data_found then null;end;
   select nvl(sum(CODE_COUNT),0)into total from RRL_TRADE_SUPPLY_PART where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr;
   if total+ncodes>10000 then fail('SUPPLY_PART_CODE_LIMIT');end if;
@@ -117,11 +118,16 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
   eh varchar2(64):=j.get_string('end_hash');tot number:=j.get_number('total_codes');csha varchar2(64):=j.get_string('codes_sha256');
   occ varchar2(40):=j.get_string('occurred_at');doc varchar2(100):=j.get_string('document_id');ver number:=j.get_number('version');
   cnt number:=j.get_number('part_count');hh varchar2(64):=j.get_string('header_hash');header clob:=j.get_object('header').to_clob;
+  event_count number;
   -- JSON object methods never inside SQL (ORA-40573)
  begin
   if j.get_number('warehouse_id')<>p_ware then fail('SOURCE_MISMATCH');end if;
   site:=lock_site(p_ware,p_actor,'tradecase_import',src);
   require_owner(p_actor,p_ware,header,1);  -- END repeats the SUPPLY header, so the owner is known even before the first part
+  select count(*)into event_count from RRL_TRADE_SUPPLY_PART where WARE_ID=p_ware and SOURCE_ID=src and EVENT_ID=ev;
+  if event_count>0 then fail('SUPPLY_PART_EVENT_CONFLICT');end if;
+  select count(*)into event_count from RRL_TRADE_SUPPLY_TRANSFER where WARE_ID=p_ware and SOURCE_ID=src and END_EVENT_ID=ev and TRANSFER_ID<>tr;
+  if event_count>0 then fail('SUPPLY_PART_EVENT_CONFLICT');end if;
   begin select*into t from RRL_TRADE_SUPPLY_TRANSFER where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr for update;
    if t.END_EVENT_ID is not null then
     if t.END_EVENT_ID=ev and t.END_HASH=eh then p_result:=state(p_ware,src,tr,true);return;end if;
@@ -139,6 +145,7 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
   end;
   evaluate(p_ware,src,tr);
   p_result:=state(p_ware,src,tr,false);
+ exception when dup_val_on_index then fail('SUPPLY_PART_EVENT_CONFLICT');
  end;
 
  procedure assembled(p_ware number,p_actor nvarchar2,p_source varchar2,p_transfer varchar2,p_result out clob)is
@@ -164,6 +171,7 @@ create or replace package body RRL_TRADE_SUPPLY_PARTS_API as
  begin
   site:=lock_site(p_ware,p_actor,'tradecase_import',src);
   select*into t from RRL_TRADE_SUPPLY_TRANSFER where WARE_ID=p_ware and SOURCE_ID=src and TRANSFER_ID=tr for update;
+  require_owner(p_actor,p_ware,t.HEADER_JSON,1);
   if t.STATUS in('DELIVERED','DELIVERY_REJECTED')then
    if t.DELIVERED_EVENT_ID<>ev then fail('SUPPLY_DELIVERY_CONFLICT');end if;
    p_result:=state(p_ware,src,tr,true);return;

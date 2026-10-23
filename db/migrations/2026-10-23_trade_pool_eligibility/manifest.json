@@ -42,6 +42,6 @@
   "applied_by_root": true,
   "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T08/trade-pool-native-result.json",
   "superseded_objects": {
-    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "2026-10-23-trade-pool-empty"
+    "RRL_STOCK_POOL_CMD:PACKAGE BODY": "2026-10-23-trade-pool-access"
   }
 }

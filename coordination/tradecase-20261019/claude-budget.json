@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 25,
-  "used": 25,
+  "limit": 26,
+  "used": 26,
   "requests": [
     {
       "id": "C-0130",
@@ -194,6 +194,14 @@
       "status": "REGISTERED; queued after C0162 RELEASE and C0161 corrections",
       "delivery": "existing file channel",
       "grant_date": "2026-10-23"
+    },
+    {
+      "id": "C-0164",
+      "task": "T02 original outgoing composition confirmation and early assembly closure ordering",
+      "registered_at": "2026-10-23T08:57:18.899924+00:00",
+      "status": "REGISTERED; after C0163 rev1 RELEASE",
+      "delivery": "existing file channel",
+      "grant_date": "2026-10-23"
     }
   ],
   "additional_grants": [
@@ -377,6 +385,16 @@
       "used": 1,
       "request_ids": [
         "C-0163"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner explicitly authorized continued work until all sprints and more Claude delegation",
+      "allocation_basis": "One remaining original T02 business acknowledgment scenario; Codex accepts C0163 in parallel",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0164"
       ]
     }
   ]

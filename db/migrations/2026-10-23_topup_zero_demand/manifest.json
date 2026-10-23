@@ -1,6 +1,6 @@
 {
   "migration_id": "2026-10-23-topup-zero-demand",
-  "status": "NOT_APPLIED",
+  "status": "APPLIED",
   "target": "RABAEV/orcl",
   "before_sha256": {
     "RRL_TRADE_TOPUP_READ:PACKAGE BODY": "1483937FF45EE07E378739787580D2FED8EF9329C269146C3BE8064F17E75AEE"
@@ -16,5 +16,7 @@
     "rollback.sql": "4faa84621fe5504728027c599304d986bbf998c9355667586604b616da15d8fd",
     "rollback_verify.sql": "81b49ad96642dcdc0b10712219353590d87ab1d59eff2d21b36f2e22bcffc3d4",
     "verify.sql": "0d4b0577257a57bfb58570ecc956bf0f24fc276deaa2d228bf3fbb545b9f26e5"
-  }
+  },
+  "applied_by_root": true,
+  "live_verification": "runtime/test-evidence/tradecase/2026-10-23/T08/topup-zero-native-result.json"
 }
