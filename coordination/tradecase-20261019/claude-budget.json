@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 29,
-  "used": 29,
+  "limit": 32,
+  "used": 32,
   "requests": [
     {
       "id": "C-0130",
@@ -215,14 +215,35 @@
       "id": "C-0166",
       "task": "T11 marked inventory FOUND/LOST and operator recovery using existing commands",
       "registered_at": "2026-10-23T13:50:40.130164+03:00",
-      "status": "ACK K0151; root approved narrow INVENTORY_CMD body / UNIT_CORE spec+body boundaries; candidate NOT_APPLIED pending",
+      "status": "K0153 RELEASE; root native/mobile/current-owner accepted aee4b8e6; bounded T11 only",
       "delivery": "existing file channel"
     },
     {
       "id": "C-0167",
       "task": "Original T07/revision27 section2 vehicle replacement after assembly with preserved cargo and operator flow",
       "registered_at": "2026-10-23T16:00:39.450421+03:00",
-      "status": "REGISTERED; WAITING_FOR_ACK after C0166 RELEASE",
+      "status": "K0157 RELEASE3476f3e3; root actual vehicle/unload/new-document/depart accepted3c2ad441; bounded T07 only",
+      "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0168",
+      "registered_at": "2026-10-23T17:35:45.255336+03:00",
+      "task": "Original T03 factory hierarchy receipt and DESADV: verify existing contract, close actual gaps, isolated proof and operator UI",
+      "status": "K0163 final RELEASEb4310a3f; root factory receipt plus served compact-menu read1440/390 accepted; bounded T03 only",
+      "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0169",
+      "registered_at": "2026-10-23T18:15:48.554034+03:00",
+      "task": "T12 measured repeated warehouse/driver selector SQL latency; preserve rights, filters and equal results",
+      "status": "K0162 RELEASEf4695b37; root six-case SQL/HTTP equal-result accepted, measured small-list regression documented",
+      "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0170",
+      "registered_at": "2026-10-23T18:41:15.065222+03:00",
+      "task": "Original T11/T04 picking shortage exception: inspect and close trade-aware inventory/replenishment continuation through existing writers",
+      "status": "REGISTERED before file delivery",
       "delivery": "existing file channel"
     }
   ],
@@ -447,6 +468,36 @@
       "used": 1,
       "request_ids": [
         "C-0167"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner: continue until all original sprints, delegate to waiting Claude",
+      "allocation_basis": "One consolidated remaining original T03 package while root accepts C0167",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0168"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner authorizes all original sprints and more parallel Claude work; SQL optimization explicitly authorized",
+      "allocation_basis": "Measured repeated selector latency in actual C0167 acceptance",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0169"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner: jointly close all original sprints and delegate further work",
+      "allocation_basis": "One original picking shortage exception from available source program26 and explanations BP10",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0170"
       ]
     }
   ]
