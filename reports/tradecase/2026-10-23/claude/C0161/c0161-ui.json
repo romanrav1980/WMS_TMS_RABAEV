@@ -1,0 +1,72 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "LIVE trip R1.1168 opens with the top-up panel"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE partial load: result says main counted once, packaging +kg/+m³, floor not checked"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE several stops: readable refusal"
+  },
+  {
+   "width": 1440,
+   "name": "FIXTURE departed: readable refusal"
+  },
+  {
+   "width": 1440,
+   "name": "every top-up button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "static help link answers 200 and has the after-loading section"
+  },
+  {
+   "width": 390,
+   "name": "LIVE trip R1.1168 opens with the top-up panel"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE partial load: result says main counted once, packaging +kg/+m³, floor not checked"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE several stops: readable refusal"
+  },
+  {
+   "width": 390,
+   "name": "FIXTURE departed: readable refusal"
+  },
+  {
+   "width": 390,
+   "name": "every top-up button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "static help link answers 200 and has the after-loading section"
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "posts": [
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}",
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}",
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}",
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}",
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}",
+  "{\"need_ids\":[\"N1\"],\"max_age_minutes\":60}"
+ ],
+ "status": "PASS"
+}

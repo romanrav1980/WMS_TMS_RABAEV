@@ -9,7 +9,7 @@ from ..contracts_trade_topup import TopupPreview
 from ..contracts_trade_transport import TradeTransportError
 from ..contracts_tradecase import TradecaseError
 from ..domain.trade_capacity import box_capacity
-from .trade_capacity import capacity_context, _box, _document
+from .trade_capacity import after_load_admission, capacity_context, _box, _document
 from .trade_need import need_snapshot
 
 
@@ -89,8 +89,9 @@ def _item(cur: Any, ware: int, context: dict, planned: list, need: dict, confirm
 
 def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> dict:
     context = capacity_context(cur, ware, trip, actor)
-    if context['started']:
-        raise TradeTransportError('TOPUP_LOADING_ALREADY_STARTED', 409)
+    block = after_load_admission(context, None, datetime.now(timezone.utc))  # C-0161: loaded main cargo allowed; departure/route on facts
+    if block:
+        raise TradeTransportError(block, 409)
     planned = list(context['planned']);packages = context['packages']
     confirmed_topups = _confirmed(cur, ware, trip, context['trip'])
     for topup in confirmed_topups:
@@ -102,6 +103,9 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
     departure = datetime.fromisoformat(context['trip']['planned_departure_at'].replace('Z', '+00:00'))
     for key in body.need_ids:
         need = need_snapshot(cur, ware, key, body.max_age_minutes, now)
+        block = after_load_admission(context, need['recipient_id'], now)
+        if block:
+            raise TradeTransportError(block + ':' + key, 409)
         identity = (need['recipient_id'], need['sku_id'])
         if identity in identities:
             raise TradeTransportError('TOPUP_DUPLICATE_RECIPIENT_SKU', 409)
@@ -128,10 +132,12 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
                   proposed_boxes=sum(x['proposed_boxes'] for x in selected),
                   physical_execution=False, approval_available=False, topup_order_created=False,
                   sender_stock_checked=True, route_checked=False, stacking_rules_checked=False,
-                  loading_mode='BOX_FIXED_ORIENTATION')
+                  loading_mode='BOX_FIXED_ORIENTATION', loading_started=context['started'],
+                  loaded=context['loaded'], floor_places_checked=False)
     # Time-dependent age is displayed but is not an identity/version input.
     basis = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],
                  trip=context['trip'],packages=packages,
+                 loaded=context['loaded'],
                  capacity_kg=context['max_weight'],capacity_m3=context['max_volume'],dimensions=context['dimensions'],
                  profile_version=result['profile_version'], profile_base_hash=result['profile_base_hash'],
                  order_versions=result['order_versions'], max_age_minutes=body.max_age_minutes,

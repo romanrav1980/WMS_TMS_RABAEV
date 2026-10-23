@@ -6,7 +6,8 @@ import { useRead } from "./useRead";
 import { Act, HelpLink, Tech } from "./ui";
 
 type Result = { proposed_boxes: number; items: { priority: number; proposed_boxes: number; uncovered_boxes: string;
-  need: { document_id: string; recipient_title: string; sku_title: string; additional_boxes: string } }[] };
+  need: { document_id: string; recipient_title: string; sku_title: string; additional_boxes: string } }[];
+  loading_started?: boolean; loaded?: { places: number; overhead_kg: string; overhead_m3: string } | null };
 const help = (id: string, text: string) => ({ id: "tradecase.topup." + id, text, anchor: "topup" });
 function failure(e: unknown) {
   if (e instanceof ApiRequestError) {
@@ -18,6 +19,15 @@ function failure(e: unknown) {
     if (code.startsWith("TOPUP_NEED_HORIZON_MISMATCH")) return "Выезд рейса не входит в период потребности. Выберите подходящий снимок.";
     if (code === "TOPUP_DUPLICATE_RECIPIENT_SKU") return "Оставьте один снимок на товар и получателя.";
     if (code === "TOPUP_LOADING_ALREADY_STARTED") return "Погрузка уже началась. Перед изменением состава согласуйте добивку с диспетчером.";
+    if (code.startsWith("TOPUP_TRIP_DEPARTED")) return "Рейс уже выехал. Добивка в эту машину невозможна.";
+    if (code.startsWith("TOPUP_DEPARTURE_TIME_PASSED")) return "Плановое время отправления уже прошло. Согласуйте новое время рейса до добивки.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_ROUTE_ORDER_UNVERIFIED")) return "Часть груза уже в машине, а у рейса несколько точек: порядок выгрузки не подтверждён данными. Согласуйте добивку с диспетчером вне системы или дождитесь изменения рейса.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_RECIPIENT_NOT_ON_TRIP")) return "Получатель добивки не совпадает с получателем уже погруженного груза.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_VEHICLE_MISMATCH")) return "Погрузка шла в другую машину, чем указана в рейсе. Сверьте машину рейса.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_FACT_MEASURE_REQUIRED")) return "У погруженного места нет фактического веса или объёма. Без них свободное место не определяется.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_UNPLANNED_GOODS")) return "В машине есть товар сверх плана рейса. Сверьте погрузку с заказами.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_BASE_UOM_UNSUPPORTED")) return "Погруженный товар учтён не в штуках. Расчёт добивки для него не поддерживается.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_FACT_BOUND_200")) return "У рейса больше 200 погруженных мест. Расчёт не выполняется.";
     if (e.status === 404) return "Снимок потребности не найден на этом складе. Проверьте его номер.";
     if (e.status === 409) return "Сверьте версии исходных данных, параметры упаковки и машины перед повторным расчётом.";
   }
@@ -65,6 +75,7 @@ export function TopupPreview({ wh, trip, onSave, saveLocked }: { wh: string; tri
     {busy && <p role="status">Сверяем потребности и вместимость…</p>}{error && <p className="tc-err" role="alert">{error}</p>}
     {!!detail && <Tech value={detail} label="Причина отказа сервера" />}
     {result && <div aria-label="Результат распределения"><p><b>Всего предложено: {result.proposed_boxes} кор.</b></p>
+      {result.loading_started && result.loaded && <p className="tc-note">Часть основного груза уже в машине: мест {result.loaded.places}. Основные заказы учтены один раз; добавлена фактическая упаковка погруженных мест: +{result.loaded.overhead_kg} кг, +{result.loaded.overhead_m3} м³. Паллетоместа и порядок укладки не проверялись.</p>}
       {result.items.map(x => <article key={x.need.document_id} className="tc-panel"><h5>{x.priority}. {x.need.recipient_title} · {x.need.sku_title}</h5>
         <dl className="tc-fields"><dt>Потребность</dt><dd>{x.need.additional_boxes} кор.</dd><dt>Предложено</dt><dd>{x.proposed_boxes} кор.</dd><dt>Осталось покрыть</dt><dd>{x.uncovered_boxes} кор.</dd></dl></article>)}
       <p>Расчёт учитывает свободное место, уже подтверждённые добивки и пригодный запас сверх основных заказов. Маршрут, укладку и сроки доставки проверьте отдельно. Заказы SAP и складские задания расчётом не создаются.</p>

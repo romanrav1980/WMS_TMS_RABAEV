@@ -1,0 +1,37 @@
+{
+ "215590763:R1.1155": {
+  "basis": "d8a77d51b69e8ee75c2501a24ded32da57e9363db1ccad32dee45b7b1a459e0a",
+  "departed": 1,
+  "ms": 239.5,
+  "live_basis": "2354e04edd216ef0f6b399a8dd53dbf62b19ec593bbc7c4e72e9ec10b9c95394",
+  "python": "TOPUP_TRIP_DEPARTED"
+ },
+ "215590763:R1.1156": {
+  "basis": "63ab4a18409375ea3f0e029a86f5e9d92703be406daf18c041a7bbea59dde0af",
+  "departed": 1,
+  "ms": 9.7,
+  "live_basis": "8d7049fffb4d83c5d421cada5da1c10b6167ac58168bd1477e3da50a2eee8e12",
+  "python": "TOPUP_TRIP_DEPARTED"
+ },
+ "220639789:R1.1221": {
+  "basis": "6e6b2751a108bf6fc7afb5f67fbabecf29b39fc72201fa6e55abb5e069e5cb63",
+  "departed": 1,
+  "ms": 6.1,
+  "live_basis": "9b83e64fac48199ef7d3778fff5d41ff07398cd77fe66adc96870caa89012b08",
+  "python": "TRADE_CAPACITY_PACKAGE_MEASUREMENTS_REQUIRED"
+ },
+ "220793322:R1.1168": {
+  "basis": "3bdc764fc5b4574575f894bc24baf92285bd42015344fa3fbf8a2b9b07e706b6",
+  "departed": 1,
+  "ms": 7.8,
+  "live_basis": "feb3b1bea0522716c4c3373a26c29321c3efa7ee5455f42c136b2031a71a9c5b",
+  "python": "TRADE_CAPACITY_PACKAGE_MEASUREMENTS_REQUIRED"
+ },
+ "221164919:R1.1219": {
+  "basis": "73a9e3d1d5f5c025d05209403bba65245ab977d551c9252322fed475fbf3e409",
+  "departed": 1,
+  "ms": 6.0,
+  "live_basis": "40c7280128a5b84b2ae144b5abc3605fb2f4cf410b3445b08dd3d3f1f1c233fb",
+  "python": "TRADE_CAPACITY_PACKAGE_MEASUREMENTS_REQUIRED"
+ }
+}
