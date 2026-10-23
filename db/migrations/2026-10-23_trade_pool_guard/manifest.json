@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-23-trade-pool-guard",
+  "status": "NOT_APPLIED",
+  "target": "RABAEV/orcl",
+  "before_sha256": {
+    "RRL_TRADE_STOCK_GUARD:PACKAGE BODY": "1848FB59594F05F8BC687C3AF6CB61E26368B0049BF315FB90C0D9A64FCAB423"
+  },
+  "after_sha256": {
+    "RRL_TRADE_STOCK_GUARD:PACKAGE BODY": "7D6E1781DB7F46AC66105865B83D583C2FF35A9A905C1D8B91C97421CF0A68EE"
+  },
+  "files_sha256": {
+    "000_preflight.sql": "022359da6f1389caf19b3c9c23b1d099616fe5cbbf0a49eeb9b23ba5547cb5e9",
+    "001_guard.sql": "5d6eae8a598d478c4f9a4c2b24e620913af16707418c244d1fe33573661de3de",
+    "apply.sql": "28fa00d71117a79b7f66a044205bf8da7b345d502d60fca7585e87790966902a",
+    "before_guard.sql": "b8eb3c861b8bf424a0ff5b82fe941c780062dc7926788f8f313fca58d28962a3",
+    "rollback.sql": "8e4fa8324a97f797c7706c0c8bcdfb72dbe4a009b82bf30cc1158509b6f5c988",
+    "rollback_verify.sql": "022359da6f1389caf19b3c9c23b1d099616fe5cbbf0a49eeb9b23ba5547cb5e9",
+    "verify.sql": "7023384e67352b349f360865659724f33848f26681b9292f949a0c8329365356"
+  }
+}
