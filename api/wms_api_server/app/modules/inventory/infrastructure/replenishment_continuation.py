@@ -9,7 +9,32 @@ class ReplenishmentContinuation:
     def __init__(self, gateway: Any, sync_tasks: Callable[[Any, int, str], None]) -> None:
         self.gateway, self.sync_tasks = gateway, sync_tasks
 
+    def _has_pending(self, warehouse: int, actor: str) -> bool:
+        # This is a read-only hint. The existing writer rechecks rights and rows
+        # after acquiring CONFIG6; arrivals after an empty read remain queued.
+        with self.gateway.transaction("Read pending replenishment work") as cursor:
+            cursor.execute("set transaction read only")
+            cursor.execute("""begin
+                if :actor is null or RRL_HAS_WRIGHT(:actor,'pick_wave_launch')!=1 then
+                    raise_application_error(-20882,'TASK_METADATA_FORBIDDEN');
+                end if;
+                end;""", {"actor": actor})
+            cursor.execute("""select count(*) from RUSERS u where u.ID=:actor
+                and nvl(u.DELETED,0)=0 and(u.WARE_ID=:ware or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN')""",
+                {"actor": actor, "ware": warehouse})
+            if cursor.fetchone()[0] != 1:
+                raise HTTPException(403, detail="REPLENISHMENT_CURRENT_WAREHOUSE_REQUIRED")
+            cursor.execute("""select 1 from RRL_PICK_WAVE_REPLENISH_TASK rt
+                join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_ID
+                where w.WARE_ID=:ware and w.STATUS='LAUNCHED'
+                  and rt.STATUS in('RELEASED','QUEUED','WAIT_FREE_CELL','FAILED')
+                  and(rt.PARENT_REPLENISH_TASK_ID is not null or rt.PICK_TASK_ID is not null)
+                fetch first 1 row only""", {"ware": warehouse})
+            return cursor.fetchone() is not None
+
     def reconcile(self, warehouse: int, actor: str) -> dict[str, Any]:
+        if not self._has_pending(warehouse, actor):
+            return {"warehouse": warehouse, "processed": 0, "wave_ids": []}
         with self.gateway.transaction("Resume existing replenishment remainder") as cursor:
             entered = False
             try:

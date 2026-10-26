@@ -82,7 +82,31 @@ class MinimaxService:
             rows=self._snapshot(cursor,warehouse)
         return {"warehouse":warehouse,"faces":rows,"preview":True}
 
+    def _has_configuration(self,warehouse: int,actor: str) -> bool:
+        # Keep active waves on the original path, even if their norms disappeared.
+        with self.gateway.transaction("Read pending minimax configuration") as cursor:
+            cursor.execute("set transaction read only")
+            cursor.execute("""begin
+                if :actor is null or RRL_HAS_WRIGHT(:actor,'pick_wave_launch')!=1 then
+                    raise_application_error(-20882,'TASK_METADATA_FORBIDDEN');
+                end if;
+                end;""",{"actor":actor})
+            cursor.execute("""select 1 from RRL_PICK_WAVE where WARE_ID=:ware
+                and WAVE_KIND='REPLENISHMENT'and WAVE_NAME='RETAILCASE_MINIMAX'and STATUS='LAUNCHED'
+                fetch first 1 row only""",{"ware":warehouse})
+            if cursor.fetchone() is not None:
+                return True
+            cursor.execute("""select 1 from RRL_PICK_FACE pf
+                join RRL_PICK_FACE_ARTICUL a on a.PICK_FACE_ID=pf.PICK_FACE_ID
+                left join RRL_ARTICUL_REPLENISH_RULE ar on ar.ARTICUL=a.ARTICUL and ar.ACTIVE=1
+                where pf.WARE_ID=:ware and pf.ACTIVE=1 and a.ACTIVE=1
+                  and coalesce(case when a.USE_ARTICUL_REPLENISH_RULE=1 then ar.REPLENISHMENT_METHOD end,
+                    a.REPLENISHMENT_METHOD)='MINIMAX' fetch first 1 row only""",{"ware":warehouse})
+            return cursor.fetchone() is not None
+
     def reconcile(self,warehouse: int,actor: str) -> dict[str,Any]:
+        if not self._has_configuration(warehouse,actor):
+            return {"warehouse":warehouse,"created":0,"wave_id":None,"faces":[]}
         # Rare metadata planning owns CONFIG X; quantity effects run after its commit through the root.
         with self.gateway.transaction("Reconcile existing minimax replenishment") as cursor:
             entered=False
