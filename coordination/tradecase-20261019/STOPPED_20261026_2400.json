@@ -1,0 +1,56 @@
+{
+  "status": "incomplete_deadline",
+  "saved_at": "2026-10-26T23:59:51.410823+03:00",
+  "deadline": "2026-10-27T00:00:00+03:00",
+  "completed_sprints": [
+    "T01"
+  ],
+  "partial_sprints": [
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07",
+    "T08",
+    "T09",
+    "T10",
+    "T11",
+    "T12"
+  ],
+  "completed_local_case": {
+    "warehouse": 225290508,
+    "plan": 2285,
+    "wave": 636,
+    "trip": 33687,
+    "phase": "CLOSED",
+    "physical_places": 660,
+    "shipped_units": 6600,
+    "warehouse_stock": 0,
+    "hard_reserved": 0,
+    "qa_retired": true,
+    "source_program_accepted": false
+  },
+  "checks": [
+    "Real HTTP/Oracle receipt/pick/QC/load/depart/replay/finish passed",
+    "660 movement and load operations; no stock consumption at DEPART",
+    "SAP/SKM outbox14420/14421:6600units/codes each, equal, PENDING",
+    "Real UI1440/390,tooltips/help/403handling; native QA403 separately",
+    "Quality gate24tests,bothTypeScript,encoding,diff passed",
+    "Oracle INVALID0; five previous fixtures unchanged"
+  ],
+  "known_open_issues": [
+    "Large wave launch56.5s/release36.8s; native context/execution reads need batching",
+    "Original3orders/1100BOX/main600+topup60 or80/660to640 not accepted",
+    "Real external formats/adapters/business acknowledgements not accepted",
+    "Full concurrency/resource/return/paper/tare/peak/pilot matrix remains partial"
+  ],
+  "claude_requests_total": 33,
+  "claude_requests_this_continuation": 0,
+  "claude_unavailable_until": "2026-10-29",
+  "functional_checkpoint": "88ac36f2",
+  "unfinished_transactions": false,
+  "report": "wiki/roadmap/tradecase_evening_result_20261026.md",
+  "resume": "coordination/tradecase-20261019/RESUME_LATEST.md",
+  "publication": "Local commits only; no new GitHub publication authorization"
+}
