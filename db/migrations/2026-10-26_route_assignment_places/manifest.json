@@ -19,9 +19,9 @@
     "001_body.sql": "a6e27b7f8c9553c2b55784314feed24f036a44597da0d7aeecb8e2d4582a863f",
     "before_002.sql": "bc0db7d73e23f442a01547d5ec59a934e9ce3984d90bf1a0831f5b9c0b98dac4",
     "002_body.sql": "20b82ec945d0501c13458acdd5877c15720d298f41c89a855518bb3e25068335",
-    "000_preflight.sql": "d214af74d26a48d87df46dc2deffe22d62c6027ae3bf5c009e3a9dfcd61b325d",
-    "verify.sql": "f0e2a19c8d84e0f619b601c93a1f8565591604b115ac45c20690bc01a6c61d11",
-    "rollback_verify.sql": "d214af74d26a48d87df46dc2deffe22d62c6027ae3bf5c009e3a9dfcd61b325d",
+    "000_preflight.sql": "7ec0ddfb8d6b4cc94d59fcc3b79c0806efe8697e3d26bfbd55d877c204b567d4",
+    "verify.sql": "5ffc5f48e77c680898b6940f2645312427b3da51e9bf56e6061d3cb5e9d4cfe0",
+    "rollback_verify.sql": "7ec0ddfb8d6b4cc94d59fcc3b79c0806efe8697e3d26bfbd55d877c204b567d4",
     "apply.sql": "871cff2d4beb458347937f9908cbfda133b72204a29450c68f048ffa3e56a740",
     "rollback.sql": "f8ce839cff2c65e3ee32286972ad107ebf67805688c17b6c883c0c039e6a657c"
   }

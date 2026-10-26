@@ -15,5 +15,5 @@ declare s clob;
  same('RRL_TRANSPORT_PLAN_RULES','PACKAGE','212B475C20AB28355BE92C48BE2DB97B2DAF61D19BFD75B0BADD8CA4E0B19302');
 end;
 /
-declare n number;begin select count(*)into n from user_indexes where INDEX_NAME='RRL_UNIT_CELL_GUARD_IX';if n!=0 then raise_application_error(-20999,'INDEX_ALREADY_EXISTS');end if;end;
+declare n number;begin select count(*)into n from USER_OBJECTS where STATUS='INVALID';if n!=0 then raise_application_error(-20999,'INVALID_OBJECTS');end if;end;
 /
