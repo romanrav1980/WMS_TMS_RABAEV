@@ -12,9 +12,10 @@
   async function open() {
     if (panel || !window.wmsAdminAuth?.hasPermission("case_pick_manage") || new URLSearchParams(location.search).get("demo") === "1") return;
     const host = document.querySelector(".case-page"); if (!host) return;
-    panel = node("section"); panel.className = "case-panel";
+    panel = node("section"); panel.className = "case-panel pallet-type-control";
     panel.append(node("h2","Типы тары и финальное взвешивание"));
-    panel.append(node("p","Обязательное взвешивание этого места сохраняется при освобождении родительской паллеты от контроля. Справочный вес типа не заменяет измерение."));
+    panel.append(node("p","Выберите класс и размеры тары. Сохраняйте справочную массу отдельно от фактического измерения места."));
+    const help=node("a","Как подтвердить вес места");help.href="/help/manual-weight.html#enter";help.target="_blank";help.rel="noopener";help.title="Открыть порядок ввода и подтверждения фактического веса грузового места.";panel.append(help);
     const choice = node("select"); choice.setAttribute("aria-label","Тип тары");
     const code = node("input"), name = node("input"), volume = node("input"), weight = node("input");
     const kind = node("select"); Object.entries({PALLET:"Паллета",TROLLEY:"Тележка",CONTAINER:"Контейнер",BOX:"Короб"}).forEach(([value,label]) => { const option=node("option",label); option.value=value;kind.append(option); });

@@ -3,7 +3,7 @@ const {chromium}=require('../../admin/wms_admin_frontend/node_modules/playwright
 const out='runtime/test-evidence/tradecase/2026-10-26/T08/carton-scale/physical';
 const state=JSON.parse(fs.readFileSync(out+'/state.json','utf8'));
 const pass=fs.readFileSync('AGENTS.md','utf8').match(/PASS=(\S+?)[`,)\s]/)[1];
-const phase=process.env.CARTON_UI_PHASE||'LOADED660',members=Number(process.env.CARTON_UI_MEMBERS||660),loaded=Number(process.env.CARTON_UI_LOADED||660);
+const phase=process.env.CARTON_UI_PHASE||'LOADED660',members=Number(process.env.CARTON_UI_MEMBERS||660),loaded=process.env.CARTON_UI_LOADED==='live'?null:Number(process.env.CARTON_UI_LOADED||660);
 assert(/^[A-Z0-9_-]+$/.test(phase));
 const report={checks:[],writes:[],errors:[],denial:'MODELLED_403; real positive GETs'};let browser;
 (async()=>{
@@ -24,7 +24,10 @@ const report={checks:[],writes:[],errors:[],denial:'MODELLED_403; real positive 
   if(!await page.evaluate(()=>Boolean(window.wmsAdminAuth.state.user))){await page.fill('#loginUser','admin');await page.fill('#loginPassword',pass);await page.click('#adminLoginForm button[type=submit]');}
   await page.waitForFunction(count=>document.querySelectorAll('#tripRows tr').length===count,members,{timeout:30000});
   const usefulScreenMs=Date.now()-start;
-  assert((await page.locator('#tripSummary').innerText()).includes('физических мест: '+loaded+';'));
+  const summary=await page.locator('#tripSummary').innerText();
+  const observedLoaded=Number(summary.match(/физических мест: (\d+);/)?.[1]);
+  assert(Number.isInteger(observedLoaded)&&observedLoaded>=0&&observedLoaded<=members);
+  if(loaded!==null)assert.equal(observedLoaded,loaded);
   assert.equal(await page.locator('#tripRows tr').count(),members);
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Document overflow');
   const missing=await page.locator('main button:visible').evaluateAll(nodes=>nodes.filter(n=>!n.title.trim()).map(n=>({id:n.id,text:n.textContent})));
@@ -37,7 +40,7 @@ const report={checks:[],writes:[],errors:[],denial:'MODELLED_403; real positive 
   deny=true;await page.click('#tripLoad');await page.waitForFunction(()=>document.querySelectorAll('#tripRows tr').length===0);
   assert(!await page.locator('#tripSummary').innerText().then(s=>s.includes(state.transport.vehicle_number)));
   deny=false;await page.click('#tripLoad');await page.waitForFunction(count=>document.querySelectorAll('#tripRows tr').length===count,members);
-  report.checks.push({width,members,loaded,usefulScreenMs,tooltips:true,help:href,denialClears:true});
+  report.checks.push({width,members,loaded:observedLoaded,usefulScreenMs,tooltips:true,help:href,denialClears:true});
   await context.close();
  }
  assert.deepStrictEqual(report.writes,[]);assert.deepStrictEqual(report.errors,[]);report.status='PASS';

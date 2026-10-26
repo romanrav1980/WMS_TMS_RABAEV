@@ -11,7 +11,7 @@ class PalletTypeUpsertRequest(BaseModel):
 
     @field_validator('load_unit_class',mode='before')
     @classmethod
-    def normalize_class(cls,value):
+    def normalize_class(cls,value: object) -> object:
         return value.strip().upper() if isinstance(value,str) else value
     default_volume_m3: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
     default_weight_kg: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)

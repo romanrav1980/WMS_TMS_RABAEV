@@ -1,5 +1,6 @@
 (() => {
  const el=id=>document.getElementById(id);
+ const loadStateLabels={LOADED:"Погружено",DEPARTED:"Выехало",UNLOADED:"Выгружено"};
  let pending=null,busy=false,composition=null,trip=null,generation=0,identity="",record=null;
  const base=()=>window.wmsAdminAuth.state.apiBase.replace(/\/$/,"");
  const scope=()=>"wms-physical-load:"+base()+":"+(window.wmsAdminAuth.state.user?.username||"");
@@ -61,7 +62,7 @@
   el("tripSummary").textContent="Машина: "+(data.trip.transport||"не назначена")+"; ворота: "+(data.trip.dock||"не назначены")+"; физических мест: "+data.loaded_place_count+"; ожидают погрузки СТ: "+data.pending_st_ids.length+". Статус рейса: "+data.trip.condition;
   el("tripRows").replaceChildren(...data.members.map(item=>{
    const row=document.createElement("tr");
-   [item.st_number,item.root_uid||"",item.load_status||"Ожидает",item.vehicle_number||"",item.dock||"",data.floor_capacity?.load_confirmations?.[item.load_operation_id]?.current_type_name||"Тип верхнего места не подтверждён",data.temperature?.load_confirmations?.[item.load_operation_id]?.confirmation?.observed_c?data.temperature.load_confirmations[item.load_operation_id].confirmation.observed_c+" °C · вручную":"Не подтверждена"].forEach(value=>{const td=document.createElement("td");td.textContent=String(value);row.append(td);});return row;
+   [item.st_number,item.root_uid||"",item.load_status?(loadStateLabels[item.load_status]||"Статус не определён"):"Ожидает погрузки",item.vehicle_number||"",item.dock||"",data.floor_capacity?.load_confirmations?.[item.load_operation_id]?.current_type_name||"Тип верхнего места не подтверждён",data.temperature?.load_confirmations?.[item.load_operation_id]?.confirmation?.observed_c?data.temperature.load_confirmations[item.load_operation_id].confirmation.observed_c+" °C · вручную":"Не подтверждена"].forEach(value=>{const td=document.createElement("td");td.textContent=String(value);row.append(td);});return row;
   }));controls();
  }
  async function refresh(){
