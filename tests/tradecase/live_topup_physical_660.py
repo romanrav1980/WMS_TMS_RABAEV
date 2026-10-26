@@ -205,10 +205,14 @@ def topup():
     from concurrent.futures import ThreadPoolExecutor
     f = s["fixture"]; w = f["warehouse_id"]; base = f"/api/tradecase/warehouses/{w}"; trip = base + "/trips/T1"
     assert s.get("phase") in ("MAIN_WAVE", "TOPUP_HELD", "TOPUP_ORDERED"), s.get("phase")
-    preview = step("topup_preview", "POST", trip + "/topup-preview", dict(need_ids=["N1"], max_age_minutes=1440))
+    if 'msg_need_horizon_identity' not in s.get('steps',{}):
+        need=dict(s['steps']['msg_need']['body']['payload']);need.pop('entity_type',None)
+        need.update(period_from=s['day']+'T00:00:00+03:00',period_until=s['day']+'T23:59:59+03:00')
+        send('need_horizon_identity','NEED','N1.HORIZON',need,version=1)
+    preview = step("topup_preview", "POST", trip + "/topup-preview", dict(need_ids=["N1.HORIZON"], max_age_minutes=1440))
     item = preview["items"][0]
     assert (item["proposed_boxes"], item["uncovered_boxes"], item["limited_by"], item["sender_stock_boxes"]) == (60, "20", "CAPACITY", 60), item
-    body = dict(operation_id=tag() + ".save", need_ids=["N1"], max_age_minutes=1440)
+    body = dict(operation_id=tag() + ".save", need_ids=["N1.HORIZON"], max_age_minutes=1440)
     saved = step("topup_saved", "POST", trip + "/topup-proposals", body)
     proposal = saved["proposals"][0]; pid = proposal["proposal_id"]; s["proposal_id"] = pid; save()
     assert proposal["approved_boxes"] == 60, proposal
@@ -232,7 +236,7 @@ def topup():
     assert len(s["held_units"]) == 600 and len({r[1] for r in s["held_units"]}) == 600
     s["phase"] = "TOPUP_HELD"; save()
     accepted = step("topup_sap", "POST", trip + f"/topup-proposals/{pid}/sap-reply", dict(operation_id=tag() + ".sap", expected_version=confirmed["version"], source_id="TC03.SAP",
-        event_id=tag() + ".SAP104", outcome="ACCEPTED", sap_order_id="SYNTHETIC.SAP.104"))
+        event_id=tag() + ".SAP104", outcome="ACCEPTED", sap_order_id="O104"))
     send("order_topup", "ORDER", "O104", dict(order_kind="TOPUP", parent_trip_id="T1", recipient_id="C1", planned_ship_at=s["trip_v1"]["planned_departure_at"],
         lines=[dict(line_id="1", sku_id="A", source_owner_id="SNS", target_owner_id="SNS", mrc="200", quantity="600", uom="EA", min_osg_days=0)]))
     extra = native_order("native_topup", 600)
@@ -240,6 +244,16 @@ def topup():
         lines=[dict(line_id="1", customer_order_row_id=extra["row"])]))
     trip2 = dict(s["trip_v1"], orders=s["trip_v1"]["orders"] + [dict(order_id="O104", line_id="1", quantity="600")])
     send("trip_2", "TRIP", "T1", trip2, 2); s["trip_v2"] = trip2; s["phase"] = "TOPUP_ORDERED"; save()
+    acknowledged=s['steps']['topup_sap']['body']['sap_order_id']
+    if acknowledged != 'O104':
+        # Preserve the accepted synthetic reply; correct the mismatched fixture documents explicitly.
+        payload=dict(s['steps']['msg_order_topup']['body']['payload']);payload.pop('entity_type',None)
+        send('order_topup_match','ORDER',acknowledged,payload)
+        extra=native_order('native_topup_matched',600)
+        step('binding_topup_match','POST',base+'/orders/'+acknowledged+'/binding',dict(operation_id=tag()+'.bind.topup.match',expected_order_version=1,customer_order_id=extra['order'],lines=[dict(line_id='1',customer_order_row_id=extra['row'])]))
+        corrected=dict(s['trip_v1'],orders=s['trip_v1']['orders']+[dict(order_id=acknowledged,line_id='1',quantity='600')])
+        send('trip_matched','TRIP','T1',corrected,version=3)
+        send('order_topup_cancel_after_trip','ORDER','O104',dict(payload,cancelled=True),version=2)
     assert db("select RRL_TRADE_TOPUP_ADOPT.line_proposal(:r) from dual", r=extra["row"]) == [(pid,)]
     tasks = wave("topup", extra["order"])
     s["topup_tasks"] = [list(t) for t in tasks]; save()
@@ -256,7 +270,7 @@ def pick():
     f = s["fixture"]; w = f["warehouse_id"]
     assert s.get("phase") in ("TOPUP_WAVE", "PICKING"), s.get("phase")
     s["phase"] = "PICKING"; s["st_number"] = "TP." + str(w); save()
-    for kind, tasks, order in (("main", s["main_tasks"], s["native_main"]["order"]), ("topup", s["topup_tasks"], s["native_topup"]["order"])):
+    for kind, tasks, order in (("main", s["main_tasks"], s["native_main"]["order"]), ("topup", s["topup_tasks"], s.get("native_topup_matched",s["native_topup"])["order"])):
         for tid, pallet, src, dst, qty in tasks:
             key = str(tid)
             body = dict(operation_id=tag() + ".move." + key, scanned_pallet=pallet, scanned_from_cell=src, scanned_to_cell=dst, fact_qty=str(qty))
@@ -273,8 +287,8 @@ def pick():
                 step("bind_ship_" + key, "POST", path, dict(operation_id=tag() + ".ship." + key, shipment_identifier=shipments[key]["shipment_identifier"],
                     scanned_pallet=current["pallet_identifier"], expected_stock_version=current["stock_version"]))
     s["after_pick"] = stock(); s["fulfillment"] = [list(r) for r in db("select f.CUSTOMER_ORDER_ID,f.STATUS,count(*),sum(f.FACT_QTY) from RRL_CUSTOMER_ORDER_FULFILLMENT f where f.CUSTOMER_ORDER_ID in(:a,:b) group by f.CUSTOMER_ORDER_ID,f.STATUS",
-        a=s["native_main"]["order"], b=s["native_topup"]["order"])]; save()
-    assert sorted((r[0], r[1], r[2], r[3]) for r in s["fulfillment"]) == sorted([(s["native_main"]["order"], "PICKED", MAIN_PALLETS, MAIN_PALLETS * UNITS), (s["native_topup"]["order"], "PICKED", PALLETS - MAIN_PALLETS, (PALLETS - MAIN_PALLETS) * UNITS)]), s["fulfillment"]
+        a=s["native_main"]["order"], b=s.get("native_topup_matched",s["native_topup"])["order"])]; save()
+    assert sorted((r[0], r[1], r[2], r[3]) for r in s["fulfillment"]) == sorted([(s["native_main"]["order"], "PICKED", MAIN_PALLETS, MAIN_PALLETS * UNITS), (s.get("native_topup_matched",s["native_topup"])["order"], "PICKED", PALLETS - MAIN_PALLETS, (PALLETS - MAIN_PALLETS) * UNITS)]), s["fulfillment"]
     s["phase"] = "PICKED"; save()
 
 

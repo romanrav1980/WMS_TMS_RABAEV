@@ -163,3 +163,5 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 - [[lock_resource_dedup_20261026]] — удаление дубликатов перед hash mutex; бюджеты и набор блокировок сохраняются, приёмка продолжается.
 
 - [[stock_large_plan_budget_20261026]] — измеренный предел6сна попытку при сохранении общего30с; приёмка ещё продолжается.
+
+- [[topup_whole_pallet_20261026]] — классификация собственного полного удержания добивки как FULL_PALLET; независимая проверка продолжается.
