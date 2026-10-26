@@ -16,9 +16,6 @@ class Cursor:
         self.members, self.loads, self.floor, self.thermal = members, loads, floor, thermal
         self.rows, self.calls = [], []
 
-    def setinputsizes(self, **values):
-        self.sizes = values
-
     def execute(self, sql, **binds):
         self.calls.append((sql, binds))
         if 'from RRL_SBORKA_PALLETS sp left join' in sql:
@@ -69,23 +66,13 @@ def test_oversized_read_refuses_instead_of_showing_partial_trip(monkeypatch, mem
 
 
 @pytest.mark.parametrize('reader', [loading_floor_read, loading_thermal_read])
-def test_4000_history_ids_use_one_clob_bind_without_oracle_in_limit(reader):
-    ids = ['L'+str(i) for i in range(4000)]
+def test_confirmations_use_authorized_trip_without_oracle_in_limit(reader):
     cur = Cursor(floor=[('L659', 1, 'BOX', 'Box', 1, 'MANUAL', 'ref', None)], thermal=[('L659', '{}', None)])
-    result = reader(cur, ids, 7) if reader is loading_floor_read else reader(cur, 'V', ids, 7)
+    result = reader(cur, 7) if reader is loading_floor_read else reader(cur, 'V', 7)
     assert 'L659' in result['load_confirmations']
-    queries = [(sql, binds) for sql, binds in cur.calls if 'json_table(:load_ids' in sql]
+    queries = [(sql, binds) for sql, binds in cur.calls if 'join RRL_TT_HU_LOAD_FACT l' in sql]
     assert len(queries) == 1
-    assert json.loads(queries[0][1]['load_ids']) == ids
-    assert len(queries[0][1]) == 1
-
-
-@pytest.mark.parametrize('reader', [loading_floor_read, loading_thermal_read])
-def test_history_guard_fires_before_database_access(reader):
-    cur = Cursor()
-    with pytest.raises(ValueError, match='HISTORY_BOUND_4000'):
-        reader(cur, ['L']*4001, 7) if reader is loading_floor_read else reader(cur, 'V', ['L']*4001, 7)
-    assert not cur.calls
+    assert queries[0][1] == {'trip':7}
 
 
 def test_capacity_counts_660_cartons_once_and_refuses_1001():

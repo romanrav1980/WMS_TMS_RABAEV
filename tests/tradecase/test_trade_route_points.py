@@ -26,7 +26,8 @@ class Cur:
         elif "ENTITY_TYPE='TRIP'" in s: self.rows = [(1 if self.trip else 0,)]
         elif "from RRL_TRADE_TRIP_LINK" in s: self.rows = [(33660,)] if self.linked else []
         elif "from RRL_SBORKA_PALLETS sp where sp.TRANSTASK_ID" in s: self.rows = self.points
-        elif "select distinct o.CUSTOMER_ORDER_ID" in s: self.rows = ORDERS[kw["sp"]]
+        elif "select distinct x.POINT_ID,o.CUSTOMER_ORDER_ID" in s:
+            self.rows = [(p[0],*order)for p in self.points if p[2]==kw['w'] for order in ORDERS.get(p[0],[])]
         elif "ol.SOURCE_OWNER_ID from RRL_TRADE_ORDER_LINK" in s: self.rows = [(o,) for o in OWNERS[kw["o"]]]
         elif "owner_allowed" in s: self.rows = [(0 if kw["o"] == "HIDDEN" else 1,)]
         elif "ENTITY_TYPE='RECIPIENT'" in s:
@@ -108,3 +109,24 @@ def test_unbound_trip_is_explicit_and_unknown_trip_is_404_and_denied_is_403():
     with pytest.raises(TradeTransportError) as denied:
         route_points(Gateway(Cur(allowed=False)), 7, "R1", "u")
     assert denied.value.status == 403
+
+
+def test_660_members_of_one_order_use_ten_reads_and_preserve_every_point(monkeypatch):
+    points=[(i,'ST'+str(i),7,'ADDR-1',i,None,None)for i in range(1,661)]
+    for point in points:
+        monkeypatch.setitem(ORDERS,point[0],[(101,501,'O1','R1',7)])
+    cur=Cur(points=points)
+    result=route_points(Gateway(cur),7,'R1','u')
+    assert len(result['points'])==660
+    assert result['blocked_reason'] is None
+    assert result['points'][-1]['st_number']=='ST660'
+    assert all(p['recipient_id']=='R1'and p['address_status']=='CONFIRMED'for p in result['points'])
+    assert len(cur.sql)==10
+
+
+def test_excess_members_fail_before_order_or_recipient_queries():
+    cur=Cur(points=[(i,'ST'+str(i),7,'ADDR-1',i,None,None)for i in range(1001)])
+    with pytest.raises(TradeTransportError)as error:
+        route_points(Gateway(cur),7,'R1','u')
+    assert error.value.code=='TRADE_ROUTE_POINT_BOUND_1000'
+    assert not any('x.POINT_ID' in sql or "ENTITY_TYPE='RECIPIENT'" in sql for sql in cur.sql)

@@ -1,26 +1,21 @@
 """Scoped caller supplies existing load IDs after its warehouse authorization."""
 from typing import Any
-import json
 import oracledb
 from ...platform.public import read_oracle_json
 
-def loading_thermal_read(cur: Any, plate: str | None, load_ids: list[str], trip: int) -> dict[str, Any]:
-    if len(load_ids)>4000:
-        raise ValueError("LOADING_THERMAL_HISTORY_BOUND_4000")
+def loading_thermal_read(cur: Any, plate: str | None, trip: int) -> dict[str, Any]:
     cur.execute("select ID from RRL_TR_VEHICLE where NUM=:plate and nvl(DELETED,0)=0 fetch first 2 rows only",plate=plate)
     vehicles=cur.fetchall()
     profile=None
     if len(vehicles)==1:
         profile=read_oracle_json(cur.callfunc("RRL_VEHICLE_PROFILE_API.describe_profile",oracledb.DB_TYPE_CLOB,[vehicles[0][0]]))
     facts={}
-    if load_ids:
-        cur.setinputsizes(load_ids=oracledb.DB_TYPE_CLOB)
-        cur.execute("""select LOAD_OPERATION_ID,CONFIRMATION_JSON,RECORDED_AT from RRL_TT_LOAD_THERMAL_FACT
-            where LOAD_OPERATION_ID in(select id from json_table(:load_ids,'$[*]'
-              columns(id varchar2(100) path '$')))""",load_ids=json.dumps(load_ids))
-        for op,wire,recorded in cur:
-            facts[op]={"confirmation":read_oracle_json(wire),"recorded_at":recorded,
-                       "sensor_verified":False,"basis":"MANUAL_AT_LOADING"}
+    cur.execute("""select f.LOAD_OPERATION_ID,f.CONFIRMATION_JSON,f.RECORDED_AT
+        from RRL_TT_LOAD_THERMAL_FACT f join RRL_TT_HU_LOAD_FACT l
+          on l.LOAD_OPERATION_ID=f.LOAD_OPERATION_ID where l.TT_ID=:trip""",trip=trip)
+    for op,wire,recorded in cur:
+        facts[op]={"confirmation":read_oracle_json(wire),"recorded_at":recorded,
+                   "sensor_verified":False,"basis":"MANUAL_AT_LOADING"}
     cur.execute("""select o.RESULT_JSON from RRL_TT_VEHICLE_SOURCE s join RRL_STOCK_OPERATION o
         on o.OPERATION_ID=s.DEPARTURE_OPERATION_ID where s.TT_ID=:trip and o.STATE='APPLIED'
         and o.COMMAND_TYPE='TRIP_DEPART'""",trip=trip)

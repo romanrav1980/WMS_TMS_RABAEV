@@ -108,11 +108,11 @@ def receive():
         s["order_import"] = xml_call("/api/integrations/sap/supply-orders", supply, 202); save()
     pallets = s.setdefault("pallets", {})
     for n in range(1, PALLETS + 1):
-        key = str(n).zfill(2)
+        key = str(n).zfill(3 if PALLETS>99 else 2)
         if pallets.get(key, {}).get("valid"):
             continue
-        pallet = ean("6900" + key + "0" + str(int(f["tag"], 16)).zfill(10)[-10:])
-        codes = [f["gtin"] + f["tag"][:2] + key + str(i).zfill(3) for i in range(1, UNITS + 1)]
+        pallet = 'CT26.'+str(w)+'.'+key if PALLETS>99 else ean("6900" + key + "0" + str(int(f["tag"], 16)).zfill(10)[-10:])
+        codes = [f["gtin"] + f["tag"][:2] + key + str(i).zfill(2 if PALLETS>99 else 3) for i in range(1, UNITS + 1)]
         received = step("receipt_" + key, "POST", f"/api/receiving/supply-orders/{s['order_import']['order_id']}/pallets", dict(operation_id=tag() + ".receipt." + key,
             line_number="1", pallet_identifier=pallet, quantity=str(UNITS), supplier_batch="TP26", expiry_date="2030-01-01", gross_weight=str(UNITS),
             units=[dict(unit_id=str(i), quantity="1", codes=[dict(system_code="CRPT", profile_code="TOBACCO", code=c)]) for i, c in enumerate(codes, 1)]), status=201)
@@ -127,6 +127,7 @@ def receive():
         step("valid_" + key, "POST", base + "/stock/mark-confirmations", dict(operation_id=tag() + ".valid." + key, skm_id="TC03.SKM", external_event_id=tag() + ".valid." + key,
             expected_site_version=1, occurred_at=datetime.now(timezone.utc).isoformat(), items=items))
         pallets[key] = dict(pallet=pallet, cell=target, valid=True); save()
+        if n%25==0: print('Received places',n,'of',PALLETS,flush=True)
     s["after_receipt"] = stock(); assert tuple(s["after_receipt"]) == (PALLETS * UNITS, 0, PALLETS), s["after_receipt"]
     s["phase"] = "RECEIVED"; save()
 

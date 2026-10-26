@@ -47,8 +47,8 @@ def read_loading_status(cur: Any, trip: int, actor: str) -> dict[str, Any]:
         return (row["load_status"]in{"LOADED","DEPARTED"} and row["stock_operation_state"]=="APPLIED"
                 and row["load_trip_id"]==trip and row["vehicle_number"]==header[1])
     pending=[row["id"]for row in members if not physically_loaded(row)]
-    thermal=loading_thermal_read(cur,header[1],[row["load_operation_id"]for row in loads],trip)
-    floor=loading_floor_read(cur,[row["load_operation_id"]for row in loads],trip)
+    thermal=loading_thermal_read(cur,header[1],trip)
+    floor=loading_floor_read(cur,trip)
     return {"trip":dict(zip(("id","transport","dock","condition","voditel_id"),header[:5])),
         "members":members,"physical_places":loads,"temperature":thermal,"floor_capacity":floor,
         "loaded_place_count":sum(row["status"]in{"LOADED","DEPARTED"}for row in loads),
