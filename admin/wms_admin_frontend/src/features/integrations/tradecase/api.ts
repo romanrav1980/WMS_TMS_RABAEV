@@ -21,7 +21,8 @@ export type Buyout = { buyout_id: string; basis_order_id: string; basis_line_id:
   requested_units: number; confirmed_units: number; rejected_units: number; pending_units: number; requires_sorting: boolean | null;
   requires_transit_reconciliation: boolean | null; composition_checked: boolean; created_at: string; [key: string]: unknown };
 export type BuyoutPage = { warehouse_id: number; items: Buyout[]; has_more: boolean; next_after: string | null };
-export type BuyoutUnit = { physical_unit_key: string; outcome: "CONFIRMED" | "REJECTED" | "PENDING"; reason: string | null; owner_id: string; pallet_identifier: string; cell: string | null; buyout_hold: boolean };
+export type BuyoutUnit = { physical_unit_key: string; outcome: "CONFIRMED" | "REJECTED" | "PENDING"; reason: string | null; owner_id: string; pallet_identifier: string; cell: string | null; buyout_hold: boolean;
+  marking_codes?: { system_code: string; code: string }[]; carrier_identifier?: string | null; stock_status?: string };
 export type StockUnit = { physical_unit_key: string; sku_id: string; owner_id: string; mrc: string | null; expiry_date: string | null; pallet_identifier: string;
   cell: string | null; mark_state: string; base_quantity: string; base_uom: string; allocation_enabled: boolean; buyout_hold: boolean; hard_reserved: boolean;
   location_kind?: string; last_warehouse_cell?: string | null };

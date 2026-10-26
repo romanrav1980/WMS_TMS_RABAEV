@@ -37,11 +37,17 @@ export function BuyoutView({ wh, card, names }: { wh: string; card: Buyout; name
       <dt>Разделение паллеты</dt><dd>{!card.composition_checked ? "не проверено — перечитайте карточку" : card.requires_sorting ? <b>нужно: на паллете остаётся товар другого собственника <HelpLink anchor="sort" label="Как разделить" /></b> : "не нужно"}</dd>
       <dt>Создан</dt><dd><Time value={card.created_at} /></dd>
     </dl>
-    <h4>Коды выкупа</h4>
-    {units.error ? <p className="tc-err" role="alert">{units.error}</p> : units.loading && !units.data ? <p className="tc-note">Читаем коды…</p> : units.data && <div className="tc-scroll"><table className="tc-table">
-      <thead><tr><th>Паллета</th><th>Адрес</th><th>Ответ СКМ</th><th>Причина отказа</th><th>Удержание под выкуп</th></tr></thead>
-      <tbody>{units.data.items.map(u => <tr key={u.physical_unit_key}><td>{u.pallet_identifier}</td><td>{str(u.cell)}</td>
+    <h4>Коды выкупа <HelpLink anchor="buyout" label="Как проверить коды" /></h4>
+    {units.error ? <p className="tc-err" role="alert">{units.error}</p> : units.loading && !units.data ? <p className="tc-note">Читаем коды…</p> : units.data && <div className="tc-scroll tc-buyout-units"><table className="tc-table">
+      <thead><tr><th>Код маркировки</th><th>Ответ СКМ</th><th>Текущий собственник</th><th>Идентификатор паллеты</th><th>Ячейка / отгрузка</th><th>Причина отказа</th><th>Удержание под выкуп</th></tr></thead>
+      <tbody>{units.data.items.map(u => <tr key={u.physical_unit_key}>
+        <td>{u.marking_codes?.length ? u.marking_codes.map((m, i) => <details className="tc-marking-code" key={m.system_code + ":" + i}>
+          <summary title="Показать полный код маркировки для сверки с этикеткой" data-help-id="tradecase.buyout.unit.code">{m.code.length > 22 ? m.code.slice(0, 22) + "…" : m.code}</summary>
+          <code aria-label="Полный код маркировки">{m.code}</code>
+        </details>) : "Маркировка не передана"}</td>
         <td>{u.outcome === "CONFIRMED" ? <span className="tc-chip ok">подтверждён</span> : u.outcome === "REJECTED" ? <span className="tc-chip bad">отклонён</span> : <span className="tc-chip">ожидает</span>}</td>
+        <td>{named(names, "OWNER", u.owner_id)}</td><td>{u.carrier_identifier ?? u.pallet_identifier}</td>
+        <td>{u.stock_status === "ISSUED" ? <>Отгружено{u.cell && <small className="tc-last-cell">Последняя ячейка: {u.cell}</small>}</> : str(u.cell)}</td>
         <td>{str(u.reason)}</td><td>{u.buyout_hold ? "да" : "нет"}</td></tr>)}</tbody></table></div>}
     <div className="tc-pager">{cursors.length > 1 && <Act help={tcHelp.first} onClick={() => setCursors([null])}>⟲ К началу</Act>}
       {units.data?.has_more && units.data.next_after && <Act help={tcHelp.moreUnits} onClick={() => setCursors(c => [...c, units.data!.next_after])}>Далее →</Act>}</div>

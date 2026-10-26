@@ -38,7 +38,11 @@ class OracleTradeStock:
                 codes.setvalue(0, json.dumps(hints))
                 result = cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_TRADE_STOCK_API.execute_command", [warehouse_id, actor, request, codes, result])
-                return read_oracle_json(result.getvalue())
+                response = read_oracle_json(result.getvalue())
+                if command == "BUYOUT_UNITS":
+                    from .trade_buyout_codes import attach_buyout_codes
+                    return attach_buyout_codes(cur, response, warehouse_id, payload["buyout_id"])
+                return response
         except oracledb.DatabaseError as exc:
             number = getattr(exc.args[0], "code", 0)
             status = 403 if number in {20851, 20882} else 404 if number == 1403 else 409 if 20800 <= number <= 20999 else 503
