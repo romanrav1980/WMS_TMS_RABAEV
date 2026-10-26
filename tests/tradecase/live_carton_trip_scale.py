@@ -23,6 +23,16 @@ q.UNITS=10
 if q.STATE.exists():q.s.update(json.loads(q.STATE.read_text(encoding='utf-8')))
 s=q.s
 original_step=q.step
+original_http=q.http
+
+
+def carton_http(method,path,body=None,*args,**kwargs):
+    if method=='POST' and path.endswith(('/launch','/release-picking')):
+        kwargs['timeout']=100
+    return original_http(method,path,body,*args,**kwargs)
+
+
+q.http=carton_http
 
 
 def bounded_step(key,method,path,body=None,status=200):
@@ -75,7 +85,7 @@ def prepare_after_source_bound():
 
 
 def launch_after_wave_bound():
-    assert 'WAVE_LAUNCH_BATCH_BOUND' in s.get('error','') or ('REQUEST_DEADLINE' in s.get('error','') and 'launch_places1000' in s['steps'])
+    assert s.get('phase')=='RECEIVED' and 'launch_places1000' in s['steps']
     key=s['wave_key'];wave=s['steps'][key+'_wave']['result']['pick_wave_id'];route=f'/api/picking/waves/{wave}'
     q.step('launch_places1000','POST',route+'/launch',dict(operation_id=q.tag()+'.launch.places1000'))
     q.step('staging_places1000','POST',route+'/staging/release',dict(to_cell=s['fixture']['receive']))

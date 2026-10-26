@@ -89,6 +89,22 @@ def command():
 
 
 class StockRunnerTests(unittest.TestCase):
+    def test_large_wave_shares_one_deadline_across_retries(self):
+        wave = StockCommand(operation_id='wave-id',command_type='WAVE_PICK_RELEASE',actor='authenticated-user',
+                            lines=(),source={'wave_id':636},metadata={})
+        pool = Pool(Connection())
+        deadlines=[]
+        def attempt(lease,payload,actor,operation_id,deadline):
+            deadlines.append(deadline)
+            if len(deadlines)==1:
+                raise oracledb.DatabaseError(SimpleNamespace(code=54))
+            return {'status':'APPLIED'}
+        with patch.object(uow,'_oracle_pool',return_value=pool),patch.object(uow,'monotonic',return_value=10),patch.object(uow,'_attempt',side_effect=attempt):
+            result=uow.StockPosting(wait=lambda _:None).post(wave)
+        self.assertEqual(result,{'status':'APPLIED'})
+        self.assertEqual(deadlines,[100,100])
+        self.assertEqual(pool.acquires,1)
+
     def test_stale_task_version_checks_receipt_once_but_transient_closure_still_retries(self):
         original = Cursor.execute
         for reason, attempts in (("TASK_EXPECTED_SIGNATURE_CHANGED", 2), ("CLOSURE_CHANGED: HU", 3)):

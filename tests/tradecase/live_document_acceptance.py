@@ -22,7 +22,7 @@ CALLS = []
 BASE = "http://127.0.0.1:8088"
 
 
-def http(method, path, body=None, actor=None, password=None):
+def http(method, path, body=None, actor=None, password=None, *, timeout=35):
     actor = actor or os.environ["TRADECASE_ADMIN_USER"]
     password = password or os.environ["TRADECASE_ADMIN_PASSWORD"]
     auth = base64.b64encode((actor + ":" + password).encode()).decode()
@@ -30,7 +30,7 @@ def http(method, path, body=None, actor=None, password=None):
                       headers={"Authorization": "Basic " + auth, "Content-Type": "application/json"}, method=method)
     started = time.perf_counter()
     try:
-        with urlopen(request, timeout=35) as response:
+        with urlopen(request, timeout=timeout) as response:
             code, raw = response.status, response.read()
     except HTTPError as exc:
         code, raw = exc.code, exc.read()

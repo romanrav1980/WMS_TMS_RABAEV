@@ -14,6 +14,7 @@ from .stock_staging_inputs import prepare_staging_inputs
 
 RETRY_CODES = {54, 60, 20840, 20846, 20890, 30006}
 REQUEST_BUDGET = 30.0
+WAVE_BATCH_BUDGET = 90.0
 _LOG = logging.getLogger(__name__)
 
 
@@ -132,7 +133,10 @@ class StockPosting:
 
     def post(self, command: StockCommand) -> dict[str, Any]:
         payload = command.canonical_json()
-        deadline = monotonic() + REQUEST_BUDGET
+        # Launch atomically validates up to 1000 inventory places. A measured
+        # 660-place command needs ~60s; row-lock attempts still have their native 6s cap.
+        budget = WAVE_BATCH_BUDGET if command.command_type in {"WAVE_LAUNCH", "WAVE_PICK_RELEASE"} else REQUEST_BUDGET
+        deadline = monotonic() + budget
         pool = _oracle_pool()
         # Acquire once: retries must not restart a 30-second pool wait.
         lease = _Lease(pool.acquire())
