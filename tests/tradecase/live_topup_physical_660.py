@@ -37,8 +37,11 @@ def step(key, method, path, body=None, status=200):
     """A step runs once; its request and response are kept, so a rerun continues instead of creating anything twice."""
     done = s.setdefault("steps", {})
     if key not in done:
-        done[key] = dict(method=method, path=path, body=body, status=status, result=expect(status, http(method, path, body))); save()
-    return done[key]["result"]
+        done[key] = dict(method=method, path=path, body=body, status=status);save()
+    request=done[key]
+    if 'result' not in request:
+        request['result']=expect(request['status'],http(request['method'],request['path'],request['body']));save()
+    return request['result']
 
 
 def db(sql, **binds):
@@ -153,6 +156,9 @@ def wave(key, order):
     wid = step(key + "_wave", "POST", "/api/picking/waves", dict(wave_code=tag() + "." + key, wave_name="C-0171 " + key, ware_id=f["warehouse_id"],
         planned_start_at=day + "T08:00:00+03:00", planned_finish_at=day + "T10:00:00+03:00"))["pick_wave_id"]
     route = f"/api/picking/waves/{wid}"
+    if key.startswith('topup_proven'):
+        types=db('select TASK_TYPE,QTY from RRL_PICK_TASK where PICK_PLAN_ID=:p order by PICK_TASK_ID',p=plan)
+        assert types==[('FULL_PALLET',200)]*3,types
     step(key + "_added", "POST", route + "/plans", dict(pick_plan_id=plan)); step(key + "_calculated", "POST", route + "/calculate", {})
     launched = step(key + "_launched", "POST", route + "/launch", dict(operation_id=tag() + "." + key + ".launch"))
     assert expect(200, http("POST", route + "/launch", dict(operation_id=tag() + "." + key + ".launch"))) == launched  # replay: no second reservation
@@ -318,6 +324,11 @@ def load():
     t = s["transport"]
     for key, ship in sorted(s["shipments"].items()):
         ident = ship["shipment_identifier"]
+        if "floor_" + key not in s["steps"]:
+            floor = expect(200, http("GET", "/api/inventory/pallet-floor-types?identifier=" + ship["pallet"]))
+            step("floor_" + key, "POST", "/api/inventory/pallet-floor-types", dict(operation_id=tag() + ".floor." + key,
+                identifier=ship["pallet"], pallet_type_id=1, expected_version=floor["version"], scan_pallet=ship["pallet"],
+                scan_cell=floor["cell"], evidence_reference="OWN_SYNTHETIC_EURO_PALLET_NOT_HARDWARE"))
         n = next(k for k, p in s["pallets"].items() if p["pallet"] == ship["pallet"])
         scans = [dict(system_code="CRPT", profile_code="TOBACCO", code=f["gtin"] + f["tag"][:2] + n + str(i).zfill(3)) for i in range(1, UNITS + 1)]
         if "qc_" + key not in s["steps"]:
@@ -340,6 +351,26 @@ def load():
     s["loaded_units"] = db("select -sum(e.BASE_QTY) from RRL_EVENTS e where e.OPERATION_ID like :o", o=tag() + ".load.%")[0][0]; save()
     assert tuple(s["after_load"][:2]) == (0, 0) and s["load_facts"] == [["LOADED", PALLETS, PALLETS * UNITS]] and s["loaded_units"] == PALLETS * UNITS, (s["after_load"], s["load_facts"], s["loaded_units"])
     s["phase"] = "LOADED"; save()
+
+
+def unload():
+    """Reverse each own load through the native command; keep all 6600 units reserved for the original orders."""
+    assert s.get("phase") in ("LOADED", "UNLOADING"), s.get("phase")
+    assert s["fixture"]["warehouse_id"] == 223214750
+    s["phase"] = "UNLOADING"; save()
+    for key, loaded in sorted(s["load_bodies"].items()):
+        body = dict(operation_id=tag() + ".unload." + key, load_operation_id=loaded["operation_id"],
+            expected_version=loaded["expected_version"], scan_container=loaded["scan_container"], scan_cell=loaded["scan_cell"],
+            scan_vehicle=loaded["scan_vehicle"], scan_dock=loaded["scan_dock"], reason="Remove synthetic QA load; vehicle height contradiction remains unaccepted")
+        result = step("unload_" + key, "POST", "/api/transport/loading/unload", body)
+        if "unload_replay" not in s:
+            assert expect(200, http("POST", "/api/transport/loading/unload", body)) == result
+            s["unload_replay"] = key; save()
+    s["after_unload"] = stock()
+    s["unload_facts"] = [list(r) for r in db("select STATUS,count(*) from RRL_TT_HU_LOAD_FACT where TT_ID=:t group by STATUS", t=s["transport"]["transport_task_id"])]
+    assert tuple(s["after_unload"]) == (PALLETS * UNITS, PALLETS * UNITS, PALLETS), s["after_unload"]
+    assert s["unload_facts"] == [["UNLOADED", PALLETS]], s["unload_facts"]
+    s["phase"] = "UNLOADED"; save()
 
 
 def main():

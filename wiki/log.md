@@ -5334,3 +5334,5 @@ RuntimeOSRM/Valhallaработает, прежний блокер недосту
 26.10: бюджет6с прошёл8/8/8, диагностическийprepare6924мс/rollbackбезэффекта; настоящий625launch/replay/staging/releaseпрошёл6000HARD. Дляproposal15выявлено неверноеCASE-планирование целых200EAпри собственномHARD, wave628releaseотказал без физического движения. Подготовленtopup_whole_palletодноусловиевRRL_PICKING_API, NOT_APPLIED; ожидания и rollback/dependenciesзафиксированы.
 
 26.10: topup_whole_palletv1прошёл8/8/8, но новуюволну629также построилCASE; результатнепринят, rollback8/0errors. Выявлен фактическийдефектснимкаREMAIN-HARDприownhold; v2меняеттолькоснимокдляtopup, сохраняетисходныйFULLPALLETclassifierиhold_free. Partial100из200осталсяCASEвконтроле; v2ещёнеприменён. Данные6600/H6600, physicalMOVEещёнет.
+
+26.10: Codex подготовил 2026-10-26_load_vehicle_dimensions после настоящего LOAD/UNLOAD 33 паллет. Факты движения подтверждены, вместимость не принята: 2,5 м выше кузова 2 м. Комплект ещё не применён; описание wiki/database/load_vehicle_dimensions_20261026.md.
