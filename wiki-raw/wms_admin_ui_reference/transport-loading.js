@@ -5,11 +5,21 @@
  const scope=()=>"wms-physical-load:"+base()+":"+(window.wmsAdminAuth.state.user?.username||"");
  const intent=window.wmsLoadingIntent.create(scope);
  const modeInput=mode=>el(mode==="SINGLE"?"loadShipment":mode==="RECONCILE"?"loadOriginalOperation":"loadIdentifier").value;
- const status=text=>{el("loadStatus").textContent=text;};
+ const status=text=>{el("loadStatus").textContent=text;el("loadActionStatus").textContent=text;};
  function controls(){for(const [id,visible]of [["loadShipment",el("loadMode").value==="SINGLE"],["loadOriginalOperation",el("loadMode").value==="RECONCILE"],["loadIdentifier",["HU","BULK"].includes(el("loadMode").value)]])el(id).closest("label").hidden=!visible;el("loadConfirm").textContent=el("loadMode").value==="BULK"?"Погрузить короб":"Подтвердить фактическую погрузку";document.querySelectorAll("main input,main select,main button").forEach(n=>{if(!n.closest("#deliveryWindow"))n.disabled=busy;});el("loadRetry").hidden=!pending||!!record?.damaged;el("loadArchive").hidden=!record?.damaged;el("loadRestart").hidden=!pending?.confirmed_rejection;el("tripDepart").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован"||!trip?.all_members_physically_loaded;el("loadConfirm").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован";}
+ function loadingError(detail){
+  const raw=JSON.stringify(detail);
+  const messages={
+   LOAD_PLACE_EXCEEDS_VEHICLE_DIMENSIONS:'Грузовое место не помещается в кузов. Проверьте фактические размеры места и профиль машины; выберите подходящую машину.',
+   LOAD_BOUNDING_VOLUME_EXCEEDS_VEHICLE:'Суммарный внешний объём грузовых мест превышает объём кузова. Снимите лишние места с погрузки или выберите другую машину.',
+   LOAD_CURRENT_VEHICLE_DIMENSIONS_REQUIRED:'Профиль машины изменился или не содержит подтверждённых размеров кузова. Подтвердите профиль и перечитайте рейс.',
+   LOAD_FLOOR_CURRENT_TOP_SOURCE_REQUIRED:'Для паллеты не указан тип основания. Укажите тип паллеты и повторно прочитайте состав.'
+  };
+  const key=Object.keys(messages).find(code=>raw.includes(code));return key?messages[key]:raw;
+ }
  async function request(path,body){
   const r=await fetch(base()+path,{method:body?"POST":"GET",headers:{...window.wmsAdminAuth.headers(),...(body?{"Content-Type":"application/json"}:{})},...(body?{body:JSON.stringify(body)}:{})});
-  const data=await r.json();if(!r.ok){const error=new Error(JSON.stringify(data.detail||data));error.status=r.status;error.confirmed=(r.status===422||data.detail?.outcome_confirmed===true)&&![401,403].includes(r.status)&&!String(data.detail?.message||data.detail?.code||"").includes("CONFLICT");throw error;}return data;
+  const data=await r.json();if(!r.ok){const error=new Error(loadingError(data.detail||data));error.status=r.status;error.confirmed=(r.status===422||data.detail?.outcome_confirmed===true)&&![401,403].includes(r.status)&&!String(data.detail?.message||data.detail?.code||"").includes("CONFLICT");throw error;}return data;
  }
  function clearMeasurements(){
   for(const id of ["loadGross","loadWidth","loadDepth","loadHeight","loadTempObserved","loadTempReference","departTempObserved","departTempReference"]){const node=el(id);if(node)node.value="";}

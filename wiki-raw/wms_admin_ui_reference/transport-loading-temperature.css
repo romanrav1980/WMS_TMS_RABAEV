@@ -22,3 +22,8 @@ body{min-width:0}.workspace{min-width:0;padding:24px;background:#f5f8fc}
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.workspace{padding:12px}.workspace .panel{padding:16px}.workspace .panel>label{display:flex;min-width:0;margin-right:0}.workspace .panel>button{max-width:100%}.workspace h1{font-size:22px}.workspace table{min-width:720px}}
 
 .loading-temperature select{box-sizing:border-box;min-width:0;width:100%}
+
+.workspace .loading-trip-table{max-height:22rem;overflow:auto;overscroll-behavior:contain}
+.workspace .loading-trip-table thead th{position:sticky;top:0;z-index:1}
+.workspace .loading-action-status{overflow-wrap:anywhere;font-weight:600}
+.loading-recovery-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
