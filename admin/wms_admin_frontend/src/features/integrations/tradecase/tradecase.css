@@ -56,3 +56,7 @@
 .tc-marking-code code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px;user-select:text}
 .tc-last-cell{display:block;color:var(--tc-dim);margin-top:4px}
 @media(max-width:600px){.tc-tabs{display:none}.tc-mobile-tabs{display:flex;align-items:center;gap:10px;min-width:0;padding:8px 12px;background:var(--tc-panel);border:1px solid var(--tc-line);border-radius:10px}.tc-mobile-tabs select{flex:1;min-width:0;max-width:100%;min-height:44px;font-size:16px}}
+
+.tc-shipment-messages .tc-table { min-width: 0; table-layout: fixed; }
+.tc-shipment-messages .tc-table th, .tc-shipment-messages .tc-table td { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
+.tc-shipment-messages .tc-table th:nth-child(2) { width: 4rem; }

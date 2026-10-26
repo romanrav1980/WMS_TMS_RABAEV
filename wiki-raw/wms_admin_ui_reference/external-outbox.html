@@ -38,12 +38,12 @@
               <input placeholder="Событие, система, статус, агрегат..." />
               <kbd>⌘ K</kbd>
             </label>
-            <button class="round alert">12</button>
-            <button class="round">?</button>
+
+
             <div class="profile">
               <span class="avatar"></span>
               <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
-              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+              <button id="adminLogout" class="logout-button" type="button" title="Завершить текущий сеанс администратора" data-help-id="external-outbox.logout">Выйти</button>
             </div>
           </div>
         </header>
@@ -52,17 +52,17 @@
           <article class="panel api-audit-panel">
             <header>
               <h2>Внешние отправки: outbox и адаптеры</h2>
-              <button id="externalRefresh" type="button">↻</button>
+              <button id="externalRefresh" type="button" title="Перечитать очередь по выбранным фильтрам" data-help-id="external-outbox.refresh">↻</button>
             </header>
             <div class="api-audit-toolbar">
-              <label>Система<select id="externalSystem"><option value="">Все</option><option>MERCURY</option><option>CRPT</option><option>INTERNAL</option></select></label>
+              <label>Система<select id="externalSystem"><option value="">Все</option><option>MERCURY</option><option>CRPT</option><option>INTERNAL</option><option value="TRADECASE_BUS">СНС/BLC</option></select></label>
               <label>Статус<select id="externalStatus"><option value="">Все</option><option>PENDING</option><option>LOCKED</option><option>RETRY</option><option>DONE</option><option>ERROR</option><option>DEAD_LETTER</option></select></label>
               <label>Событие<input id="externalEventType" placeholder="MercuryOperationRequested" /></label>
               <label>Тип агрегата<input id="externalAggregateType" placeholder="PROD_BATCH" /></label>
               <label>ID агрегата<input id="externalAggregateId" placeholder="12345 / SSCC" /></label>
               <label>Лимит<input id="externalLimit" type="number" min="1" max="500" value="50" /></label>
-              <button id="externalDryRun" type="button">Dry run retry</button>
-              <button id="externalRetry" type="button" data-permission="external_outbox_retry">Повторить</button>
+              <button id="externalDryRun" type="button" title="Проверить возможность повторной передачи выбранного сообщения; его состояние не изменится" data-help-id="external-outbox.check-retry">Проверить повтор</button>
+              <button id="externalRetry" type="button" data-permission="external_outbox_retry" title="Вернуть выбранное отказавшее сообщение в очередь" data-help-id="external-outbox.retry">Повторить отправку</button>
             </div>
             <div class="api-audit-summary"><span id="externalStatusText">Ожидание данных</span><span id="externalRetryStatus"></span></div>
             <div class="api-audit-content">
@@ -79,7 +79,7 @@
           <article class="panel api-audit-panel">
             <header>
               <h2>Журнал адаптеров</h2>
-              <button id="adapterRefresh" type="button">↻</button>
+              <button id="adapterRefresh" type="button" title="Перечитать журнал обращений адаптеров" data-help-id="external-outbox.adapters">↻</button>
             </header>
             <div class="api-audit-summary"><span id="adapterStatusText">Ожидание данных</span></div>
             <div class="api-audit-content">

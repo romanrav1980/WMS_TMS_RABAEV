@@ -5,7 +5,7 @@ import { TripRoute } from "./TripRoute";
 import { useState } from "react";
 import { RAW_ADMIN_BASE } from "../../../api";
 import { executionPath, nativeTripPath, tcHelp, tripBindingPath } from "./api";
-import type { BindingBody, DocCard, NativeTrip, TripExec } from "./api";
+import type { BindingBody, DocCard, NativeTrip, TripExec, ShipmentMessage } from "./api";
 import { journal } from "./intent";
 import { useCommand } from "./useCommand";
 import { useRead } from "./useRead";
@@ -20,9 +20,9 @@ const LOAD: Record<string, string> = { DEPARTED: "выехал", LOADED: "пог
 export const tripScreen = (nativeId: number) => `${RAW_ADMIN_BASE}/transport-loading.html?trip_id=${nativeId}`;
 
 /** Фактическое исполнение внешнего рейса: привязка к рейсу склада, документ и погрузки. Документ ≠ доставка; очередь ≠ внешний документ. */
-export function TripExecution({ wh, user, trip }: { wh: string; user: string; trip: DocCard }) {
+export function TripExecution({ wh, user, trip, refresh }: { wh: string; user: string; trip: DocCard; refresh: number }) {
   const [reload, setReload] = useState(0), [edit, setEdit] = useState(false), topup = useTopup(wh, user);
-  const ex = useRead<TripExec>(executionPath(wh, trip.document_id), reload);
+  const ex = useRead<TripExec>(executionPath(wh, trip.document_id), reload + refresh);
   const missing = Boolean(ex.error) && ex.error.includes("не найден");
   const e = ex.data;
   return <section className="tc-bind"><h4>Фактическое исполнение рейса <HelpLink anchor="trip" /></h4>
@@ -34,8 +34,9 @@ export function TripExecution({ wh, user, trip }: { wh: string; user: string; tr
         <dt>Документ</dt><dd>{DOC[e.document_status] ?? "состояние документа неизвестно"}{e.external_document_id ? ` (${e.external_document_id})` : ""}{e.error_reason ? `: ${e.error_reason}` : ""}. Готовность документа не означает доставку.</dd>
         <dt>Версии</dt><dd>рейс {e.trip_version}, привязка {e.binding_version}{e.document_version ? `, документ ${e.document_version}` : ""}</dd>
       </dl>
-      {e.loads.length > 0 && <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Погрузка</th><th>Место</th><th>Состояние</th><th>Выезд</th><th>Груз передан получателю</th></tr></thead>
-        <tbody>{e.loads.map(l => <tr key={l.load_operation_id}><td>{l.load_operation_id}</td><td>{l.identifier}</td><td>{LOAD[l.status] ?? l.status}</td><td><Time value={l.departed_at} /></td><td>{l.custody_released ? "да" : "нет"}</td></tr>)}</tbody></table></div>}
+      {e.loads.length > 0 && <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Место</th><th>Состояние</th><th>Выезд</th><th>Груз передан получателю</th></tr></thead>
+        <tbody>{e.loads.map(l => <tr key={l.load_operation_id}><td>{l.identifier}</td><td>{LOAD[l.status] ?? l.status}</td><td><Time value={l.departed_at} /></td><td>{l.custody_released ? "да" : "нет"}</td></tr>)}</tbody></table></div>}
+      {Boolean(e.shipment_messages?.length) && <ShipmentDelivery messages={e.shipment_messages!} hasMore={e.shipment_messages_has_more} />}
       <Tech value={e} /></>}
     {e && !edit && <Act help={tcHelp.rebindTrip} onClick={() => setEdit(true)}>Изменить привязку</Act>}
     {(missing || edit) && <BindForm wh={wh} user={user} trip={trip} bindingVersion={e?.binding_version ?? 0} onDone={() => { setEdit(false); setReload(n => n + 1); }} />}
@@ -44,6 +45,18 @@ export function TripExecution({ wh, user, trip }: { wh: string; user: string; tr
     <TopupPreview wh={wh} trip={trip.document_id} saveLocked={topup.cmd.stored.kind !== "none" || topup.cmd.busy}
       onSave={(needIds, age) => topup.cmd.start({ action: "SAVE", trip: trip.document_id, need_ids: needIds, max_age_minutes: age }, topup.refresh)} />
     <TopupProposals wh={wh} trip={trip.document_id} topup={topup} />
+  </section>;
+}
+
+function ShipmentDelivery({ messages, hasMore }: { messages: ShipmentMessage[]; hasMore?: boolean }) {
+  const statuses: Record<string, string> = { PENDING: "В очереди", LOCKED: "Передаётся", RETRY: "Ожидает повтора", DONE: "Передано транспорту", ERROR: "Ошибка передачи", DEAD_LETTER: "Требуется разбор", CANCELLED: "Отменено" };
+  return <section className="tc-shipment-messages"><h4>Передача фактической отгрузки <HelpLink anchor="shipment" /></h4>
+    <p className="tc-note">Сверяйте отправку в обе системы. Подтверждение оформления в SAP и СКМ проверяйте отдельно от доставки сообщения.</p>
+    <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Отправка</th><th>Шт.</th><th>Передача</th></tr></thead>
+      <tbody>{messages.map(message => <tr key={message.event_id}><td>{message.order_id}<br />{message.system_code === "SKM" ? "СКМ" : message.system_code}</td><td>{message.quantity}</td>
+        <td>{statuses[message.delivery_status] ?? "Состояние уточняется"}<br /><a href={`${RAW_ADMIN_BASE}/external-outbox.html?event_id=${message.event_id}`} target="_blank" rel="noopener" title="Открыть это сообщение в технической очереди. Ответственный за обмен может проверить ошибку и повторить выбранную отправку." data-help-id="tradecase.shipment.queue">Открыть</a></td></tr>)}</tbody>
+    </table></div>
+    {hasMore && <p className="tc-note">Показаны первые 400 сообщений. Остальные проверьте во внешних отправках.</p>}
   </section>;
 }
 

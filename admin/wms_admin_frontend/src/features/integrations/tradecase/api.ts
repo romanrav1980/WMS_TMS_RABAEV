@@ -59,9 +59,10 @@ export const buyoutsPostPath = (wh: string) => base(wh) + "/buyouts";
 export const sortPath = (wh: string) => base(wh) + "/stock/sort";
 /** Исполнение внешнего рейса (C-0139): 404 — привязки к фактическому рейсу ещё нет, а не пустой рейс. */
 export type TripLoad = { load_operation_id: string; status: string; identifier: string; content_version: number; departed_at: string | null; custody_released: boolean };
+export type ShipmentMessage = { event_id: number; delivery_status: string; attempts: number; system_code: string; order_id: string; quantity: string; base_uom: string; unit_count: number };
 export type TripExec = { basis_current: boolean; trip_id: string; native_task_id: number | null; trip_version: number; binding_version: number; manifest_signature: string | null;
   loads: TripLoad[]; document_version: number | null; document_status: "READY" | "ERROR" | "REVOKED" | "MISSING" | string; external_document_id: string | null;
-  error_reason: string | null; manifest_matched: boolean; document_ready: boolean };
+  error_reason: string | null; manifest_matched: boolean; document_ready: boolean; shipment_messages?: ShipmentMessage[]; shipment_messages_has_more?: boolean };
 export type NativeTrip = { ID: number; TRANSPORT: string | null; CONDITION: string | null; DOCK: string | null; SHIPMENT_DATE: string | null; VODITEL_NAME: string | null };
 export type BindingBody = { operation_id: string; native_task_id: number; expected_trip_version: number; expected_binding_version: number };
 export const executionPath = (wh: string, trip: string) => base(wh) + "/trips/" + encodeURIComponent(trip) + "/execution";

@@ -27,7 +27,27 @@ class OracleTradeTransport:
                 codes=cur.var(oracledb.DB_TYPE_CLOB);codes.setvalue(0,"[]")
                 result=cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_TRADE_STOCK_API.execute_command",[ware,actor,wire,codes,result])
-                return read_oracle_json(result.getvalue())
+                response = read_oracle_json(result.getvalue())
+                if kind == "TRIP_STATE" and response.get("native_task_id"):
+                    cur.execute("""select /* TRADE_TRIP_SHIPMENT_DELIVERY */ e.EVENT_OUTBOX_ID,e.STATUS,e.TRY_COUNT,
+                        p.SYSTEM_CODE,p.ORDER_ID,p.QUANTITY,p.BASE_UOM,p.UNIT_COUNT
+                        from RRL_EVENT_OUTBOX e cross apply json_table(e.PAYLOAD_JSON,'$'columns(
+                            SYSTEM_CODE varchar2(40)path'$.system_code',ORDER_ID varchar2(100)path'$.order_id',
+                            QUANTITY varchar2(100)path'$.quantity',BASE_UOM varchar2(20)path'$.base_uom',
+                            UNIT_COUNT number path'$.unit_count',WAREHOUSE_ID number path'$.warehouse_id',
+                            NATIVE_TASK_ID number path'$.native_task_id'))p
+                        where e.EVENT_TYPE in('TRADECASE_SHIPMENT_SAP','TRADECASE_SHIPMENT_SKM')
+                        and exists(select 1 from RRL_TT_HU_LOAD_FACT lf where lf.TT_ID=:native_id
+                            and lf.WARE_ID=:warehouse and lf.STATUS='DEPARTED'and lf.DEPARTURE_OPERATION_ID=e.CORRELATION_ID)
+                        and p.WAREHOUSE_ID=:warehouse and p.NATIVE_TASK_ID=:native_id
+                        order by e.EVENT_OUTBOX_ID fetch first 401 rows only""",
+                        native_id=response["native_task_id"], warehouse=ware)
+                    rows = cur.fetchall()
+                    response["shipment_messages_has_more"] = len(rows) > 400
+                    response["shipment_messages"] = [dict(event_id=id, delivery_status=status, attempts=attempts,
+                        system_code=system, order_id=order, quantity=quantity, base_uom=unit, unit_count=count)
+                        for id,status,attempts,system,order,quantity,unit,count in rows[:400]]
+                return response
         except oracledb.DatabaseError as exc:
             number=getattr(exc.args[0],"code",0)
             status=403 if number in{20851,20882}else 404 if number==1403 else 409 if 20800<=number<=20999 else 503

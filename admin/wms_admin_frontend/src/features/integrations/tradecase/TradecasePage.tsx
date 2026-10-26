@@ -107,7 +107,7 @@ export function TradecasePage({ onBack, onWorkspace }: { onBack: () => void; onW
             : card.data && (view.tab === "BUYOUTS" ? <BuyoutView key={view.open} wh={view.wh} card={card.data as unknown as Buyout} names={names.current.map} /> : view.tab === "MESSAGES" ? <MessageView key={view.wh + ":" + view.open} card={card.data as MsgCard} onOpen={openRelated} onDone={() => setReload(n => n + 1)} /> : <DocumentView card={card.data as DocCard} names={names.current.map} onOpen={openRelated}
               bind={(card.data as DocCard).entity_type === "SUPPLY" ? <BindPanel wh={view.wh} user={user} card={card.data as DocCard} names={names.current.map} onOpen={openRelated} onDone={() => setReload(n => n + 1)} />
                 : (card.data as DocCard).entity_type === "NEED" ? <NeedPreview key={view.open} wh={view.wh} id={view.open} />
-                : (card.data as DocCard).entity_type === "TRIP" ? <TripExecution key={view.open} wh={view.wh} user={user} trip={card.data as DocCard} />
+                : (card.data as DocCard).entity_type === "TRIP" ? <TripExecution key={view.open} wh={view.wh} user={user} trip={card.data as DocCard} refresh={reload} />
                 : (card.data as DocCard).entity_type === "ORDER" && (card.data as DocCard).payload.order_kind === "BUYOUT" ? <BuyoutBasis wh={view.wh} user={user} order={card.data as DocCard} names={names.current.map} onDone={openBuyout} /> : null} />)}
         </section>}
       </div>}</>}
