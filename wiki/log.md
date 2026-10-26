@@ -5332,3 +5332,5 @@ RuntimeOSRM/Valhallaработает, прежний блокер недосту
 26.10: контекст обновлён после очисткиC0170(20/H0/20кодов) и настоящего запуска625(6000HARD). T08добивка60/20/race/replayпрошла; найденFULL_PALLET-пробелклассификациисобственногоHARDвRRL_PICKING_API, правкаеще не начата. Состояние6600HARD, физическойпогрузкинет. ПодробностиRESUME_LATEST, ClaudeостановленK0167до29.10.
 
 26.10: бюджет6с прошёл8/8/8, диагностическийprepare6924мс/rollbackбезэффекта; настоящий625launch/replay/staging/releaseпрошёл6000HARD. Дляproposal15выявлено неверноеCASE-планирование целых200EAпри собственномHARD, wave628releaseотказал без физического движения. Подготовленtopup_whole_palletодноусловиевRRL_PICKING_API, NOT_APPLIED; ожидания и rollback/dependenciesзафиксированы.
+
+26.10: topup_whole_palletv1прошёл8/8/8, но новуюволну629также построилCASE; результатнепринят, rollback8/0errors. Выявлен фактическийдефектснимкаREMAIN-HARDприownhold; v2меняеттолькоснимокдляtopup, сохраняетисходныйFULLPALLETclassifierиhold_free. Partial100из200осталсяCASEвконтроле; v2ещёнеприменён. Данные6600/H6600, physicalMOVEещёнет.
