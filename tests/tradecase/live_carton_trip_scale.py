@@ -186,13 +186,16 @@ def finish():
     assert s['final_fulfillment']==[('SHIPPED',660,6600)],s['final_fulfillment']
     assert q.stock()==(0,0,0)
     wave=s[s.get('wave_key','scale660')+'_wave_id']
-    q.expect(200,q.http('POST',f'/api/picking/waves/{wave}/refresh-sync',{}))
+    s['wave_execution_before_finish']=q.expect(200,q.http('GET',f'/api/picking/waves/{wave}/execution'));q.save()
+    assert s['wave_execution_before_finish']['ready'],s['wave_execution_before_finish']
+    q.step('finish.execution','POST',f'/api/picking/waves/{wave}/finish-execution',dict(operation_id=q.tag()+'.finish'))
     assert q.db('select STATUS from RRL_PICK_WAVE where PICK_WAVE_ID=:w',w=wave)==[('DONE',)]
     with q.oracle_connection()as c:
         cur=c.cursor()
         cur.execute("update RUSERS set DELETED=1 where ID=:u and WARE_ID=:w and USER_GROUP='TC03QA'",u=f['actor'],w=w)
         cur.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where USERNAME=:u and REVOKED_AT is null',u=f['actor']);c.commit()
         cur.execute("select count(*)from USER_OBJECTS where STATUS='INVALID'");assert cur.fetchone()[0]==0
+    if s.get('error'):s.setdefault('previous_errors',[]).append(s.pop('error'))
     s['phase']='CLOSED';s['status']='PASS_SCALE_ONLY';q.save()
 
 
