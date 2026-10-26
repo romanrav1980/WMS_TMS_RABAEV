@@ -104,3 +104,5 @@
 - <a id="control-files"></a> **Control Files.** [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
 
 26.10: [частичное SAP-пополнение](database/sap_replenishment_clone_20261026.md) — найден20804на задании1286; подготовлен защищённый комплект, без нового writer.
+
+26.10: [план ресурсных блокировок](database/lock_resource_dedup_20261026.md) исследуется по сбою волны625; контрольный набор30000/6000дал1806→363мс при равныхLOCK_ID, живое исправление ещё не принято.

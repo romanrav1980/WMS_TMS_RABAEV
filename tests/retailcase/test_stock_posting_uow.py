@@ -107,6 +107,22 @@ class StockRunnerTests(unittest.TestCase):
                     self.assertEqual(error.exception.rule_reason, reason)
                 self.assertEqual((connection.committed, connection.rollbacks, len(connection.requests)), (0, attempts, attempts))
 
+    def test_driver_call_timeout_returns_a_recoverable_command_error_after_rollback(self):
+        connection = Connection()
+        pool = Pool(connection)
+        original = Cursor.execute
+        def execute(cursor, sql, binds=None):
+            original(cursor, sql, binds)
+            if "prepare_command" in sql:
+                raise oracledb.DatabaseError(SimpleNamespace(code=0, full_code="DPY-4024"))
+        with patch.object(uow, "_oracle_pool", return_value=pool), patch.object(Cursor, "execute", execute):
+            with self.assertRaises(StockPostingError) as error:
+                uow.StockPosting(wait=lambda _: None).post(command())
+        self.assertEqual((error.exception.code, error.exception.operation_id), ("REQUEST_DEADLINE", "same-id"))
+        self.assertEqual((connection.committed, connection.rollbacks, connection.resets), (0, 1, 1))
+        self.assertEqual(connection.requests, [command().canonical_json()])
+        self.assertEqual((pool.releases, pool.drops), (1, 0))
+
     def test_concurrent_receipt_becoming_visible_beats_stale_signature_refusal(self):
         connection = Connection()
         pool = Pool(connection)

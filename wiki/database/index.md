@@ -159,3 +159,5 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 [Trade shortage guard C-0170](trade_short_guard_20261023.md): NOT_APPLIED v2 kit, CASE_SHORT_APPROVE bound to own operation plan; v1 DO NOT APPLY.
 
 - [[sap_replenishment_clone_20261026]] — конкретный допуск клона из плана частичного SAP-пополнения; до приёмки NOT_APPLIED.
+
+- [[lock_resource_dedup_20261026]] — удаление дубликатов перед hash mutex; бюджеты и набор блокировок сохраняются, приёмка продолжается.

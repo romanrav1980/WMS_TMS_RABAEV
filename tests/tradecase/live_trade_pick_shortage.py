@@ -2,7 +2,7 @@
 existing writers only. NEW isolated warehouse (same guard as live_factory_hierarchy), two own lots of 10 SNS units; an order of 10 is
 replenished from lot A into the pick cell, CASE picker reports the whole shortage, an independent approver decides RESTORE, the linked
 inventory task counts lot A to 0 (the only loss posting), lot B replenishes, READY re-reserves lot B under the same order row, the picker
-picks lot B. The line is partly picked first (4 of 10, a carrier lot of the CASE) and 6 are reported short. Plus owner revoke -> replay 403 -> restore -> same receipt, and changed-body 409. Resumable: phases are saved in the state
+picks lot B. The CASE order is8 of a source lot10:4 picked,4 short; the cell count confirms6 missing physical units. Plus owner revoke -> replay 403 -> restore -> same receipt, and changed-body 409. Resumable: phases are saved in the state
 file and repeated steps return the stored result. NOT executed by Claude (native candidate not applied when written)."""
 from datetime import datetime, timezone, timedelta
 import json
@@ -213,12 +213,12 @@ def shortage():
     def reserved_scans(limit):
         rows = db("""select c.RAW_CODE from RRL_WMS_RECEIPT_UNIT u join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID
             join RRL_STOCK_RESERVATION r on r.RESERVATION_ID=u.HARD_RESERVATION_ID where r.SOURCE_DOC_TYPE='PICK_WAVE' and r.SOURCE_LINE_ID=:p
-            and r.STATUS in('ACTIVE','ALLOCATED','PICKING') order by u.PHYSICAL_UNIT_KEY""", p=s["pick_task"])[:limit]
+            and r.STATUS in('ACTIVE','ALLOCATED','PICKING') and u.CURRENT_CELL=:cell and u.CURRENT_UID=r.UID_PALLET and u.CURRENT_CELL=r.CELL order by u.PHYSICAL_UNIT_KEY""", p=s["pick_task"],cell=f["pick"])[:limit]
         return [dict(system_code="CRPT", profile_code="TOBACCO", code=(raw.read() if hasattr(raw, "read") else raw)) for (raw,) in rows]
-    # 0. Partly picked first (4 of 10): the carrier lot of this CASE then holds picked trade goods, which the decision also locks.
+    # 0. Partly picked first (4 of 8): the carrier lot of this CASE then holds picked trade goods, which the decision also locks.
     step("picked_part", "POST", case + f"/lines/{s['line']}/confirm", dict(operation_id=tag + ".pickpart", fact_qty="4", scan_cell=f["pick"], scan_product=f["article"],
         scan_container=carrier, resource_id=resource, resource_session_id=session, unit_scans=reserved_scans(4)), picker, password)
-    # 1. The picker reports the remaining 6 short: no quantity or owner change yet.
+    # 1. The picker reports the remaining 4 short: no quantity or owner change yet.
     step("short", "POST", case + f"/lines/{s['line']}/short", dict(picked_qty="4", short_qty="4", reason_text="Cell short at pick (isolated QA)",
         offline_event_id=tag + ".short", resource_id=resource, resource_session_id=session), picker, password)
     short_id = db("select CASE_PICK_SHORT_ID from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=:l", l=s["line"])[0][0]; s["short_id"] = short_id; save()
@@ -256,15 +256,19 @@ def shortage():
     # 5. Replenishment from the other own lot through the existing warehouse task (trade guard checks REPLENISH compatibility).
     for tid, pallet, src, dst, qty in db("""select wh.TASK_ID,wh.UID_PALLET,wh.FROM_CELL,wh.TO_CELL,wh.QTY from RRL_WAREHOUSE_TASK wh
         where wh.TASK_SOURCE='WAVE' and wh.SOURCE_TASK_ID=:r and wh.TASK_TYPE='REPLENISHMENT' and wh.STATUS not in('DONE','CANCELLED')""", r=count["replenish_task_id"]):
-        step("short_repl_" + str(tid), "POST", f"/api/warehouse-tasks/{tid}/complete", dict(operation_id=tag + ".shortrepl." + str(tid), scanned_pallet=pallet,
-            scanned_from_cell=src, scanned_to_cell=dst, fact_qty=str(qty)))
+        key='short_repl_'+str(tid)+'_units'
+        if key not in s:
+            s[key]=[k for (k,) in db("select PHYSICAL_UNIT_KEY from RRL_WMS_RECEIPT_UNIT where CURRENT_UID=:u and CURRENT_CELL=:c and HARD_RESERVATION_ID=(select SOURCE_RESERVATION_ID from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_REPLENISH_TASK_ID=:r)order by PHYSICAL_UNIT_KEY",u=pallet,c=src,r=count['replenish_task_id'])]
+            assert len(s[key]) == int(qty), s[key];save()
+        step("short_repl_" + str(tid), "POST", f"/api/warehouse-tasks/{tid}/complete", dict(operation_id=tag + ".shortrepl." + str(tid)+'.units', scanned_pallet=pallet,
+            scanned_from_cell=src, scanned_to_cell=dst, fact_qty=str(qty),unit_keys=s[key]))
     # 6. READY re-reserves the replenished lot under the same order row; the picker then picks those units.
     recovery = db('select RECOVERY_STATE from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=:i',i=short_id)[0][0]
     assert recovery == 'READY', recovery
     s['ready_observed'] = dict(source='NATIVE_AFTER_REPLENISHMENT_READ_ONLY',recovery_state=recovery);save()
     scans = reserved_scans(100)
-    assert len(scans) == 4, len(scans)  # exactly the remaining 6 of lot B are now reserved under the same order row
-    step("picked", "POST", case + f"/lines/{s['line']}/confirm", dict(operation_id=tag + ".pick", fact_qty="4", scan_cell=f["pick"], scan_product=f["article"],
+    assert len(scans) == 4, len(scans)  # exactly the remaining 4 are reserved at the original pick cell
+    step("picked", "POST", case + f"/lines/{s['line']}/confirm", dict(operation_id=tag + ".pick", fact_qty="8", scan_cell=f["pick"], scan_product=f["article"],
         scan_container=carrier, resource_id=resource, resource_session_id=session, unit_scans=scans), picker, password)
     s["final"] = {"remains": [list(r) for r in db("select r.UID_POLETA,r.CELL,r.REMAIN,r.HARD_RESERVED_BASE from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0 order by 1,2", w=w)],
                   "loss_rows": db("select count(*) from RRL_INVENTORY_LOSS_UNIT where UID_PALLET=:u", u=lot_a)[0][0],
@@ -273,9 +277,55 @@ def shortage():
     assert s['final']['loss_rows'] == s['expected_count_loss'], s['final']
     assert s['final']['invalid'] == 0, s['final']
     totals = db('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w)[0]
-    assert totals == (20-s['expected_count_loss'], 0), totals
+    assert totals == (20-s['expected_count_loss'], 8), totals
     s['final']['totals'] = list(totals)
     s["phase"] = "RECOVERED"; save()
+
+
+def cleanup():
+    assert s.get('phase') in ('RECOVERED','CLEANING'), s.get('phase')
+    s['phase']='CLEANING';save()
+    f=s['fixture'];w=f['warehouse_id'];tag='TS23.'+f['tag'];base=f'/api/tradecase/warehouses/{w}'
+    case=f"/api/case-pick/tasks/{s['case']}"
+    picker,pw=s['picker']['username'],s['picker']['password']
+    requests=s.setdefault('cleanup_requests',{})
+    def action(key,method,path,body,actor=None,password=None):
+        if key not in requests:requests[key]=dict(method=method,path=path,body=body);save()
+        r=requests[key]
+        return step(key,r['method'],r['path'],r['body'],actor,password)
+    carrier,version=db('select SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t',t=s['case'])[0]
+    action('cleanup_closed','POST',case+'/close-current',dict(operation_id=tag+'.cleanup.close',expected_content_version=version),picker,pw)
+    carrier,version=db('select SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t',t=s['case'])[0]
+    lots=[uid for(uid,)in db('select LOT_UID from RRL_CASE_CARRIER_LOT where CASE_PICK_TASK_ID=:t order by LOT_UID',t=s['case'])]
+    assert len(lots)==2, lots
+    action('cleanup_return_original','POST',case+'/return-carrier',dict(operation_id=tag+'.cleanup.return.original',scan_container=carrier,expected_content_version=version,destinations={uid:f['pick'] for uid in lots}))
+    revision=action('found_revision','POST','/api/inventory/stock-posting/inventory/revisions',dict(warehouse_id=w))['revision_id']
+    uid=s['picked_lot_pallet']
+    keys=db("select c.SYSTEM_CODE,c.RAW_CODE from RRL_INVENTORY_LOSS_UNIT l join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=l.PHYSICAL_UNIT_KEY join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID where l.LOSS_OPERATION_ID=:o order by l.PHYSICAL_UNIT_KEY",o=tag+'.count')
+    assert len(keys)==s['expected_count_loss'], len(keys)
+    version=db('select STOCK_VERSION from RRL_REMAINS where UID_POLETA=:u and CELL=:c',u=uid,c=f['pick'])[0][0]
+    action('found_original_units','POST','/api/inventory/stock-posting/inventory/counts',dict(operation_id=tag+'.cleanup.found',revision_id=revision,reason='Return the same missing fixture codes after shortage acceptance',counts=[dict(uid=uid,cell=f['pick'],article=f['article'],unit='EA',quantity=str(len(keys)),expected_stock_version=version,scans=[dict(system_code=system,profile_code='TOBACCO',code=code)for system,code in keys])]))
+    action('cleanup_logout','POST',f"/api/resources/sessions/{s['session']['id']}/logout",dict(reason='End own shortage acceptance'))
+    action('cleanup_qualification','PUT',f"/api/resources/{s['resource']['id']}/qualifications",dict(task_type='CASE_PICK',active=False))
+    action('cleanup_book','POST','/api/inventory/tare/book-cancel',dict(operation_id=tag+'.cleanup.book',booking_operation_id=s['tare_book']['operation_id']))
+    balance=next(x for x in expect(200,http('GET',f'/api/inventory/tare/warehouses/{w}/balances')) if x['custodian_kind']=='WAREHOUSE'and x['pallet_type_id']==1 and x['condition_code']=='GOOD')
+    action('cleanup_tare','POST','/api/inventory/tare/count',dict(operation_id=tag+'.cleanup.tare',owner_ware_id=w,pallet_type_id=1,condition='GOOD',observed_quantity='0',expected_version=balance['balance_version'],reason='Restore synthetic shortage tare baseline',decision_reference='TEST_FIXTURE_RESTORE:'+tag))
+    for who in ('picker','approver'):
+        user=s[who]['username'];v=1 if who=='picker' else 3
+        action('cleanup_owner_'+who,'PUT',base+'/stock/owner-grants',dict(operation_id=tag+'.cleanup.owner.'+who,expected_version=v,username=user,owner_id=tag+'.owner_SNS',can_view=False,can_operate=False,reason='Retire own shortage access'))
+    with oracle_connection() as conn:
+        q=conn.cursor()
+        for revision_id in (s['revision']['revision_id'],revision):
+            q.execute('select CONDITION,WARE_ID from RRL_REVIZION where ID=:r',r=revision_id);condition,warehouse=q.fetchone();assert warehouse==w
+            if condition in (0,1,2):
+                result=q.var(int);q.execute('begin :v:=REVIZION.close_revision(:r);end;',v=result,r=revision_id);assert result.getvalue()==1
+        for user in (s['picker']['username'],s['approver']['username'],f['actor']):
+            q.execute("update RUSERS set DELETED=1 where ID=:u and WARE_ID=:w and USER_GROUP='TC03QA'",u=user,w=w);assert q.rowcount==1
+            q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=coalesce(REVOKED_AT,systimestamp)where USERNAME=:u and SCOPE_ID=:w',u=user,w=str(w))
+        conn.commit()
+    totals=db('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w)[0]
+    assert totals==(20,0),totals
+    s['cleanup_totals']=list(totals);s['phase']='CLEANED';s['status']='PASS';s.pop('error',None);save()
 
 
 if __name__ == "__main__":
@@ -283,6 +333,11 @@ if __name__ == "__main__":
     os.environ.setdefault("TRADECASE_ADMIN_PASSWORD", re.search(r"PASS=(\S+?)[`,)\s]", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))[1])
     if STATE.exists():
         s.update(json.loads(STATE.read_text(encoding="utf-8")))  # resume the same fixture; never a second one
+    if '--cleanup' in sys.argv:
+        try:cleanup()
+        except Exception as exc:s['cleanup_error']=str(exc);save();raise
+        finally:s.setdefault('http',[]).extend(CALLS);save()
+        print(json.dumps(dict(status=s.get('status'),phase=s.get('phase'),stock=s.get('cleanup_totals'))));raise SystemExit(0)
     try:
         if s.get('phase') in ('PLANNED', 'CLEANED'):
             raise RuntimeError('Do not rerun incomplete setup or closed fixture; inspect saved state first')

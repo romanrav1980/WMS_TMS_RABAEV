@@ -142,6 +142,8 @@ class StockPosting:
                     code = _oracle_code(exc)
                     if lease.discard:
                         raise StockPostingError("CONNECTION_UNUSABLE", command.operation_id, code) from exc
+                    if getattr(exc.args[0], 'full_code', None) == 'DPY-4024':
+                        raise StockPostingError('REQUEST_DEADLINE', command.operation_id, code) from exc
                     if code == 1 and "RRL_RECEIPT_UNIT_PHYSICAL_UK" in str(exc):
                         raise StockPostingError("PHYSICAL_UNIT_ALREADY_RECEIVED", command.operation_id, 20886) from exc
                     if code in {1403, 1422}:
