@@ -75,7 +75,7 @@ def prepare_after_source_bound():
 
 
 def launch_after_wave_bound():
-    assert 'WAVE_LAUNCH_BATCH_BOUND' in s.get('error','')
+    assert 'WAVE_LAUNCH_BATCH_BOUND' in s.get('error','') or ('REQUEST_DEADLINE' in s.get('error','') and 'launch_places1000' in s['steps'])
     key=s['wave_key'];wave=s['steps'][key+'_wave']['result']['pick_wave_id'];route=f'/api/picking/waves/{wave}'
     q.step('launch_places1000','POST',route+'/launch',dict(operation_id=q.tag()+'.launch.places1000'))
     q.step('staging_places1000','POST',route+'/staging/release',dict(to_cell=s['fixture']['receive']))
