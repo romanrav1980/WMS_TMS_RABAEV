@@ -33,8 +33,7 @@ class Cursor:
         elif "owner_allowed" in s: self.rows = [(0 if kw["o"] == "HIDDEN" else 1,)]
         elif "from RRL_TRADE_ORDER_LINK" in s:
             self.rows = {("O1", "1"): [(3001, 3)], ("O1", "2"): [(3002, 3)], ("O3", "1"): []}.get((kw["o"], kw["line"]), [])
-        elif "UNATTRIBUTED_LOADS" in s: self.rows = [(self.unattributed,)]
-        elif "from RRL_TT_HU_LOAD_FACT" in s: self.rows = [(3001, "DEPARTED", 0, 6), (3001, "DEPARTED", 1, 2), (3001, "LOADED", 0, 2), (3001, "UNLOADED", 0, 5)]
+        elif "from RRL_TT_HU_LOAD_FACT" in s: self.rows = [(3001, "DEPARTED", 0, 6, "LINE"), (3001, "DEPARTED", 1, 2, "LINE"), (3001, "LOADED", 0, 2, "LINE"), (3001, "UNLOADED", 0, 5, "LINE"), (None, None, None, self.unattributed, "MISSING")]
         else: raise AssertionError(s)
 
     def fetchone(self):

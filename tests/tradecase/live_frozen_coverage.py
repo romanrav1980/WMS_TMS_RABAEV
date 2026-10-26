@@ -5,18 +5,18 @@ ROOT=Path(__file__).resolve().parents[2];sys.path[:0]=[str(ROOT/'scripts'),str(R
 from stock_posting_environment import load_local_oracle_environment
 load_local_oracle_environment()
 from app.db import oracle_connection
-from app.modules.integrations.infrastructure.trade_route import _LOADS,_UNATTRIBUTED
+from app.modules.integrations.infrastructure.trade_route import _LOAD_COVERAGE
 report=dict(status='FAIL',checks=[],physical_writes=0,fixture='Synthetic JSON only; not evidence of physical nested loading')
 with oracle_connection() as c:
  q=c.cursor();q.execute('set transaction read only')
  q.execute('select lot.LOT_UID,pl.CUSTOMER_ORDER_ROW_ID from RRL_CASE_CARRIER_LOT lot join RRL_CASE_PICK_LINE cl on cl.CASE_PICK_LINE_ID=lot.CASE_PICK_LINE_ID join RRL_PICK_PLAN_LINE pl on pl.PICK_PLAN_LINE_ID=cl.PICK_PLAN_LINE_ID where lot.CASE_PICK_TASK_ID in(1168,1169)order by lot.CASE_PICK_TASK_ID');places=q.fetchall();assert len(places)==2
- real_prefix=_LOADS.split(' leaves as(',1)[0]
+ real_prefix=_LOAD_COVERAGE.split(' leaves as(',1)[0]
  fake_prefix="with facts as(select 'SYNTHETIC_READ_ONLY' LOAD_OPERATION_ID,'DEPARTED' STATUS,cast(null as timestamp with time zone)CUSTODY_RELEASED_AT,:tree COMPOSITION_JSON from dual),\n"
  def read(nodes):
   value=json.dumps(dict(nodes=nodes))
-  loads=_LOADS.replace(real_prefix,fake_prefix,1);missing=_UNATTRIBUTED.replace(real_prefix,fake_prefix,1)
-  q.execute(loads,w=220793322,tree=value);rows=[list(r)for r in q]
-  q.execute(missing,w=220793322,tree=value);return rows,q.fetchone()[0]
+  query=_LOAD_COVERAGE.replace(real_prefix,fake_prefix,1)
+  q.execute(query,w=220793322,tree=value);result=list(q)
+  return [list(row[:4])for row in result if row[4]=='LINE'],next(row[3]for row in result if row[4]=='MISSING')
  nodes=[dict(uid='PAL.TEST',kind='CONTAINER',depth=0),dict(uid='CASE:1168',kind='CASE',depth=2),dict(uid='CASE:1169',kind='CASE',depth=3)]
  nodes += [dict(uid=uid,kind='STOCK',quantity=str(i+1),depth=i+3)for i,(uid,_)in enumerate(places)]
  rows,missing=read(nodes);assert sorted((int(x[0]),int(x[3]))for x in rows)==sorted((int(row),i+1)for i,(_,row)in enumerate(places));assert missing==0
@@ -29,4 +29,4 @@ with oracle_connection() as c:
  rows,missing=read([dict(uid=foreign[0],kind='STOCK',quantity='1')]);assert rows==[] and missing==1
  report['checks'].append('Foreign-warehouse CASE cannot borrow the selected trip warehouse')
  c.rollback()
-report['status']='PASS';out=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T09/frozen-tree-read.json';out.write_text(json.dumps(report,indent=2),encoding='utf-8');print(json.dumps(report))
+report['status']='PASS';out=ROOT/'runtime/test-evidence/tradecase/2026-10-26/T12/frozen-tree-read-combined.json';out.write_text(json.dumps(report,indent=2),encoding='utf-8');print(json.dumps(report))

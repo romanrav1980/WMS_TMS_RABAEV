@@ -6,6 +6,7 @@ from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.concurrency import run_in_threadpool
 from starlette.responses import JSONResponse
 from .audit_body import capture_request,capture_response
 
@@ -59,7 +60,7 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
         replay_run_id = request.headers.get("x-wms-replay-run-id")
         replayable = 1 if is_replayable(request) else 0
 
-        local_path = audit.append_local(
+        local_path = await run_in_threadpool(audit.append_local,
             {
                 "phase": "STARTED",
                 "request_id": request_id,
@@ -79,7 +80,7 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
             }
         )
 
-        api_call_id = audit.start_call(
+        api_call_id = await run_in_threadpool(audit.start_call,
             {
                 "request_id": request_id,
                 "replay_of_call_id": replay_of,
@@ -122,8 +123,8 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
                 "duration_ms": duration_ms,
                 "local_log_path": local_path,
             }
-            audit.finish_call(api_call_id, finish_entry)
-            audit.append_local(
+            await run_in_threadpool(audit.finish_call, api_call_id, finish_entry)
+            await run_in_threadpool(audit.append_local,
                 {
                     "phase": "FINISHED",
                     "api_call_id": api_call_id,
@@ -155,8 +156,8 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
                 "duration_ms": duration_ms,
                 "local_log_path": local_path,
             }
-            audit.finish_call(api_call_id, finish_entry)
-            audit.append_local(
+            await run_in_threadpool(audit.finish_call, api_call_id, finish_entry)
+            await run_in_threadpool(audit.append_local,
                 {
                     "phase": "FINISHED",
                     "api_call_id": api_call_id,

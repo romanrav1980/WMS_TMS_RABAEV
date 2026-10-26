@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,6 +28,8 @@ HOP_BY_HOP_HEADERS = {
     "transfer-encoding",
     "upgrade",
 }
+
+_local_write_lock = threading.Lock()
 
 
 class ApiAuditService:
@@ -99,9 +102,10 @@ class ApiAuditService:
         self.local_dir.mkdir(parents=True, exist_ok=True)
         path = self.local_dir / f"{datetime.now(timezone.utc):%Y-%m-%d}.jsonl"
         payload = {**record, "logged_at": utc_now_iso()}
-        with path.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(payload, ensure_ascii=False, default=str))
-            handle.write("\n")
+        line = json.dumps(payload, ensure_ascii=False, default=str) + "\n"
+        with _local_write_lock:
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write(line)
         return str(path)
 
     def list_calls(

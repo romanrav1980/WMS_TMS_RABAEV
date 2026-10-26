@@ -36,10 +36,10 @@ _FROZEN = """with facts as(
  mapped as(select LOAD_OPERATION_ID,NODE_UID,min(ROW_ID)ROW_ID,max(QTY)QTY from candidates
  group by LOAD_OPERATION_ID,NODE_UID having count(*)=1)
  """
-_LOADS = _FROZEN + """select m.ROW_ID,f.STATUS,case when f.CUSTODY_RELEASED_AT is not null then 1 else 0 end RELEASED,sum(m.QTY)QTY
+_LOAD_COVERAGE = _FROZEN + """select /* TRADE_TRIP_FROZEN_COVERAGE */ m.ROW_ID,f.STATUS,case when f.CUSTODY_RELEASED_AT is not null then 1 else 0 end RELEASED,sum(m.QTY)QTY,'LINE'KIND
  from facts f join mapped m on m.LOAD_OPERATION_ID=f.LOAD_OPERATION_ID
- group by m.ROW_ID,f.STATUS,case when f.CUSTODY_RELEASED_AT is not null then 1 else 0 end"""
-_UNATTRIBUTED = _FROZEN + """select count(*) UNATTRIBUTED_LOADS from facts f
+ group by m.ROW_ID,f.STATUS,case when f.CUSTODY_RELEASED_AT is not null then 1 else 0 end
+ union all select null,null,null,count(*),'MISSING'from facts f
  where not exists(select 1 from leaves n where n.LOAD_OPERATION_ID=f.LOAD_OPERATION_ID)
  or exists(select 1 from leaves n where n.LOAD_OPERATION_ID=f.LOAD_OPERATION_ID
   and not exists(select 1 from mapped m where m.LOAD_OPERATION_ID=n.LOAD_OPERATION_ID and m.NODE_UID=n.NODE_UID))"""
@@ -113,9 +113,13 @@ def trip_coverage(gateway: Any, ware: int, trip_id: str, actor: str) -> dict[str
             unattributed = None
             loading_complete = False
             if link is not None:
-                cur.execute(_LOADS, tt=link[0], w=ware)
+                cur.execute(_LOAD_COVERAGE, tt=link[0], w=ware)
                 by_row: dict[int, dict[str, Decimal]] = {}
-                for row_id, status, released, qty in cur:
+                missing = 0
+                for row_id, status, released, qty, kind in cur:
+                    if kind == "MISSING":
+                        missing = int(qty)
+                        continue
                     bucket = by_row.setdefault(int(row_id), {"LOADED": Decimal(0), "DEPARTED": Decimal(0), "RELEASED": Decimal(0)})
                     if status in ("LOADED", "DEPARTED"):
                         bucket[status] += Decimal(str(qty or 0))
@@ -125,8 +129,6 @@ def trip_coverage(gateway: Any, ware: int, trip_id: str, actor: str) -> dict[str
                     if item["native_row_id"] is not None:
                         bucket = by_row.get(item["native_row_id"], {"LOADED": Decimal(0), "DEPARTED": Decimal(0), "RELEASED": Decimal(0)})
                         item.update(loaded_base=_text(bucket["LOADED"]), departed_base=_text(bucket["DEPARTED"]), released_base=_text(bucket["RELEASED"]))
-                cur.execute(_UNATTRIBUTED, tt=link[0], w=ware)
-                missing = int(cur.fetchone()[0])
                 loading_complete = missing == 0
                 if not hidden:
                     unattributed = missing
