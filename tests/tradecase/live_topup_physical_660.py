@@ -30,7 +30,10 @@ s: dict = {}
 
 
 def save():
-    OUT.mkdir(parents=True, exist_ok=True); STATE.write_text(json.dumps(s, indent=1, ensure_ascii=True, default=str), encoding="utf-8")
+    OUT.mkdir(parents=True, exist_ok=True)
+    pending=STATE.with_name(STATE.name+'.tmp')
+    pending.write_text(json.dumps(s, separators=(',', ':'), ensure_ascii=True, default=str), encoding='utf-8')
+    pending.replace(STATE)
 
 
 def step(key, method, path, body=None, status=200):

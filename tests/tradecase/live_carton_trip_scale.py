@@ -22,6 +22,16 @@ q.PALLETS=q.MAIN_PALLETS=660
 q.UNITS=10
 if q.STATE.exists():q.s.update(json.loads(q.STATE.read_text(encoding='utf-8')))
 s=q.s
+original_step=q.step
+
+
+def bounded_step(key,method,path,body=None,status=200):
+    if 'result'not in s.get('steps',{}).get(key,{}) and datetime.now(ZoneInfo('Europe/Moscow'))>=datetime(2026,10,26,23,55,tzinfo=ZoneInfo('Europe/Moscow')):
+        raise RuntimeError('Stop new fixture commands at 23:55; preserve state before midnight')
+    return original_step(key,method,path,body,status)
+
+
+q.step=bounded_step
 
 
 def setup():
@@ -52,9 +62,16 @@ def prepare():
     q.send('order','ORDER','O660',dict(recipient_id='C1',planned_ship_at=s['day']+'T12:00:00+03:00',lines=[dict(line_id='1',sku_id='A',source_owner_id='SNS',target_owner_id='SNS',mrc='200',quantity='6600',uom='EA',min_osg_days=0)]))
     order=q.native_order('native_order',6600)
     q.step('binding','POST',base+'/orders/O660/binding',dict(operation_id=q.tag()+'.binding',expected_order_version=1,customer_order_id=order['order'],lines=[dict(line_id='1',customer_order_row_id=order['row'])]))
-    s['tasks']=q.wave('scale660',order['order']);q.save()
+    s['tasks']=q.wave(s.get('wave_key','scale660'),order['order']);q.save()
     assert len(s['tasks'])==660 and all(t[4]==10 for t in s['tasks']),[(t[0],t[4])for t in s['tasks']]
     s['phase']='WAVE';q.save()
+
+
+def prepare_after_source_bound():
+    assert 'PICK_PLAN_SOURCE_STOCK_BOUND_500' in s.get('error','')
+    assert q.stock()==(6600,0,660)
+    s['wave_key']='scale660_sources1000';q.save()
+    prepare()
 
 
 def pick():
@@ -144,7 +161,7 @@ def finish():
     s['final_fulfillment']=q.db('select STATUS,count(*),sum(FACT_QTY)from RRL_CUSTOMER_ORDER_FULFILLMENT where CUSTOMER_ORDER_ID=:o group by STATUS',o=s['native_order']['order'])
     assert s['final_fulfillment']==[('SHIPPED',660,6600)],s['final_fulfillment']
     assert q.stock()==(0,0,0)
-    wave=s['scale660_wave_id']
+    wave=s[s.get('wave_key','scale660')+'_wave_id']
     q.expect(200,q.http('POST',f'/api/picking/waves/{wave}/refresh-sync',{}))
     assert q.db('select STATUS from RRL_PICK_WAVE where PICK_WAVE_ID=:w',w=wave)==[('DONE',)]
     with q.oracle_connection()as c:
