@@ -1,0 +1,28 @@
+whenever sqlerror exit failure rollback
+whenever sqlerror exit failure rollback
+declare begin if user<>'RABAEV' or sys_context('USERENV','SERVICE_NAME')<>'orcl' then raise_application_error(-20999,'WRONG_TARGET');end if;end;
+/
+declare s clob;
+ procedure same(n varchar2,t varchar2,h varchar2)is begin
+  dbms_lob.createtemporary(s,true);
+  for r in(select TEXT from USER_SOURCE where NAME=n and TYPE=t order by LINE)loop dbms_lob.append(s,replace(r.TEXT,chr(13),''));end loop;
+  if dbms_lob.getlength(s)=0 or rawtohex(sys.dbms_crypto.hash(rtrim(s,chr(10)),sys.dbms_crypto.hash_sh256))<>h then raise_application_error(-20999,'SOURCE_OR_DEPENDENCY_DRIFT'||':'||n||':'||t);end if;
+  dbms_lob.freetemporary(s);
+ end;
+ begin
+ same('RRL_STOCK_TRIP_DEPART_CMD','PACKAGE BODY','D5514FCDA4B50CE3336C299933D5D6CCAAB5189F39C270F341BB4590C68BF12E');
+ same('RRL_TRADE_SHIP_EVENT','PACKAGE','A2E34606D786F70425DFD7756071592A09443D1A49AA04B8BD0F8D556810681A');
+ same('RRL_TRADE_SHIP_EVENT','PACKAGE BODY','436268780645E1906B7A761F0DB4E232CCEB7FC4E67EC91279DA4CAEA41DA79A');
+ same('RRL_STOCK_TRIP_DEPART_CMD','PACKAGE','9314F735ABF2D1C48C035EBB25EB9D8C25A83604FAC2546610744A8A6B0F3C64');
+ same('RRL_STOCK_POSTING_API','PACKAGE BODY','EB97721019B0177F4077C6DF224F3707D10F51DAFCD104EF0EE78D83FE56FA48');
+ same('RRL_TRADE_TRANSPORT_CORE','PACKAGE BODY','283127E6FB8931716D5B94DAF7656BC9D1FDD4AC1BF48191B20A5B9B4DEB52FE');
+ same('RRL_TRADE_TRANSIT_PROOF','PACKAGE','AED1D8D486C4276FC1E6EF8171C3CCBE5A38F5BB97A9383E939BD6BEF55BFFAF');
+ same('RRL_TRADE_TRANSIT_PROOF','PACKAGE BODY','DE0C5936CABA30532597147F781E3B106A93F6ED06FFA7D6010E3D222655CAAD');
+ same('RRL_TRACEABILITY_API','PACKAGE BODY','4131765217B3C15BE5273A2539E238E5CA16C367311667D9FBBE1A8FDAE68196');
+end;
+/
+@@before_depart.sql
+drop package RRL_TRADE_SHIP_EVENT;
+@@rollback_verify.sql
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-26-trade-shipment-events' MIGRATION_ID from dual)x on(d.MIGRATION_ID=x.MIGRATION_ID)when matched then update set STATUS='ROLLED_BACK',APPLIED_AT=sysdate,APPLIED_BY=user when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS)values(x.MIGRATION_ID,'Freeze actual departing TRADECASE codes in independent SAP and SKM outbox events in the native departure transaction',sysdate,user,'apply.sql','rollback.sql','ROLLED_BACK');
+commit;
