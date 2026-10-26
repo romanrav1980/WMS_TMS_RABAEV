@@ -5358,3 +5358,6 @@ RuntimeOSRM/Valhallaработает, прежний блокер недосту
 26.10:2437f7cb прошёлqualitygate/encoding и развёрнут штатнымиstop/start-minimax; архив прежнихжурналов сохранён,worker39176здоров/трициклаOK. Serv.batперезапустилAPI; настоящийPOSTпустогоMINIMAXподCONFIG4получил200за665мс безтоварногоэффекта,0/H0. Дополнены runbook и доказательства empty-polling-deployment/http.json.
 
 26.10: прочитаны живые RRL_TT_REORDER_ADR/RRL_TT_PLAN_SHIPPPING_HOUR/FTIME_SHIPPING_PLAN. Разница33681 объяснена тестовымSTDATE27/пустымSHIPPING_TIME→28полночь; история не изменялась. Воспроизведён NLS-дефект: YYYY-MM-DD молча теряет день/время. Подготовлен2026-10-26_shipping_time_nls с двумя явными форматами, свежимиSHA/ABI/dependencies и парнымrollback; NOT_APPLIED. Кодовыйпорог20 сохранён, противоречащийкомментарий12 отмечен в database/shipping_time_nls_20261026.md.
+
+## 26.10.2026 — формат даты отгрузки
+Применён комплект2026-10-26_shipping_time_nls после коммитаad8eb601:10/9/10операторов, ошибок0, INVALID0. Четыре формата сеанса и28сочетаний прошли; дополнительный shipping-time-nls-after.json PASS. Правила дня/порога20 и закрытая история рейса33681 сохранены. См. [[database/shipping_time_nls_20261026]].
