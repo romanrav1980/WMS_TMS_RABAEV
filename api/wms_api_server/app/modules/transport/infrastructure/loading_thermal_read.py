@@ -1,11 +1,12 @@
 """Scoped caller supplies existing load IDs after its warehouse authorization."""
 from typing import Any
+import json
 import oracledb
 from ...platform.public import read_oracle_json
 
 def loading_thermal_read(cur: Any, plate: str | None, load_ids: list[str], trip: int) -> dict[str, Any]:
-    if len(load_ids)>200:
-        raise ValueError("LOADING_THERMAL_HISTORY_BOUND_200")
+    if len(load_ids)>4000:
+        raise ValueError("LOADING_THERMAL_HISTORY_BOUND_4000")
     cur.execute("select ID from RRL_TR_VEHICLE where NUM=:plate and nvl(DELETED,0)=0 fetch first 2 rows only",plate=plate)
     vehicles=cur.fetchall()
     profile=None
@@ -13,9 +14,10 @@ def loading_thermal_read(cur: Any, plate: str | None, load_ids: list[str], trip:
         profile=read_oracle_json(cur.callfunc("RRL_VEHICLE_PROFILE_API.describe_profile",oracledb.DB_TYPE_CLOB,[vehicles[0][0]]))
     facts={}
     if load_ids:
-        binds={"op"+str(i):value for i,value in enumerate(load_ids)}
-        names=",".join(":"+name for name in binds)
-        cur.execute("select LOAD_OPERATION_ID,CONFIRMATION_JSON,RECORDED_AT from RRL_TT_LOAD_THERMAL_FACT where LOAD_OPERATION_ID in("+names+")",binds)
+        cur.setinputsizes(load_ids=oracledb.DB_TYPE_CLOB)
+        cur.execute("""select LOAD_OPERATION_ID,CONFIRMATION_JSON,RECORDED_AT from RRL_TT_LOAD_THERMAL_FACT
+            where LOAD_OPERATION_ID in(select id from json_table(:load_ids,'$[*]'
+              columns(id varchar2(100) path '$')))""",load_ids=json.dumps(load_ids))
         for op,wire,recorded in cur:
             facts[op]={"confirmation":read_oracle_json(wire),"recorded_at":recorded,
                        "sensor_verified":False,"basis":"MANUAL_AT_LOADING"}

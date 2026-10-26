@@ -27,7 +27,7 @@ function failure(e: unknown) {
     if (code.startsWith("TOPUP_AFTER_LOAD_FACT_MEASURE_REQUIRED")) return "У погруженного места нет фактического веса или объёма. Без них свободное место не определяется.";
     if (code.startsWith("TOPUP_AFTER_LOAD_UNPLANNED_GOODS")) return "В машине есть товар сверх плана рейса. Сверьте погрузку с заказами.";
     if (code.startsWith("TOPUP_AFTER_LOAD_BASE_UOM_UNSUPPORTED")) return "Погруженный товар учтён не в штуках. Расчёт добивки для него не поддерживается.";
-    if (code.startsWith("TOPUP_AFTER_LOAD_FACT_BOUND_200")) return "У рейса больше 200 погруженных мест. Расчёт не выполняется.";
+    if (code.startsWith("TOPUP_AFTER_LOAD_FACT_BOUND_1000")) return "У рейса больше 1000 погруженных мест. Расчёт не выполняется.";
     if (e.status === 404) return "Снимок потребности не найден на этом складе. Проверьте его номер.";
     if (e.status === 409) return "Сверьте версии исходных данных, параметры упаковки и машины перед повторным расчётом.";
   }

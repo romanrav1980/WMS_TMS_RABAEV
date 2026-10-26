@@ -20,10 +20,10 @@ def read_loading_status(cur: Any, trip: int, actor: str) -> dict[str, Any]:
           on ls.SBORKA_PALLET_ID=sp.ID and ls.ACTIVE_FLAG=1
         left join RRL_TT_HU_LOAD_FACT lf on lf.LOAD_OPERATION_ID=ls.LOAD_OPERATION_ID
         left join RRL_STOCK_OPERATION op on op.OPERATION_ID=lf.LOAD_OPERATION_ID
-        where sp.TRANSTASK_ID=:trip_id order by sp.ID fetch first 201 rows only""",trip_id=trip)
+        where sp.TRANSTASK_ID=:trip_id order by sp.ID fetch first 1001 rows only""",trip_id=trip)
     raw_members=cur.fetchall()
-    if len(raw_members)>200:
-        raise TransportLoadingError("TRIP_MEMBER_BOUND_200","Разбейте рейс: больше200 СТ")
+    if len(raw_members)>1000:
+        raise TransportLoadingError("TRIP_MEMBER_BOUND_1000","В рейсе больше 1000 сборочных заданий")
     member_names=("id","st_number","pallet_uid","condition","destination_addr","load_operation_id",
                   "root_uid","load_status","vehicle_number","dock","warehouse_id","load_trip_id","stock_operation_state")
     members=[dict(zip(member_names,row))for row in raw_members]
@@ -34,10 +34,10 @@ def read_loading_status(cur: Any, trip: int, actor: str) -> dict[str, Any]:
         json_value(COMPOSITION_JSON,'$.nodes[0].sscc'),json_value(COMPOSITION_JSON,'$.nodes[0].kind'),
         json_value(COMPOSITION_JSON,'$.cell'),CUSTODY_RELEASED_AT,CUSTODY_RELEASE_OPERATION_ID
         from RRL_TT_HU_LOAD_FACT where TT_ID=:trip_id order by LOADED_AT,LOAD_OPERATION_ID
-        fetch first 201 rows only""",trip_id=trip)
+        fetch first 4001 rows only""",trip_id=trip)
     raw_loads=cur.fetchall()
-    if len(raw_loads)>200:
-        raise TransportLoadingError("TRIP_LOAD_HISTORY_BOUND_200","История рейса превышает окно")
+    if len(raw_loads)>4000:
+        raise TransportLoadingError("TRIP_LOAD_HISTORY_BOUND_4000","История рейса превышает 4000 операций погрузки")
     load_names=("load_operation_id","root_uid","vehicle_number","dock","status","gross_weight_kg",
                 "loaded_by","loaded_at","departure_operation_id","departed_at","content_version",
                 "root_case_task_id","ware_id","root_scan_identifier","root_kind","origin_cell",

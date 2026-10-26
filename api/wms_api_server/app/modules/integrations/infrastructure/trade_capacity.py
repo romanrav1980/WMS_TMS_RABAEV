@@ -64,10 +64,10 @@ def _loaded(cur:Any,ware:int,trip_id:str,trip:dict,planned:list[dict])->dict|Non
     cur.execute("select l.NATIVE_TASK_ID,upper(trim(t.TRANSPORT))from RRL_TRADE_TRIP_LINK l join RRL_TRANSPORT_TASK t on t.ID=l.NATIVE_TASK_ID where l.WARE_ID=:w and l.TRIP_ID=:t",w=ware,t=trip_id)
     link=cur.fetchone()
     if link is None:return None  # without a native binding nothing can have been loaded for this trip
-    cur.execute("select LOAD_OPERATION_ID,STATUS,upper(trim(VEHICLE_NUMBER)),GROSS_WEIGHT_KG,BOUNDING_VOLUME_M3,COMPOSITION_JSON from RRL_TT_HU_LOAD_FACT where TT_ID=:t and STATUS in('LOADED','DEPARTED')order by LOAD_OPERATION_ID fetch first 201 rows only",t=link[0])
+    cur.execute("select LOAD_OPERATION_ID,STATUS,upper(trim(VEHICLE_NUMBER)),GROSS_WEIGHT_KG,BOUNDING_VOLUME_M3,COMPOSITION_JSON from RRL_TT_HU_LOAD_FACT where TT_ID=:t and STATUS in('LOADED','DEPARTED')order by LOAD_OPERATION_ID fetch first 1001 rows only",t=link[0])
     rows=[(op,status,vehicle,gross,volume,read_oracle_json(raw))for op,status,vehicle,gross,volume,raw in cur.fetchall()]
     if not rows:return None
-    if len(rows)>200:raise TradeTransportError('TOPUP_AFTER_LOAD_FACT_BOUND_200',409)
+    if len(rows)>1000:raise TradeTransportError('TOPUP_AFTER_LOAD_FACT_BOUND_1000',409)
     if any(r[1]=='DEPARTED'for r in rows):raise TradeTransportError('TOPUP_TRIP_DEPARTED',409)
     vehicle=str(trip['vehicle_id']).strip().upper()
     if link[1]!=vehicle or any(r[2]!=vehicle for r in rows):raise TradeTransportError('TOPUP_AFTER_LOAD_VEHICLE_MISMATCH',409)
