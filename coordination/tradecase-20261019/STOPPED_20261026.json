@@ -1,0 +1,41 @@
+﻿{
+    "status":  "incomplete_time_limit",
+    "saved_at":  "2026-10-26T19:10:01.0421896+03:00",
+    "deadline":  "2026-10-26T19:00:00+03:00",
+    "latest_functional_commit":  "3f26998f",
+    "completed_sprints":  [
+                              "T01"
+                          ],
+    "partial_sprints":  [
+                            "T02",
+                            "T03",
+                            "T04",
+                            "T05",
+                            "T06",
+                            "T07",
+                            "T08",
+                            "T09",
+                            "T10",
+                            "T11",
+                            "T12"
+                        ],
+    "claude_requests_total":  33,
+    "claude_new_requests_this_continuation":  0,
+    "claude_unavailable_until":  "2026-10-29",
+    "checks":  [
+                   "Oracle final-owned-state PASS; INVALID=0; owned shipment fixtures 0/H0; shortage fixture 20/H0",
+                   "Quality gate PASS; 9 focused audit/coverage tests PASS",
+                   "Real shipment UI 1440/390 PASS; replay/conflict PASS",
+                   "Shipment events: 4 PENDING, attempts=0; no real external delivery"
+               ],
+    "remaining":  [
+                      "Original 660 to 640 carton scenario in 66/64 m3; native limit 200 top-level places",
+                      "Real SAP/SKM/L4 adapters and business acknowledgements",
+                      "Remaining concurrency, role and resource matrices",
+                      "Full returns, paper workflows and pilot acceptance",
+                      "Investigate parallel HTTP latency; overall speedup not confirmed"
+                  ],
+    "context":  "coordination/tradecase-20261019/RESUME_LATEST.md",
+    "roadmap":  "wiki/roadmap/tradecase_execution_20261019.md",
+    "publication":  "Local commits only; no new GitHub publication authorization"
+}
