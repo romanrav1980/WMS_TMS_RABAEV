@@ -107,6 +107,21 @@ class StockRunnerTests(unittest.TestCase):
                     self.assertEqual(error.exception.rule_reason, reason)
                 self.assertEqual((connection.committed, connection.rollbacks, len(connection.requests)), (0, attempts, attempts))
 
+    def test_prepare_uses_remaining_request_budget_instead_of_three_second_driver_cap(self):
+        connection = Connection()
+        pool = Pool(connection)
+        original = Cursor.execute
+        seen = []
+        def execute(cursor, sql, binds=None):
+            if "prepare_command" in sql:
+                seen.append(cursor.connection.call_timeout)
+            return original(cursor, sql, binds)
+        with patch.object(uow, "_oracle_pool", return_value=pool), patch.object(Cursor, "execute", execute):
+            self.assertEqual(uow.StockPosting().post(command())["status"], "APPLIED")
+        self.assertEqual(len(seen), 1)
+        self.assertGreater(seen[0], 3000)
+        self.assertLessEqual(seen[0], 30000)
+
     def test_driver_call_timeout_returns_a_recoverable_command_error_after_rollback(self):
         connection = Connection()
         pool = Pool(connection)

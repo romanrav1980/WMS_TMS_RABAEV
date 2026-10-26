@@ -194,10 +194,11 @@ function renderDetail() {
   caseState.selectedId = task.case_pick_task_id;
   caseRememberTask(task.case_pick_task_id);
   const related = caseState.tasks.filter((item) => item.wave_code === task.wave_code);
-  const problem = caseState.shorts.find((item) => item.case_pick_task_id === task.case_pick_task_id) || (task.problem ? { reason_text: task.problem, sscc: task.sscc, created_by: task.assigned_to } : null);
+  const pendingShort = caseState.shorts.find(item => item.case_pick_task_id === task.case_pick_task_id && ["CREATED", "PENDING_APPROVAL"].includes(item.status));
+  const problem = pendingShort || caseState.shorts.find(item => item.case_pick_task_id === task.case_pick_task_id && ["WAIT_INVENTORY", "WAIT_REPLENISHMENT", "FAILED"].includes(item.recovery_state)) || (task.problem ? { reason_text: task.problem, sscc: task.sscc, created_by: task.assigned_to } : null);
   document.getElementById("caseDetail").innerHTML = `
     <div class="case-detail-title">
-      <div><b>Детали рейса: ${escapeHtml(task.wave_code || "-")} (${escapeHtml(task.route || "Маршрут")})</b><span class="case-muted">${caseState.demo ? "Демо-режим" : "Данные API"}</span></div>
+      <div><b>Задание сборки: ${escapeHtml(task.wave_code || "-")} (${escapeHtml(task.route || "Маршрут")})</b><span class="case-muted">${caseState.demo ? "Демо-режим" : "Данные API"}</span></div>
       <button type="button" aria-label="Закрыть">x</button>
     </div>
     <div class="case-detail-progress">
@@ -205,7 +206,7 @@ function renderDetail() {
       <strong>${pct(task)}%</strong>
       <i class="case-bar"><i style="width:${pct(task)}%"></i></i>
     </div>
-    <div class="case-muted">Поддонов в рейсе: ${related.length}</div>
+    <div class="case-muted">Заданий в волне: ${related.length}</div>
     <div class="case-detail-list">
       ${related.slice(0, 5).map((item) => `
         <div class="case-detail-row">
@@ -217,7 +218,7 @@ function renderDetail() {
     </div>
     ${problem ? `
       <div class="case-alert">
-        <b>Критически для закрытия рейса</b>
+        <b>Требуется решение по недостаче</b>
         <span>${escapeHtml(problem.sscc || task.sscc || "-")}</span>
         <span>${escapeHtml(formatProblem(problem.reason_text || "Проблема комплектации")).replaceAll("\n", " ")}</span>
         <span>Комплектовщик: ${escapeHtml(problem.created_by || task.assigned_to || "-")}</span>
@@ -225,13 +226,13 @@ function renderDetail() {
     ` : ""}
     <div class="case-actions">
       <button id="caseTransfer" type="button" title="Передать задание и паллету другому комплектовщику: форма с ресурсом, сессией и сканом паллеты" data-help-id="case.handoff.open">Передать</button>
-      <button id="caseOpenTsd" type="button">Открыть ТСД</button>
-      <button id="caseApproveShort" type="button" title="Проверить ячейку заданием инвентаризации, пополнить подходящим запасом и вернуть строку в отбор. Потерю отражает только подтверждённый пересчёт" data-help-id="case.short.restore">Восстановить отбор</button><button id="caseAcceptShort" type="button" title="Завершить строку с недобором; ячейка всё равно проверяется инвентаризацией" data-help-id="case.short.accept">Принять недобор</button><button id="caseAcceptWeight" type="button" title="Завершить весовой заказ в пределах допуска массы" data-help-id="case.short.weight">Завершить по допуску массы</button>
-      <button id="caseRejectShort" class="danger" type="button">Отклонить</button>
+      <button id="caseOpenTsd" type="button" title="Открыть выбранное задание на терминале для продолжения сборки" data-help-id="case.task.open">Открыть ТСД</button>
+      <button id="caseApproveShort" ${pendingShort ? "" : "disabled"} type="button" title="Проверить ячейку заданием инвентаризации, пополнить подходящим запасом и вернуть строку в отбор. Потерю отражает только подтверждённый пересчёт" data-help-id="case.short.restore">Восстановить отбор</button><button id="caseAcceptShort" ${pendingShort ? "" : "disabled"} type="button" title="Завершить строку с недобором; ячейка всё равно проверяется инвентаризацией" data-help-id="case.short.accept">Принять недобор</button><button id="caseAcceptWeight" ${pendingShort ? "" : "disabled"} type="button" title="Завершить весовой заказ в пределах допуска массы" data-help-id="case.short.weight">Завершить по допуску массы</button>
+      <button id="caseRejectShort" class="danger" type="button" title="Отклонить согласование выбранной недостачи и указать причину" data-help-id="case.short.reject" ${pendingShort ? "" : "disabled"}>Отклонить</button>
     </div>
   `;
   document.getElementById("caseTransfer")?.addEventListener("click", () => caseSafe(() => transferSelected(task)));
-  document.getElementById("caseOpenTsd")?.addEventListener("click", () => window.location.href = "case-pick-tsd.html");
+  document.getElementById("caseOpenTsd")?.addEventListener("click", () => window.location.href = "case-pick-tsd.html?case_task_id=" + encodeURIComponent(task.case_pick_task_id));
   document.getElementById("caseApproveShort")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "RESTORE")));
   document.getElementById("caseAcceptShort")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "ACCEPT_SHORT")));
   document.getElementById("caseAcceptWeight")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "WEIGHT_TOLERANCE")));

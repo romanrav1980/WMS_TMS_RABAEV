@@ -70,6 +70,11 @@ def _attempt(lease: _Lease, payload: str, actor: str, operation_id: str,
         payload_bind.setvalue(0, payload)
         resolution_bind = cursor.var(oracledb.DB_TYPE_CLOB)
         resolution_bind.setvalue(0, resolution)
+        remaining = deadline - monotonic()
+        if remaining <= 0:
+            raise StockPostingError("REQUEST_DEADLINE", operation_id)
+        # Compilation and deterministic resource planning share the existing request deadline.
+        connection.call_timeout = max(1, int(remaining * 1000))
         cursor.execute(
             "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;",
             {"payload": payload_bind, "actor": actor, "result": result, "resolution": resolution_bind},

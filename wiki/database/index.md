@@ -161,3 +161,5 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 - [[sap_replenishment_clone_20261026]] — конкретный допуск клона из плана частичного SAP-пополнения; до приёмки NOT_APPLIED.
 
 - [[lock_resource_dedup_20261026]] — удаление дубликатов перед hash mutex; бюджеты и набор блокировок сохраняются, приёмка продолжается.
+
+- [[stock_large_plan_budget_20261026]] — измеренный предел6сна попытку при сохранении общего30с; приёмка ещё продолжается.
