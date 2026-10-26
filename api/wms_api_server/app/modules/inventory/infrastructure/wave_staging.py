@@ -26,9 +26,9 @@ def _release(cursor: Any, wave: int, cell: str, actor: str) -> int:
     cursor.execute("""select PICK_WAVE_TASK_ID,PALLET_UID,ARTICUL,SOURCE_CELL_CODE,QTY
         from RRL_PICK_WAVE_TASK where PICK_WAVE_ID=:wave and TASK_TYPE='FULL_PALLET'
         and STATUS in('NEW','ASSIGNED') order by PICK_WAVE_TASK_ID for update nowait""", wave=wave)
-    rows = cursor.fetchmany(201)
-    if len(rows) > 200:
-        raise WavePlanningError("STAGING_BATCH_BOUND_200", 409)
+    rows = cursor.fetchmany(1001)
+    if len(rows) > 1000:
+        raise WavePlanningError("STAGING_BATCH_BOUND_1000", 409)
     count = 0
     for task, uid, article, source, quantity in rows:
         if not uid or not source or not quantity or quantity <= 0 or source == cell:

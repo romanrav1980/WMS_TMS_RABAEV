@@ -74,6 +74,19 @@ def prepare_after_source_bound():
     prepare()
 
 
+def launch_after_wave_bound():
+    assert 'WAVE_LAUNCH_BATCH_BOUND' in s.get('error','')
+    key=s['wave_key'];wave=s['steps'][key+'_wave']['result']['pick_wave_id'];route=f'/api/picking/waves/{wave}'
+    q.step('launch_places1000','POST',route+'/launch',dict(operation_id=q.tag()+'.launch.places1000'))
+    q.step('staging_places1000','POST',route+'/staging/release',dict(to_cell=s['fixture']['receive']))
+    q.step('release_places1000','POST',route+'/release-picking',dict(operation_id=q.tag()+'.release.places1000'))
+    s[key+'_wave_id']=wave
+    s['tasks']=q.db("select TASK_ID,UID_PALLET,FROM_CELL,TO_CELL,QTY from RRL_WAREHOUSE_TASK where TASK_SOURCE='WAVE'and SOURCE_DOC_ID=:w and TASK_TYPE='PICKING_MOVE'order by TASK_ID",w=wave)
+    assert len(s['tasks'])==660 and all(t[4]==10 for t in s['tasks'])
+    assert q.stock()==(6600,6600,660)
+    s['phase']='WAVE';q.save()
+
+
 def pick():
     f=s['fixture'];w=f['warehouse_id']
     for i,(tid,pallet,src,dst,qty) in enumerate(s['tasks'],1):
