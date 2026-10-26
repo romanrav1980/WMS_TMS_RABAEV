@@ -1,4 +1,4 @@
-# Страж TRADECASE: решение по недостаче при сборке (C-0170) — NOT_APPLIED
+# Страж TRADECASE: решение по недостаче при сборке (C-0170) — применён 26.10, сквозная проверка продолжается
 
 - Комплект: `db/migrations/2026-10-23_trade_short_guard_v2/`, MIGRATION_ID `2026-10-23-trade-short-guard-v2`. v1 (`2026-10-23_trade_short_guard`) — НЕ ПРИМЕНЯТЬ.
 - Объект: тело RRL_TRADE_STOCK_GUARD, SHA до 7D6E1781DB7F46AC66105865B83D583C2FF35A9A905C1D8B91C97421CF0A68EE, после E72348D2921BA0E20908C575877AB5E0A7BF40467BF353572E94D8DFF0992AA1.
@@ -6,3 +6,5 @@
 - Правило: CASE_SHORT_APPROVE на товаре TRADECASE допускается только для UID из плана операции (reservations / carrier того же CASE / chunks для READY с торговыми правилами сборки). Иначе отказ с кодом TRADE_SHORT_BINDING_REQUIRED. Владелец проверяется существующим assert_owner и RRL_TRADE_CASE_ACCESS до кэша.
 - Откат: AFTER_SOURCE_DRIFT_REFUSED, TRADE_SHORT_HISTORY_PRESENT, затем тело «до» и проверка.
 - Доказательства: `reports/tradecase/2026-10-23/claude/C0170/` (guard-probe, owner-probe, parse-check-v2, rollback-guard-dry). Живой сценарий для root после apply: `tests/tradecase/live_trade_pick_shortage.py`.
+
+26.10 Codex сверил свежие исходники и зависимости, применил/проверил пустой откат/повторное применение:5/7/5,INVALID0. Живая цепочка выявила отдельный дефект частичного SAP-пополнения; [[sap_replenishment_clone_20261026]]. Полный T11 не закрыт.

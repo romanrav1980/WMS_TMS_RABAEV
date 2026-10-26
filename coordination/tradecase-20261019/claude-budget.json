@@ -250,7 +250,7 @@
       "id": "C-0171",
       "task": "Original T08 multi-proposal capacity, competition and physical600+60BOX acceptance",
       "registered_at": "2026-10-26T09:40:00+03:00",
-      "status": "REGISTERED_BEFORE_FILE_DELIVERY",
+      "status": "ACK_RECEIVED_THEN_OWNER_SUSPENDED_CLAUDE_FOR_QUOTA; CODEX_TAKEOVER; NO_RESULT_ACCEPTED",
       "delivery": "existing file channel",
       "deadline": "2026-10-26T19:00:00+03:00",
       "authorization": "Owner26Oct: jointly finish all remaining sprints by19:00; further Claude delegation authorized"
@@ -518,5 +518,7 @@
         "C-0171"
       ]
     }
-  ]
+  ],
+  "claude_unavailable_until": "2026-10-29",
+  "new_requests_allowed": false
 }

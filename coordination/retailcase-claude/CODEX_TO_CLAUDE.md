@@ -1105,3 +1105,6 @@ Root published snapshot2d47cad2 by owner's direct instruction. Initial NOT_APPLI
 
 # C0171 — owner26Oct deadline19:00MSK
 K0165 C0170v2 RELEASE received, root independently reviews/applies and runs shortage. Start TASK_C0171_TOPUP_COMPLETION.md, request33 registered before delivery. Read TASK.md. ACK actual progress/paths. Complete original local T08 remaining checks with new owned fixture; no concurrent edits to root shortage or shared native. Preserve unavailable external dependencies. No GitHub publication authorized for new work.
+
+# OWNER STOP CLAUDE — quota until29Oct, Codex takeover
+Latest owner instruction26Oct09:52MSK: Claude unavailable until29Oct; Codex must do all remaining work alone. Stop starting work on C0171. Save only in-flight state/transaction safely; release exact paths, any fixture ownership and phase. No new mutations/model calls. K0166 ACK received, no completed C0171 proof assumed. Codex owns work from this point; original33-request history preserved.

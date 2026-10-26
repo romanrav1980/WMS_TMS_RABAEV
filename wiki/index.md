@@ -4,7 +4,7 @@
 
 ## Текущая работа
 
-26.10 до19:00МСК: Codex принимает C0170v2 по недостаче, Claude передан C0171(T08). [Контекст и границы](../coordination/tradecase-20261019/RESUME_LATEST.md#активное-поручение2610-срок1900мск). ACK C0171 пока не получен.
+26.10 до19:00МСК: Codex выполняет оставшиеся спринты самостоятельно. Claude недоступен до29.10 по лимиту, ожидающее C0171 остановлено владельцем. [Контекст и границы](../coordination/tradecase-20261019/RESUME_LATEST.md#активное-поручение2610-срок1900мск). C0171 успел подтвердить начало, завершённого результата нет.
 
 [Публикация23.10](../coordination/tradecase-20261019/PUBLICATION_20261023.md) · [Контекст перезапуска](../coordination/tradecase-20261019/RESUME_LATEST.md) · [Снимок доказательств23.10](../reports/tradecase/2026-10-23/codex-snapshot/README.md).
 
@@ -102,3 +102,5 @@
 - <a id="roadmap"></a> **Roadmap.** [Права/знания](roadmap/retailcase_access_knowledge_plan.md) · [ТМС-2](roadmap/transport_execution_plan.md) · [Остальные планы](sources/wiki_index_catalog_20261015.md#roadmap).
 - <a id="requirements"></a> **Requirements.** [Требования и версии](sources/wiki_index_catalog_20261015.md#requirements).
 - <a id="control-files"></a> **Control Files.** [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
+
+26.10: [частичное SAP-пополнение](database/sap_replenishment_clone_20261026.md) — найден20804на задании1286; подготовлен защищённый комплект, без нового writer.
