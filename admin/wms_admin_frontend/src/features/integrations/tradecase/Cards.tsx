@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { apiFetch, ApiRequestError } from "../../../api";
 import { cardPath, tcHelp } from "./api";
-import type { DocCard, Kind, MsgCard, Payload } from "./api";
+import type { DocCard, Kind, MsgCard, Payload, OrderExecution, OrderQuantity } from "./api";
 import type { Names } from "./Lists";
 import { KIND_NAME, resultChip } from "./Lists";
 import { Act, BUYOUT, HelpLink, OSG, ORDER_KIND, Tech, Time, UOM, str, yes } from "./ui";
@@ -11,17 +11,30 @@ const named = (names: Names, kind: string, id: unknown) => { const v = str(id); 
 const Row = ({ k, v }: { k: string; v: React.ReactNode }) => <><dt>{k}</dt><dd>{v}</dd></>;
 type Open = (kind: Kind, id: string) => void;
 
-/** Карточка документа. Принятое основание ≠ физическое исполнение: сборка, выкуп и погрузка здесь не показываются. */
+/** Основание и подтверждённые складские количества читаются из одного снимка сервера. */
 export function DocumentView({ card, names, onOpen, bind }: { card: DocCard; names: Names; onOpen: Open; bind?: React.ReactNode }) {
   const p = card.payload;
   return <>
     <p className="tc-note">Основание принято, версия {card.document_version}. {card.entity_type === "NEED" ? "Сверьте получателя, товар и период." : card.entity_type === "ORDER" || card.entity_type === "TRIP" ? "Проверьте строки и плановую дату." : "Сверьте данные документа."}{p.cancelled === true ? " Документ отменён источником." : ""}</p>
     <dl className="tc-fields">{fields(card.entity_type, p, names)}</dl>
     {card.entity_type === "ORDER" && <OrderLines lines={arr(p.lines)} names={names} />}
+    {card.entity_type === "ORDER" && card.execution && <OrderProgress value={card.execution} />}
     {card.entity_type === "TRIP" && <TripOrders orders={arr(p.orders)} onOpen={onOpen} />}
     {bind}
     <Tech value={{ warehouse_id: card.warehouse_id, source_id: card.source_id, entity_type: card.entity_type, document_version: card.document_version, payload: p }} />
   </>;
+}
+
+function OrderProgress({ value }: { value: OrderExecution }) {
+  const labels: [OrderQuantity, string][] = [["ordered", "Заказано"], ["picked", "Собрано"], ["loaded", "Погружено"], ["shipped", "Из них выехало"], ["retained", "Осталось на складе"]];
+  return <section className="tc-order-execution"><h4>Сборка и отгрузка <HelpLink anchor="order" label="Как сверить" /></h4>
+    {!value.available ? <p className="tc-note">{value.reason === "UNBOUND" ? "Заказ ещё не связан со складским заказом." : value.reason === "STALE_BINDING" ? "Заказ изменился после привязки: сверьте складской заказ." : value.reason === "PACKAGING" ? "Сверьте упаковки товара: количество не рассчитано." : "Проверьте состав закрытых мест: количество не рассчитано."}</p> : <>
+      <p className="tc-note">Сверяйте количество в закрытых местах; незавершённая сборка здесь не учтена. Погружено включает выехавшие места.</p>
+      {value.items?.map(item => <div className="tc-bind" key={item.sku_id}><b>{item.title}</b><dl className="tc-fields">
+        {labels.map(([key, label]) => <Row key={key} k={label} v={<><strong>{item.boxes[key]} кор.</strong> · {item[key]} шт.</>} />)}
+      </dl></div>)}
+    </>}
+  </section>;
 }
 
 function fields(kind: Kind, p: Payload, names: Names) {

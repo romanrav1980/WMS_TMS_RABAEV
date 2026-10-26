@@ -9,7 +9,9 @@ export type Result = { status: "ACCEPTED" | "REJECTED" | "WAITING"; code?: strin
   external_delivery?: string; external_business?: string; outbox_id?: number; occurred_at?: string; [key: string]: unknown };
 export type MsgRow = { event_id: string; entity_type: Kind; document_id: string; version: number; result: Result; current_result?: Result };
 export type Page<T> = Site & { owner_scope_filtered?: boolean; items: T[]; has_more: boolean; next_after: string | null };
-export type DocCard = Site & { document_id: string; entity_type: Kind; document_version: number; payload: Payload };
+export type OrderQuantity = "ordered" | "picked" | "loaded" | "shipped" | "retained";
+export type OrderExecution = { available: boolean; reason?: string; items?: ({ sku_id: string; title: string; boxes: Record<OrderQuantity, string> } & Record<OrderQuantity, string>)[] };
+export type DocCard = Site & { document_id: string; entity_type: Kind; document_version: number; payload: Payload; execution?: OrderExecution };
 export type MsgCard = Site & { request: unknown; result: Result; current_result?: Result };
 /** Группа запаса (C-0133): количества — десятичные строки, счётчики кодов — числа. Один идентификатор может иметь несколько групп. */
 export type StockGroup = { pallet_identifier: string; cell: string | null; sku_id: string; owner_id: string; mrc: string | null; expiry_date: string | null;
