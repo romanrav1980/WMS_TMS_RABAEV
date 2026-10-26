@@ -3,7 +3,7 @@ import type { CaseTask, Session, Wave } from "../types";
 import type { CaseShort, Risk, WaveDetail } from "./types";
 
 const BLOCKER_TEXT: Record<string, string> = {
-  REPLENISHMENT: "Открыто пополнение отборной ячейки", STAGING: "Открыта задача размещения целой паллеты", CASE_PICK: "Открыта сборка",
+  REPLENISHMENT: "Открыто пополнение отборной ячейки", STAGING: "Не завершено перемещение грузового места", CASE_PICK: "Открыта сборка",
   DOMAIN_SYNC: "Факт складского задания не синхронизирован с волной", SHORTAGE: "Неразрешённая недостача",
 };
 const BLOCKER_ACTION: Record<string, { label: string; page: string }> = {

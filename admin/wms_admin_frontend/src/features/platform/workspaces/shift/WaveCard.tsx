@@ -43,7 +43,7 @@ export function WaveCard({ wave, detail, risks, tasks, caseStatuses, onClose, on
     {risks.length === 0 ? <p className="ops-note">{preparationComplete(detail) ? "В прочитанном снимке блокировок не найдено. Допуск к запуску проверяет сервер при команде." : "Нет полной проверки подготовки; готовность неизвестна."}</p> :
       <RiskList risks={risks} />}</>}
     <h3>Сборка коробов и штук <small>{tasks.length}</small></h3>
-    {tasks.length === 0 ? <p className="ops-note">Задания на сборку коробов и штук не найдены. Перемещение целых паллет показано в складских заданиях.</p> :
+    {tasks.length === 0 ? <p className="ops-note">Задания на сборку коробов и штук не найдены. Перемещение целых грузовых мест показано в складских заданиях.</p> :
       <ul className="ops-list">{tasks.slice(0, 12).map(ct => <li key={ct.case_pick_task_id}>
         <span><b>Сборка {ct.case_pick_task_id}</b> <small>{ct.status}{ct.blocking_reason ? " · остановка: " + ct.blocking_reason : ""}</small><br />
           <small>строк {ct.picked_lines} из {ct.total_lines} · {ct.assigned_to ?? "исполнитель не назначен"}</small></span>

@@ -6,7 +6,7 @@
 
 - [Защитные строки единиц](database/existing_unit_guards_20261026.md) применены8/8/8; [снимок и индекс](database/stock_verify_snapshot_20261026.md) —11/10/11. Запуск660мест прошёлHTTP/56,5с; запуск и разрешение отбора имеют единый90сdeadline, прочие команды30с, mutex6с.
 
-- [Коробный рейс](database/carton_trip_bounds_20261026.md): пределы1000мест/4000истории применены,660заданий отобраны и назначены33687. 660мест выехали/0H0; [предел снимка закрытия](database/wave_snapshot_items_20261026.md) исправляется. Исходные3заказа/660→640 открыты.
+- [Коробный рейс](database/carton_trip_bounds_20261026.md): пределы1000мест/4000истории применены,660заданий отобраны и назначены33687. [Отдельный прогон660мест завершён](roadmap/tradecase_evening_result_20261026.md): выезд/повтор/DONE/0H0/QAзакрыт. Исходные3заказа/660→640 открыты.
 
 - 26.10: владелец возобновил работу до 24:00 Москвы; Codex выполняет остаток самостоятельно. T01 завершён, T02–T12 частичны. [Итог и остаток](../coordination/tradecase-20261019/STOPPED_20261026.json), [контекст продолжения](../coordination/tradecase-20261019/RESUME_LATEST.md). Claude недоступен до 29.10.
 
@@ -95,4 +95,4 @@
 - <a id="requirements"></a> **Requirements.** [Требования и версии](sources/wiki_index_catalog_20261015.md#requirements).
 - <a id="control-files"></a> **Control Files.** [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
 
-26.10: [Класс короба](database/box_load_class_20261026.md) применён12/11/12; [назначение рейса](database/route_assignment_places_20261026.md) —10/10/10. Все660СТ назначены33687; погрузка продолжается. [Прежние записи](sources/wiki_index_20261026_evening_history.md).
+26.10: [Класс короба](database/box_load_class_20261026.md) применён12/11/12; [назначение рейса](database/route_assignment_places_20261026.md) —10/10/10. 660мест выехали, волна636DONE,0/H0. [Прежние записи](sources/wiki_index_20261026_evening_history.md).
