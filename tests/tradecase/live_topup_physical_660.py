@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 import xml.etree.ElementTree as ET
 from zoneinfo import ZoneInfo
 
@@ -33,7 +34,13 @@ def save():
     OUT.mkdir(parents=True, exist_ok=True)
     pending=STATE.with_name(STATE.name+'.tmp')
     pending.write_text(json.dumps(s, separators=(',', ':'), ensure_ascii=True, default=str), encoding='utf-8')
-    pending.replace(STATE)
+    for attempt in range(10):
+        try:
+            pending.replace(STATE)
+            break
+        except PermissionError:
+            if attempt==9:raise
+            time.sleep(0.05)
 
 
 def step(key, method, path, body=None, status=200):

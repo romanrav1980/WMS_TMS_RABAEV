@@ -27,7 +27,7 @@ export function WaveCard({ wave, detail, risks, tasks, caseStatuses, onClose, on
     {!preparationComplete(detail) && <p className="ops-note" role="status">Подготовка не проверена полностью. Отсутствие прочитанных блокировок не подтверждает готовность.</p>}
     <dl>
       <dt>Заказы / задания</dt><dd>{wave.order_count} / {wave.task_count}</dd>
-      <dt>Сборка по факту</dt><dd>{stage ? CASE_STAGE[stage] : caseStatuses === undefined ? "сборка не прочитана полностью — стадия не определяется" : !tasks.length ? "заданий сборки в выборке нет" : "стадия не определена по статусам заданий"}</dd>
+      <dt>Короба и штуки</dt><dd>{stage ? CASE_STAGE[stage] : caseStatuses === undefined ? "Не удалось прочитать задания" : !tasks.length ? "Задания на сборку коробов и штук не найдены" : "Проверьте состояния заданий"}</dd>
       <dt>Окно волны</dt><dd>{wave.planned_start_at || wave.planned_finish_at ? `${t(wave.planned_start_at)} — ${t(wave.planned_finish_at)}` : "не задано"}</dd>
       <dt>Время утверждено</dt><dd>{detail?.time.error ? <span className="ops-err">{detail.time.error}</span> : time ? (time.plan_status === "NO_APPROVED_PLAN" ? "нет утверждённого плана" : time.plan_status) : "—"}</dd>
       <dt>Ворота / маршрут</dt><dd>{wave.dock_id ?? "ворота не назначены"}{wave.route_code ? " · " + wave.route_code : ""}</dd>
@@ -35,16 +35,15 @@ export function WaveCard({ wave, detail, risks, tasks, caseStatuses, onClose, on
       <dt>Запас под задания</dt><dd>{detail?.pick.error ? <span className="ops-err">{detail.pick.error}</span> : pick ? `${pick.tasks.length - missing.length} из ${pick.tasks.length} заданий покрыты` : "—"}</dd>
       <dt>Пополнение</dt><dd>{detail?.replenishment.error ? <span className="ops-err">{detail.replenishment.error}</span> : repl ? `${repl.length} строк, не завершено ${replWait.length}` : "—"}</dd>
       <dt>Открыто по волне</dt><dd>{detail?.readiness.error ? <span className="ops-err">{detail.readiness.error}</span> : ready ? `пополнений ${ready.summary.open_replenishment_count}, размещений ${ready.summary.open_staging_count}, сборок ${ready.summary.open_case_pick_count}, недостач ${ready.summary.shortage_count}` : "—"}</dd>
-      <dt>Люди и техника</dt><dd>квалификация и выход — в «Загрузке ресурсов» и общем Ганте ниже; здесь не рассчитываются</dd>
     </dl>
     {missing.length > 0 && <><h3>Не хватает запаса <small>{missing.length}</small></h3>
       <ul className="ops-list">{missing.slice(0, 12).map(m => <li key={m.pick_task_id}><span><b>{m.article}</b><br />
         <small>не хватает {m.missing_base} из {m.required_base} {m.base_uom ?? "баз. ед. (не указана)"}{m.cell ? " · " + m.cell : ""}</small></span></li>)}</ul></>}
-    {isClosedWave(wave.status) ? <p className="ops-note">{wave.status === "DONE" ? "Волна завершена." : "Волна отменена."} Показаны сохранённые задания.</p> : <><h3>Риски запуска <small>{risks.length}</small></h3>
+    {isClosedWave(wave.status) ? <p className="ops-note">{wave.status === "DONE" ? "Волна завершена." : "Волна отменена."} Показаны сохранённые задания.</p> : <><h3>Отклонения волны <small>{risks.length}</small></h3>
     {risks.length === 0 ? <p className="ops-note">{preparationComplete(detail) ? "В прочитанном снимке блокировок не найдено. Допуск к запуску проверяет сервер при команде." : "Нет полной проверки подготовки; готовность неизвестна."}</p> :
       <RiskList risks={risks} />}</>}
-    <h3>Сборка этой волны <small>{tasks.length}</small></h3>
-    {tasks.length === 0 ? <p className="ops-note">Заданий сборки по этой волне в текущей выборке нет.</p> :
+    <h3>Сборка коробов и штук <small>{tasks.length}</small></h3>
+    {tasks.length === 0 ? <p className="ops-note">Задания на сборку коробов и штук не найдены. Перемещение целых паллет показано в складских заданиях.</p> :
       <ul className="ops-list">{tasks.slice(0, 12).map(ct => <li key={ct.case_pick_task_id}>
         <span><b>Сборка {ct.case_pick_task_id}</b> <small>{ct.status}{ct.blocking_reason ? " · остановка: " + ct.blocking_reason : ""}</small><br />
           <small>строк {ct.picked_lines} из {ct.total_lines} · {ct.assigned_to ?? "исполнитель не назначен"}</small></span>

@@ -102,7 +102,8 @@ def pick():
     for i,(tid,pallet,src,dst,qty) in enumerate(s['tasks'],1):
         q.step('move.'+str(tid),'POST',f'/api/warehouse-tasks/{tid}/complete',dict(operation_id=q.tag()+'.move.'+str(tid),scanned_pallet=pallet,scanned_from_cell=src,scanned_to_cell=dst,fact_qty=str(qty)))
         if str(tid) not in s.setdefault('shipments',{}):
-            st='CT.'+str(w)+'.'+str(i)
+            st='CT'+str(w)+'.'+str(i)
+            assert len(st)<=15  # Legacy shipment rows retain a 15-character DOCID.
             s['shipments'][str(tid)]=dict(prepare_shipment(dict(fixture=f,native_order=s['native_order']['order'],shipment_identifier='CT.ST.'+str(tid),shipment_quantity=qty,st_number=st)),pallet=pallet,st_number=st,ordinal=i);q.save()
         path=f'/api/warehouse-tasks/{tid}/full-pallet-shipment'
         if 'bind.'+str(tid)not in s['steps']:
@@ -201,6 +202,11 @@ def main():
     assert s.get('phase')!='CLOSED','Never reopen a closed fixture'
     try:
         setup()
+        if s.get('http'):
+            archive=q.OUT/('http-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%f')+'.json')
+            archive.write_text(json.dumps(s['http'],separators=(',',':')),encoding='utf-8')
+            s.setdefault('http_archives',[]).append(archive.name)
+            s['http']=[];q.save()
         stage=sys.argv[1]if len(sys.argv)>1 else 'receive'
         q.receive()if stage=='receive'else globals()[stage]()
         print(json.dumps(dict(phase=s.get('phase'),warehouse=s['fixture']['warehouse_id'])))
