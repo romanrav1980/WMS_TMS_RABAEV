@@ -4,6 +4,8 @@
 
 ## Текущая работа
 
+26.10 до19:00МСК: Codex принимает C0170v2 по недостаче, Claude передан C0171(T08). [Контекст и границы](../coordination/tradecase-20261019/RESUME_LATEST.md#активное-поручение2610-срок1900мск). ACK C0171 пока не получен.
+
 [Публикация23.10](../coordination/tradecase-20261019/PUBLICATION_20261023.md) · [Контекст перезапуска](../coordination/tradecase-20261019/RESUME_LATEST.md) · [Снимок доказательств23.10](../reports/tradecase/2026-10-23/codex-snapshot/README.md).
 
 23.10: владелец утвердил перерыв 120/15 и эталон магазин12:55/возврат14:10; [нативный расчёт совпал](runbooks/tradecase_live_road_provider_20261023.md#несовпадение-контрольного-расписания).

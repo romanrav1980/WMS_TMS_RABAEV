@@ -1102,3 +1102,6 @@ C0170 rollback review: current rollback.sql has no after-source hash guard and s
 
 # C0170 publication checkpoint, same task32
 Root published snapshot2d47cad2 by owner's direct instruction. Initial NOT_APPLIED kit is preserved with explicit DO NOT APPLY warning; no native apply, no C0170 fixture. Reservations and all previous reviews remain granted. Continue same C0170, ACK actual progress and deliver corrected immutable kit/access/body/current-owner/partly-picked evidence before RELEASE. No new task/budget call; root independently continues T09. Owner confirmed existing120/15 breaks and reference store12:55/return14:10; no native policy change. Do not publish further changes automatically.
+
+# C0171 — owner26Oct deadline19:00MSK
+K0165 C0170v2 RELEASE received, root independently reviews/applies and runs shortage. Start TASK_C0171_TOPUP_COMPLETION.md, request33 registered before delivery. Read TASK.md. ACK actual progress/paths. Complete original local T08 remaining checks with new owned fixture; no concurrent edits to root shortage or shared native. Preserve unavailable external dependencies. No GitHub publication authorized for new work.

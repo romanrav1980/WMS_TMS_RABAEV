@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 32,
-  "used": 32,
+  "limit": 33,
+  "used": 33,
   "requests": [
     {
       "id": "C-0130",
@@ -245,6 +245,15 @@
       "task": "Original T11/T04 picking shortage exception: inspect and close trade-aware inventory/replenishment continuation through existing writers",
       "status": "REGISTERED before file delivery",
       "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0171",
+      "task": "Original T08 multi-proposal capacity, competition and physical600+60BOX acceptance",
+      "registered_at": "2026-10-26T09:40:00+03:00",
+      "status": "REGISTERED_BEFORE_FILE_DELIVERY",
+      "delivery": "existing file channel",
+      "deadline": "2026-10-26T19:00:00+03:00",
+      "authorization": "Owner26Oct: jointly finish all remaining sprints by19:00; further Claude delegation authorized"
     }
   ],
   "additional_grants": [
@@ -498,6 +507,15 @@
       "used": 1,
       "request_ids": [
         "C-0170"
+      ]
+    },
+    {
+      "date": "2026-10-26",
+      "authorization": "Owner: save context, jointly finish all sprints no later19:00 today",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0171"
       ]
     }
   ]
