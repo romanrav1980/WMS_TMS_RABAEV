@@ -3,7 +3,9 @@ import json,os,re,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent))
 import live_topup_physical_660 as qa
-FILE=qa.OUT/'topup-physical-660-corrected.json'
+CYCLE=os.environ.get('TRADECASE_660_CYCLE','corrected');assert CYCLE in('corrected','close')
+RETAIN='--retain-load'in sys.argv
+FILE=qa.OUT/('topup-physical-660-'+CYCLE+'.json')
 r=json.loads(FILE.read_text(encoding='utf-8'))if FILE.exists()else dict(phase='PLANNED',steps={})
 def save():FILE.write_text(json.dumps(r,indent=2,default=str),encoding='utf-8')
 def step(key,path,body):
@@ -16,7 +18,7 @@ def main():
  assert s['fixture']['warehouse_id']==223214750 and s['phase']=='UNLOADED'
  assert r['phase']!='CLOSED','Never reopen a closed fixture'
  os.environ['TRADECASE_ADMIN_USER']='admin';os.environ['TRADECASE_ADMIN_PASSWORD']=re.search(r'PASS=(\S+?)[`,)\s]',Path('AGENTS.md').read_text(encoding='utf-8'))[1]
- prefix=qa.tag()+'.corrected'
+ prefix=qa.tag()+'.'+CYCLE
  try:
   if r['phase']in('PLANNED','LOADING'):
    profile=qa.expect(200,qa.http('GET',f"/api/admin/transport/vehicles/{s['vehicle']}/profile"))
@@ -42,7 +44,7 @@ def main():
    assert r['facts']==[(33,6600,79.2)],r['facts']
    r['load_posted']=qa.db('select -sum(BASE_QTY) from RRL_EVENTS where OPERATION_ID like :o',o=prefix+'.load.%')[0][0];assert r['load_posted']==6600
    r['phase']='LOADED';save()
-  if r['phase']in('LOADED','UNLOADING'):
+  if r['phase']in('LOADED','UNLOADING')and not RETAIN:
    r['phase']='UNLOADING';save()
    for key in sorted(s['shipments']):
     loaded=r['steps']['load.'+key]['body']
@@ -54,6 +56,7 @@ def main():
    r['after_unload']=qa.stock();assert tuple(r['after_unload'])==(6600,6600,33)
    r['unload_posted']=qa.db('select sum(BASE_QTY) from RRL_EVENTS where OPERATION_ID like :o',o=prefix+'.unload.%')[0][0];assert r['unload_posted']==6600
    r['phase']='UNLOADED';r['status']='PASS';save()
+  if RETAIN and r['phase']=='LOADED':r['status']='LOADED_PENDING_DEPARTURE';save()
   print(json.dumps({k:r.get(k)for k in ['phase','status','after_load','after_unload','facts']}))
  finally:r.setdefault('http',[]).extend(qa.CALLS);save()
 if __name__=='__main__':main()
