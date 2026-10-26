@@ -17,14 +17,14 @@
     panel.append(node("p","Обязательное взвешивание этого места сохраняется при освобождении родительской паллеты от контроля. Справочный вес типа не заменяет измерение."));
     const choice = node("select"); choice.setAttribute("aria-label","Тип тары");
     const code = node("input"), name = node("input"), volume = node("input"), weight = node("input");
-    const kind = node("select"); ["PALLET","TROLLEY","CONTAINER"].forEach(value => { const option=node("option",value); option.value=value;kind.append(option); });
+    const kind = node("select"); Object.entries({PALLET:"Паллета",TROLLEY:"Тележка",CONTAINER:"Контейнер",BOX:"Короб"}).forEach(([value,label]) => { const option=node("option",label); option.value=value;kind.append(option); });
     const required = node("input"); required.type = "checkbox";
     for (const [caption,input] of [["Код",code],["Название",name],["Класс",kind],["Справочный объём, м³",volume],["Справочная масса, кг",weight],["Обязательное финальное взвешивание",required]]) {
       const label=node("label",caption + " "); label.append(input);panel.append(label);
     }
     code.maxLength=50;name.maxLength=160;
     const refresh=node("button","Обновить карточку"),save=node("button","Сохранить"),message=node("p");
-    panel.prepend(choice);panel.append(refresh,save,message);host.append(panel);
+    refresh.title="Прочитать текущие параметры типа тары и проверить результат сохранения.";save.title="Сохранить класс, размеры и требования к взвешиванию выбранного типа тары.";panel.prepend(choice);panel.append(refresh,save,message);host.append(panel);
     function render() {
       selected = rows.find(row => String(row.pallet_type_id) === choice.value) || null;
       code.value=selected?.pallet_type_code || ""; name.value=selected?.pallet_type_name || "";

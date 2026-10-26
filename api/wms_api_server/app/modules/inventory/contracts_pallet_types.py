@@ -1,12 +1,18 @@
 """Existing logistics carrier type contract with an explicit final weight requirement."""
 from decimal import Decimal
-from pydantic import BaseModel,Field
+from typing import Literal
+from pydantic import BaseModel,Field,field_validator
 
 class PalletTypeUpsertRequest(BaseModel):
     pallet_type_id: int | None = None
     pallet_type_code: str = Field(min_length=1,max_length=50)
     pallet_type_name: str = Field(min_length=1,max_length=160)
-    load_unit_class: str = Field(default="PALLET",min_length=1,max_length=20)
+    load_unit_class: Literal['PALLET','TROLLEY','CONTAINER','BOX'] = 'PALLET'
+
+    @field_validator('load_unit_class',mode='before')
+    @classmethod
+    def normalize_class(cls,value):
+        return value.strip().upper() if isinstance(value,str) else value
     default_volume_m3: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
     default_weight_kg: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
     length_mm: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)

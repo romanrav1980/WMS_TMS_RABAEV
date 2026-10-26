@@ -1,0 +1,19 @@
+{
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-26-box-load-class",
+  "status": "NOT_APPLIED",
+  "before_sha256": {},
+  "after_sha256": {},
+  "unchanged_dependency_sha256": {
+    "RRL_PALLET_TYPE_API:PACKAGE BODY": "71383280802D45D8EE0F2A51EC877E95B5921295687E06054B1B13CA8BEBD1A6"
+  },
+  "constraint_before": "LOAD_UNIT_CLASS in ('PALLET', 'TROLLEY', 'CONTAINER')",
+  "constraint_after": "LOAD_UNIT_CLASS in ('PALLET', 'TROLLEY', 'CONTAINER', 'BOX')",
+  "files_sha256": {
+    "000_preflight.sql": "c3e52f758cf4f4ddd3ef418f609fb0728b1d9e5031a1639f194889cfa351aedb",
+    "verify.sql": "30c2b0757c71872c8c44005f142457c0bd5b06d1302e6a30d26596be0e4da4d3",
+    "rollback_verify.sql": "c3e52f758cf4f4ddd3ef418f609fb0728b1d9e5031a1639f194889cfa351aedb",
+    "apply.sql": "a4c70f0a4db3b19d9e14ec538daca487b40f41fb6901e3a3f22be729e2192987",
+    "rollback.sql": "1618ca156c8171bc0deecebeee752056e86e80f0eb9311c1300a5376d559907a"
+  }
+}
