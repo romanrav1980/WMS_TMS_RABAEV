@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRead } from "./useRead";
 import { Tech } from "./ui";
 import { RAW_ADMIN_BASE } from "../../../api";
@@ -7,9 +8,12 @@ type Point = { point_id: number; link_status: "LINKED" | "UNLINKED" | "AMBIGUOUS
   recipient_title?: string | null; order_ids?: string[]; customer_consistent?: boolean | null; address_status?: string | null; address_type?: string | null };
 export type Points = { native_task_id: number | null; points: Point[]; blocked_reason: string | null };
 type Stop = { address: string; arrival_at: string | null; service_start_at: string | null; service_finish_at: string | null; wait_min: string | null; late_min: string | null;
-  window_from: string | null; window_to: string | null; issues: string[] };
+  window_from: string | null; window_to: string | null; issues: string[]; store_time_zone?: string | null };
+type Segment = { code: string; start_at: string; finish_at: string };
 type Windows = { status: string; departure_at: string | null; return_at: string | null; stops: Stop[]; issues: { code: string; address: string | null }[];
-  warnings: { code: string; address: string | null }[] };
+  warnings: { code: string; address: string | null }[]; segments?: Segment[]; destination_time_zones_verified?: boolean };
+type Zone = "Europe/Moscow" | "Asia/Tbilisi" | "UTC";
+const ZONE: Record<Zone, string> = { "Europe/Moscow": "МСК", "Asia/Tbilisi": "Тбилиси", UTC: "UTC" };
 
 const ISSUE: Record<string, string> = {
   WAREHOUSE_DEPOT_NOT_CONFIGURED: "адрес склада выезда не настроен", ROUTE_DEPARTURE_STAGE_UNKNOWN: "время выезда не определено",
@@ -31,19 +35,32 @@ export const routeIssue = issue;
 const FIX: Record<string, string> = { WAREHOUSE_DEPOT_NOT_CONFIGURED: "«Настроить исходные данные маршрута» → адрес склада выезда",
   ROUTE_DEPARTURE_STAGE_UNKNOWN: "«Настроить исходные данные маршрута» → оценка длительности рейса (создаёт плановые операции и время выезда)",
   ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED: "«Обновить дорожные плечи»", DESTINATION_RULE_INVALID: "«Настроить окна и разгрузку магазина» у точки",
-  DELIVERY_WINDOW_UNCONFIGURED: "«Настроить окна и разгрузку магазина» у точки" };
-const time = (iso: string | null) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)} ${iso.slice(11, 16)} UTC` : "неизвестно");
+  DELIVERY_WINDOW_UNCONFIGURED: "«Настроить окна и разгрузку магазина» у точки",
+  ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE: "«Настроить исходные данные маршрута» → увеличить «Возврат на склад, мин» (оценка должна включать разгрузку и отдых водителя)" };
+// Расчёт возвращает местное время окон в выбранном поясе; подпись берётся из того же выбора, а не из «UTC» по умолчанию (C-0172).
+const stamp = (iso: string | null, zone: Zone) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)} ${iso.slice(11, 16)} ${ZONE[zone]}` : "неизвестно");
+const clock = (iso: string) => iso.slice(11, 16);
+const gap = (from: string, to: string) => Math.ceil((Date.parse(to) - Date.parse(from)) / 60000);
 const minutes = (v: string | null) => (v === null ? "неизвестно" : `${Math.round(Number(v))} мин`);
 
 /** План маршрута: точки текущего основания, их получатели по ключам и расчёт приезда/обслуживания/ожидания/возврата
  *  существующим расчётом окон. Отсутствующие данные называются; расчёт не означает выезд или доставку. */
 export function RoutePlan({ nativeTask, members, points }: { nativeTask: number; members: RouteMember[]; points: Points }) {
-  const windows = useRead<Windows>(`/api/transport/preflight/trips/${nativeTask}/delivery-windows?time_zone=UTC&depot_address=&max_age_hours=24`);
+  const [zone, setZone] = useState<Zone>("Europe/Moscow");
+  const windows = useRead<Windows>(`/api/transport/preflight/trips/${nativeTask}/delivery-windows?time_zone=${encodeURIComponent(zone)}&depot_address=&max_age_hours=24`);
+  const time = (iso: string | null) => stamp(iso, zone);
   const byPoint = new Map(points.points.map(p => [p.point_id, p])), w = windows.data;
   const stop = (address: string | null) => w?.stops.find(s => s.address === address);
   const tripIssues = [...new Set((w?.issues ?? []).filter(i => !i.address).map(i => i.code))];
   const blocked = points.blocked_reason || (w && w.status !== "NO_EARLIEST_WINDOW_VIOLATION");
+  const rests = (w?.segments ?? []).filter(x => x.code === "REST");
+  const handover = w?.segments?.find(x => x.code === "RETURN_HANDOVER");
+  const short = w?.return_at && handover && w.issues.some(i => i.code === "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE") ? gap(handover.start_at, w.return_at) : 0;
+  const zones = [...new Set((w?.stops ?? []).map(x => x.store_time_zone).filter(Boolean))];
   return <div aria-label="План маршрута">
+    <label title="Часовой пояс, в котором показаны окна и расчётное время" data-help-id="tradecase.route.zone">Часовой пояс{" "}
+      <select title="Выбрать часовой пояс показа" value={zone} onChange={e => setZone(e.target.value as Zone)}>{(Object.keys(ZONE) as Zone[]).map(z => <option key={z} value={z}>{z}</option>)}</select></label>
+    {zones.some(z => z !== zone) && <p className="tc-msg warn">Пояс магазина в карточке ({zones.join(", ")}) отличается от выбранного — сверьте окна в поясе магазина.</p>}
     {windows.error && <p className="tc-err" role="alert">{windows.error.includes("Нет права") ? "Нет права расчёта окон доставки." : `Расчёт окон не получен: ${windows.error}`}</p>}
     {windows.loading && !w && <p className="tc-note">Читаем расчёт окон…</p>}
     {w && <p className={"tc-msg " + (blocked ? "warn" : "ok")} role="status">
@@ -53,6 +70,8 @@ export function RoutePlan({ nativeTask, members, points }: { nativeTask: number;
       {points.blocked_reason && " Не у всех точек подтверждён получатель."} Расчёт — план; выезд и доставку он не подтверждает.</p>}
     {w && (() => { const fixes = [...new Set(w.issues.map(i => FIX[i.code]).filter(Boolean))];
       return fixes.length > 0 && <p className="tc-note" title="Что задать, чтобы расчёт стал полным" data-help-id="tradecase.route.fix">Что сделать: {fixes.join("; ")}.</p>; })()}
+    {short > 0 && handover && <p className="tc-msg warn" role="status">Возврат по расчёту {time(w!.return_at)}, а план машины рассчитан до {time(handover.start_at)}: не хватает {short} мин.</p>}
+    {w && <p className="tc-note">{rests.length ? `Отдых водителя по правилу 120/15: ${rests.map(x => `${clock(x.start_at)}–${clock(x.finish_at)}`).join(", ")}.` : "Отдых водителя в расчёте не потребовался."}</p>}
     {members.map(m => {
       const p = byPoint.get(m.id), s = stop(m.address);
       return <article key={m.id} className="tc-panel" aria-label={`Точка ${m.route_ordinal ?? "без номера"}`}>
