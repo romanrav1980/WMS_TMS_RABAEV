@@ -1,0 +1,175 @@
+{
+ "kind": "LIVE_OWN_VITE_CODEX_API_8093_NO_STUB",
+ "warehouse": "226192056",
+ "dock": "TR27D226192056",
+ "checks": [
+  {
+   "w": 1440,
+   "case": "real GET: dock shown open"
+  },
+  {
+   "w": 1440,
+   "case": "server executed BLOCK, reply lost: outcome unknown, command kept with retry"
+  },
+  {
+   "w": 1440,
+   "case": "after reload the same bytes were retried; receipt accepted; GET shows blocked with reason"
+  },
+  {
+   "w": 390,
+   "case": "real UNBLOCK on the phone; dock open again",
+   "size": {
+    "viewport": 390,
+    "page": 390
+   }
+  }
+ ],
+ "posts": [
+  {
+   "w": 1440,
+   "body": {
+    "operation_id": "yard-dock-d720d0bb-282b-4546-8e47-7a8272c86c2d",
+    "action": "BLOCK",
+    "reason": "C-0180 QA: створка не закрывается"
+   },
+   "raw": "{\"operation_id\":\"yard-dock-d720d0bb-282b-4546-8e47-7a8272c86c2d\",\"action\":\"BLOCK\",\"reason\":\"C-0180 QA: створка не закрывается\"}",
+   "lost": true
+  },
+  {
+   "w": 1440,
+   "body": {
+    "operation_id": "yard-dock-d720d0bb-282b-4546-8e47-7a8272c86c2d",
+    "action": "BLOCK",
+    "reason": "C-0180 QA: створка не закрывается"
+   },
+   "raw": "{\"operation_id\":\"yard-dock-d720d0bb-282b-4546-8e47-7a8272c86c2d\",\"action\":\"BLOCK\",\"reason\":\"C-0180 QA: створка не закрывается\"}",
+   "lost": false
+  },
+  {
+   "w": 390,
+   "body": {
+    "operation_id": "yard-dock-4182d3c2-7c72-41b6-b309-bff482cf2882",
+    "action": "UNBLOCK",
+    "reason": "C-0180 QA: отремонтировано, проверено"
+   }
+  }
+ ],
+ "gets": [
+  {
+   "w": 1440,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": false,
+      "reason": "C0180 QA: gate test complete",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:07:16Z"
+     }
+    ]
+   }
+  },
+  {
+   "w": 1440,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": true,
+      "reason": "C-0180 QA: створка не закрывается",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:14:44Z"
+     }
+    ]
+   }
+  },
+  {
+   "w": 1440,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": true,
+      "reason": "C-0180 QA: створка не закрывается",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:14:44Z"
+     }
+    ]
+   }
+  },
+  {
+   "w": 1440,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": true,
+      "reason": "C-0180 QA: створка не закрывается",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:14:44Z"
+     }
+    ]
+   }
+  },
+  {
+   "w": 390,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": true,
+      "reason": "C-0180 QA: створка не закрывается",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:14:44Z"
+     }
+    ]
+   }
+  },
+  {
+   "w": 390,
+   "status": 200,
+   "body": {
+    "warehouse_id": 226192056,
+    "docks": [
+     {
+      "dock": "TR27D226192056",
+      "ambiguous": false,
+      "blocked": false,
+      "reason": "C-0180 QA: отремонтировано, проверено",
+      "updated_by": "admin",
+      "updated_at": "2026-10-27T14:14:51Z"
+     }
+    ]
+   }
+  }
+ ],
+ "errors": [],
+ "lost_reply": {
+  "status": 200,
+  "body": {
+   "operation_id": "yard-dock-d720d0bb-282b-4546-8e47-7a8272c86c2d",
+   "warehouse_id": 226192056,
+   "dock": "TR27D226192056",
+   "blocked": true,
+   "reason": "C-0180 QA: створка не закрывается",
+   "updated_at": "2026-10-27T14:14:44Z"
+  }
+ },
+ "unknown_rows": [],
+ "status": "PASS"
+}

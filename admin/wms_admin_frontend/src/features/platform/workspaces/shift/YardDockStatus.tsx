@@ -100,7 +100,7 @@ export function YardDockStatus({ wh, reload }: { wh: string; reload: number }) {
 
   return <div className="ops-dock-status" aria-label="Состояние ворот">
     <h4>Состояние ворот{" "}<HelpButton help={shiftHelp.dockRefresh} onClick={() => setLocal(n => n + 1)}>Обновить</HelpButton></h4>
-    <p className="ops-note">Неисправные ворота не предлагаются для новых назначений и планов. Отметка не отменяет текущий визит, план, погрузку и отгрузку у этих ворот — их ведите отдельно ниже и в плане ворот.</p>
+    <p className="ops-note">Неисправные ворота не предлагаются для новых назначений и планов. Отметка не отменяет текущий визит, план, погрузку и отгрузку у этих ворот — их ведите отдельно выше: в визитах двора и в плане ворот.</p>
     {read.error && <p role="alert" className="ops-err">Состояние ворот не прочитано: {read.error}</p>}
     {pending.damaged && <p role="alert" className="ops-err">{pending.damaged}</p>}
     {intent && <div role="status" className="ops-err">Команда «{TITLE[intent.action]}» ворот {intent.dock} не подтверждена.{" "}
