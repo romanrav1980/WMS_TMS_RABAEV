@@ -1,0 +1,308 @@
+{
+ "tag": "C0185.119165bc3b",
+ "calls": [
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/docks",
+   "body": null,
+   "status": 200,
+   "ms": 272.2,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/visits?active=true",
+   "body": null,
+   "status": 200,
+   "ms": 47.4,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-26T19%3A31%3A28.357997%2B00%3A00&to=2026-11-02T19%3A31%3A28.357997%2B00%3A00",
+   "body": null,
+   "status": 200,
+   "ms": 32.9,
+   "attempt": 0
+  },
+  {
+   "method": "POST",
+   "path": "/api/tradecase/warehouses/220793322/yard/visits",
+   "body": {
+    "operation_id": "C0185.119165bc3b.visit",
+    "supply_ids": [
+     "C0185.119165bc3b"
+    ],
+    "vehicle": "C0185.119165bc3b",
+    "planned_arrival_at": "2026-10-27T22:31:30+00:00"
+   },
+   "status": 200,
+   "ms": 177.7,
+   "attempt": 0
+  },
+  {
+   "method": "POST",
+   "path": "/api/tradecase/warehouses/220793322/yard/docks/B22D1161/status",
+   "body": {
+    "operation_id": "C0185.119165bc3b.block",
+    "action": "BLOCK",
+    "reason": "C-0185 QA: damaged door, blocked-plan check"
+   },
+   "status": 200,
+   "ms": 100.0,
+   "attempt": 0
+  },
+  {
+   "method": "POST",
+   "path": "/api/tradecase/warehouses/220793322/yard/docks/B22D1161/status",
+   "body": {
+    "operation_id": "C0185.119165bc3b.unblock",
+    "action": "UNBLOCK",
+    "reason": "C-0185 QA: blocked-plan check finished, dock reopened"
+   },
+   "status": 200,
+   "ms": 96.7,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/visits?active=true",
+   "body": null,
+   "status": 200,
+   "ms": 43.9,
+   "attempt": 0
+  },
+  {
+   "method": "POST",
+   "path": "/api/tradecase/warehouses/220793322/yard/visits/638/transitions",
+   "body": {
+    "operation_id": "C0185.119165bc3b.cancel",
+    "action": "CANCEL",
+    "expected_version": 1,
+    "reason": "C-0185 QA visit no longer needed"
+   },
+   "status": 200,
+   "ms": 110.4,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/docks",
+   "body": null,
+   "status": 200,
+   "ms": 57.0,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/visits?active=true",
+   "body": null,
+   "status": 200,
+   "ms": 52.9,
+   "attempt": 0
+  },
+  {
+   "method": "GET",
+   "path": "/api/tradecase/warehouses/220793322/yard/dock-plans?from=2026-10-26T19%3A31%3A55.497658%2B00%3A00&to=2026-11-02T19%3A31%3A55.497658%2B00%3A00",
+   "body": null,
+   "status": 200,
+   "ms": 34.3,
+   "attempt": 0
+  }
+ ],
+ "results": {
+  "visit": {
+   "operation_id": "C0185.119165bc3b.visit",
+   "planned_dock": null,
+   "supply_ids": [
+    "C0185.119165bc3b"
+   ],
+   "visit_id": 638,
+   "warehouse_id": 220793322,
+   "visit_kind": "INBOUND",
+   "trip_id": null,
+   "native_task_id": null,
+   "vehicle": "C0185.119165BC3B",
+   "dock": null,
+   "state": "EXPECTED",
+   "version": 1,
+   "planned_arrival_at": "2026-10-27T22:31:30Z",
+   "arrived_at": null,
+   "docked_at": null,
+   "work_started_at": null,
+   "work_finished_at": null,
+   "departed_at": null,
+   "cancelled_at": null,
+   "cancel_reason": null,
+   "updated_by": "admin",
+   "replayed": false
+  },
+  "block": {
+   "operation_id": "C0185.119165bc3b.block",
+   "warehouse_id": 220793322,
+   "dock": "B22D1161",
+   "blocked": true,
+   "reason": "C-0185 QA: damaged door, blocked-plan check",
+   "updated_at": "2026-10-27T19:31:33Z"
+  },
+  "unblock": {
+   "operation_id": "C0185.119165bc3b.unblock",
+   "warehouse_id": 220793322,
+   "dock": "B22D1161",
+   "blocked": false,
+   "reason": "C-0185 QA: blocked-plan check finished, dock reopened",
+   "updated_at": "2026-10-27T19:31:58Z"
+  },
+  "cancel_visit": {
+   "operation_id": "C0185.119165bc3b.cancel",
+   "planned_dock": null,
+   "supply_ids": [
+    "C0185.119165bc3b"
+   ],
+   "visit_id": 638,
+   "warehouse_id": 220793322,
+   "visit_kind": "INBOUND",
+   "trip_id": null,
+   "native_task_id": null,
+   "vehicle": "C0185.119165BC3B",
+   "dock": null,
+   "state": "CANCELLED",
+   "version": 2,
+   "planned_arrival_at": "2026-10-27T22:31:30Z",
+   "arrived_at": null,
+   "docked_at": null,
+   "work_started_at": null,
+   "work_finished_at": null,
+   "departed_at": null,
+   "cancelled_at": "2026-10-27T19:31:58Z",
+   "cancel_reason": "C-0185 QA visit no longer needed",
+   "updated_by": "admin",
+   "replayed": false
+  }
+ },
+ "before": {
+  "docks": {
+   "B22D1161": {
+    "blocked": false,
+    "ambiguous": false
+   },
+   "N22DA1168": {
+    "blocked": false,
+    "ambiguous": false
+   }
+  },
+  "visits": [],
+  "plans": [],
+  "stock": [
+   [
+    7,
+    5,
+    14
+   ]
+  ]
+ },
+ "slow_marker": 7432,
+ "started": "2026-10-27T19:31:30.074453+00:00",
+ "supply_created": true,
+ "ui": {
+  "code": 0,
+  "out": "PASS 2\n",
+  "err": ""
+ },
+ "cleanup": "done",
+ "after": {
+  "docks": {
+   "B22D1161": {
+    "blocked": false,
+    "ambiguous": false
+   },
+   "N22DA1168": {
+    "blocked": false,
+    "ambiguous": false
+   }
+  },
+  "visits": [],
+  "plans": [],
+  "stock": [
+   [
+    7,
+    5,
+    14
+   ]
+  ]
+ },
+ "visit_final": [
+  [
+   "CANCELLED"
+  ]
+ ],
+ "plans_for_visit": [
+  [
+   0
+  ]
+ ],
+ "slow_sql": [
+  [
+   7436,
+   1311,
+   null,
+   "Current CASE queue READ ONLY snapshot"
+  ],
+  [
+   7438,
+   1201,
+   null,
+   "Bounded shift overview single READ ONLY snapshot"
+  ],
+  [
+   7441,
+   978,
+   null,
+   "Current CASE queue READ ONLY snapshot"
+  ],
+  [
+   7435,
+   896,
+   null,
+   "Recovery queue scoped READ ONLY"
+  ],
+  [
+   7440,
+   713,
+   null,
+   "Bounded shift overview single READ ONLY snapshot"
+  ],
+  [
+   7434,
+   623,
+   null,
+   "Current CASE shortages READ ONLY snapshot"
+  ],
+  [
+   7433,
+   501,
+   null,
+   "Resource timeline native scoped read"
+  ],
+  [
+   7437,
+   155,
+   null,
+   "TRADECASE yard dock plan command"
+  ],
+  [
+   7439,
+   52,
+   null,
+   "TRADECASE yard dock plan command"
+  ]
+ ],
+ "checks": {
+  "dock_open": true,
+  "visits_unchanged": true,
+  "plans_unchanged": true,
+  "stock_equal": true,
+  "visit_cancelled": true,
+  "no_plan_for_visit": true
+ }
+}
