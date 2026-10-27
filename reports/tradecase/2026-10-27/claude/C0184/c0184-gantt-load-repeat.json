@@ -1,0 +1,225 @@
+{
+ "api": "http://127.0.0.1:8093",
+ "window": [
+  "2026-10-27T12:00:00+00:00",
+  "2026-10-27T18:00:00+00:00"
+ ],
+ "started": "2026-10-27T19:20:42.613031+00:00",
+ "processes_before": [
+  "11:06:35",
+  "17:05:40",
+  "8088|87992|10/27/2026",
+  "8093|24236|10/27/2026"
+ ],
+ "warehouses": {
+  "220793322": {
+   "serial": [],
+   "concurrent": [
+    {
+     "status": 200,
+     "ms": 1207.0,
+     "bytes": 4570,
+     "resources": 8,
+     "events": 3,
+     "assignments": 3,
+     "resource_kinds": [
+      "CASE_PICKER",
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "67bbe62298c3f7c8"
+    },
+    {
+     "status": 200,
+     "ms": 1169.3,
+     "bytes": 4570,
+     "resources": 8,
+     "events": 3,
+     "assignments": 3,
+     "resource_kinds": [
+      "CASE_PICKER",
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "67bbe62298c3f7c8"
+    },
+    {
+     "status": 200,
+     "ms": 1152.8,
+     "bytes": 4570,
+     "resources": 8,
+     "events": 3,
+     "assignments": 3,
+     "resource_kinds": [
+      "CASE_PICKER",
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "67bbe62298c3f7c8"
+    },
+    {
+     "status": 200,
+     "ms": 1123.0,
+     "bytes": 4570,
+     "resources": 8,
+     "events": 3,
+     "assignments": 3,
+     "resource_kinds": [
+      "CASE_PICKER",
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "67bbe62298c3f7c8"
+    }
+   ],
+   "serial_ms": null,
+   "same_ids": true,
+   "concurrent_ms": {
+    "min": 1123.0,
+    "median": 1169.3,
+    "max": 1207.0
+   }
+  },
+  "226192056": {
+   "serial": [],
+   "concurrent": [
+    {
+     "status": 200,
+     "ms": 265.2,
+     "bytes": 1626,
+     "resources": 1,
+     "events": 0,
+     "assignments": 0,
+     "resource_kinds": [
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "a683096011db3975"
+    },
+    {
+     "status": 200,
+     "ms": 281.5,
+     "bytes": 1626,
+     "resources": 1,
+     "events": 0,
+     "assignments": 0,
+     "resource_kinds": [
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "a683096011db3975"
+    },
+    {
+     "status": 200,
+     "ms": 242.6,
+     "bytes": 1626,
+     "resources": 1,
+     "events": 0,
+     "assignments": 0,
+     "resource_kinds": [
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "a683096011db3975"
+    },
+    {
+     "status": 200,
+     "ms": 244.5,
+     "bytes": 1626,
+     "resources": 1,
+     "events": 0,
+     "assignments": 0,
+     "resource_kinds": [
+      "DOCK"
+     ],
+     "sources": {
+      "registry": "READY",
+      "attendance": "READY",
+      "warehouse_tasks": "READY",
+      "case_tasks": "READY",
+      "transport": "READY",
+      "sessions": "READY",
+      "yard": "READY"
+     },
+     "ids_hash": "a683096011db3975"
+    }
+   ],
+   "serial_ms": null,
+   "same_ids": true,
+   "concurrent_ms": {
+    "min": 242.6,
+    "median": 265.2,
+    "max": 281.5
+   }
+  }
+ },
+ "requests": 8,
+ "slow_log_since_start": [],
+ "db_clock": [
+  "2026-10-27 15:20:56.067147",
+  "+03:00"
+ ],
+ "processes_after": [
+  "11:06:35",
+  "17:05:40",
+  "8088|87992|10/27/2026",
+  "8093|24236|10/27/2026"
+ ],
+ "finished": "2026-10-27T19:20:58.652398+00:00"
+}
