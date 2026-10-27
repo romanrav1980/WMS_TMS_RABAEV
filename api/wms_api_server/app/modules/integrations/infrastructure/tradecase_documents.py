@@ -8,6 +8,8 @@ import oracledb
 
 from ...platform.public import read_oracle_json
 from ..contracts_tradecase import TradecaseError, TradeEnvelope, TradeSiteSetting
+from ..domain.order_units import REGISTRY_UNIT, normalize_line
+from .order_unit_registry import article_conversions
 
 
 def canonical(value: dict[str, Any]) -> str:
@@ -29,13 +31,15 @@ class OracleTradecaseDocuments:
     def __init__(self, gateway: Any) -> None:
         self.gateway = gateway
 
-    def _command(self, procedure: str, warehouse_id: int, actor: str, value: dict[str, Any]) -> dict[str, Any]:
+    def _command(self, procedure: str, warehouse_id: int, actor: str, value: dict[str, Any], prepare: Any = None) -> dict[str, Any]:
         assert procedure in {"configure", "receive_document"}
-        raw = canonical(value)
-        if len(raw.encode()) > 1024 * 1024:
-            raise TradecaseError("TRADECASE_MESSAGE_TOO_LARGE", 413)
         try:
             with self.gateway.transaction("TRADECASE " + procedure) as cur:
+                if prepare is not None:
+                    value = prepare(cur, value)  # same transaction as the native command
+                raw = canonical(value)
+                if len(raw.encode()) > 1024 * 1024:
+                    raise TradecaseError("TRADECASE_MESSAGE_TOO_LARGE", 413)
                 request = cur.var(oracledb.DB_TYPE_CLOB)
                 request.setvalue(0, raw)
                 result = cur.var(oracledb.DB_TYPE_CLOB)
@@ -43,9 +47,47 @@ class OracleTradecaseDocuments:
                 response = read_oracle_json(result.getvalue())
             if response.get("status") == "REJECTED":
                 raise TradecaseError(response["code"], 409)
+            lines = [x.get("normalization") for x in value.get("payload", {}).get("lines", []) if isinstance(x, dict)]
+            if any(lines):  # derived from the stored body, so an exact replay returns the same line outcome
+                response["line_results"] = [dict(line_id=x["line_id"], **{k: x["normalization"][k] for k in ("status", "error_code", "integration_error", "executable")},
+                                                 quantity=x["quantity"], uom=x["uom"]) for x in value["payload"]["lines"]]
+                response["loaded_with_integration_error"] = any(x["normalization"]["integration_error"] for x in value["payload"]["lines"])
             return response
         except oracledb.DatabaseError as exc:
             raise native_error(exc) from exc
+
+    def _normalize_order(self, cur: Any, value: dict[str, Any]) -> dict[str, Any]:
+        """C-0175: an exact replay goes to the native command with its stored request (never renormalized); a new ORDER gets each line
+        normalized once from the current SKU setting and the article's published coefficients."""
+        cur.execute("select PAYLOAD_HASH,REQUEST_JSON from RRL_TRADE_MESSAGE where WARE_ID=:w and SOURCE_ID=:s and EVENT_ID=:e",
+                    w=value["warehouse_id"], s=value["source_id"], e=value["event_id"])
+        stored = cur.fetchone()
+        if stored is not None:
+            return read_oracle_json(stored[1]) if stored[0] == value["payload_hash"] else value
+        if value["payload"].get("order_kind") == "BUYOUT":
+            return value  # a buyout basis stays in base pieces; it is not a shipment line
+        for line in value["payload"]["lines"]:
+            cur.execute("select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+                        w=value["warehouse_id"], k=line["sku_id"])
+            row = cur.fetchone()
+            sku = read_oracle_json(row[0]) if row else {}
+            if row is None and line["uom"] in ("EA", "BOX"):
+                continue  # the current EA/BOX contract; the native document intake waits for the SKU as before
+            setting = sku.get("processing_uom")
+            if setting is None and line["uom"] in ("EA", "BOX"):
+                continue  # no single processing unit configured: unchanged
+            units = {REGISTRY_UNIT[u] for u in (line["uom"], setting) if u in REGISTRY_UNIT}
+            conversions = article_conversions(cur, sku["wms_article_id"], units) if sku.get("wms_article_id") else {}
+            result = normalize_line(Decimal(line["quantity"]), line["uom"], setting,
+                                    Decimal(str(sku["processing_step"])) if sku.get("processing_step") is not None else None,
+                                    sku.get("round_to_processing_unit") is not False, conversions)
+            if row is None:
+                result.update(status="SKU_SETTINGS_MISSING", error_code="ORDER_UNIT_SKU_SETTINGS_MISSING", quantity=None, uom=None, executable=False, integration_error=True)
+            result.update(sku_version=int(row[1]) if row else None, processing_step=sku.get("processing_step"), round_to_processing_unit=sku.get("round_to_processing_unit"))
+            line["normalization"] = result
+            line["quantity"] = result["quantity"] if result["executable"] else "0"
+            line["uom"] = result["uom"] or line["uom"]
+        return value
 
     def configure(self, warehouse_id: int, body: TradeSiteSetting, actor: str) -> dict[str, Any]:
         value = body.model_dump(mode="json")
@@ -55,12 +97,14 @@ class OracleTradecaseDocuments:
     def receive(self, body: TradeEnvelope, actor: str) -> dict[str, Any]:
         value = body.model_dump(mode="json")
         # Additive optional mappings must not change the hash of an older unchanged message.
-        for key in ("wms_article_id", "wms_customer_id", "buyout_mode"):
+        for key in ("wms_article_id", "wms_customer_id", "buyout_mode", "processing_uom", "processing_step", "round_to_processing_unit"):
             if value["payload"].get(key) is None:
                 value["payload"].pop(key, None)
         value["payload_hash"] = sha256(canonical(value).encode()).hexdigest()
         business = {key: value[key] for key in ("schema_version", "source_id", "warehouse_id", "document_id", "version", "payload")}
         value["business_hash"] = sha256(canonical(business).encode()).hexdigest()
+        if value["payload"].get("entity_type") == "ORDER":
+            return self._command("receive_document", body.warehouse_id, actor, value, prepare=self._normalize_order)
         return self._command("receive_document", body.warehouse_id, actor, value)
 
     def retry(self, warehouse_id: int, event_id: str, actor: str) -> dict[str, Any]:

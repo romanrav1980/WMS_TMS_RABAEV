@@ -27,11 +27,20 @@ class TradeSku(TradeModel):
     units_per_box: int = Field(strict=True, gt=0, le=100000)
     permitted_mrc: list[Money] = Field(min_length=1, max_length=100)
     active: bool = True
+    # C-0175: the single processing unit of order lines, its explicit handling step (in that unit) and whether rounding down to it is
+    # allowed without an integration error. Absent: the EA/BOX order contract stays as before.
+    processing_uom: Literal["EA", "BOX"] | None = None
+    processing_step: Quantity | None = None
+    round_to_processing_unit: bool | None = None
 
     @model_validator(mode="after")
     def unique_prices(self) -> "TradeSku":
         if len(set(self.permitted_mrc)) != len(self.permitted_mrc):
             raise ValueError("Duplicate MRC")
+        if (self.processing_uom is None) != (self.processing_step is None):
+            raise ValueError("Processing unit and its handling step are set together")
+        if self.processing_uom is None and self.round_to_processing_unit is not None:
+            raise ValueError("Rounding setting requires a processing unit")
         return self
 
 
@@ -68,7 +77,8 @@ class TradeOrderLine(TradeModel):
     target_owner_id: Key
     mrc: Money
     quantity: Quantity
-    uom: Literal["BOX", "EA"]
+    # C-0175: piece, box, block (BLOCK or the exchange code BLK), gram, kilogram; converted by the SKU's published coefficients.
+    uom: Literal["BOX", "EA", "BLOCK", "BLK", "G", "KG"]
     min_osg_days: int = Field(strict=True, ge=0, le=3650)
 
 
