@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useRead } from "./useRead";
+import { sourceZone, stamp, minutesBetween } from "./routeZone";
 import { Tech } from "./ui";
 import { RAW_ADMIN_BASE } from "../../../api";
 
@@ -12,8 +12,7 @@ type Stop = { address: string; arrival_at: string | null; service_start_at: stri
 type Segment = { code: string; start_at: string; finish_at: string };
 type Windows = { status: string; departure_at: string | null; return_at: string | null; stops: Stop[]; issues: { code: string; address: string | null }[];
   warnings: { code: string; address: string | null }[]; segments?: Segment[]; destination_time_zones_verified?: boolean };
-type Zone = "Europe/Moscow" | "Asia/Tbilisi" | "UTC";
-const ZONE: Record<Zone, string> = { "Europe/Moscow": "МСК", "Asia/Tbilisi": "Тбилиси", UTC: "UTC" };
+type TimeContext = Parameters<typeof sourceZone>[0];
 
 const ISSUE: Record<string, string> = {
   WAREHOUSE_DEPOT_NOT_CONFIGURED: "адрес склада выезда не настроен", ROUTE_DEPARTURE_STAGE_UNKNOWN: "время выезда не определено",
@@ -37,30 +36,31 @@ const FIX: Record<string, string> = { WAREHOUSE_DEPOT_NOT_CONFIGURED: "«Нас�
   ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED: "«Обновить дорожные плечи»", DESTINATION_RULE_INVALID: "«Настроить окна и разгрузку магазина» у точки",
   DELIVERY_WINDOW_UNCONFIGURED: "«Настроить окна и разгрузку магазина» у точки",
   ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE: "«Настроить исходные данные маршрута» → увеличить «Возврат на склад, мин» (оценка должна включать разгрузку и отдых водителя)" };
-// Расчёт возвращает местное время окон в выбранном поясе; подпись берётся из того же выбора, а не из «UTC» по умолчанию (C-0172).
-const stamp = (iso: string | null, zone: Zone) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)} ${iso.slice(11, 16)} ${ZONE[zone]}` : "неизвестно");
 const clock = (iso: string) => iso.slice(11, 16);
-const gap = (from: string, to: string) => Math.ceil((Date.parse(to) - Date.parse(from)) / 60000);
+const BASIS = { APPROVAL: "основание — утверждение времени рейса" };
 const minutes = (v: string | null) => (v === null ? "неизвестно" : `${Math.round(Number(v))} мин`);
 
 /** План маршрута: точки текущего основания, их получатели по ключам и расчёт приезда/обслуживания/ожидания/возврата
  *  существующим расчётом окон. Отсутствующие данные называются; расчёт не означает выезд или доставку. */
 export function RoutePlan({ nativeTask, members, points }: { nativeTask: number; members: RouteMember[]; points: Points }) {
-  const [zone, setZone] = useState<Zone>("Europe/Moscow");
-  const windows = useRead<Windows>(`/api/transport/preflight/trips/${nativeTask}/delivery-windows?time_zone=${encodeURIComponent(zone)}&depot_address=&max_age_hours=24`);
-  const time = (iso: string | null) => stamp(iso, zone);
+  // Окна и операции рейса записаны местным временем; расчёт трактует их в поясе исходных данных, поэтому без подтверждённого пояса он не запрашивается.
+  const context = useRead<TimeContext>(`/api/transport/preflight/trips/${nativeTask}/time-context`);
+  const src = context.data ? sourceZone(context.data) : null;
+  const windows = useRead<Windows>(src?.zone ? `/api/transport/preflight/trips/${nativeTask}/delivery-windows?time_zone=${encodeURIComponent(src.zone)}&depot_address=&max_age_hours=24` : null);
+  const time = stamp;
   const byPoint = new Map(points.points.map(p => [p.point_id, p])), w = windows.data;
   const stop = (address: string | null) => w?.stops.find(s => s.address === address);
   const tripIssues = [...new Set((w?.issues ?? []).filter(i => !i.address).map(i => i.code))];
   const blocked = points.blocked_reason || (w && w.status !== "NO_EARLIEST_WINDOW_VIOLATION");
   const rests = (w?.segments ?? []).filter(x => x.code === "REST");
   const handover = w?.segments?.find(x => x.code === "RETURN_HANDOVER");
-  const short = w?.return_at && handover && w.issues.some(i => i.code === "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE") ? gap(handover.start_at, w.return_at) : 0;
-  const zones = [...new Set((w?.stops ?? []).map(x => x.store_time_zone).filter(Boolean))];
+  const short = w?.return_at && handover && w.issues.some(i => i.code === "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE") ? minutesBetween(handover.start_at, w.return_at) : 0;
   return <div aria-label="План маршрута">
-    <label title="Часовой пояс, в котором показаны окна и расчётное время" data-help-id="tradecase.route.zone">Часовой пояс{" "}
-      <select title="Выбрать часовой пояс показа" value={zone} onChange={e => setZone(e.target.value as Zone)}>{(Object.keys(ZONE) as Zone[]).map(z => <option key={z} value={z}>{z}</option>)}</select></label>
-    {zones.some(z => z !== zone) && <p className="tc-msg warn">Пояс магазина в карточке ({zones.join(", ")}) отличается от выбранного — сверьте окна в поясе магазина.</p>}
+    {context.error && <p className="tc-err" role="alert">Пояс исходных данных рейса не прочитан: {context.error}</p>}
+    {src && !src.zone && <p className="tc-msg warn" role="status" data-help-id="tradecase.route.zone">{src.reason === "MIXED_ZONES"
+      ? `В маршруте магазины в другом поясе (${src.zones.join(", ")}), чем утверждённое время рейса; текущий расчёт считает рейс в одном поясе и такой маршрут пока не показывает.`
+      : "Пояс местного времени рейса не подтверждён: утвердите время рейса с явным часовым поясом в транспортном экране."} Расчёт окон не выполняется, чтобы не сдвинуть время.</p>}
+    {src?.zone && <p className="tc-note" data-help-id="tradecase.route.zone">Местное время рейса записано в поясе {src.zone} ({src.basis ? BASIS[src.basis] : ""}); время показано со смещением от UTC.</p>}
     {windows.error && <p className="tc-err" role="alert">{windows.error.includes("Нет права") ? "Нет права расчёта окон доставки." : `Расчёт окон не получен: ${windows.error}`}</p>}
     {windows.loading && !w && <p className="tc-note">Читаем расчёт окон…</p>}
     {w && <p className={"tc-msg " + (blocked ? "warn" : "ok")} role="status">

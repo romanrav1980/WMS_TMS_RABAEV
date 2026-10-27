@@ -27,6 +27,7 @@ from live_document_acceptance import http, expect, CALLS
 OUT = ROOT / "runtime/test-evidence/tradecase/2026-10-27/T09"
 TAG = "RW27" + uuid4().hex[:10]
 WARE = 240000000 + secrets.randbelow(9000000)
+UI = "--ui" in sys.argv  # keep a bound TRADECASE trip in the approved state for the route screen check; retire with --retire afterwards
 POINTS = [("DEPOT", 56.8389, 60.5975), ("HUB", 56.4149, 61.9189), ("BRANCH", 56.7760, 62.0460), ("STORE", 56.9070, 62.0340)]
 ADDR = {name: TAG + "." + name for name, _, _ in POINTS}
 DAY = (datetime.now() + timedelta(days=2)).date()
@@ -100,12 +101,13 @@ def run():
     with oracle_connection() as c:
         q = c.cursor(); q.execute("select user,sys_context('USERENV','SERVICE_NAME')from dual"); assert q.fetchone() == ("RABAEV", "orcl")
         q.execute("""select (select count(*) from RRL_WARES where ID=:w)+(select count(*) from RRL_ACCESS_OBJECT where KIND='WAREHOUSE' and OBJECT_ID=to_char(:w))
-            +(select count(*) from RRL_ADDR where ADDR like :t) from dual""", w=WARE, t=TAG + ".%")
+            +(select count(*) from RRL_ADDR where ADDR like :t) from dual""", w=-1 if UI else WARE, t=TAG + ".%")  # UI: the warehouse was checked before setup
         assert q.fetchone() == (0,), "fixture must be absent before the first write"
         q.execute("select nvl(max(LOG_ID),0) from RRL_SQL_SLOW_LOG"); report["slow_marker"] = q.fetchone()[0]
         save()  # state before the first write
-        q.execute("insert into RRL_WARES(ID,NAME)values(:w,:n)", w=WARE, n="TRADECASE QA route windows " + TAG)
-        q.execute("insert into RRL_ACCESS_OBJECT(KIND,OBJECT_ID,TITLE,ACTIVE,VERSION_NO)values('WAREHOUSE',:w,'Route windows QA',1,1)", w=str(WARE))
+        if not UI:
+            q.execute("insert into RRL_WARES(ID,NAME)values(:w,:n)", w=WARE, n="TRADECASE QA route windows " + TAG)
+            q.execute("insert into RRL_ACCESS_OBJECT(KIND,OBJECT_ID,TITLE,ACTIVE,VERSION_NO)values('WAREHOUSE',:w,'Route windows QA',1,1)", w=str(WARE))
         for name, lat, lon in POINTS:  # program: unloading 15 minutes, strict windows
             q.execute("insert into RRL_ADDR(ADDR,SHIROTA,DOLGOTA,DELETED3,UNLOAD_NORM_MIN,TW_STRICT,TRANSPORT_TYPE,STOL)values(:a,:lat,:lon,0,15,1,'0',0)", a=ADDR[name], lat=lat, lon=lon)
         c.commit(); state["created"] = True; save()
@@ -198,6 +200,8 @@ def run():
     report["approved"] = call("POST", PRE + "/time-approvals", approval)
     assert call("POST", PRE + "/time-approvals", approval) == report["approved"]
     report["checks"].append("Time approval and exact replay")
+    if UI:
+        trade_trip(plate); save(); return
     save()
     late = list(reachable); late[2] = (shift(arrivals[2], -60), shift(arrivals[2], -10))
     windows(late); missed = calc(); report["missed"] = summary(missed)
@@ -221,6 +225,24 @@ def run():
                                                                      reason="Store window agreed again; approve the real-road timetable"))
     report["checks"].append("Window agreed again: timetable without violations approved on the new basis")
     save()
+
+
+def trade_trip(plate):
+    """Own TRADECASE documents on the own warehouse and the binding of trade trip T1 to the native trip (screen check only)."""
+    f = state["ui_fixture"]; base = f"/api/tradecase/warehouses/{WARE}"; now = datetime.now().astimezone().isoformat()
+    def send(kind, key, payload):
+        return call("POST", "/api/tradecase/messages", dict(schema_version=1, event_id=TAG + "." + kind + "." + key, source_id="TC03.SAP", warehouse_id=WARE,
+                    document_id=key, version=1, occurred_at=now, payload=dict(entity_type=kind, **payload)))
+    call("PUT", base + "/site", dict(operation_id=TAG + ".site", expected_version=0, source_id="TC03.SAP", active_skm="TC03.SKM", planning_source="SAP",
+                                     enabled=True, reason="C-0172 route screen check"))
+    send("OWNER", "SNS", dict(title="SNS"))
+    send("SKU", "A", dict(title="Route QA product", wms_article_id=f["article"], units_per_box=10, permitted_mrc=["200"]))
+    send("RECIPIENT", "C1", dict(title="Route QA store", target_owner_id="SNS", permitted_source_owners=["SNS"], buyout_mode="BEFORE_PICK", min_osg_days=0, lead_time_days=0))
+    departure = f"{DAY}T08:54:00+03:00"
+    send("ORDER", "O1", dict(recipient_id="C1", planned_ship_at=departure, lines=[dict(line_id="1", sku_id="A", source_owner_id="SNS", target_owner_id="SNS", mrc="200", quantity="10", uom="EA", min_osg_days=0)]))
+    send("TRIP", "T1", dict(vehicle_id=plate, planning_source="SAP", planned_departure_at=departure, capacity_kg="8000", capacity_m3="66", orders=[dict(order_id="O1", line_id="1", quantity="10")]))
+    state["binding"] = call("POST", base + "/trips/T1/binding", dict(operation_id=TAG + ".binding", native_task_id=state["trip"], expected_trip_version=1, expected_binding_version=0))
+    state["ui_url"] = f"?page=tradecase&tc_wh={WARE}&tc_tab=TRIP&tc_open=T1"
 
 
 def retire(st, ware, tag):
@@ -247,17 +269,41 @@ def retire(st, ware, tag):
     st["retired"] = True
 
 
+def ui_setup():
+    global WARE
+    import live_stock_acceptance
+    tag = uuid4().hex; ware = 210000000 + int(tag[:6], 16)  # the id live_stock_acceptance.setup derives from its tag
+    with oracle_connection() as c:
+        q = c.cursor(); q.execute("""select (select count(*) from RRL_WARES where ID=:w)+(select count(*) from RRL_CELLS where WARE_ID=:w)
+            +(select count(*) from RRL_TRADE_SITE where WARE_ID=:w)+(select count(*) from RRL_ACCESS_OBJECT where KIND='WAREHOUSE' and OBJECT_ID=to_char(:w)) from dual""", w=ware)
+        assert q.fetchone() == (0,) and ware not in (225837931, 213059748, 225687965, 210564699, 210069361), "warehouse must be absent before setup"
+    original = live_stock_acceptance.uuid4
+    live_stock_acceptance.uuid4 = lambda: type("Tag", (), {"hex": tag})()
+    try:
+        f = live_stock_acceptance.setup()
+    finally:
+        live_stock_acceptance.uuid4 = original
+    assert f["warehouse_id"] == ware
+    WARE = f["warehouse_id"]; report["warehouse"] = WARE
+    with oracle_connection() as c:
+        q = c.cursor(); q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=f["actor"])
+        q.execute("update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:a", a=f["role"]); c.commit()
+    state["ui_fixture"] = {k: v for k, v in f.items() if k != "password"}; save()
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--retire"]:  # retire an earlier own run from its evidence file
         path = Path(sys.argv[2]); old = json.loads(path.read_text(encoding="utf-8")); assert old["tag"].startswith("RW27") and not old["state"].get("retired")
         retire(old["state"], old["warehouse"], old["tag"]); path.write_text(json.dumps(old, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
         print(json.dumps(old["state"])); sys.exit(0)
     try:
-        run(); report["status"] = "RUN_COMPLETE_REVIEW"
+        if UI:
+            ui_setup()
+        run(); report["status"] = "UI_FIXTURE_READY" if UI else "RUN_COMPLETE_REVIEW"
     except Exception as exc:
         report["error"] = repr(exc)[:3000]; raise
     finally:
-        if state["created"] and "--keep" not in sys.argv:
+        if state["created"] and "--keep" not in sys.argv and not (UI and report["status"] == "UI_FIXTURE_READY"):
             retire(state, WARE, TAG)
         save()
         print(json.dumps(dict(status=report["status"], tag=TAG, trip=state["trip"], checks=report["checks"], error=report.get("error")), ensure_ascii=False)[:3000])

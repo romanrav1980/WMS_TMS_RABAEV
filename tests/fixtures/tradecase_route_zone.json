@@ -1,0 +1,180 @@
+{
+ "cases": [
+  {
+   "name": "approval_and_stores_agree",
+   "context": {
+    "last_approval": {
+     "time_zone": "Europe/Moscow"
+    },
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Europe/Moscow"
+      },
+      {
+       "time_zone": "Europe/Moscow"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": "Europe/Moscow",
+    "basis": "APPROVAL",
+    "reason": null
+   }
+  },
+  {
+   "name": "stores_only",
+   "context": {
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Asia/Tbilisi"
+      },
+      {
+       "time_zone": null,
+       "profile_absent": true
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "UNCONFIRMED"
+   }
+  },
+  {
+   "name": "approval_conflicts_with_store",
+   "context": {
+    "last_approval": {
+     "time_zone": "UTC"
+    },
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Europe/Moscow"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "MIXED_ZONES"
+   }
+  },
+  {
+   "name": "stores_differ",
+   "context": {
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Europe/Moscow"
+      },
+      {
+       "time_zone": "Asia/Tbilisi"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "UNCONFIRMED"
+   }
+  },
+  {
+   "name": "unknown_region",
+   "context": {
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Asia/Yekaterinburg"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "UNCONFIRMED"
+   }
+  },
+  {
+   "name": "nothing_confirmed",
+   "context": {
+    "source": {
+     "store_window_profiles": [
+      {
+       "profile_absent": true,
+       "time_zone": "Europe/Moscow"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "UNCONFIRMED"
+   }
+  },
+  {
+   "name": "approval_without_store_profiles",
+   "context": {
+    "last_approval": {
+     "time_zone": "Asia/Tbilisi"
+    },
+    "source": {
+     "store_window_profiles": []
+    }
+   },
+   "expect": {
+    "zone": "Asia/Tbilisi",
+    "basis": "APPROVAL",
+    "reason": null
+   }
+  },
+  {
+   "name": "approval_and_stores_in_two_zones",
+   "context": {
+    "last_approval": {
+     "time_zone": "Europe/Moscow"
+    },
+    "source": {
+     "store_window_profiles": [
+      {
+       "time_zone": "Europe/Moscow"
+      },
+      {
+       "time_zone": "Asia/Tbilisi"
+      }
+     ]
+    }
+   },
+   "expect": {
+    "zone": null,
+    "basis": null,
+    "reason": "MIXED_ZONES"
+   }
+  }
+ ],
+ "stamps": [
+  [
+   "2026-10-29T12:48:59.000000+03:00",
+   "29.10 12:48 (UTC+03:00)"
+  ],
+  [
+   "2026-10-29T09:48:59.000000+00:00",
+   "29.10 09:48 (UTC)"
+  ],
+  [
+   "2026-10-29T09:48:59Z",
+   "29.10 09:48 (UTC)"
+  ],
+  [
+   null,
+   "неизвестно"
+  ]
+ ]
+}

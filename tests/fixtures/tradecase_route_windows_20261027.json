@@ -1,0 +1,295 @@
+{
+ "note": "Depersonalized extract of the C-0172 live run (OSRM, trip dated 2026-10-29, Europe/Moscow); addresses are role names only.",
+ "road_minutes": [
+  101.65,
+  68.41,
+  19.92,
+  97.4
+ ],
+ "road_totals_only": {
+  "issues": [
+   "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE"
+  ],
+  "segments": [
+   {
+    "code": "DOCK_ASSIGN",
+    "start_at": "2026-10-29T08:00:00.000000+03:00",
+    "finish_at": "2026-10-29T08:15:00.000000+03:00"
+   },
+   {
+    "code": "WAIT_LOAD",
+    "start_at": "2026-10-29T08:15:00.000000+03:00",
+    "finish_at": "2026-10-29T08:25:00.000000+03:00"
+   },
+   {
+    "code": "LOADING",
+    "start_at": "2026-10-29T08:25:00.000000+03:00",
+    "finish_at": "2026-10-29T08:34:00.000000+03:00"
+   },
+   {
+    "code": "CLOSE_GATE",
+    "start_at": "2026-10-29T08:34:00.000000+03:00",
+    "finish_at": "2026-10-29T08:44:00.000000+03:00"
+   },
+   {
+    "code": "DOCUMENTS",
+    "start_at": "2026-10-29T08:44:00.000000+03:00",
+    "finish_at": "2026-10-29T08:54:00.000000+03:00"
+   },
+   {
+    "code": "DEPART",
+    "start_at": "2026-10-29T08:54:00.000000+03:00",
+    "finish_at": "2026-10-29T08:54:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T08:54:00.000000+03:00",
+    "finish_at": "2026-10-29T10:35:39.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T10:35:39.000000+03:00",
+    "finish_at": "2026-10-29T10:50:39.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T10:50:39.000000+03:00",
+    "finish_at": "2026-10-29T11:09:00.000000+03:00"
+   },
+   {
+    "code": "REST",
+    "start_at": "2026-10-29T11:09:00.000000+03:00",
+    "finish_at": "2026-10-29T11:24:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T11:24:00.000000+03:00",
+    "finish_at": "2026-10-29T12:14:04.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T12:14:04.000000+03:00",
+    "finish_at": "2026-10-29T12:29:04.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T12:29:04.000000+03:00",
+    "finish_at": "2026-10-29T12:48:59.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T12:48:59.000000+03:00",
+    "finish_at": "2026-10-29T13:03:59.000000+03:00"
+   },
+   {
+    "code": "LOAD_RETURNS",
+    "start_at": "2026-10-29T13:03:59.000000+03:00",
+    "finish_at": "2026-10-29T13:18:59.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T13:18:59.000000+03:00",
+    "finish_at": "2026-10-29T14:09:00.000000+03:00"
+   },
+   {
+    "code": "REST",
+    "start_at": "2026-10-29T14:09:00.000000+03:00",
+    "finish_at": "2026-10-29T14:24:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T14:24:00.000000+03:00",
+    "finish_at": "2026-10-29T15:11:23.000000+03:00"
+   },
+   {
+    "code": "RETURN_HANDOVER",
+    "start_at": "2026-10-29T14:06:00.000000+03:00",
+    "finish_at": "2026-10-29T14:26:00.000000+03:00"
+   },
+   {
+    "code": "CLEAN_RETURNS",
+    "start_at": "2026-10-29T14:26:00.000000+03:00",
+    "finish_at": "2026-10-29T14:46:00.000000+03:00"
+   }
+  ]
+ },
+ "full_input": {
+  "drive_min": 235,
+  "drive_back_min": [
+   113,
+   119
+  ],
+  "issues": [],
+  "segments": [
+   {
+    "code": "DOCK_ASSIGN",
+    "start_at": "2026-10-29T08:00:00.000000+03:00",
+    "finish_at": "2026-10-29T08:15:00.000000+03:00"
+   },
+   {
+    "code": "WAIT_LOAD",
+    "start_at": "2026-10-29T08:15:00.000000+03:00",
+    "finish_at": "2026-10-29T08:25:00.000000+03:00"
+   },
+   {
+    "code": "LOADING",
+    "start_at": "2026-10-29T08:25:00.000000+03:00",
+    "finish_at": "2026-10-29T08:34:00.000000+03:00"
+   },
+   {
+    "code": "CLOSE_GATE",
+    "start_at": "2026-10-29T08:34:00.000000+03:00",
+    "finish_at": "2026-10-29T08:44:00.000000+03:00"
+   },
+   {
+    "code": "DOCUMENTS",
+    "start_at": "2026-10-29T08:44:00.000000+03:00",
+    "finish_at": "2026-10-29T08:54:00.000000+03:00"
+   },
+   {
+    "code": "DEPART",
+    "start_at": "2026-10-29T08:54:00.000000+03:00",
+    "finish_at": "2026-10-29T08:54:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T08:54:00.000000+03:00",
+    "finish_at": "2026-10-29T10:35:39.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T10:35:39.000000+03:00",
+    "finish_at": "2026-10-29T10:50:39.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T10:50:39.000000+03:00",
+    "finish_at": "2026-10-29T11:09:00.000000+03:00"
+   },
+   {
+    "code": "REST",
+    "start_at": "2026-10-29T11:09:00.000000+03:00",
+    "finish_at": "2026-10-29T11:24:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T11:24:00.000000+03:00",
+    "finish_at": "2026-10-29T12:14:04.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T12:14:04.000000+03:00",
+    "finish_at": "2026-10-29T12:29:04.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T12:29:04.000000+03:00",
+    "finish_at": "2026-10-29T12:48:59.000000+03:00"
+   },
+   {
+    "code": "UNLOAD",
+    "start_at": "2026-10-29T12:48:59.000000+03:00",
+    "finish_at": "2026-10-29T13:03:59.000000+03:00"
+   },
+   {
+    "code": "LOAD_RETURNS",
+    "start_at": "2026-10-29T13:03:59.000000+03:00",
+    "finish_at": "2026-10-29T13:18:59.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T13:18:59.000000+03:00",
+    "finish_at": "2026-10-29T14:09:00.000000+03:00"
+   },
+   {
+    "code": "REST",
+    "start_at": "2026-10-29T14:09:00.000000+03:00",
+    "finish_at": "2026-10-29T14:24:00.000000+03:00"
+   },
+   {
+    "code": "DRIVE",
+    "start_at": "2026-10-29T14:24:00.000000+03:00",
+    "finish_at": "2026-10-29T15:11:23.000000+03:00"
+   },
+   {
+    "code": "WAIT",
+    "start_at": "2026-10-29T15:11:23.000000+03:00",
+    "finish_at": "2026-10-29T15:12:00.000000+03:00"
+   },
+   {
+    "code": "RETURN_HANDOVER",
+    "start_at": "2026-10-29T15:12:00.000000+03:00",
+    "finish_at": "2026-10-29T15:32:00.000000+03:00"
+   },
+   {
+    "code": "CLEAN_RETURNS",
+    "start_at": "2026-10-29T15:32:00.000000+03:00",
+    "finish_at": "2026-10-29T15:52:00.000000+03:00"
+   }
+  ]
+ },
+ "missed": {
+  "status": "INSUFFICIENT_EVIDENCE",
+  "departure": "08:54",
+  "return_at": "15:11",
+  "stops": [
+   {
+    "address": "HUB",
+    "arrival": "10:35",
+    "start": "10:35",
+    "finish": "10:50",
+    "wait": "0",
+    "late": "0",
+    "issues": []
+   },
+   {
+    "address": "BRANCH",
+    "arrival": "12:14",
+    "start": "12:14",
+    "finish": "12:29",
+    "wait": "0",
+    "late": "0",
+    "issues": []
+   },
+   {
+    "address": "STORE",
+    "arrival": "12:48",
+    "start": "12:48",
+    "finish": "13:03",
+    "wait": "0",
+    "late": "25.98333333333333333333333333333333333336",
+    "issues": [
+     "DELIVERY_HARD_WINDOW_MISSED"
+    ]
+   }
+  ],
+  "issues": [
+   "DELIVERY_HARD_WINDOW_MISSED"
+  ],
+  "breaks": true,
+  "rests": null
+ },
+ "stale_approval": [
+  409,
+  {
+   "detail": {
+    "code": "TRANSPORT_EDIT_REJECTED",
+    "message": "ORA-20886: TT_TIME_SOURCE_CHANGED"
+   }
+  }
+ ],
+ "violating_approval": [
+  409,
+  {
+   "detail": {
+    "code": "TRANSPORT_EDIT_REJECTED",
+    "message": "ORA-20886: TT_TIME_ROUTE_SCHEDULE_REJECTED:DELIVERY_HARD_WINDOW_MISSED:STORE"
+   }
+  }
+ ],
+ "approvals": {
+  "first_version": 1,
+  "second_version": 2,
+  "after_change": "SOURCE_CHANGED"
+ }
+}
