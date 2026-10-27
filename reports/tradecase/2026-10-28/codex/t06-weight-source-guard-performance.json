@@ -1,4 +1,4 @@
-﻿{
+{
     "kind":  "t06_weight_source_guard_read_performance",
     "checked_at":  "2026-10-28T01:31:05+03:00",
     "source":  "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_commands.py",

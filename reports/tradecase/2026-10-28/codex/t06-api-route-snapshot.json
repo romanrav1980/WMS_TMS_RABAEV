@@ -1,0 +1,9 @@
+{
+  "kind": "read_only_route_preflight",
+  "checked_at": "2026-10-28T01:14:00+03:00",
+  "shared_api": {"url": "http://127.0.0.1:8088", "version": "0.1.0", "weight_routes": ["/api/case-pick/tasks/{task}/lines/{line}/weigh-line"], "manual_net_route_present": false},
+  "isolated_api": {"host": "127.0.0.1", "port": 8095, "version": "0.1.0", "weight_routes": ["/api/case-pick/tasks/{task}/lines/{line}/weigh-line", "/api/case-pick/tasks/{task}/lines/{line}/weigh-line-manual"], "manual_net_route_present": true, "stopped_after_check": true},
+  "oracle_ping": {"status": "ok", "user": "RABAEV", "service": "orcl"},
+  "writes": 0,
+  "decision": "The manual NET route is included by the current source and reaches Oracle from an isolated API process. Do not restart the shared API or post a live fixture until the controlled runner and cleanup are reviewed."
+}
