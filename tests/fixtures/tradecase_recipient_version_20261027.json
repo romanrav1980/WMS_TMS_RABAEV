@@ -1,0 +1,85 @@
+{
+ "note": "Depersonalized extract of tests/tradecase/live_trade_recipient_version.py (own warehouse; C103 read only). live = exact copy of the live enter_line predicate; candidate = C-0173 function evaluated READ ONLY.",
+ "versions": [
+  {
+   "label": "v1 bound",
+   "recipient_version": 1,
+   "live": "VALID",
+   "candidate": 1,
+   "candidate_context": "VALID"
+  },
+  {
+   "label": "v2 only topup_enabled",
+   "recipient_version": 2,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": 2,
+   "candidate_context": "VALID"
+  },
+  {
+   "label": "v3 only top-up settings",
+   "recipient_version": 3,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": 3,
+   "candidate_context": "VALID"
+  },
+  {
+   "label": "v4 min_osg_days changed",
+   "recipient_version": 4,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": null,
+   "candidate_context": "TRADE_ORDER_BINDING_STALE"
+  },
+  {
+   "label": "v5 owners changed",
+   "recipient_version": 5,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": null,
+   "candidate_context": "TRADE_ORDER_BINDING_STALE"
+  },
+  {
+   "label": "v6 buyout changed",
+   "recipient_version": 6,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": null,
+   "candidate_context": "TRADE_ORDER_BINDING_STALE"
+  },
+  {
+   "label": "v7 inactive",
+   "recipient_version": 7,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": null,
+   "candidate_context": "TRADE_ORDER_BINDING_STALE"
+  },
+  {
+   "label": "v8 back to v1 except top-up",
+   "recipient_version": 8,
+   "live": "TRADE_ORDER_BINDING_STALE",
+   "candidate": 8,
+   "candidate_context": "VALID"
+  }
+ ],
+ "v1_accepted_records": [
+  2,
+  2
+ ],
+ "missing_history": null,
+ "c103": {
+  "bound": 1,
+  "live": "TRADE_ORDER_BINDING_STALE",
+  "candidate": 4
+ },
+ "parse": {
+  "002_pick_context_body.sql": {
+   "codes": [],
+   "syntax_error": false
+  },
+  "003_transport_core_body.sql": {
+   "codes": [
+    "ORA-00904",
+    "ORA-06550",
+    "PLS-00231"
+   ],
+   "syntax_error": false
+  }
+ }
+}

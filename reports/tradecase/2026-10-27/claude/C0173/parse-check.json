@@ -1,0 +1,16 @@
+{
+ "002_pick_context_body.sql": {
+  "codes": [],
+  "syntax_error": false,
+  "message": "COMPILED"
+ },
+ "003_transport_core_body.sql": {
+  "codes": [
+   "ORA-00904",
+   "ORA-06550",
+   "PLS-00231"
+  ],
+  "syntax_error": false,
+  "message": "ORA-06550: line 95, column 141:\nPLS-00231: function 'RRL_TRADE_RECIPIENT_VERSION' may not be used in SQL\nORA-06550: line 95, column 141:\nPL/SQL: ORA-00904: : invalid identifier\nORA-06550: line 91, column 3:\nPL/SQL: SQL Statement ignored\nHelp: https://docs.oracle.com/error-help/db/ora-06550/"
+ }
+}
