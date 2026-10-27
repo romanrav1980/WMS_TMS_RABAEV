@@ -76,7 +76,7 @@ async function send(intent: Intent, retry: boolean): Promise<Sent> {
 
 // Дубликат или недопустимое значение в справочнике: состояние не выдумывается, команды недоступны.
 const unknownState = (d: Dock) => d.blocked === true || d.blocked === false ? null
-  : d.ambiguous ? "состояние неизвестно: название ворот повторяется в справочнике" : `состояние неизвестно: недопустимое значение в справочнике${d.status_error ? ` (${d.status_error})` : ""}`;
+  : d.ambiguous ? "состояние неизвестно: название ворот повторяется в справочнике (YARD_DOCK_AMBIGUOUS)" : `состояние неизвестно: недопустимое значение в справочнике${d.status_error ? ` (${d.status_error})` : ""}`;
 
 /** Состояние ворот склада: исправны или отмечена неисправность; отметка и открытие с причиной. */
 export function YardDockStatus({ wh, reload }: { wh: string; reload: number }) {
