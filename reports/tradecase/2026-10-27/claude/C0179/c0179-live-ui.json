@@ -1,0 +1,127 @@
+{
+ "kind": "LIVE_OWN_VITE_OWN_API_CURRENT_CODE_NO_STUB",
+ "checks": [
+  {
+   "w": 1440,
+   "case": "real click; reason text matches real API blocking_reason; no fitting line; estimates labelled; help link kept",
+   "reason": "TOPUP_PALLET_PLACE_MAPPING_REQUIRED",
+   "size": {
+    "viewport": 1440,
+    "page": 1440
+   },
+   "text": "Добивку нельзя согласовать: для товара и машины не настроены и не подтверждены тип паллеты, количество коробов на паллетоместо и правила штабелирования. Вместимость по паллетоместам не рассчитана; заказ и резерв не создаются. Код: TOPUP_PALLET_PLACE_MAPPING_REQUIRED"
+  },
+  {
+   "w": 390,
+   "case": "real click; reason text matches real API blocking_reason; no fitting line; estimates labelled; help link kept",
+   "reason": "TOPUP_PALLET_PLACE_MAPPING_REQUIRED",
+   "size": {
+    "viewport": 390,
+    "page": 390
+   },
+   "text": "Добивку нельзя согласовать: для товара и машины не настроены и не подтверждены тип паллеты, количество коробов на паллетоместо и правила штабелирования. Вместимость по паллетоместам не рассчитана; заказ и резерв не создаются. Код: TOPUP_PALLET_PLACE_MAPPING_REQUIRED"
+  }
+ ],
+ "capacity_calls": [
+  {
+   "w": 1440,
+   "status": 200,
+   "body": {
+    "planned_weight_kg": "80",
+    "planned_volume_m3": "0.8",
+    "free_weight_kg": "0",
+    "free_volume_m3": "0",
+    "box_limit_weight": 0,
+    "box_limit_volume": 0,
+    "box_limit_geometry": 1,
+    "maximum_boxes": null,
+    "requested_boxes": 1,
+    "fitting_boxes": null,
+    "remaining_boxes": null,
+    "warehouse_id": 226192056,
+    "trip_id": "T1",
+    "trip_version": 3,
+    "sku_id": "A",
+    "order_versions": [
+     {
+      "order_id": "O1",
+      "version": 1
+     },
+     {
+      "order_id": "O104",
+      "version": 1
+     }
+    ],
+    "profile_version": 1,
+    "profile_base_hash": "9A5942AEF290F5188A3B4D6596B139B3F55984156F76B6082F7B61EFED641186",
+    "capacity_kg": "76.0",
+    "capacity_m3": "0.8",
+    "loading_started": true,
+    "loading_mode": "BOX_FIXED_ORIENTATION",
+    "operational_admission": false,
+    "stock_eligibility_checked": false,
+    "route_eligibility_checked": false,
+    "approval_available": false,
+    "floor_places_checked": false,
+    "stacking_rules_checked": false,
+    "floor_profile_status": "TARE_TYPE_UNCONFIRMED",
+    "loaded_places": 8,
+    "loaded_overhead_kg": "4.0",
+    "loaded_overhead_m3": "0",
+    "blocking_reason": "TOPUP_PALLET_PLACE_MAPPING_REQUIRED",
+    "calculation_signature": "d35bf900d2696a27a4b4f4d3afd83c03beb791e2c26b6d89054093ec42404fda"
+   }
+  },
+  {
+   "w": 390,
+   "status": 200,
+   "body": {
+    "planned_weight_kg": "80",
+    "planned_volume_m3": "0.8",
+    "free_weight_kg": "0",
+    "free_volume_m3": "0",
+    "box_limit_weight": 0,
+    "box_limit_volume": 0,
+    "box_limit_geometry": 1,
+    "maximum_boxes": null,
+    "requested_boxes": 1,
+    "fitting_boxes": null,
+    "remaining_boxes": null,
+    "warehouse_id": 226192056,
+    "trip_id": "T1",
+    "trip_version": 3,
+    "sku_id": "A",
+    "order_versions": [
+     {
+      "order_id": "O1",
+      "version": 1
+     },
+     {
+      "order_id": "O104",
+      "version": 1
+     }
+    ],
+    "profile_version": 1,
+    "profile_base_hash": "9A5942AEF290F5188A3B4D6596B139B3F55984156F76B6082F7B61EFED641186",
+    "capacity_kg": "76.0",
+    "capacity_m3": "0.8",
+    "loading_started": true,
+    "loading_mode": "BOX_FIXED_ORIENTATION",
+    "operational_admission": false,
+    "stock_eligibility_checked": false,
+    "route_eligibility_checked": false,
+    "approval_available": false,
+    "floor_places_checked": false,
+    "stacking_rules_checked": false,
+    "floor_profile_status": "TARE_TYPE_UNCONFIRMED",
+    "loaded_places": 8,
+    "loaded_overhead_kg": "4.0",
+    "loaded_overhead_m3": "0",
+    "blocking_reason": "TOPUP_PALLET_PLACE_MAPPING_REQUIRED",
+    "calculation_signature": "d35bf900d2696a27a4b4f4d3afd83c03beb791e2c26b6d89054093ec42404fda"
+   }
+  }
+ ],
+ "errors": [],
+ "status": "PASS"
+}

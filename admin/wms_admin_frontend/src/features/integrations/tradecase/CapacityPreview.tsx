@@ -8,6 +8,17 @@ type Capacity = { trip_version: number; planned_weight_kg: string; planned_volum
   box_limit_weight: number; box_limit_volume: number; box_limit_geometry: number | null; maximum_boxes: number | null; fitting_boxes: number | null;
   remaining_boxes: number | null; blocking_reason: string | null; loading_started: boolean; calculation_signature: string };
 
+// Every blocking reason the capacity read returns, in operator words; an unknown future code stays a visible refusal, never success.
+const REASONS: Record<string, string> = {
+  TOPUP_PALLET_PLACE_MAPPING_REQUIRED: "Добивку нельзя согласовать: для товара и машины не настроены и не подтверждены тип паллеты, количество коробов на паллетоместо и правила штабелирования. Вместимость по паллетоместам не рассчитана; заказ и резерв не создаются.",
+  LOAD_ALREADY_STARTED: "По рейсу началась погрузка. Добивка после начала погрузки этим расчётом не определяется.",
+  MIXED_PACKAGE_LAYOUT_REQUIRED: "В рейсе короба разных габаритов. Нужна подтверждённая схема размещения; итоговое количество не рассчитано.",
+  TOPUP_DEPARTURE_TIME_PASSED: "Плановое время отправления рейса уже наступило. Добивка в этот рейс не рассчитывается.",
+  TOPUP_AFTER_LOAD_ROUTE_ORDER_UNVERIFIED: "Погрузка уже идёт, а у рейса несколько получателей без подтверждённого порядка выгрузки. Доступ к грузу не доказан, добивка не рассчитывается.",
+  TOPUP_AFTER_LOAD_RECIPIENT_NOT_ON_TRIP: "Погрузка уже идёт, а получатель не входит в загруженный рейс. Добивка не рассчитывается.",
+};
+const reasonText = (code: string) => REASONS[code] ?? "Расчёт заблокирован по причине, которую экран пока не описывает. Количество не рассчитано и не согласовано; передайте код ответственному.";
+
 export function CapacityPreview({ wh, trip }: { wh: string; trip: string }) {
   const [sku, setSku] = useState(""), [boxes, setBoxes] = useState("60"), [path, setPath] = useState<string | null>(null), [reload, setReload] = useState(0);
   const products = useRead<Page<DocRow>>(listPath(wh, "SKU", null)), read = useRead<Capacity>(path, reload);
@@ -26,10 +37,11 @@ export function CapacityPreview({ wh, trip }: { wh: string; trip: string }) {
     {result && <div className="tc-capacity-result"><dl className="tc-fields">
       <dt>План рейса</dt><dd>{result.planned_weight_kg} кг · {result.planned_volume_m3} м³</dd>
       <dt>Осталось по плану</dt><dd>{result.free_weight_kg} кг · {result.free_volume_m3} м³</dd>
-      <dt>Ограничение по массе / объёму / геометрии</dt><dd>{result.box_limit_weight} / {result.box_limit_volume} / {result.box_limit_geometry ?? "нет подтверждённой схемы укладки"} коробов</dd>
+      <dt>Оценка предела по массе / объёму / геометрии</dt><dd>{result.box_limit_weight} / {result.box_limit_volume} / {result.box_limit_geometry ?? "нет подтверждённой схемы укладки"} коробов</dd>
       {result.maximum_boxes !== null && <><dt>В пределах расчёта</dt><dd><b>{result.fitting_boxes}</b> коробов; вне предела {result.remaining_boxes}</dd></>}
     </dl>
-      {result.blocking_reason && <p className="tc-msg warn">{result.loading_started ? "По рейсу началась погрузка. Добивка после начала погрузки этим расчётом не определяется." : "Для разных габаритов коробов требуется отдельная схема укладки; итоговое количество не рассчитано."}</p>}
+      {result.blocking_reason && <p className="tc-msg warn" role="alert" data-reason={result.blocking_reason}>{reasonText(result.blocking_reason)} <span className="tc-note">Код: {result.blocking_reason}</span></p>}
+      {result.blocking_reason && <p className="tc-note">Пределы по массе и объёму выше — только оценка; они не означают, что товар поместится, и не станут согласием после настройки.</p>}
       <p className="tc-note">Для согласования добивки отдельно проверьте укладку, свободный товар, получателя и срок доставки. Выполнение требует отдельного заказа SAP.</p><Tech value={result} /></div>}
   </section>;
 }
