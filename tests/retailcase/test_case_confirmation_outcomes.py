@@ -16,6 +16,7 @@ from app.services.case_pick_service import CasePickService
     ('STOCK_RULE_REJECTED',20886,'OPERATION_CONFLICT',409,False,True),
     ('STOCK_RULE_REJECTED',20882,None,403,False,False),
     ('STOCK_RULE_REJECTED',20886,'CASE_PAPER_LINE_CHANGED',409,True,False),
+    ('CASE_WEIGHT_SOURCE_REQUIRED',None,None,409,True,False),
 ])
 def test_confirmation_outcome(monkeypatch,code,oracle,reason,status,confirmed,conflict):
     def post(gateway,task,line,request):

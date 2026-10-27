@@ -1,0 +1,13 @@
+﻿{
+  "kind": "t06_weight_source_guard_read_performance",
+  "checked_at": "2026-10-28T01:25:00+03:00",
+  "source": "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_commands.py",
+  "query": "Bounded by CASE_PICK_TASK_ID and CASE_PICK_LINE_ID; checks TYPE_W, exact KG-to-KG conversion and SERIALIZED_WEIGHT_BOXES",
+  "fixture": "historical cancelled QA task/line 1077/1081; read-only, no active task",
+  "runs": 100,
+  "median_ms": 1.622,
+  "p95_ms": 3.36,
+  "max_ms": 9.362,
+  "writes": 0,
+  "decision": "No index or query rewrite. Single bounded read measured below 4 ms at p95 in this local run. API-level latency and peak load remain unmeasured; repeat after live deployment."
+}

@@ -81,6 +81,19 @@ def post_case_pick(gateway: Any, task_id: int, line_id: int, request: Any) -> di
             raise StockPostingError("OPERATION_CONTENT_CONFLICT", operation)
         metadata, units = old["metadata"], tuple(old["units"])
     else:
+        weighted = gateway.fetch_all("""
+            select case when exists(select 1 from RRL_ARTICULS a
+                    where a.ACTICUL=l.ARTICUL and a.TYPE_W in(2,3,5,6,7))
+                  and exists(select 1 from RRL_STOCK_UOM_CONVERSION c
+                    where c.ARTICUL=l.ARTICUL and c.INPUT_UOM='KG' and c.BASE_UOM='KG'
+                      and c.NUMERATOR=1 and c.DENOMINATOR=1)
+                  and nvl((select p.SERIALIZED_WEIGHT_BOXES from RRL_SKU_RECEIPT_POLICY p
+                    where p.ARTICUL=l.ARTICUL),0)=0 then 1 else 0 end WEIGHTED_KG
+              from RRL_CASE_PICK_LINE l
+             where l.CASE_PICK_TASK_ID=:task and l.CASE_PICK_LINE_ID=:line
+        """, {"task": task_id, "line": line_id})
+        if weighted and bool(weighted[0]["weighted_kg"]):
+            raise StockPostingError("CASE_WEIGHT_SOURCE_REQUIRED", operation)
         units = tuple(request.unit_keys) if request.unit_keys else resolve_case_codes(gateway, task_id, line_id, request.unit_scans)
         metadata = {"fact_qty": quantity_text(request.fact_qty), "scan_cell": request.scan_cell,
             "scan_product": request.scan_product or request.scan_box, "scan_container": request.scan_container,
