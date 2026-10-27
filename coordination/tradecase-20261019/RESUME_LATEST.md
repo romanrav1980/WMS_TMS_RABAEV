@@ -1,6 +1,16 @@
+## C0175 применён, C0176 в работе
+
+Root применил units-kit после91908992:6/8/6, INVALID0/USER_ERRORS0, after-kit ASGI+Oracle223057509 PASS. Root поправил mixed-line receipt, persisted-winner readback, точный Fraction, целый шаг нынешнегоEA/BOX и WAITING loaded=false;15адресныхтестов PASS. Профиль200строкодногоSKU:401SQL/1887мс →3SQL/34мс READONLY при полном равенстве. Кэш только внутри заказа. Новый общий8088 ещё не перезапущен, ждём C0176 native/RELEASE для одного restart.
+
+C0176 ACK+CONTRACT K0179 BUSY: Claude owns transport/native selected places/UI. Root замечания в конце CODEX_TO_CLAUDE.md: hash snapshot вместо count, strict IDs, unknown outcome403/conflict, replay lookup послеTTlock, bounded1000/nullware/access-lock. Не применять незамороженный комплект до RELEASE.
+
+Root подготовил reduce() в tests/tradecase/live_program_orders.py и изменил load(): только после REDUCED_READY, исключает20retainedkeys, ожидает640LOAD/64m3, остаток4600/H200/460. Пока не запускалось. Набор210069361 всё ещё TRANSPORT_READY/33698/11000H6600. ПослеC0176apply/restart: reduce, load, документы/выезд640, коды/остаток20/исходящие. Не выполнятьстарыйload660/DEPART660.
+
+Новый документ и ZIP NICORA опубликованы и проверены; ссылки ниже. НативныйGoogleDoc211полей/24таблицы, архив25CSV (23входных+словарь+ожидаемыйрезультат). GitHub не публиковать без нового поручения.
+
 ## Последняя задача владельца: приложение NICORA опубликовано
 
-Отдельный Google Документ со словарём211полей и примерами: https://docs.google.com/document/d/1wftqBkWDad207yB1iXTbtLW5FeApc1aq4--K3N1x8QA . ZIP24CSV/паспорт/manifest: https://drive.google.com/file/d/1Fo0cWh8gvNT44rhirYl_xR6MBpX7D0F9/view . Оба рядом в ChatGPT, metadata/readback подтверждены. 940ячеек сверены, локальные SHA/ZIP/ссылки/дерево/месяц проверены; PDF в runtime/nicora-export-fields-review.pdf, таблицы с повтором заголовка и без разрыва строки. Локальные файлы docs/integrations/nicora/, wiki/requirements/nicora_export_fields_examples_20261027.md. Это синтетический профиль CSV, не выдуманный IDoc и не приёмка SAP. Публикации GitHub нет.
+Отдельный Google Документ со словарём211полей и примерами: https://docs.google.com/document/d/1wftqBkWDad207yB1iXTbtLW5FeApc1aq4--K3N1x8QA . ZIP 25 CSV / паспорт / manifest: https://drive.google.com/file/d/1Fo0cWh8gvNT44rhirYl_xR6MBpX7D0F9/view . Оба рядом в ChatGPT, metadata/readback подтверждены. 940ячеек сверены, локальные SHA/ZIP/ссылки/дерево/месяц проверены; PDF в runtime/nicora-export-fields-review.pdf, таблицы с повтором заголовка и без разрыва строки. Локальные файлы docs/integrations/nicora/, wiki/requirements/nicora_export_fields_examples_20261027.md. Это синтетический профиль CSV, не выдуманный IDoc и не приёмка SAP. Публикации GitHub нет.
 
 Владелец поручил продолжать все спринты совместно с Claude. C0175 зарегистрирован до передачи, бюджет37/37, K0177 ACK+CONTRACT подтверждает BUSY. Claude делает новые единицы заказов, owns contracts_tradecase.py, tradecase_documents.py, order_units.py и NOT_APPLIED native тела RRL_TRADE_ORDER_API/RRL_TRADE_DOCUMENT_API. Root согласовал контракт в конце CODEX_TO_CLAUDE.md. Не менять эти файлы параллельно. Live baseKG в TRADECASE и NI02 остаются открытыми; чистые тесты дробности не выдать за их реализацию. Claude не перезапускает API и не трогает root210069361.
 

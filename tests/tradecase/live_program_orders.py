@@ -330,12 +330,56 @@ def transport():
     s.update(transport=dict(transport_task_id=task,vehicle_number=plate,vehicle_id=s['vehicle'],dock=dock,driver_id=driver),phase='TRANSPORT_READY');q.save()
 
 
+def reduce():
+    """Remove twenty selected places without renaming the sixty-place assembly."""
+    assert s.get('phase') in ('TRANSPORT_READY', 'REDUCING'), s.get('phase')
+    s['phase'] = 'REDUCING'; q.save()
+    f = s['fixture']; t = s['transport']; tt = t['transport_task_id']
+    base = f"/api/tradecase/warehouses/{f['warehouse_id']}/trips/T1"
+    topup = sorted((k for k, v in s['shipments'].items() if v['order_number'] == '104'), key=int)
+    assert len(topup) == 60
+    s.setdefault('retained_shipment_keys', topup[-20:]); q.save()
+    st = s['shipments'][topup[0]]['st_number']
+    if 'reduction.member_ids' not in s:
+        ids = dict((uid, int(mid)) for mid, uid in q.db(
+            'select ID,PALLET_UID from RRL_SBORKA_PALLETS where ST_NUMBER=:st and WARE_ID=:w order by ID',
+            st=st, w=f['warehouse_id']))
+        assert len(ids) == 60
+        s['reduction.member_ids'] = sorted(ids[s['shipments'][k]['shipment_identifier']] for k in s['retained_shipment_keys'])
+        q.save()
+    context = q.step('reduction.context', 'GET', f'/api/transport/trips/{tt}/sts/{st}/places')
+    result = q.step('reduction.remove', 'POST', f'/api/transport/trips/{tt}/place-removals',
+        dict(operation_id=q.tag()+'.remove20', st_number=st, member_ids=s['reduction.member_ids'],
+             expected_source_hash=context['source_hash'], reason='Retain twenty BOX of the same recipient in expedition'))
+    assert q.expect(200, q.http('POST', f'/api/transport/trips/{tt}/place-removals', s['steps']['reduction.remove']['body'])) == result
+    members = q.db('select nvl(TRANSTASK_ID,0),count(*) from RRL_SBORKA_PALLETS where ST_NUMBER=:st group by TRANSTASK_ID order by 1', st=st)
+    assert members == [(0,20),(tt,40)], members
+    trip = dict(s['trip'], capacity_m3='64', orders=s['trip']['orders']+[dict(order_id='104',line_id='1',quantity='40')])
+    q.send('trip.reduced', 'TRIP', 'T1', trip, version=3)
+    profile = q.step('reduction.vehicle.context', 'GET', f"/api/admin/transport/vehicles/{t['vehicle_id']}/profile")
+    q.step('reduction.vehicle.profile', 'POST', '/api/admin/transport/vehicle-profiles',
+        dict(operation_id=q.tag()+'.vehicle64', vehicle_id=t['vehicle_id'], expected_source_hash=profile['base_hash'],
+             expected_version=profile['version'], vehicle_size_class='QA_PROGRAM', cargo_length_mm=12800,
+             cargo_width_mm=2500, cargo_height_mm=2000, outer_height_mm=3000, outer_length_mm=14000,
+             floor_variants=[dict(code='BOX640',limits=[dict(pallet_type_id=s['box_type'],max_places=640)])],
+             reason='Owned synthetic vehicle reduction from 66 to 64 cubic metres', evidence_reference='TEST_NOT_HARDWARE'))
+    q.step('reduction.trade.binding', 'POST', base+'/binding',
+        dict(operation_id=q.tag()+'.trade.bind3', native_task_id=tt, expected_trip_version=3, expected_binding_version=0))
+    plain = q.step('reduction.capacity', 'GET', base+'/capacity?sku_id=A&requested_boxes=1')
+    preview = q.step('reduction.topup.preview', 'POST', base+'/topup-preview', dict(need_ids=['N1'],max_age_minutes=1440))
+    assert plain['planned_volume_m3'] == preview['items'][0]['capacity']['planned_volume_m3'] == '64'
+    assert preview['items'][0]['sender_stock_boxes'] is None
+    assert q.stock() == (11000,6600,1100), q.stock()
+    s.update(reduced_trip=trip, reduced_members=members, phase='REDUCED_READY'); q.save()
+
+
 def load():
     """Scan and load independent boxes using the actual BOX type and confirmed box measurements."""
-    assert s.get('phase') in ('TRANSPORT_READY','LOADING'),s.get('phase')
+    assert s.get('phase') in ('REDUCED_READY','LOADING') and len(s.get('retained_shipment_keys',[]))==20,s.get('phase')
     s['phase']='LOADING';q.save();t=s['transport'];f=s['fixture']
     physical={p['pallet']:(key,p['sku']) for key,p in s['pallets'].items()}
     for key,ship in sorted(s['shipments'].items(),key=lambda x:int(x[0])):
+        if key in s['retained_shipment_keys']: continue
         ident=ship['shipment_identifier'];pallet=ship['pallet']
         if 'floor.'+key not in s['steps']:
             current=q.expect(200,q.http('GET','/api/inventory/pallet-floor-types?identifier='+pallet))
@@ -361,10 +405,10 @@ def load():
             assert q.expect(200,q.http('POST','/api/transport/loading/confirm-single',body))==result
             s['load_replay']=key;q.save()
         count=sum(k.startswith('load.') for k in s['steps'])
-        if count%25==0:print('Loaded',count,'of 660 BOX',flush=True)
+        if count%25==0:print('Loaded',count,'of 640 BOX',flush=True)
     facts=q.db("select count(*),sum(GROSS_WEIGHT_KG),sum(BOUNDING_VOLUME_M3) from RRL_TT_HU_LOAD_FACT where TT_ID=:t and STATUS='LOADED'",t=t['transport_task_id'])
-    assert facts==[(660,6600,66)],facts
-    assert q.stock()==(4400,0,440),q.stock()
+    assert facts==[(640,6400,64)],facts
+    assert q.stock()==(4600,200,460),q.stock()
     s.update(load_facts=facts,phase='LOADED');q.save()
 
 

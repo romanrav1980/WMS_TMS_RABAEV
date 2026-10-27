@@ -1,0 +1,98 @@
+{
+  "migration_id": "2026-10-27-trade-order-units",
+  "checkpoint": "91908992",
+  "apply_rollback_reapply_statements": [
+    6,
+    8,
+    6
+  ],
+  "errors": [],
+  "invalid": [],
+  "ledger": [
+    [
+      "APPLIED"
+    ]
+  ],
+  "warehouse": 223057509,
+  "checks": [
+    "25 EA -> 2 BOX (1 left), 5 BLK -> 4 BOX (2 left), 3 BOX exact; source and processed kept in the stored line",
+    "Rounding not allowed: 25 EA and 24 EA loaded as 2 BOX, each with ORDER_UNIT_ROUNDING_NOT_ALLOWED; message accepted, not rejected",
+    "Exact replay after the SKU setting changed returns the stored line results; changed payload under the same event: 409",
+    "Actor without the document right: 403",
+    "After the kit: zero and no-coefficient lines kept non-executable (quantity 0); TRIP assignment refused ORDER_LINE_NOT_EXECUTABLE",
+    "The processed O2 (2/4/3 BOX) binds to native BOX rows through the existing binding: no second recalculation downstream"
+  ],
+  "mixed_and_concurrency": {
+    "status": "PASS",
+    "mode": "ASGI + real Oracle",
+    "warehouse": 223057509,
+    "mixed_receipt": {
+      "warehouse_id": 223057509,
+      "document_id": "ROOT_MIXED_260e7d",
+      "entity_type": "ORDER",
+      "version": 1,
+      "status": "ACCEPTED",
+      "replayed": false,
+      "stock_changed": false,
+      "physical_execution": "NOT_STARTED",
+      "schema_version": 1,
+      "event_id": "ROOTU.ac112d260e7d.ROOT_MIXED_260e7d",
+      "correlation_id": "ROOTU.ac112d260e7d.ROOT_MIXED_260e7d",
+      "source_id": "WMS_TRADECASE",
+      "target_source_id": "TC03.SAP",
+      "occurred_at": "2026-10-27T03:28:31.684-04:00",
+      "external_delivery": "PENDING",
+      "external_business": "NOT_CONFIRMED",
+      "outbox_id": 21575,
+      "line_results": [
+        {
+          "line_id": "1",
+          "quantity": "2",
+          "uom": "BOX",
+          "status": "ROUNDED_DOWN",
+          "error_code": "ORDER_UNIT_ROUNDING_NOT_ALLOWED",
+          "integration_error": true,
+          "executable": true
+        },
+        {
+          "line_id": "2",
+          "quantity": "24",
+          "uom": "EA",
+          "status": "UNCHANGED",
+          "error_code": null,
+          "integration_error": false,
+          "executable": true
+        }
+      ],
+      "loaded_with_integration_error": true
+    },
+    "mixed_http_ms": 403.22,
+    "concurrent_statuses": [
+      200,
+      200
+    ],
+    "concurrent_business_receipt_equal": true,
+    "legacy_replayed_flag_preserved": true,
+    "persisted_messages": 1,
+    "stock": [
+      0,
+      0
+    ],
+    "primary_unchanged": [
+      11000,
+      6600
+    ],
+    "invalid": [],
+    "binding_slow_sql": [],
+    "limitations": [
+      "KG base and NI02 remain open",
+      "Concurrent settings-change acceptance is not covered by this duplicate-delivery test"
+    ]
+  },
+  "slow_sql_decision": "No binding SQL/transaction exceeded the slow log threshold in this owned fixture. Mixed ORDER was 403 ms ASGI, n=1; no claim of served-8088 speed or load capacity. No speculative index; keep one persisted-receipt read for race correctness.",
+  "limits": [
+    "Base KG end-to-end and NI02 not implemented",
+    "Order before SKU in a new unit remains non-executable and needs explicit resolution",
+    "Shared 8088 still runs the previous Python build until root safe restart"
+  ]
+}

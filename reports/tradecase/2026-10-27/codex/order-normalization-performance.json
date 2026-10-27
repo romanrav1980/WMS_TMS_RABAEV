@@ -1,0 +1,111 @@
+{
+  "before": {
+    "label": "before",
+    "mode": "Direct READ ONLY Oracle normalization; not HTTP",
+    "warehouse": 223057509,
+    "lines": 200,
+    "runs": [
+      {
+        "iteration": 0,
+        "elapsed_ms": 1830.11,
+        "sql_count": 401
+      },
+      {
+        "iteration": 1,
+        "elapsed_ms": 2091.29,
+        "sql_count": 401
+      },
+      {
+        "iteration": 2,
+        "elapsed_ms": 1887.15,
+        "sql_count": 401
+      },
+      {
+        "iteration": 3,
+        "elapsed_ms": 1593.86,
+        "sql_count": 401
+      }
+    ],
+    "warm_median_ms": 1887.15,
+    "all_results_equal": true,
+    "top_statement_calls": [
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 32.65579999424517
+      },
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 31.718599842861295
+      },
+      {
+        "sql": "select u.INPUT_UOM,u.NUMERATOR,u.DENOMINATOR,u.BASE_UOM,u.BASE_SCALE,u.POLICY_VERSION from RRL_STOCK_UOM_CONVERSION u where u.ARTICUL=:article and u.INPUT_UOM in(:u0,:u1) and u.POLICY_VERSION=(select max(v.POLICY_VERSION) from RRL_STOCK_UOM_CONVERSION v where v.ARTICUL=u.ARTICUL and v.INPUT_UOM=u.INPUT_UOM)",
+        "ms": 31.52270009741187
+      },
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 30.433400068432093
+      },
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 29.922000132501125
+      }
+    ],
+    "quantity_writes": false
+  },
+  "after": {
+    "label": "after",
+    "mode": "Direct READ ONLY Oracle normalization; not HTTP",
+    "warehouse": 223057509,
+    "lines": 200,
+    "runs": [
+      {
+        "iteration": 0,
+        "elapsed_ms": 48.68,
+        "sql_count": 3
+      },
+      {
+        "iteration": 1,
+        "elapsed_ms": 34.07,
+        "sql_count": 3
+      },
+      {
+        "iteration": 2,
+        "elapsed_ms": 33.66,
+        "sql_count": 3
+      },
+      {
+        "iteration": 3,
+        "elapsed_ms": 36.32,
+        "sql_count": 3
+      }
+    ],
+    "warm_median_ms": 34.07,
+    "all_results_equal": true,
+    "top_statement_calls": [
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 20.178700098767877
+      },
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 10.50750003196299
+      },
+      {
+        "sql": "select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+        "ms": 8.89529986307025
+      },
+      {
+        "sql": "select PAYLOAD_HASH,REQUEST_JSON from RRL_TRADE_MESSAGE where WARE_ID=:w and SOURCE_ID=:s and EVENT_ID=:e",
+        "ms": 8.86579998768866
+      },
+      {
+        "sql": "select PAYLOAD_HASH,REQUEST_JSON from RRL_TRADE_MESSAGE where WARE_ID=:w and SOURCE_ID=:s and EVENT_ID=:e",
+        "ms": 6.112400209531188
+      }
+    ],
+    "quantity_writes": false
+  },
+  "result_equality": true,
+  "scope": "One ORDER, one SKU,200 lines; read-only Oracle; no HTTP or load claim",
+  "decision": "Reuse SKU/registry snapshot only within one order; no global cache/index"
+}

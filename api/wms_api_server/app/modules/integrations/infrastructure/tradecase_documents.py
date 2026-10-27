@@ -64,7 +64,7 @@ class OracleTradecaseDocuments:
                                                                 executable=Decimal(line["quantity"]) > 0)
                     response["line_results"].append(dict(line_id=line["line_id"], quantity=line["quantity"], uom=line["uom"],
                         **{key: outcome[key] for key in ("status", "error_code", "integration_error", "executable")}))
-                response["loaded_with_integration_error"] = any(line["integration_error"] for line in response["line_results"])
+                response["loaded_with_integration_error"] = response.get("status") == "ACCEPTED" and any(line["integration_error"] for line in response["line_results"])
             return response
         except oracledb.DatabaseError as exc:
             raise native_error(exc) from exc
@@ -79,18 +79,28 @@ class OracleTradecaseDocuments:
             return read_oracle_json(stored[1]) if stored[0] == value["payload_hash"] else value
         if value["payload"].get("order_kind") == "BUYOUT":
             return value  # a buyout basis stays in base pieces; it is not a shipment line
+        requested_units: dict[str, set[str]] = {}
         for line in value["payload"]["lines"]:
-            cur.execute("select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
-                        w=value["warehouse_id"], k=line["sku_id"])
-            row = cur.fetchone()
+            if line["uom"] in REGISTRY_UNIT:
+                requested_units.setdefault(line["sku_id"], set()).add(REGISTRY_UNIT[line["uom"]])
+        sku_rows, registries = {}, {}
+        for line in value["payload"]["lines"]:
+            sku_id = line["sku_id"]
+            if sku_id not in sku_rows:
+                cur.execute("select BODY_JSON,VERSION_NO from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='SKU' and EXTERNAL_ID=:k and STATUS='ACCEPTED'",
+                            w=value["warehouse_id"], k=sku_id)
+                sku_rows[sku_id] = cur.fetchone()
+            row = sku_rows[sku_id]
             sku = read_oracle_json(row[0]) if row else {}
             if row is None and line["uom"] in ("EA", "BOX"):
                 continue  # the current EA/BOX contract; the native document intake waits for the SKU as before
             setting = sku.get("processing_uom")
             if setting is None and line["uom"] in ("EA", "BOX"):
                 continue  # no single processing unit configured: unchanged
-            units = {REGISTRY_UNIT[u] for u in (line["uom"], setting) if u in REGISTRY_UNIT}
-            conversions = article_conversions(cur, sku["wms_article_id"], units) if sku.get("wms_article_id") else {}
+            units = requested_units.get(sku_id, set()) | ({REGISTRY_UNIT[setting]} if setting in REGISTRY_UNIT else set())
+            if sku_id not in registries:
+                registries[sku_id] = article_conversions(cur, sku["wms_article_id"], units) if sku.get("wms_article_id") else {}
+            conversions = registries[sku_id]
             result = normalize_line(Decimal(line["quantity"]), line["uom"], setting,
                                     Decimal(str(sku["processing_step"])) if sku.get("processing_step") is not None else None,
                                     sku.get("round_to_processing_unit") is not False, conversions)

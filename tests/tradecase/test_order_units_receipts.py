@@ -27,7 +27,7 @@ class ReceiptCursor:
     def var(self, *args):
         return NativeValue()
     def callproc(self, procedure, args):
-        args[-1].setvalue(0, json.dumps(dict(status='ACCEPTED', event_id='E1')))
+        args[-1].setvalue(0, json.dumps(dict(status=getattr(self, 'native_status', 'ACCEPTED'), event_id='E1')))
     def execute(self, sql, **binds):
         self.reads.append((sql, binds))
     def fetchone(self):
@@ -79,3 +79,15 @@ def test_tradecase_discrete_processing_setting_refuses_a_fractional_box_step():
     with pytest.raises(ValidationError):
         TradeSku(entity_type='SKU', title='Review fixture', units_per_box=12, permitted_mrc=['1'],
                  processing_uom='BOX', processing_step='0.5', round_to_processing_unit=True)
+
+
+@pytest.mark.parametrize('native_status, loaded', [('ACCEPTED', True), ('WAITING', False)])
+def test_waiting_document_is_not_reported_as_loaded_with_error(native_status, loaded):
+    value = dict(source_id='SAP', event_id='E1', payload=dict(entity_type='ORDER', lines=[
+        dict(line_id='1', quantity='0', uom='G', normalization=dict(status='SKU_SETTINGS_MISSING',
+            error_code='ORDER_UNIT_SKU_SETTINGS_MISSING', integration_error=True, executable=False))]))
+    gateway = ReceiptGateway(value)
+    gateway.cursor.native_status = native_status
+    response = OracleTradecaseDocuments(gateway)._command('receive_document', 42, 'admin', value)
+    assert response['loaded_with_integration_error'] is loaded
+    assert response['status'] == native_status
