@@ -1,0 +1,367 @@
+{
+ "YARD_PLAN_TIME_INVALID": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_ACCESS_DENIED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "2026-10-27_yard_dock_status/002_status_api.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_PLAN_BUSY": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_DOCK_UNKNOWN": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_DOCK_AMBIGUOUS": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "2026-10-27_yard_dock_status/002_status_api.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_DOCK_BLOCKED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_DOCK_PLAN_CONFLICT": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_VEHICLE_PLAN_CONFLICT": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_VISIT_NOT_FOUND": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/002_supply_api.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API",
+  "yard_plan_routes.py"
+ ],
+ "YARD_PLAN_NOT_FOUND": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "yard_plan_routes.py"
+ ],
+ "YARD_PLAN_STATE_CONFLICT": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "VERSION_CONFLICT": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_PLAN_REASON_REQUIRED": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_PLAN_VISIT_STATE": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_REQUEST_INVALID": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/002_supply_api.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_PLAN_RANGE_INVALID": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_PLAN_IN_PAST": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_PLAN_EXISTS": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_OPERATION_CONFLICT": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "2026-10-27_yard_dock_status/002_status_api.sql",
+  "native:RRL_YARD_DOCK_PLAN_API",
+  "native:RRL_YARD_VISIT_API",
+  "yard_dock_status_routes.py",
+  "yard_plan_routes.py"
+ ],
+ "YARD_PLAN_WINDOW_INVALID": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_PLAN_BOUND_NARROW_WINDOW": [
+  "2026-10-23_yard_dock_plan/004_plan_api.sql",
+  "2026-10-23_yard_plan_scalar_fix/001_body.sql",
+  "2026-10-23_yard_plan_scalar_fix/before_body.sql",
+  "native:RRL_YARD_DOCK_PLAN_API"
+ ],
+ "YARD_DOCK_OCCUPIED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_TRIP_BINDING_REQUIRED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_VEHICLE_REQUIRED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_VEHICLE_OCCUPIED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_SUPPLIES_REQUIRED": [
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/002_supply_api.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_TRIP_REQUIRED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_TRIP_VISIT_ACTIVE": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_CANCEL_REASON_REQUIRED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_STATE_CONFLICT": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_DOCK_OR_VEHICLE_OCCUPIED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_HISTORY_INVALID_WINDOW": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_HISTORY_BOUND_NARROW_WINDOW": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_dock_plan/003_visit_body.sql",
+  "2026-10-23_yard_dock_plan/before_visit_body.sql",
+  "2026-10-23_yard_inbound/004_body.sql",
+  "2026-10-23_yard_inbound/before_body.sql",
+  "native:RRL_YARD_VISIT_API"
+ ],
+ "YARD_DOCK_STATUS_REQUEST_INVALID": [
+  "2026-10-27_yard_dock_status/002_status_api.sql",
+  "yard_dock_status_routes.py"
+ ],
+ "YARD_PLAN_WINDOW_TIMEZONE_REQUIRED": [
+  "yard_plan_routes.py"
+ ],
+ "YARD_PLAN_NOT_AVAILABLE": [
+  "yard_dock_plans.py"
+ ],
+ "YARD_RESULT_UNKNOWN": [
+  "yard_dock_plans.py",
+  "yard_dock_status.py",
+  "yard_visits.py"
+ ],
+ "YARD_DOCK_STATUS_NOT_AVAILABLE": [
+  "yard_dock_status.py"
+ ],
+ "YARD_NOT_AVAILABLE": [
+  "yard_visits.py"
+ ],
+ "YARD_OBJECTS_ALREADY_PRESENT": [
+  "2026-10-22_yard_visit/000_preflight.sql"
+ ],
+ "YARD_DEPENDENCIES_MISSING": [
+  "2026-10-22_yard_visit/000_preflight.sql"
+ ],
+ "YARD_EVENT_APPEND_ONLY": [
+  "2026-10-22_yard_visit/001_schema.sql"
+ ],
+ "YARD_INBOUND_UNSUPPORTED": [
+  "2026-10-22_yard_visit/002_api.sql",
+  "2026-10-23_yard_inbound/before_body.sql"
+ ],
+ "YARD_HISTORY_PRESENT": [
+  "2026-10-22_yard_visit/rollback.sql"
+ ],
+ "YARD_OBJECTS_REMAIN": [
+  "2026-10-22_yard_visit/rollback_verify.sql"
+ ],
+ "YARD_COMPILE_ERRORS": [
+  "2026-10-22_yard_visit/verify.sql"
+ ],
+ "YARD_TABLES_MISSING": [
+  "2026-10-22_yard_visit/verify.sql"
+ ],
+ "YARD_OCCUPANCY_GUARDS_MISSING": [
+  "2026-10-22_yard_visit/verify.sql"
+ ],
+ "YARD_EVENT_APPEND_GUARD_MISSING": [
+  "2026-10-22_yard_visit/verify.sql"
+ ],
+ "YARD_PLAN_EVENT_APPEND_ONLY": [
+  "2026-10-23_yard_dock_plan/001_schema.sql"
+ ],
+ "YARD_SUPPLY_NOT_FOUND": [
+  "2026-10-23_yard_inbound/002_supply_api.sql"
+ ],
+ "YARD_SUPPLY_VISIT_ACTIVE": [
+  "2026-10-23_yard_inbound/002_supply_api.sql"
+ ],
+ "YARD_SUPPLY_BOUND": [
+  "2026-10-23_yard_inbound/002_supply_api.sql"
+ ],
+ "YARD_SUPPLY_CHANGED": [
+  "2026-10-23_yard_inbound/002_supply_api.sql"
+ ],
+ "YARD_SUPPLY_LINK_IMMUTABLE": [
+  "2026-10-23_yard_inbound/002_supply_api.sql"
+ ],
+ "YARD_SOURCE_MISMATCH": [
+  "2026-10-23_yard_inbound/preflight.sql",
+  "2026-10-23_yard_inbound/rollback_verify.sql",
+  "2026-10-23_yard_inbound/verify.sql"
+ ],
+ "YARD_DOCK_STATUS_APPEND_ONLY": [
+  "2026-10-27_yard_dock_status/001_schema.sql"
+ ],
+ "YARD_DOCK_NOT_FOUND": [
+  "2026-10-27_yard_dock_status/002_status_api.sql"
+ ],
+ "YARD_DOCK_STATUS_INVALID": [
+  "2026-10-27_yard_dock_status/002_status_api.sql"
+ ],
+ "YARD_DOCK_NAME_REQUIRED": [
+  "2026-10-27_yard_dock_status/002_status_api.sql"
+ ]
+}
