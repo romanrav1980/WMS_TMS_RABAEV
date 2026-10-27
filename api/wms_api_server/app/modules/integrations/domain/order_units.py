@@ -7,7 +7,7 @@ line that came in another unit is an integration error, never the direction: wit
 the error, even when the conversion is exact. A missing coefficient or setting never produces a quantity: the line is kept as
 non-executable. Nothing here reads or writes the database."""
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from fractions import Fraction
 from math import floor
 
@@ -26,8 +26,19 @@ class Conversion:
 
 
 def _text(value: Fraction) -> str:
-    exact = Decimal(value.numerator) / Decimal(value.denominator)
-    return format(exact.normalize(), "f") if exact else "0"
+    denominator, scale = value.denominator, 0
+    for prime in (2, 5):
+        exponent = 0
+        while denominator % prime == 0:
+            denominator //= prime
+            exponent += 1
+        scale = max(scale, exponent)
+    if denominator != 1:
+        raise ValueError("A non-terminating fraction has no exact decimal representation")
+    with localcontext() as context:
+        context.prec = len(str(abs(value.numerator))) + scale + 1
+        text = format(Decimal(value.numerator) / Decimal(value.denominator), "f")
+    return text.rstrip("0").rstrip(".") if "." in text else text
 
 
 def _kept(source: dict, status: str, error: str, policy: dict) -> dict:
@@ -36,7 +47,7 @@ def _kept(source: dict, status: str, error: str, policy: dict) -> dict:
 
 def normalize_line(quantity: Decimal, uom: str, processing_uom: str | None, processing_step: Decimal | None, round_allowed: bool,
                    conversions: dict[str, Conversion]) -> dict:
-    source = dict(source_quantity=format(Decimal(quantity).normalize(), "f"), source_uom=uom)
+    source = dict(source_quantity=_text(Fraction(Decimal(quantity))), source_uom=uom)
     if processing_uom is None:
         if uom in ("EA", "BOX"):  # current EA/BOX contract without the new setting: unchanged
             return dict(source, quantity=source["source_quantity"], uom=uom, status="UNCHANGED", error_code=None, integration_error=False,
@@ -73,6 +84,10 @@ def normalize_line(quantity: Decimal, uom: str, processing_uom: str | None, proc
         error = "ORDER_UNIT_ROUNDING_NOT_ALLOWED"  # loaded, but the sender must see the integration error
     elif processed == 0:
         error = "ORDER_LINE_ZERO_AFTER_ROUNDING"
-    return dict(source, quantity=_text(processed), uom=processing_uom, base_uom=src.base_uom, base_quantity=_text(base),
-                processed_base_quantity=_text(processed_base), base_difference=_text(difference), status=status, error_code=error,
+    try:
+        quantities = dict(quantity=_text(processed), base_quantity=_text(base),
+                          processed_base_quantity=_text(processed_base), base_difference=_text(difference))
+    except ValueError:
+        return _kept(source, "COEFFICIENT_PRECISION_UNSUPPORTED", "ORDER_UNIT_EXACT_DECIMAL_REQUIRED", policy)
+    return dict(source, **quantities, uom=processing_uom, base_uom=src.base_uom, status=status, error_code=error,
                 integration_error=other_unit and not round_allowed, executable=processed > 0, conversion_policy=policy)

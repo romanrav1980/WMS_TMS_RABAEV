@@ -1,0 +1,48 @@
+{
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/000_preflight.sql",
+      "sha256": "22b2d0a8bf3815e0e4d152e02c1102f8c8c2cd93ac38656e3cd14f635c3088c3"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/001_document_api_body.sql",
+      "sha256": "17b525d2441d51cf7681312ab933f0bb7672990c51556a575795b4492ef4a677"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/002_order_api_body.sql",
+      "sha256": "235f7066fe20a670d6e8c185eb7f0da1a0de006bb1d8aac7dede84b4cd449223"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/apply.sql",
+      "sha256": "2fcc0e74373c5fa2284c90f6b8a77db645389a1d3ca75c292aa4aac6178e7ab0"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/before_document_api_body.sql",
+      "sha256": "d9363cde0e1a2ffae65f2345b56c5c150d5afd15e5215ec186aab7014806fb4a"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/before_order_api_body.sql",
+      "sha256": "bad504599816c18a823dc2deef04b49e61caa033b7a0d9c26e05223850ed2e8c"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/manifest.json",
+      "sha256": "5c371cd48aac973261bbec0e576f96258d6250cfba44958f93343ebc2952a0a9"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/README.md",
+      "sha256": "db64e20c7404e916455101d8841adfde3bbdd90195821e56422526e60b6557b7"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/rollback.sql",
+      "sha256": "03faf9d17d3aeac384bdf50c0734676c8313c6acd216154302ab863a59d3fb02"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/rollback_verify.sql",
+      "sha256": "309b5310005d0b5e29f49d613abb379fd3876971cfcd63562aaad9bae693e2a4"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_order_units/verify.sql",
+      "sha256": "a48492ed0c53b9d49fde709b64608f09ba016c20936c9954a2b38757a0956d9e"
+    }
+  ]
+}

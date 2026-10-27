@@ -41,6 +41,8 @@ class TradeSku(TradeModel):
             raise ValueError("Processing unit and its handling step are set together")
         if self.processing_uom is None and self.round_to_processing_unit is not None:
             raise ValueError("Rounding setting requires a processing unit")
+        if self.processing_step is not None and self.processing_step != self.processing_step.to_integral_value():
+            raise ValueError("EA/BOX processing requires a whole-unit step")
         return self
 
 

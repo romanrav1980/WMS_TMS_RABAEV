@@ -45,13 +45,26 @@ class OracleTradecaseDocuments:
                 result = cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_TRADE_DOCUMENT_API." + procedure, [warehouse_id, actor, request, result])
                 response = read_oracle_json(result.getvalue())
+                if value.get("payload", {}).get("entity_type") == "ORDER" and response.get("status") != "REJECTED":
+                    # A competing identical delivery may have won with an earlier SKU snapshot.
+                    # Return its persisted normalization, never this attempt's discarded calculation.
+                    cur.execute("select REQUEST_JSON from RRL_TRADE_MESSAGE where WARE_ID=:w and SOURCE_ID=:s and EVENT_ID=:e",
+                                w=warehouse_id, s=value["source_id"], e=value["event_id"])
+                    persisted = cur.fetchone()
+                    if persisted is None:
+                        raise TradecaseError("TRADECASE_RESULT_UNKNOWN", 503)
+                    value = read_oracle_json(persisted[0])
             if response.get("status") == "REJECTED":
                 raise TradecaseError(response["code"], 409)
             lines = [x.get("normalization") for x in value.get("payload", {}).get("lines", []) if isinstance(x, dict)]
             if any(lines):  # derived from the stored body, so an exact replay returns the same line outcome
-                response["line_results"] = [dict(line_id=x["line_id"], **{k: x["normalization"][k] for k in ("status", "error_code", "integration_error", "executable")},
-                                                 quantity=x["quantity"], uom=x["uom"]) for x in value["payload"]["lines"]]
-                response["loaded_with_integration_error"] = any(x["normalization"]["integration_error"] for x in value["payload"]["lines"])
+                response["line_results"] = []
+                for line in value["payload"]["lines"]:
+                    outcome = line.get("normalization") or dict(status="UNCHANGED", error_code=None, integration_error=False,
+                                                                executable=Decimal(line["quantity"]) > 0)
+                    response["line_results"].append(dict(line_id=line["line_id"], quantity=line["quantity"], uom=line["uom"],
+                        **{key: outcome[key] for key in ("status", "error_code", "integration_error", "executable")}))
+                response["loaded_with_integration_error"] = any(line["integration_error"] for line in response["line_results"])
             return response
         except oracledb.DatabaseError as exc:
             raise native_error(exc) from exc

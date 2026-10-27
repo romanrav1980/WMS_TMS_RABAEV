@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 37,
-  "used": 37,
+  "limit": 38,
+  "used": 38,
   "requests": [
     {
       "id": "C-0130",
@@ -283,6 +283,14 @@
       "status": "ACK + CONTRACT K-0177; root approved bounded contract; BUSY",
       "delivery": "existing file channel",
       "authorization": "Owner explicitly requests continuing all sprints jointly with Claude in latest message"
+    },
+    {
+      "id": "C-0176",
+      "task": "T08: selected physical places removed from existing ST/trip, native API + usable UI",
+      "registered_at": "2026-10-27T10:14:42.188822+03:00",
+      "status": "REGISTERED_BEFORE_DELIVERY",
+      "delivery": "existing file channel",
+      "authorization": "Owner latest instruction: jointly continue all sprints; one next large independent task"
     }
   ],
   "additional_grants": [
