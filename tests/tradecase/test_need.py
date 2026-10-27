@@ -56,3 +56,23 @@ def test_offset_changes_do_not_change_snapshot_period_identity():
     b=body(snapshot_at=NOW.astimezone(local),period_from=NOW.astimezone(local),period_until=(NOW+timedelta(days=1)).astimezone(local),supplies=[supply('S',expected_at=(NOW+timedelta(hours=1)).astimezone(local))])
     assert a.model_dump(mode='json')==b.model_dump(mode='json')
     assert isinstance(b.model_dump()['snapshot_at'],datetime)
+
+
+def test_movement_forecast_is_not_consumption_or_a_second_stock_calculation():
+    result=net_need(body(forecast_kind='MOVEMENT',forecast_quantity='100',target_quantity='0',available_quantity='0',
+                         supplies=[supply('MAIN',quantity='50',status='PLANNED',current_trip=True),supply('TRANSIT',quantity='20')]),10,NOW,60)
+    assert result['additional_boxes']=='30'
+    for change in [dict(target_quantity='1'),dict(available_quantity='1')]:
+        with pytest.raises(ValueError,match='Movement forecast'):
+            body(**dict(dict(forecast_kind='MOVEMENT',target_quantity='0',available_quantity='0'),**change))
+
+
+def test_topup_defaults_off_and_requires_receiver_horizon_when_enabled():
+    from app.modules.integrations.contracts_tradecase import TradeRecipient
+    data=dict(entity_type='RECIPIENT',title='Store',target_owner_id='SNS',permitted_source_owners=['SNS'],buyout_mode='BEFORE_PICK',lead_time_days=0,min_osg_days=50)
+    assert TradeRecipient.model_validate(data).topup_enabled is False
+    with pytest.raises(ValueError,match='horizon days'):
+        TradeRecipient.model_validate(dict(data,topup_enabled=True))
+    assert TradeRecipient.model_validate(dict(data,topup_enabled=True,topup_horizon_days=3)).topup_horizon_days==3
+    with pytest.raises(ValueError):
+        TradeRecipient.model_validate(dict(data,topup_enabled=True,topup_horizon_days=0))

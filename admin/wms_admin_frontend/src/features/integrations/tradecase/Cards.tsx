@@ -46,7 +46,9 @@ function fields(kind: Kind, p: Payload, names: Names) {
     case "RECIPIENT": return <><Row k="Название" v={str(p.title)} /><Row k="Собственник после выкупа" v={named(names, "OWNER", p.target_owner_id)} />
       <Row k="Допустимые собственники-источники" v={arr(p.permitted_source_owners).map(o => named(names, "OWNER", o)).join(", ") || "—"} />
       <Row k="Момент выкупа" v={BUYOUT[str(p.buyout_mode)] ?? str(p.buyout_mode)} /><Row k="ОСГ" v={`${OSG[str(p.osg_basis)] ?? str(p.osg_basis)}, не меньше ${str(p.min_osg_days)} дн.`} />
-      <Row k="Срок доставки, дн." v={str(p.lead_time_days)} /><Row k="Частичный отбор / отгрузка / вскрытие короба" v={`${yes(p.allow_partial_pick)} / ${yes(p.allow_partial_ship)} / ${yes(p.allow_broken_box)}`} />
+      <Row k="Срок доставки, дн." v={str(p.lead_time_days)} /><Row k="Добивать по прогнозу перемещений" v={<>{yes(p.topup_enabled)} <HelpLink anchor="topup" /></>} />
+      <Row k="Горизонт добивки, дн." v={p.topup_enabled === true ? str(p.topup_horizon_days) : "Добивка отключена"} />
+      <Row k="Частичный отбор / отгрузка / вскрытие короба" v={`${yes(p.allow_partial_pick)} / ${yes(p.allow_partial_ship)} / ${yes(p.allow_broken_box)}`} />
       <Row k="Активен" v={yes(p.active)} /></>;
     case "NEED": return <><Row k="Получатель" v={named(names, "RECIPIENT", p.recipient_id)} /><Row k="Товар" v={named(names, "SKU", p.sku_id)} /><Row k="Снимок на" v={<Time value={p.snapshot_at} />} /><Row k="Период" v={<><Time value={p.period_from} /> — <Time value={p.period_until} /></>} /></>;
     case "SKU": return <><Row k="Название" v={str(p.title)} /><Row k="Базовая единица" v={UOM[str(p.base_uom)] ?? str(p.base_uom)} /><Row k="В коробе, шт." v={str(p.units_per_box)} />

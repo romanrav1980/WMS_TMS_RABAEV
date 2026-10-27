@@ -1,0 +1,25 @@
+{
+  "migration_id": "2026-10-27-topup-recipient-forecast",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_TRADE_TOPUP_CMD|PACKAGE": "A83DB66F0ED86760C4246DF49BD8C13C81E699B380BD31959D84395CC918789F",
+    "RRL_TRADE_TOPUP_CMD|PACKAGE BODY": "1181497ABAC0B8A23D1C3EDF576B7E8DF31D542878C5D1E36AEA78A9E3ED1525"
+  },
+  "after_sources": {
+    "RRL_TRADE_TOPUP_CMD|PACKAGE": "A83DB66F0ED86760C4246DF49BD8C13C81E699B380BD31959D84395CC918789F",
+    "RRL_TRADE_TOPUP_CMD|PACKAGE BODY": "B591C1CCB67102FD5FBDE5F7AB4DB3628DC48AF7FC2DDFDD5969A22C55F3E025"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "69864b313aad2c95fe62722eae45b328aeebc6f5c3f0ee2fd689aecc2b6dd9e6",
+    "apply.sql": "44cc46d72a5ab19cb1acc6a1681062dad96cc5b52ebbe1b2d50d32ee0eaaff6d",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "d13b0e062d94f45aabf85c268f85be064448f8af3aa624fdd985227fd506f10d",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "84bec753d963087c9f866f127e2c33c781a60363bbfce535a1fc534898a928bf",
+    "restore_rrl_trade_topup_cmd_package_body.sql": "7ae22c2dcd058b1e82fe7619135c3fff92a08d6ea029c25259e375cc05ddad9c",
+    "rollback.sql": "ae42e94c5f6329692980ca13424e638dfd1ade5a830c6eef3853f7abbe7d9688",
+    "rrl_trade_topup_cmd_package_body.sql": "9c4cb6129e66111237740203e4eabcd898a8e7600ae08e6002350c741d877376",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

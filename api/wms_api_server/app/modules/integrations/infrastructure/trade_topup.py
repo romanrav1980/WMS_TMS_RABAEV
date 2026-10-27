@@ -42,34 +42,20 @@ def _confirmed(cur: Any, ware: int, trip_id: str, trip: dict) -> list[dict]:
 
 
 def _terms(cur: Any, ware: int, trip: dict, recipient: str, sku: str) -> dict:
-    """Use the matching main line, or unambiguous masters for another SKU at an existing stop."""
-    found = set(); recipient_on_trip = False
-    for assignment in trip['orders']:
-        order, _ = _document(cur, ware, 'ORDER', assignment['order_id'])
-        line = next((x for x in order['lines'] if x['line_id'] == assignment['line_id']), None)
-        recipient_on_trip |= order.get('recipient_id') == recipient and line is not None
-        if order.get('recipient_id') == recipient and line and line['sku_id'] == sku:
-            found.add((line['source_owner_id'], line['target_owner_id'], str(line['mrc']), int(line.get('min_osg_days') or 0)))
-    if not found and recipient_on_trip:
-        recipient_doc, _ = _document(cur, ware, 'RECIPIENT', recipient)
-        sku_doc, _ = _document(cur, ware, 'SKU', sku)
-        owners, prices = recipient_doc['permitted_source_owners'], sku_doc['permitted_mrc']
-        if len(owners) != 1 or len(prices) != 1:
-            raise TradeTransportError('TOPUP_STOCK_TERMS_AMBIGUOUS', 409)
-        _document(cur, ware, 'OWNER', owners[0])
-        if recipient_doc['target_owner_id'] != owners[0]:
-            _document(cur, ware, 'OWNER', recipient_doc['target_owner_id'])
-        days = recipient_doc['min_osg_days']
-        if recipient_doc.get('osg_basis') == 'DELIVERY_DATE':
-            days += recipient_doc['lead_time_days']
-        found.add((owners[0], recipient_doc['target_owner_id'], str(prices[0]), days))
-    if not found:
-        raise TradeTransportError('TOPUP_STOCK_TERMS_REQUIRED', 409)
-    if len(found) > 1:
+    """Read receiver and SKU terms independently of orders; never guess an owner or MRC."""
+    recipient_doc, _ = _document(cur, ware, 'RECIPIENT', recipient)
+    sku_doc, _ = _document(cur, ware, 'SKU', sku)
+    owners, prices = recipient_doc['permitted_source_owners'], sku_doc['permitted_mrc']
+    if len(owners) != 1 or len(prices) != 1:
         raise TradeTransportError('TOPUP_STOCK_TERMS_AMBIGUOUS', 409)
-    owner, target, mrc, days = found.pop()
+    _document(cur, ware, 'OWNER', owners[0])
+    if recipient_doc['target_owner_id'] != owners[0]:
+        _document(cur, ware, 'OWNER', recipient_doc['target_owner_id'])
+    days = recipient_doc['min_osg_days']
+    if recipient_doc.get('osg_basis') == 'DELIVERY_DATE':
+        days += recipient_doc['lead_time_days']
     departure = date.fromisoformat(trip['planned_departure_at'][:10])
-    return dict(source_owner_id=owner, target_owner_id=target, mrc=mrc, min_expiry_date=(departure + timedelta(days=days)).isoformat())
+    return dict(source_owner_id=owners[0], target_owner_id=recipient_doc['target_owner_id'], mrc=str(prices[0]), min_expiry_date=(departure + timedelta(days=days)).isoformat())
 
 
 def _stock_boxes(cur: Any, ware: int, article: str, sku: str, terms: dict, units_per_box: int) -> int:
@@ -117,6 +103,14 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
     departure = datetime.fromisoformat(context['trip']['planned_departure_at'].replace('Z', '+00:00'))
     for key in body.need_ids:
         need = need_snapshot(cur, ware, key, body.max_age_minutes, now)
+        if not need['topup_enabled']:
+            raise TradeTransportError('TOPUP_RECIPIENT_DISABLED:'+key,409)
+        if need['forecast_kind']!='MOVEMENT':
+            raise TradeTransportError('TOPUP_MOVEMENT_FORECAST_REQUIRED:'+key,409)
+        days=need['topup_horizon_days']
+        start,end=(datetime.fromisoformat(need[k])for k in ('period_from','period_until'))
+        if days is None or end-start>timedelta(days=days) or end>departure+timedelta(days=days):
+            raise TradeTransportError('TOPUP_RECIPIENT_HORIZON_EXCEEDED:'+key,409)
         block = after_load_admission(context, need['recipient_id'], now)
         if block:
             raise TradeTransportError(block + ':' + key, 409)

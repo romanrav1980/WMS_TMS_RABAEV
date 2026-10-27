@@ -27,6 +27,7 @@ class TradeNeed(TradeModel):
     sku_id:Key
     recipient_version:int=Field(strict=True,gt=0)
     sku_version:int=Field(strict=True,gt=0)
+    forecast_kind:Literal['MOVEMENT','CONSUMPTION']='CONSUMPTION'
     snapshot_at:AwareDatetime
     period_from:AwareDatetime
     period_until:AwareDatetime
@@ -43,6 +44,8 @@ class TradeNeed(TradeModel):
 
     @model_validator(mode='after')
     def horizon(self)->'TradeNeed':
+        if self.forecast_kind=='MOVEMENT' and (self.target_quantity!=0 or self.available_quantity!=0):
+            raise ValueError('Movement forecast already describes required deliveries; target and available quantities must be zero')
         if not timedelta(0)<self.period_until-self.period_from<=timedelta(days=31):
             raise ValueError('Demand horizon must be positive and at most31days')
         keys=[(x.supply_id,x.version)for x in self.supplies]

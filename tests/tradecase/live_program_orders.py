@@ -123,7 +123,7 @@ def orders():
     s.setdefault('orders', {})
     for number, title, sku, boxes, osg in [('101', 'Hub', 'A', 200, 70), ('102', 'Branch', 'A', 150, 50), ('103', 'Store', 'B', 250, 50)]:
         customer = q.step('customer.'+number, 'POST', '/api/customers', dict(customer_code=q.tag()+'.'+number, customer_name='Program '+title, customer_type='LEGAL_ENTITY'))['customer_id']
-        q.send('recipient.'+number, 'RECIPIENT', 'C'+number, dict(title=title, wms_customer_id=customer, target_owner_id='SNS', permitted_source_owners=['SNS'], buyout_mode='BEFORE_PICK', min_osg_days=osg, lead_time_days=0, allow_broken_box=False, allow_partial_ship=True))
+        q.send('recipient.'+number, 'RECIPIENT', 'C'+number, dict(title=title, wms_customer_id=customer, target_owner_id='SNS', permitted_source_owners=['SNS'], buyout_mode='BEFORE_PICK', min_osg_days=osg, lead_time_days=0, allow_broken_box=False, allow_partial_ship=True, topup_enabled=False, topup_horizon_days=3 if number=='103' else None))
         q.send('order.'+number, 'ORDER', number, dict(recipient_id='C'+number, planned_ship_at=s['day']+'T12:00:00+03:00', lines=[dict(line_id='1', sku_id=sku, source_owner_id='SNS', target_owner_id='SNS', mrc=s['skus'][sku]['mrc'], quantity=str(boxes), uom='BOX', min_osg_days=osg)]))
         native = q.native_order('order_'+number, boxes*10, article=s['skus'][sku]['article'], customer=customer)
         q.step('binding.'+number, 'POST', base+'/orders/'+number+'/binding', dict(operation_id=q.tag()+'.bind.'+number, expected_order_version=1, customer_order_id=native['order'], lines=[dict(line_id='1', customer_order_row_id=native['row'])]))
@@ -155,19 +155,45 @@ def proposals():
     trip = dict(vehicle_id=plate, planning_source='SAP', planned_departure_at=s['day']+'T12:00:00+03:00', capacity_kg='8000', capacity_m3='66', orders=[dict(order_id=number, line_id='1', quantity=str(o['boxes'])) for number, o in s['orders'].items()])
     q.send('trip', 'TRIP', 'T1', trip)
     now = datetime.now(timezone.utc)
-    q.send('need', 'NEED', 'N1', dict(recipient_id='C103', sku_id='A', recipient_version=1, sku_version=1, snapshot_at=now.isoformat(), period_from=s['day']+'T00:00:00+03:00', period_until=s['day']+'T23:59:59+03:00', uom='BOX', forecast_quantity='80', target_quantity='0', available_quantity='0', received_in_available=True, supplies=[]))
+    forecast=dict(recipient_id='C103', sku_id='A', recipient_version=1, sku_version=1, forecast_kind='MOVEMENT', snapshot_at=now.isoformat(), period_from=s['day']+'T00:00:00+03:00', period_until=s['day']+'T23:59:59+03:00', uom='BOX', forecast_quantity='80', target_quantity='0', available_quantity='0', received_in_available=True, supplies=[])
+    q.send('need', 'NEED', 'N1', forecast)
     route = base+'/trips/T1'
+    denied('disabled.preview',route+'/topup-preview',dict(need_ids=['N1'],max_age_minutes=1440),'TOPUP_RECIPIENT_DISABLED')
+    recipient=dict(s['steps']['msg_recipient.103']['body']['payload']);recipient.pop('entity_type')
+    recipient['topup_enabled']=True
+    q.send('recipient.enabled','RECIPIENT','C103',recipient,version=2)
+    denied('stale.preview',route+'/topup-preview',dict(need_ids=['N1'],max_age_minutes=1440),'NEED_MASTER_VERSION_CHANGED')
+    forecast['recipient_version']=2
+    q.send('need.enabled','NEED','N1',forecast,version=2)
+    q.send('need.consumption','NEED','N.CONSUMPTION',dict(forecast,forecast_kind='CONSUMPTION'))
+    denied('consumption.preview',route+'/topup-preview',dict(need_ids=['N.CONSUMPTION'],max_age_minutes=1440),'TOPUP_MOVEMENT_FORECAST_REQUIRED')
+    end=(datetime.fromisoformat(forecast['period_from'])+timedelta(days=4)).isoformat()
+    q.send('need.long','NEED','N.LONG',dict(forecast,period_until=end))
+    denied('horizon.preview',route+'/topup-preview',dict(need_ids=['N.LONG'],max_age_minutes=1440),'TOPUP_RECIPIENT_HORIZON_EXCEEDED')
     preview = q.step('topup.preview', 'POST', route+'/topup-preview', dict(need_ids=['N1'], max_age_minutes=1440))
     item = preview['items'][0]
     assert (item['proposed_boxes'], item['uncovered_boxes'], item['sender_stock_boxes']) == (60, '20', 350), item
     saved = q.step('topup.save', 'POST', route+'/topup-proposals', dict(operation_id=q.tag()+'.topup.save', need_ids=['N1'], max_age_minutes=1440))
     proposal = saved['proposals'][0]
     assert proposal['approved_boxes'] == 60, proposal
+    q.send('recipient.disabled.before.confirm','RECIPIENT','C103',dict(recipient,topup_enabled=False),version=3)
+    denied('disabled.confirm',route+f"/topup-proposals/{proposal['proposal_id']}/confirm",dict(operation_id=q.tag()+'.disabled.confirm',expected_version=proposal['version']),'TOPUP_RECIPIENT_DISABLED')
+    assert q.stock()==(11000,6000,1100), q.stock()
+    q.send('recipient.reenabled','RECIPIENT','C103',recipient,version=4)
+    forecast['recipient_version']=4
+    q.send('need.reenabled','NEED','N1',forecast,version=3)
+    saved=q.step('topup.save.current','POST',route+'/topup-proposals',dict(operation_id=q.tag()+'.topup.save.current',need_ids=['N1'],max_age_minutes=1440))
+    proposal=saved['proposals'][0]
     confirmed = q.step('topup.confirm', 'POST', route+f"/topup-proposals/{proposal['proposal_id']}/confirm", dict(operation_id=q.tag()+'.topup.confirm', expected_version=proposal['version']))
     replay = q.expect(200, q.http('POST', route+f"/topup-proposals/{proposal['proposal_id']}/confirm", s['steps']['topup.confirm']['body']))
     assert replay == confirmed
     assert q.stock() == (11000, 6600, 1100), q.stock()
     s.update(proposal=confirmed, trip=trip, vehicle=vehicle, phase='TOPUP_HELD'); q.save()
+
+
+def denied(key,path,body,code):
+    result=q.step(key,'POST',path,body,status=409)
+    assert result['detail']['code'].startswith(code),result
 
 
 def main():

@@ -3,6 +3,7 @@ import { useRead } from "./useRead";
 import { Act, HelpLink, Tech, Time } from "./ui";
 
 type Need = { document_version: number; recipient_title: string; sku_title: string; snapshot_at: string; period_from: string; period_until: string;
+  forecast_kind: "MOVEMENT" | "CONSUMPTION"; topup_enabled: boolean; topup_horizon_days: number | null;
   forecast_quantity: string; target_quantity: string; available_quantity: string; in_transit_quantity: string; current_trip_quantity: string;
   additional_quantity: string; additional_boxes: string; age_minutes: number; expired: boolean;
   supplies: { supply_id: string; version: number; base_quantity: string; accounted_as: string }[] };
@@ -25,11 +26,15 @@ export function NeedPreview({ wh, id }: { wh: string; id: string }) {
     {read.error && <p className="tc-err" role="alert">{read.error}</p>}
     {result && <>
       <p>{result.recipient_title} · {result.sku_title}</p>
+      <p>Период прогноза: <Time value={result.period_from} /> — <Time value={result.period_until} />.</p>
+      <p>{result.topup_enabled ? `Добивка включена на период не более ${result.topup_horizon_days} дн.` : "Добивка отключена в настройках получателя."}</p>
+      {result.forecast_kind !== "MOVEMENT" && <p className="tc-msg warn">Для добивки загрузите прогноз перемещений. Прогноз потребления не разрешает добивку.</p>}
       {result.expired ? <p className="tc-msg warn" role="alert">Снимок устарел: {quantity(String(result.age_minutes))} мин. Запросите свежие данные перед выбором добивки.</p>
         : <p className="tc-note">Возраст снимка: {quantity(String(result.age_minutes))} мин.</p>}
       <dl className="tc-fields">
-        <dt>Прогноз потребления</dt><dd>{quantity(result.forecast_quantity)} шт.</dd><dt>Целевой запас</dt><dd>{quantity(result.target_quantity)} шт.</dd>
-        <dt>Доступно у получателя</dt><dd>{quantity(result.available_quantity)} шт.</dd><dt>Подтверждено в пути</dt><dd>{quantity(result.in_transit_quantity)} шт.</dd>
+        <dt>{result.forecast_kind === "MOVEMENT" ? "Прогноз перемещений" : "Прогноз потребления"}</dt><dd>{quantity(result.forecast_quantity)} шт.</dd>
+        {result.forecast_kind !== "MOVEMENT" && <><dt>Целевой запас</dt><dd>{quantity(result.target_quantity)} шт.</dd><dt>Доступно у получателя</dt><dd>{quantity(result.available_quantity)} шт.</dd></>}
+        <dt>Подтверждено в пути</dt><dd>{quantity(result.in_transit_quantity)} шт.</dd>
         <dt>Основной подвоз</dt><dd>{quantity(result.current_trip_quantity)} шт.</dd><dt>Дополнительная потребность</dt><dd><b>{quantity(result.additional_quantity)} шт. / {quantity(result.additional_boxes)} кор.</b></dd>
       </dl>
       <p>Сверьте основной подвоз с планом рейса. Перед выбором добивки проверьте свободный запас отправителя, маршрут и вместимость.</p>

@@ -26,7 +26,8 @@ def need_snapshot(cur:Any,ware:int,key:str,max_age:int,now:datetime)->dict:
     result=net_need(body.model_dump(),sku['units_per_box'],now,max_age)
     result.update(warehouse_id=ware,document_id=key,document_version=version,source_id=source,recipient_id=body.recipient_id,recipient_title=recipient['title'],sku_id=body.sku_id,sku_title=sku['title'],recipient_version=rv,sku_version=sv,
                   period_from=body.period_from.isoformat(),period_until=body.period_until.isoformat(),units_per_box=sku['units_per_box'],input_uom=body.uom,input_hash=content_hash,
-                  provenance='EXTERNAL_RECIPIENT_SNAPSHOT',sender_stock_checked=False,route_checked=False,topup_order_created=False)
+                  forecast_kind=body.forecast_kind,topup_enabled=recipient.get('topup_enabled',False),topup_horizon_days=recipient.get('topup_horizon_days'),
+                  provenance='EXTERNAL_MOVEMENT_FORECAST'if body.forecast_kind=='MOVEMENT'else'EXTERNAL_RECIPIENT_SNAPSHOT',sender_stock_checked=False,route_checked=False,topup_order_created=False)
     result['calculation_signature']=sha256(json.dumps(dict(input_hash=content_hash,recipient_version=rv,sku_version=sv,max_age_minutes=max_age),sort_keys=True).encode()).hexdigest()
     return result
 

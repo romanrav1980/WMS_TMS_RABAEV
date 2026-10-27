@@ -74,18 +74,14 @@ def _order(recipient: str, line: dict) -> dict:
     return dict(recipient_id=recipient, lines=[{**dict(line_id="L1", sku_id="A", source_owner_id="SNS", target_owner_id="BLC", mrc=200, min_osg_days=5), **line}])
 
 
-def test_terms_come_from_main_order_of_same_recipient_and_goods(monkeypatch):
-    monkeypatch.setattr(trade_topup, "_document", lambda cur, ware, kind, key: (cur.orders[key], 1))
-    trip = dict(planned_departure_at="2026-10-22T08:00:00Z", orders=[dict(order_id="O1", line_id="L1"), dict(order_id="O2", line_id="L1")])
-    cur = _Docs({"O1": _order("R", {}), "O2": _order("OTHER", {"mrc": 999})})
-    assert trade_topup._terms(cur, 1, trip, "R", "A") == dict(source_owner_id="SNS", target_owner_id="BLC", mrc="200", min_expiry_date="2026-10-27")
-    with pytest.raises(TradeTransportError) as missing:
-        trade_topup._terms(cur, 1, trip, "NOBODY", "A")
-    assert missing.value.code == "TOPUP_STOCK_TERMS_REQUIRED"
-    cur.orders["O2"] = _order("R", {"mrc": 250})
-    with pytest.raises(TradeTransportError) as ambiguous:
-        trade_topup._terms(cur, 1, trip, "R", "A")
-    assert ambiguous.value.code == "TOPUP_STOCK_TERMS_AMBIGUOUS"
+def test_terms_do_not_require_an_order_and_do_not_inherit_its_price():
+    cur = _Docs({'STORE': dict(permitted_source_owners=['SNS'], target_owner_id='SNS', min_osg_days=50),
+                 'A': dict(permitted_mrc=['200']), 'SNS': dict(active=True)})
+    trip = dict(planned_departure_at='2026-10-22T08:00:00Z', orders=[])
+    expected = dict(source_owner_id='SNS', target_owner_id='SNS', mrc='200', min_expiry_date='2026-12-11')
+    assert trade_topup._terms(cur, 1, trip, 'STORE', 'A') == expected
+    trip['orders'] = [dict(order_id='UNRELATED_ORDER_WITH_DIFFERENT_MRC', line_id='L1')]
+    assert trade_topup._terms(cur, 1, trip, 'STORE', 'A') == expected
 
 
 @pytest.mark.parametrize('basis,lead,expiry', [('SHIP_DATE', 3, '2026-12-11'), ('DELIVERY_DATE', 3, '2026-12-14')])
@@ -118,6 +114,26 @@ def test_another_sku_rejects_inactive_recipient_sku_or_owner(kind):
     with pytest.raises(TradeTransportError) as error:
         trade_topup._terms(_Docs(masters), 1, trip, 'STORE', 'A')
     assert error.value.code == 'TRADE_CAPACITY_SOURCE_INACTIVE'
+
+
+@pytest.mark.parametrize('change,code', [
+    ({'topup_enabled': False}, 'TOPUP_RECIPIENT_DISABLED'),
+    ({'forecast_kind': 'CONSUMPTION'}, 'TOPUP_MOVEMENT_FORECAST_REQUIRED'),
+    ({'topup_horizon_days': None}, 'TOPUP_RECIPIENT_HORIZON_EXCEEDED'),
+    ({'topup_horizon_days': 1}, 'TOPUP_RECIPIENT_HORIZON_EXCEEDED'),
+    ({'period_from': '2026-10-23T00:00:00+00:00', 'period_until': '2026-10-26T00:00:00+00:00'}, 'TOPUP_RECIPIENT_HORIZON_EXCEEDED'),
+])
+def test_forecast_gates_run_before_stock_selection(monkeypatch, change, code):
+    context = dict(trip=dict(planned_departure_at='2026-10-22T08:00:00+00:00'), planned=[], packages={}, started=False)
+    need = dict(topup_enabled=True, forecast_kind='MOVEMENT', topup_horizon_days=3,
+                period_from='2026-10-22T00:00:00+00:00', period_until='2026-10-25T00:00:00+00:00', **{})
+    need.update(change)
+    monkeypatch.setattr(trade_topup, 'capacity_context', lambda *args: context)
+    monkeypatch.setattr(trade_topup, '_confirmed', lambda *args: [])
+    monkeypatch.setattr(trade_topup, 'need_snapshot', lambda *args: need)
+    with pytest.raises(TradeTransportError) as error:
+        trade_topup.allocate(None, 1, 'TRIP', TopupSave(operation_id='save', need_ids=['N1'], max_age_minutes=60), 'u')
+    assert error.value.code == code+':N1'
 
 
 class _Posting:

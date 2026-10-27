@@ -48,12 +48,16 @@ class TradeRecipient(TradeModel):
     allow_partial_pick: bool = False
     allow_partial_ship: bool = False
     allow_broken_box: bool = False
+    topup_enabled: bool = False
+    topup_horizon_days: int | None = Field(default=None, strict=True, ge=1, le=31)
     active: bool = True
 
     @model_validator(mode="after")
     def unique_owners(self) -> "TradeRecipient":
         if len(set(self.permitted_source_owners)) != len(self.permitted_source_owners):
             raise ValueError("Duplicate source owner")
+        if self.topup_enabled and self.topup_horizon_days is None:
+            raise ValueError("Enabled top-up requires recipient horizon days")
         return self
 
 

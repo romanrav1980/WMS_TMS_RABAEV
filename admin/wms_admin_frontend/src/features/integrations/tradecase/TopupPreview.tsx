@@ -14,6 +14,12 @@ function failure(e: unknown) {
     if (e.status === 401) return "Войдите в систему и повторите расчёт.";
     if (e.status === 403) return "Нет доступа к складу или собственнику груза. Проверьте назначение прав.";
     const code = (e.detail as { code?: string })?.code ?? "";
+    if (code.startsWith("TOPUP_RECIPIENT_DISABLED")) return "Включите «Добивать» в настройках получателя, чтобы рассчитывать добивку.";
+    if (code.startsWith("TOPUP_MOVEMENT_FORECAST_REQUIRED")) return "Загрузите прогноз плана перемещений получателю. Заказ и прогноз потребления не разрешают добивку.";
+    if (code.startsWith("TOPUP_RECIPIENT_HORIZON_EXCEEDED")) return "Период прогноза превышает число дней добивки в настройках получателя. Загрузите прогноз на разрешённый период.";
+    if (code.startsWith("NEED_MASTER_VERSION_CHANGED")) return "Настройки получателя или товара изменились. Загрузите прогноз с актуальными версиями справочников.";
+    if (code === "TOPUP_STOCK_TERMS_AMBIGUOUS") return "В справочнике получателя разрешены несколько собственников или у товара несколько МРЦ. Уточните условия добивки.";
+    if (code === "TRADE_TOPUP_SOURCE_BOUND_1000") return "У подходящего товара больше 1000 мест хранения. Расчёт остановлен; передайте номер рейса ответственному за систему.";
     if (code.startsWith("TOPUP_NEED_EXPIRED")) return "Обновите устаревший снимок потребности и повторите расчёт.";
     if (code.startsWith("TOPUP_PRIMARY_SNAPSHOT_MISMATCH")) return "Основной подвоз в снимке не совпадает с планом рейса. Сверьте данные получателя.";
     if (code.startsWith("TOPUP_NEED_HORIZON_MISMATCH")) return "Выезд рейса не входит в период потребности. Выберите подходящий снимок.";
