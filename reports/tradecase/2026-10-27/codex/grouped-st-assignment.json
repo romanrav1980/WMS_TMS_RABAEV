@@ -1,0 +1,114 @@
+{
+  "checkpoint": "ae1d2a8c",
+  "migration_id": "2026-10-27-grouped-st-assignment",
+  "apply_rollback_reapply_statements": [
+    9,
+    9,
+    9
+  ],
+  "migration_errors": 0,
+  "assignment": {
+    "warehouse": 210069361,
+    "task": 33698,
+    "phase": "TRANSPORT_READY",
+    "members": [
+      [
+        "P210069361101",
+        200,
+        33698
+      ],
+      [
+        "P210069361102",
+        150,
+        33698
+      ],
+      [
+        "P210069361103",
+        250,
+        33698
+      ],
+      [
+        "P210069361104",
+        60,
+        33698
+      ]
+    ],
+    "stock_before": [
+      11000,
+      6600,
+      1100
+    ],
+    "stock_after": [
+      11000,
+      6600,
+      1100
+    ],
+    "retry_status": 200,
+    "retry_ms": 1490.94,
+    "slow_sql": [
+      [
+        7252,
+        1785,
+        "TRANSACTION",
+        "Shared manual transport plan validation and ST assignment",
+        null
+      ],
+      [
+        7249,
+        1373,
+        "TRANSACTION",
+        "Shared manual transport plan validation and ST assignment",
+        "ORA-20886: ST_ASSIGNMENT_BATCH_BOUND\nORA-06512: at \"RABAEV.RRL_TT_ADD_PALL\", line 56\nORA-06512: at \"RABAEV.RRL_TT_ADD_PALL\", line 16\nORA-06512: at \"RABAEV.RRL_TT_ADD_PALL\", line 16\nORA-06512: at \"RABAEV.RRL_TRANSPORT_PLAN_API\", line 19\nORA-06512: at \"RABAEV.RRL_TRANSPORT_PLAN_API\", line 64\nORA-06512: at line 1"
+      ],
+      [
+        7253,
+        1155,
+        "TRANSACTION",
+        "Shared manual transport plan validation and ST assignment",
+        null
+      ],
+      [
+        7251,
+        20,
+        "TRANSACTION",
+        "Shared manual transport plan validation and ST assignment",
+        "ORA-04068: existing state of packages has been discarded\nORA-04061: existing state of package body \"RABAEV.RRL_TRANSPORT_PLAN_API\" has been invalidated\nORA-04065: not executed, altered or dropped package body \"RABAEV.RRL_TRANSPORT_PLAN_API\"\nORA-06508: PL/SQL: could not find program unit being called: \"RABAEV.RRL_TRANSPORT_PLAN_API\"\nORA-06512: at line 1\nHelp: https://docs.oracle.com/error-help/db/ora-04068/"
+      ]
+    ],
+    "invalid": [],
+    "errors": [],
+    "ledger": [
+      [
+        "APPLIED"
+      ]
+    ],
+    "limitations": [
+      "Synthetic external documents and vehicle; no departure or 640/20 acceptance",
+      "SQL log transaction labels are not individual SQL profiles"
+    ]
+  },
+  "c0174_http": {
+    "warehouse": 226192056,
+    "transport_document_version": 3,
+    "plain_m3": "0.8",
+    "topup_m3": "0.8",
+    "sender_stock_boxes": null,
+    "plain_http_ms": 899.72,
+    "topup_http_ms": 262.88,
+    "business_writes": false
+  },
+  "tests": {
+    "main_passed": 342,
+    "main_setup_errors": 1,
+    "audit_retry_passed": 5,
+    "setup_error": "Windows TEMP access denied; rerun under workspace basetemp",
+    "quality_gate": "PASS",
+    "encoding": "PASS"
+  },
+  "sql_decision": "Keep bounded 1000-place assignment; no speculative index. Repeat of 660-place assignment: HTTP 1490.94 ms, transaction 1155 ms. Initial successful assignment transaction 1785 ms. Transaction labels do not identify an individual SQL statement. Profile the existing per-member writer before any further performance rewrite.",
+  "open_work": [
+    "No 640/20 full-scale acceptance",
+    "No verified API for selecting 20 places from this existing 60-place ST",
+    "Industrial SAP/SKM delivery and pilot unverified"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 35,
-  "used": 35,
+  "limit": 36,
+  "used": 36,
   "requests": [
     {
       "id": "C-0130",
@@ -260,13 +260,20 @@
       "date": "2026-10-27",
       "task": "T09 full route, store windows and approvals; TASK_C0172_ROUTE_WINDOWS.md",
       "authorization": "Owner explicitly reports Claude available again and orders joint work and delegation; latest user message 2026-10-27",
-      "status": "registered_before_delivery"
+      "status": "released_after_review; integrated build and portable tests passed; full external T09 not complete"
     },
     {
       "id": "C-0173",
       "date": "2026-10-27",
       "task": "T08 660 to 640: partial trip allocation, retained 20 and capacity after topup adoption; starts after C0172 RELEASE",
       "authorization": "Owner 2026-10-27 explicitly resumed Claude and directed joint work and delegation",
+      "status": "applied_rollback_reapplied_7_8_7; real task retry and replay passed"
+    },
+    {
+      "id": "C-0174",
+      "date": "2026-10-27",
+      "task": "Complete original T08 40/20 trip reduction after adoption, one small real flow",
+      "authorization": "Owner 2026-10-27 resumed joint execution and delegation",
       "status": "registered_before_delivery"
     }
   ],
@@ -548,6 +555,15 @@
       "used": 1,
       "request_ids": [
         "C-0173"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Next large original T08 block after C0173 package handoff",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0174"
       ]
     }
   ],
