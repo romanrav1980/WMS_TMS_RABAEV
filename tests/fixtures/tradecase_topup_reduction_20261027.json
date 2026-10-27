@@ -1,0 +1,99 @@
+{
+ "note": "Depersonalized extract of tests/tradecase/live_topup_trip_reduction.py (own warehouse; old code via API 8088; fixed code in-process READ ONLY).",
+ "capacity": {
+  "before_reduction": {
+   "plain_planned_m3": "0.9",
+   "topup_planned_m3": "0.9",
+   "holds": [
+    [
+     "ADOPTED",
+     3,
+     30
+    ]
+   ]
+  },
+  "after_reduction": {
+   "plain_planned_m3": "0.8",
+   "topup_planned_m3": "0.9",
+   "holds": [
+    [
+     "ADOPTED",
+     3,
+     30
+    ]
+   ]
+  },
+  "after_load": {
+   "plain_planned_m3": "0.8",
+   "topup_planned_m3": "0.9",
+   "holds": [
+    [
+     "ADOPTED",
+     3,
+     30
+    ]
+   ]
+  }
+ },
+ "fixed_in_process": {
+  "planned_volume_m3": "0.8",
+  "maximum_boxes": 0,
+  "sender_stock_boxes": null
+ },
+ "remainder_load": [
+  409,
+  {
+   "detail": {
+    "code": "STOCK_RULE_REJECTED",
+    "message": "LOAD_ALL_STS_ASSIGNED_TO_THIS_TRIP_REQUIRED",
+    "operation_id": "TR27.f7123876.load.4454",
+    "retry_same_operation_id": true,
+    "outcome_confirmed": true
+   }
+  }
+ ],
+ "after_load": [
+  10,
+  10,
+  1
+ ],
+ "load_facts": [
+  [
+   "LOADED",
+   8
+  ]
+ ],
+ "remainder_codes": [
+  10,
+  10
+ ],
+ "remainder_owner": [
+  "SNS",
+  "SNS",
+  10
+ ],
+ "owner_denied": [
+  403,
+  {
+   "detail": {
+    "code": "STOCK_RULE_REJECTED",
+    "message": "TRADE_OWNER_ACCESS_DENIED",
+    "operation_id": "TR27.f7123876.load.4446",
+    "retry_same_operation_id": true,
+    "outcome_confirmed": false
+   }
+  }
+ ],
+ "owner_other_actor": [
+  409,
+  {
+   "detail": {
+    "code": "STOCK_RULE_REJECTED",
+    "message": "OPERATION_CONFLICT",
+    "operation_id": "TR27.f7123876.load.4446",
+    "retry_same_operation_id": true,
+    "outcome_confirmed": false
+   }
+  }
+ ]
+}

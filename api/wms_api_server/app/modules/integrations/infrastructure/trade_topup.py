@@ -31,13 +31,17 @@ def _in_trip_boxes(cur: Any, ware: int, trip: dict, order_id: str | None, units_
 
 
 def _confirmed(cur: Any, ware: int, trip_id: str, trip: dict) -> list[dict]:
-    """Confirmed top-ups of this trip; `extra` is the part not yet in the TRIP document (only that occupies more space)."""
-    cur.execute("select NEED_ID,SKU_ID,APPROVED_BOXES,SAP_ORDER_ID,UNITS_PER_BOX from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=:w and TRIP_ID=:t "
-                "and STATUS in('CONFIRMED','SAP_ACCEPTED') order by PROPOSAL_ID", w=ware, t=trip_id)
+    """Confirmed top-ups of this trip; `extra` is the part not yet in the TRIP document (only that occupies more space).
+    C-0174: the extra is still held for this trip only by the proposal's ACTIVE holds. After the wave adopted them (ADOPTED), the
+    TRIP document alone carries the order; a part later left out of a reduced trip is not this trip's load (no phantom boxes)."""
+    cur.execute("select p.NEED_ID,p.SKU_ID,p.APPROVED_BOXES,p.SAP_ORDER_ID,p.UNITS_PER_BOX,"
+                "(select nvl(sum(h.BASE_QTY),0) from RRL_TRADE_TOPUP_HOLD h where h.PROPOSAL_ID=p.PROPOSAL_ID and h.STATUS='ACTIVE')"
+                " from RRL_TRADE_TOPUP_PROPOSAL p where p.WARE_ID=:w and p.TRIP_ID=:t and p.STATUS in('CONFIRMED','SAP_ACCEPTED') order by p.PROPOSAL_ID", w=ware, t=trip_id)
     out = []
-    for need, sku, boxes, order, units in cur.fetchall():
+    for need, sku, boxes, order, units, held_units in cur.fetchall():
         inside = _in_trip_boxes(cur, ware, trip, order, int(units))
-        out.append(dict(need_id=need, sku_id=sku, inside=min(inside, Decimal(boxes)), extra=max(Decimal(0), Decimal(boxes) - inside)))
+        held = Decimal(held_units) / int(units)
+        out.append(dict(need_id=need, sku_id=sku, inside=min(inside, Decimal(boxes)), extra=min(held, max(Decimal(0), Decimal(boxes) - inside))))
     return out
 
 

@@ -33,21 +33,21 @@ def _patch(monkeypatch):
 def test_sap_order_inside_trip_occupies_no_extra_space(monkeypatch):
     _patch(monkeypatch)
     trip = {"orders": [{"order_id": "MAIN", "line_id": "1", "quantity": 600}, {"order_id": "SAP104", "line_id": "1", "quantity": 400}]}
-    got = trade_topup._confirmed(Cur([("N1", "A", 40, "SAP104", 10)]), 1, "R1", trip)
+    got = trade_topup._confirmed(Cur([("N1", "A", 40, "SAP104", 10, 400)]), 1, "R1", trip)
     assert got == [dict(need_id="N1", sku_id="A", inside=Decimal(40), extra=Decimal(0))]
 
 
 def test_confirmed_without_order_or_not_yet_in_trip_occupies_full_space(monkeypatch):
     _patch(monkeypatch)
     trip = {"orders": [{"order_id": "MAIN", "line_id": "1", "quantity": 600}]}
-    got = trade_topup._confirmed(Cur([("N1", "A", 40, None, 10), ("N2", "B", 20, "SAP104", 10)]), 1, "R1", trip)
+    got = trade_topup._confirmed(Cur([("N1", "A", 40, None, 10, 400), ("N2", "B", 20, "SAP104", 10, 200)]), 1, "R1", trip)
     assert [(g["inside"], g["extra"]) for g in got] == [(Decimal(0), Decimal(40)), (Decimal(0), Decimal(20))]
 
 
 def test_partial_inclusion_counts_only_the_remainder(monkeypatch):
     _patch(monkeypatch)
     trip = {"orders": [{"order_id": "SAP104", "line_id": "1", "quantity": 150}]}  # 15 boxes of 40 already in the TRIP
-    got = trade_topup._confirmed(Cur([("N1", "A", 40, "SAP104", 10)]), 1, "R1", trip)[0]
+    got = trade_topup._confirmed(Cur([("N1", "A", 40, "SAP104", 10, 400)]), 1, "R1", trip)[0]
     assert (got["inside"], got["extra"]) == (Decimal(15), Decimal(25))
 
 

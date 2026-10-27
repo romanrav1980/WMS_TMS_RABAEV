@@ -258,18 +258,19 @@ def pick():
     from full_pallet_fixture import prepare_shipment
     f = s["fixture"]; w = f["warehouse_id"]
     assert s.get("phase") in ("TOPUP_WAVE", "PICKING"), s.get("phase")
-    s["phase"] = "PICKING"; s["st_number"] = "TR." + str(w); save()
+    # One ST for the main order and one ST per top-up place, as separate SAP shipments would come: a reduced trip drops a whole ST.
+    s["phase"] = "PICKING"; s["st_number"] = "TR." + str(w) + ".M"; save()
     for kind, tasks, order in (("main", s["main_tasks"], s["native_main"]["order"]), ("topup", s["topup_tasks"], s["native_topup"]["order"])):
-        for tid, pallet, src, dst, qty in tasks:
-            key = str(tid)
+        for n, (tid, pallet, src, dst, qty) in enumerate(tasks, 1):
+            key = str(tid); st = s["st_number"] if kind == "main" else "TR." + str(w) + ".T" + str(n)
             body = dict(operation_id=tag() + ".move." + key, scanned_pallet=pallet, scanned_from_cell=src, scanned_to_cell=dst, fact_qty=str(qty))
             moved = step("move_" + key, "POST", f"/api/warehouse-tasks/{tid}/complete", body)
             if "move_replay_" + key not in s.get("steps", {}) and tid == tasks[0][0]:
                 assert expect(200, http("POST", f"/api/warehouse-tasks/{tid}/complete", body)) == moved; s["steps"]["move_replay_" + key] = True; save()
             shipments = s.setdefault("shipments", {})
             if key not in shipments:
-                shipments[key] = dict(prepare_shipment(dict(fixture=f, native_order=order, shipment_identifier="TR27.ST." + key, shipment_quantity=qty, st_number=s["st_number"])),
-                                      kind=kind, pallet=pallet, cell=dst); save()
+                shipments[key] = dict(prepare_shipment(dict(fixture=f, native_order=order, shipment_identifier="TR27.ST." + key, shipment_quantity=qty, st_number=st)),
+                                      kind=kind, pallet=pallet, cell=dst, st_number=st); save()
             path = f"/api/warehouse-tasks/{tid}/full-pallet-shipment"
             if "bind_ship_" + key not in s["steps"]:
                 current = expect(200, http("GET", path))
@@ -281,21 +282,39 @@ def pick():
     s["phase"] = "PICKED"; save()
 
 
-def load():
-    """Native trip for the one ST, outgoing control of all 200 codes per pallet, LOAD of every pallet (replay of the first) and totals."""
+def stock_detail():
+    return [list(r) for r in db("""select r.UID_POLETA,r.CELL,r.REMAIN,r.HARD_RESERVED_BASE from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL
+        where c.WARE_ID=:w and r.REMAIN>0 order by r.UID_POLETA""", w=s["fixture"]["warehouse_id"])]
+
+
+def capacity_view(key):
+    """Both readings of the same trip: the plain trip document (/capacity) and the top-up calculation that adds confirmed top-ups."""
+    f = s["fixture"]; trip = f"/api/tradecase/warehouses/{f['warehouse_id']}/trips/T1"
+    plain = http("GET", trip + "/capacity?sku_id=A&requested_boxes=1")
+    topup = http("POST", trip + "/topup-preview", dict(need_ids=["N1"], max_age_minutes=1440))
+    holds = [list(r) for r in db("select STATUS,count(*),sum(BASE_QTY) from RRL_TRADE_TOPUP_HOLD where PROPOSAL_ID=:p group by STATUS", p=s["proposal_id"])]
+    view = dict(plain_status=plain[0], plain_planned_m3=plain[1].get("planned_volume_m3") if plain[0] == 200 else None,
+                plain_maximum=plain[1].get("maximum_boxes") if plain[0] == 200 else None, plain=plain[1],
+                topup_status=topup[0], topup_planned_m3=topup[1]["items"][0]["capacity"]["planned_volume_m3"] if topup[0] == 200 else None,
+                topup=topup[1], holds=holds)
+    s.setdefault("capacity", {})[key] = view; save()
+    return view
+
+
+def reduce():
+    """Vehicle 0.9 -> 0.8 m3: TRIP v3 keeps main 6 and top-up 2; the third top-up place's own ST leaves the native trip (existing ST removal)."""
     import subprocess
     f = s["fixture"]; w = f["warehouse_id"]
-    assert s.get("phase") in ("PICKED", "LOADING"), s.get("phase")
-    s["phase"] = "LOADING"; save()
+    assert s.get("phase") in ("PICKED", "REDUCING"), s.get("phase")
     dock = "TR27D" + str(w)
     if not db("select count(*) from RRL_TT_DOCK where DOCK=:d", d=dock)[0][0]:
-        with oracle_connection() as conn:  # the same own dock DML as prepare_transport_task.py, sized for 33 places
+        with oracle_connection() as conn:  # the same own dock DML as prepare_transport_task.py
             q = conn.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"])
             try:
-                q.execute("insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,33,0)", d=dock, w=w); conn.commit()
+                q.execute("insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,9,0)", d=dock, w=w); conn.commit()
             finally:
                 q.callproc("RRL_STOCK_CONFIG_API.end_change")
-    fixture = OUT / "topup-trip-reduction-transport.json"
+    fixture = OUT / ("topup-trip-reduction-transport-" + str(w) + ".json")
     if not fixture.exists():
         fixture.write_text(json.dumps(dict(warehouse_id=w, case_id=w, st_number=s["st_number"], vehicle_id=s["vehicle"], vehicle_number="TR27V" + str(w), dock=dock,
                                            shipment_date=s["day"], http=[]), indent=1), encoding="utf-8")
@@ -303,32 +322,114 @@ def load():
         run = subprocess.run([sys.executable, "tests/tradecase/prepare_transport_task.py"], cwd=ROOT, env=dict(os.environ, TRADECASE_TRANSPORT_FIXTURE=str(fixture)),
                              capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
         assert run.returncode == 0, (run.stdout + run.stderr)[-2000:]
-        s["transport"] = {k: v for k, v in json.loads(fixture.read_text(encoding="utf-8")).items() if k != "http"}; save()
+        s["transport"] = {k: v for k, v in json.loads(fixture.read_text(encoding="utf-8")).items() if k != "http"}; s["phase"] = "REDUCING"; save()
+    tt = s["transport"]["transport_task_id"]
+    topup_sts = sorted({x["st_number"] for x in s["shipments"].values() if x["kind"] == "topup"})
+    step("assign_topup_sts", "POST", f"/api/admin/transport/tasks/{tt}/sts", dict(st_numbers=topup_sts))
+    capacity_view("before_reduction")
+    trip3 = dict(s["trip_v2"], capacity_m3="0.8", capacity_kg="80",
+                 orders=[dict(order_id="O1", line_id="1", quantity=str(MAIN_PALLETS * UNITS)), dict(order_id="O104", line_id="1", quantity="20")])
+    send("trip_3", "TRIP", "T1", trip3, 3); s["trip_v3"] = trip3; s["remainder_st"] = topup_sts[-1]; save()
+    step("unassign_remainder", "DELETE", f"/api/admin/transport/tasks/{tt}/sts/{s['remainder_st']}", None)
+    capacity_view("after_reduction")
+    base = f"/api/tradecase/warehouses/{w}/trips/T1"
+    step("trade_binding", "POST", base + "/binding", dict(operation_id=tag() + ".binding", native_task_id=tt, expected_trip_version=3, expected_binding_version=0))
+    s["phase"] = "REDUCED"; save()
+
+
+def load():
+    """LOAD of the 8 places of the reduced trip (replay of the first) and a refused LOAD of the remainder place; remainder keeps reserve, codes, owner."""
+    f = s["fixture"]
+    assert s.get("phase") in ("REDUCED", "LOADING"), s.get("phase")
+    s["phase"] = "LOADING"; save()
     t = s["transport"]
-    for key, ship in sorted(s["shipments"].items()):
-        ident = ship["shipment_identifier"]
+
+    def body_for(key, ship):
+        if "floor_" + key not in s["steps"]:
+            floor = expect(200, http("GET", "/api/inventory/pallet-floor-types?identifier=" + ship["pallet"]))
+            step("floor_" + key, "POST", "/api/inventory/pallet-floor-types", dict(operation_id=tag() + ".floor." + key, identifier=ship["pallet"], pallet_type_id=1,
+                expected_version=floor["version"], scan_pallet=ship["pallet"], scan_cell=floor["cell"], evidence_reference="OWN_SYNTHETIC_PALLET_NOT_HARDWARE"))
         n = next(k for k, p in s["pallets"].items() if p["pallet"] == ship["pallet"])
-        scans = [dict(system_code="CRPT", profile_code="TOBACCO", code=f["gtin"] + f["tag"][:2] + n + str(i).zfill(3)) for i in range(1, UNITS + 1)]
         if "qc_" + key not in s["steps"]:
-            quality = expect(200, http("GET", "/api/outgoing-quality/" + ident))
-            step("qc_" + key, "POST", "/api/outgoing-quality/" + ident + "/scan", dict(operation_id=tag() + ".qc." + key, expected_composition_signature=quality["composition_signature"],
-                error_count=0, scans=scans))
-        if "load_" + key not in s["steps"]:
-            preview = expect(200, http("GET", "/api/transport/loading/single-preview?shipment_identifier=" + ident))
-            s.setdefault("load_bodies", {})[key] = dict(operation_id=tag() + ".load." + key, identifier=ident, expected_version=preview["expected_version"],
+            quality = expect(200, http("GET", "/api/outgoing-quality/" + ship["shipment_identifier"]))
+            step("qc_" + key, "POST", "/api/outgoing-quality/" + ship["shipment_identifier"] + "/scan", dict(operation_id=tag() + ".qc." + key,
+                expected_composition_signature=quality["composition_signature"], error_count=0,
+                scans=[dict(system_code="CRPT", profile_code="TOBACCO", code=f["gtin"] + f["tag"][:2] + n + str(i).zfill(3)) for i in range(1, UNITS + 1)]))
+        if key not in s.setdefault("load_bodies", {}):
+            preview = expect(200, http("GET", "/api/transport/loading/single-preview?shipment_identifier=" + ship["shipment_identifier"]))
+            s["load_bodies"][key] = dict(operation_id=tag() + ".load." + key, identifier=ship["shipment_identifier"], expected_version=preview["expected_version"],
                 expected_composition_signature=preview["composition_signature"], scan_container=ship["pallet"], scan_cell=preview["snapshot"]["cell"],
                 transport_task_id=t["transport_task_id"], scan_vehicle=t["vehicle_number"], scan_dock=t["dock"],
-                measurements=dict(origin="MANUAL_CONFIRMED", content_version=preview["expected_version"], gross_weight_kg="200", width_m="1.2", depth_m="0.8", height_m="2.5")); save()
-        body = s["load_bodies"][key]
+                measurements=dict(origin="MANUAL_CONFIRMED", content_version=preview["expected_version"], gross_weight_kg="10.5", width_m="0.4", depth_m="0.5", height_m="0.5")); save()
+        return s["load_bodies"][key]
+
+    loadable = sorted(k for k, x in s["shipments"].items() if x["st_number"] != s["remainder_st"])
+    remainder = next(k for k, x in s["shipments"].items() if x["st_number"] == s["remainder_st"])
+    s["remainder_key"] = remainder; save()
+    for key in loadable:
+        body = body_for(key, s["shipments"][key])
         loaded = step("load_" + key, "POST", "/api/transport/loading/confirm-single", body)
         if "load_replay" not in s:
-            assert expect(200, http("POST", "/api/transport/loading/confirm-single", body)) == loaded  # same operation: one fact, one posting
+            assert expect(200, http("POST", "/api/transport/loading/confirm-single", body)) == loaded
             s["load_replay"] = key; save()
-    s["after_load"] = stock()
-    s["load_facts"] = [list(r) for r in db("select STATUS,count(*),sum(GROSS_WEIGHT_KG) from RRL_TT_HU_LOAD_FACT where TT_ID=:t group by STATUS", t=t["transport_task_id"])]
-    s["loaded_units"] = db("select -sum(e.BASE_QTY) from RRL_EVENTS e where e.OPERATION_ID like :o", o=tag() + ".load.%")[0][0]; save()
-    assert tuple(s["after_load"][:2]) == (0, 0) and s["load_facts"] == [["LOADED", PALLETS, PALLETS * UNITS]] and s["loaded_units"] == PALLETS * UNITS, (s["after_load"], s["load_facts"], s["loaded_units"])
+    if "remainder_load" not in s:  # the place whose ST left the reduced trip must not be loaded into it
+        s["remainder_load"] = http("POST", "/api/transport/loading/confirm-single", body_for(remainder, s["shipments"][remainder])); save()
+    assert s["remainder_load"][0] in (403, 409), s["remainder_load"]
+    s["after_load"] = stock(); s["after_load_detail"] = stock_detail()
+    s["load_facts"] = [list(r) for r in db("select STATUS,count(*) from RRL_TT_HU_LOAD_FACT where TT_ID=:t group by STATUS", t=t["transport_task_id"])]
+    pallet = s["shipments"][remainder]["pallet"]
+    s["remainder_codes"] = list(db("""select count(*),count(distinct dbms_lob.substr(c.RAW_CODE,4000,1)) from RRL_WMS_RECEIPT_UNIT u join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID
+        where u.CURRENT_UID=:p and u.STOCK_STATUS<>'ISSUED'""", p=pallet)[0])
+    s["remainder_owner"] = list(db("""select min(a.OWNER_ID),max(a.OWNER_ID),count(*) from RRL_TRADE_STOCK_ATTR a join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=a.PHYSICAL_UNIT_KEY
+        where u.CURRENT_UID=:p and u.STOCK_STATUS<>'ISSUED'""", p=pallet)[0])
+    capacity_view("after_load"); save()
+    assert tuple(s["after_load"][:2]) == (UNITS, UNITS) and s["load_facts"] == [["LOADED", PALLETS - 1]], (s["after_load"], s["load_facts"])
+    assert s["remainder_codes"] == [UNITS, UNITS] and s["remainder_owner"][:2] == ["SNS", "SNS"], (s["remainder_codes"], s["remainder_owner"])
     s["phase"] = "LOADED"; save()
+
+
+def owner():
+    """Current owner rights on the recorded LOAD reply: own loader with warehouse-scoped shipping rights; SNS view only -> 403 (outcome not
+    confirmed); with SNS operate the reply of another actor stays its own (409 conflict) and the owner still gets the same receipt; then retired."""
+    import secrets
+    from uuid import uuid4 as _uuid
+    f = s["fixture"]; w = f["warehouse_id"]
+    assert s.get("phase") in ("LOADED", "OWNER_CHECK"), s.get("phase")
+    s["phase"] = "OWNER_CHECK"; save()
+    if "loader" not in s:
+        name, password = "TR27L" + _uuid().hex[:9], secrets.token_hex(24)
+        with oracle_connection() as c:
+            q = c.cursor()
+            q.execute("insert into RUSERS(ID,PASS,NAME,USER_GROUP,WARE_ID,DELETED,PRAVO_ADMIN_LOGIN)values(:a,:p,'C-0174 loader QA','TC03QA',:w,0,1)", a=name, p=password, w=w)
+            q.execute("insert into RRL_ACCESS_ROLE(ROLE_ID,TITLE,ACTIVE,VERSION_NO)values(:a,'C-0174 loader QA',1,1)", a=name)
+            for permission in ("stock_posting_shipping", "warehouse_task_view", "transport_dispatch_view"):
+                q.execute("insert into RRL_ACCESS_ROLE_RIGHT(ROLE_ID,PERMISSION)values(:a,:p)", a=name, p=permission)
+            q.execute("""insert into RRL_ACCESS_ASSIGNMENT(ASSIGNMENT_ID,USERNAME,ROLE_ID,SCOPE_KIND,SCOPE_ID,MEMBERSHIP,VALID_FROM,VALID_UNTIL,ASSIGNED_BY,REASON,VERSION_NO)
+                values(:a,:a,:a,'WAREHOUSE',:w,'CURRENT',systimestamp-interval '1'minute,systimestamp+interval '2'hour,'admin','C-0174 current owner check',1)""", a=name, w=str(w))
+            c.commit()
+        s["loader"] = dict(username=name, password=password); save()
+    name, password = s["loader"]["username"], s["loader"]["password"]
+    base = f"/api/tradecase/warehouses/{w}/stock/owner-grants"
+    def grant(key, version, view, operate):
+        return step(key, "PUT", base, dict(operation_id=tag() + "." + key, expected_version=version, username=name, owner_id="SNS", can_view=view, can_operate=operate,
+                                           reason="C-0174 current owner authority on the recorded load reply"))
+    key = s["load_replay"]; body = s["load_bodies"][key]; recorded = s["steps"]["load_" + key]["result"]
+    grant("owner_view_only", 0, True, False)
+    if "owner_denied" not in s:
+        s["owner_denied"] = http("POST", "/api/transport/loading/confirm-single", body, name, password); save()
+    assert s["owner_denied"][0] == 403, s["owner_denied"]
+    grant("owner_operate", 1, True, True)
+    if "owner_allowed" not in s:
+        s["owner_allowed"] = http("POST", "/api/transport/loading/confirm-single", body, name, password); save()
+    # The recorded reply belongs to its own actor: another actor with full rights cannot take it over (no second fact, outcome not confirmed).
+    assert s["owner_allowed"][0] == 409 and "OPERATION_CONFLICT" in str(s["owner_allowed"][1]), s["owner_allowed"]
+    assert expect(200, http("POST", "/api/transport/loading/confirm-single", body)) == recorded  # the owning actor still gets the same receipt
+    grant("owner_retired", 2, False, False)
+    with oracle_connection() as c:
+        q = c.cursor(); q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=name)
+        q.execute("update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:a", a=name); c.commit()
+    s["loader"].pop("password", None); s["loader"]["retired"] = True
+    s["after_owner"] = stock(); s["phase"] = "OWNER_CHECKED"; save()
 
 
 def main():
