@@ -7,7 +7,7 @@ import { shiftHelp } from "./help";
 
 // Неисправность ворот (C-0180). Как и прочие команды двора: тело с operation_id сохраняется в браузере ДО отправки, повтор — те же байты;
 // запись снимается только квитанцией своей операции и своих ворот или подтверждённым отказом. 401/403/503/сеть — запись остаётся.
-type Dock = { dock: string; blocked: boolean; reason?: string | null; updated_by?: string | null; updated_at?: string | null };
+type Dock = { dock: string; blocked: boolean | null; ambiguous?: boolean; status_error?: string | null; reason?: string | null; updated_by?: string | null; updated_at?: string | null };
 type Action = "BLOCK" | "UNBLOCK";
 type Intent = { ware: string; dock: string; action: Action; path: string; wire: string; operation_id: string; scope: string };
 type Sent = { kind: "ack" } | { kind: "refused"; code: string } | { kind: "unknown"; message: string };
@@ -16,8 +16,9 @@ const key = (ware: string) => `retailcase.yard.dock-status.pending.v1:${apiOpera
 const pathOf = (ware: string, dock: string) => `/api/tradecase/warehouses/${encodeURIComponent(ware)}/yard/docks/${encodeURIComponent(dock)}/status`;
 const TITLE: Record<Action, string> = { BLOCK: "Отметить неисправность", UNBLOCK: "Открыть после ремонта" };
 const REFUSAL: Record<string, string> = {
-  YARD_DOCK_NOT_FOUND: "Таких ворот нет в справочнике склада.", YARD_DOCK_AMBIGUOUS: "Название ворот неоднозначно в справочнике; команда не выполнена.",
-  ACCESS_DENIED: "Нет права управлять двором этого склада.", TRADECASE_ACCESS_DENIED: "Нет права управлять двором этого склада.",
+  YARD_DOCK_NOT_FOUND: "Таких ворот нет в справочнике склада.", YARD_DOCK_AMBIGUOUS: "Название ворот повторяется в справочнике склада; команда не выполнена.",
+  YARD_DOCK_STATUS_INVALID: "В справочнике записано недопустимое состояние ворот; команда не выполнена.",
+  YARD_ACCESS_DENIED: "Нет права управлять двором этого склада.", ACCESS_DENIED: "Нет права управлять двором этого склада.",
 };
 
 function readIntent(ware: string): { intent: Intent | null; damaged: string } {
@@ -54,7 +55,7 @@ function refusal(error: ApiRequestError, intent: Intent, retry: boolean): Sent {
   if (d.code?.endsWith("OPERATION_CONFLICT")) return { kind: "unknown", message: "Номер этой операции уже использован с другими данными. Команда сохранена без изменений; обратитесь к руководителю." };
   if (error.status === 409 && d.outcome_confirmed === true) { clear(intent); return { kind: "refused", code: d.code ?? "HTTP 409" }; }
   if (error.status === 422 && Array.isArray(error.detail)) { clear(intent); return { kind: "refused", code: "YARD_REQUEST_INVALID" }; }  // тело не принято — исполнения не было
-  return { kind: "unknown", message: error.status === 401 || error.status === 403 ? `Доступ закрыт или сессия завершена${d.code ? ` (${d.code})` : ""}. Команда сохранена; войдите с правом управления двором и повторите её.`
+  return { kind: "unknown", message: error.status === 401 || error.status === 403 ? `${d.code && REFUSAL[d.code] ? REFUSAL[d.code] : "Доступ закрыт или сессия завершена."} Исход не подтверждён; команда сохранена — войдите с правом управления двором и повторите её.`
     : `Исход не подтверждён (HTTP ${error.status}). Команда сохранена; повторите её тем же номером.` };
 }
 
@@ -72,6 +73,10 @@ async function send(intent: Intent, retry: boolean): Promise<Sent> {
     return error instanceof ApiRequestError ? refusal(error, intent, retry) : { kind: "unknown", message: "Сервер не ответил. Команда сохранена; повторите её тем же номером." };
   }
 }
+
+// Дубликат или недопустимое значение в справочнике: состояние не выдумывается, команды недоступны.
+const unknownState = (d: Dock) => d.blocked === true || d.blocked === false ? null
+  : d.ambiguous ? "состояние неизвестно: название ворот повторяется в справочнике" : `состояние неизвестно: недопустимое значение в справочнике${d.status_error ? ` (${d.status_error})` : ""}`;
 
 /** Состояние ворот склада: исправны или отмечена неисправность; отметка и открытие с причиной. */
 export function YardDockStatus({ wh, reload }: { wh: string; reload: number }) {
@@ -103,16 +108,16 @@ export function YardDockStatus({ wh, reload }: { wh: string; reload: number }) {
     {message && <p role="status" className="ops-note">{message}</p>}
     {docks && docks.length === 0 && <p className="ops-note">В справочнике склада нет ворот.</p>}
     {docks && docks.length > 0 && <ul className="ops-list">{docks.map(d => <li key={d.dock}><span>
-      <b>Ворота {d.dock}</b> <small className={d.blocked ? "ops-err" : undefined}>{d.blocked ? "неисправны" : "исправны"}</small>
+      <b>Ворота {d.dock}</b> <small className={d.blocked !== false ? "ops-err" : undefined}>{unknownState(d) ?? (d.blocked ? "неисправны" : "исправны")}</small>
       {d.reason && <><br /><small style={{ overflowWrap: "anywhere" }}>Причина: {d.reason}</small></>}
       {d.updated_at && <><br /><small>{fmtTime(null, d.updated_at)}{d.updated_by ? ` · ${d.updated_by}` : ""}</small></>}
       {form?.dock === d.dock && <><br />
         <input aria-label={form.action === "BLOCK" ? "Описание неисправности" : "Причина открытия"} maxLength={500} value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} />
-        <HelpButton help={form.action === "BLOCK" ? shiftHelp.dockBlock : shiftHelp.dockUnblock} disabled={blocked || form.reason.trim().length < 3}
+        <HelpButton help={form.action === "BLOCK" ? shiftHelp.dockBlock : shiftHelp.dockUnblock} disabled={blocked || Boolean(unknownState(d)) || form.reason.trim().length < 3}
           onClick={() => run(() => saveIntent(wh, d.dock, form.action, form.reason.trim()))}>{TITLE[form.action]}</HelpButton>
         <HelpButton help={shiftHelp.dockClose} onClick={() => setForm(null)}>Закрыть</HelpButton></>}
     </span><span>
-      <HelpButton help={d.blocked ? shiftHelp.dockUnblock : shiftHelp.dockBlock} disabled={blocked}
+      <HelpButton help={d.blocked ? shiftHelp.dockUnblock : shiftHelp.dockBlock} disabled={blocked} unavailable={unknownState(d) ?? undefined}
         onClick={() => setForm({ dock: d.dock, action: d.blocked ? "UNBLOCK" : "BLOCK", reason: "" })}>{d.blocked ? "Открыть…" : "Неисправность…"}</HelpButton>
     </span></li>)}</ul>}
   </div>;
