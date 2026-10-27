@@ -122,7 +122,15 @@ def capacity_context(cur:Any,ware:int,trip_id:str,actor:str)->dict:
     if loaded:  # confirmed packaging of loaded places takes space the theoretical boxes do not describe
         max_weight-=loaded['overhead_kg'];max_volume-=loaded['overhead_m3']
     return dict(trip=trip,version=version,planned=planned,orders=orders,packages=packages,profile=profile,dimensions=dimensions,started=started,
-                loaded=loaded,max_weight=max_weight,max_volume=max_volume)
+                loaded=loaded,max_weight=max_weight,max_volume=max_volume,vehicle=int(vehicles[0][0]))
+
+
+def floor_admission(cur:Any,vehicle:int)->dict:
+    """C-0178 (T08 «товар не подходит для добивки»): pallet places and stacking are judged on confirmed data only. TRIP/ORDER lines carry no pallet
+    type or place count, and no authoritative product-to-pallet mapping or vehicle stacking rule exists (COUNT_IN_ROW*ROWS_IN_PAL and ALLOW_TOP_STACKING
+    have no established meaning), so the existing profile check sees the top-up places as type-unconfirmed and the candidate is refused, never fitted by volume."""
+    floor=read_oracle_json(cur.callfunc('RRL_VEHICLE_PROFILE_API.check_floor_capacity',oracledb.DB_TYPE_CLOB,[vehicle,'[]',1]))
+    return dict(floor_places_checked=False,stacking_rules_checked=False,floor_profile_status=floor.get('status'),blocking_reason='TOPUP_PALLET_PLACE_MAPPING_REQUIRED')
 
 
 def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,actor:str)->dict:
@@ -137,13 +145,14 @@ def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,a
             result=box_capacity(max_weight,max_volume,dimensions,planned,packages[sku_id],requested)
             result.update(warehouse_id=ware,trip_id=trip_id,trip_version=version,sku_id=sku_id,order_versions=orders,profile_version=profile['version'],profile_base_hash=profile['base_hash'],
                           capacity_kg=str(max_weight),capacity_m3=str(max_volume),loading_started=started,loading_mode='BOX_FIXED_ORIENTATION',operational_admission=False,
-                          stock_eligibility_checked=False,route_eligibility_checked=False,stacking_rules_checked=False,approval_available=False)
+                          stock_eligibility_checked=False,route_eligibility_checked=False,approval_available=False)
+            floor=floor_admission(cur,context['vehicle']);result.update({k:v for k,v in floor.items()if k!='blocking_reason'})
             block=after_load_admission(context,None,datetime.now(timezone.utc))
             if started:result.update(loaded_places=context['loaded']['places'],loaded_overhead_kg=str(context['loaded']['overhead_kg']),
-                                     loaded_overhead_m3=str(context['loaded']['overhead_m3']),floor_places_checked=False)
+                                     loaded_overhead_m3=str(context['loaded']['overhead_m3']))
             if block:result.update(maximum_boxes=None,fitting_boxes=None,remaining_boxes=None,blocking_reason=block)
             elif result['maximum_boxes']is None:result['blocking_reason']='MIXED_PACKAGE_LAYOUT_REQUIRED'
-            else:result['blocking_reason']=None
+            else:result.update(maximum_boxes=None,fitting_boxes=None,remaining_boxes=None,blocking_reason=floor['blocking_reason'])
             result['calculation_signature']=sha256(json.dumps(dict(result,packages=packages),default=str,sort_keys=True,separators=(',',':')).encode()).hexdigest()
             return result
     except oracledb.DatabaseError as exc:

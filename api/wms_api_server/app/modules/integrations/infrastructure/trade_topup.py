@@ -9,7 +9,7 @@ from ..contracts_trade_topup import TopupPreview
 from ..contracts_trade_transport import TradeTransportError
 from ..contracts_tradecase import TradecaseError
 from ..domain.trade_capacity import box_capacity
-from .trade_capacity import after_load_admission, capacity_context, _box, _document
+from .trade_capacity import after_load_admission, capacity_context, floor_admission, _box, _document
 from .trade_need import need_snapshot
 
 
@@ -145,14 +145,17 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
         selected.append(item)
         if item['proposed_boxes']:
             planned.append(dict(packages[need['sku_id']], boxes=Decimal(item['proposed_boxes']), recipient_id=need['recipient_id']))
+    floor = floor_admission(cur, context['vehicle'])  # C-0178: no confirmed pallet places/stacking -> no preview to save, confirm or hold
+    if floor['blocking_reason']:
+        raise TradeTransportError(floor['blocking_reason'], 409)
     result = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],
                   profile_version=context['profile']['version'], profile_base_hash=context['profile']['base_hash'],
                   order_versions=context['orders'], items=selected,
                   proposed_boxes=sum(x['proposed_boxes'] for x in selected),
                   physical_execution=False, approval_available=False, topup_order_created=False,
-                  sender_stock_checked=all(x['sender_stock_boxes'] is not None for x in selected), route_checked=False, stacking_rules_checked=False,
+                  sender_stock_checked=all(x['sender_stock_boxes'] is not None for x in selected), route_checked=False, stacking_rules_checked=floor['stacking_rules_checked'],
                   loading_mode='BOX_FIXED_ORIENTATION', loading_started=context['started'],
-                  loaded=context['loaded'], floor_places_checked=False)
+                  loaded=context['loaded'], floor_places_checked=floor['floor_places_checked'])
     # Time-dependent age is displayed but is not an identity/version input.
     basis = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],
                  trip=context['trip'],packages=packages,
