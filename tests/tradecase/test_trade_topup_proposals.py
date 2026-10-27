@@ -146,6 +146,20 @@ def test_confirmed_topup_is_deducted_once_after_its_sap_order_enters_forecast(or
     assert need['topup_need_boxes']==base
 
 
+@pytest.mark.parametrize('demand,loaded', [('0',0),('1',2)])
+def test_zero_demand_or_full_vehicle_does_not_scan_sender_stock(monkeypatch,demand,loaded):
+    from decimal import Decimal
+    package=dict(sku_id='A',units_per_box=10,dimensions=(Decimal('.4'),Decimal('.5'),Decimal('.5')),weight=Decimal('10'),volume=Decimal('.1'))
+    context=dict(packages={'A':package},trip={},max_weight=Decimal('20'),max_volume=Decimal('.2'),dimensions=(Decimal('1'),Decimal('.5'),Decimal('.5')))
+    monkeypatch.setattr(trade_topup,'_document',lambda *args:({'wms_article_id':'A'},1))
+    monkeypatch.setattr(trade_topup,'_terms',lambda *args:{})
+    def forbidden(*args):raise AssertionError('Unneeded inventory scan')
+    monkeypatch.setattr(trade_topup,'_stock_boxes',forbidden)
+    result=trade_topup._item(None,1,context,[dict(package,boxes=loaded)]if loaded else [],dict(sku_id='A',recipient_id='R',additional_boxes=demand),Decimal(0))
+    assert result['proposed_boxes']==0 and result['sender_stock_boxes']is None
+    assert result['uncovered_boxes']==demand
+
+
 class _Posting:
     def __init__(self, error: StockPostingError | None):
         self.error, self.commands = error, []

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 33,
-  "used": 33,
+  "limit": 35,
+  "used": 35,
   "requests": [
     {
       "id": "C-0130",
@@ -254,6 +254,20 @@
       "delivery": "existing file channel",
       "deadline": "2026-10-26T19:00:00+03:00",
       "authorization": "Owner26Oct: jointly finish all remaining sprints by19:00; further Claude delegation authorized"
+    },
+    {
+      "id": "C-0172",
+      "date": "2026-10-27",
+      "task": "T09 full route, store windows and approvals; TASK_C0172_ROUTE_WINDOWS.md",
+      "authorization": "Owner explicitly reports Claude available again and orders joint work and delegation; latest user message 2026-10-27",
+      "status": "registered_before_delivery"
+    },
+    {
+      "id": "C-0173",
+      "date": "2026-10-27",
+      "task": "T08 660 to 640: partial trip allocation, retained 20 and capacity after topup adoption; starts after C0172 RELEASE",
+      "authorization": "Owner 2026-10-27 explicitly resumed Claude and directed joint work and delegation",
+      "status": "registered_before_delivery"
     }
   ],
   "additional_grants": [
@@ -517,8 +531,26 @@
       "request_ids": [
         "C-0171"
       ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner explicitly reopens Claude work and asks to assign parallel project work",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0172"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Continuing owner-authorized joint completion; one large T08 followup after T09",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0173"
+      ]
     }
   ],
-  "claude_unavailable_until": "2026-10-29",
-  "new_requests_allowed": false
+  "claude_unavailable_until": null,
+  "new_requests_allowed": true
 }

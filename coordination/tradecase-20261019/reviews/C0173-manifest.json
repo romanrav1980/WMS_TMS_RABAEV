@@ -1,0 +1,51 @@
+{
+  "migration_id": "2026-10-27-trade-recipient-version",
+  "author_checkpoint": "18c47fbc",
+  "scope": "Reviewed immutable SQL kit; before/after/spec guards enforced by SQL; no quantity writes",
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/000_preflight.sql",
+      "sha256": "2b51ff4bc16bdbab659d88b36ab06c95508c752a5d457fbbb366596fe34c8731"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/001_function.sql",
+      "sha256": "26878b936a47aae8f807786ebd1519287e986e4221c3776ec70496d008e9850f"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/002_pick_context_body.sql",
+      "sha256": "b1d559c16ffcf35e4a1fc9ff5b90a45af9b0ac80f08b6afc91879e690ad3ede4"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/003_transport_core_body.sql",
+      "sha256": "72bfc2478a0b047b57341554ab8fa65a41e03ba9ff3fb6e3e8cee27d5074be14"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/apply.sql",
+      "sha256": "7697f8a2e5d805b11c9cc4d56b3c2f7143c688ef8786c75a34a0bdec275e7756"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/before_pick_context_body.sql",
+      "sha256": "2de2d546ee72ad624a450417239670bbc87df19dd156e74df49de768f6d264b2"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/before_transport_core_body.sql",
+      "sha256": "cf2b7d2a9a737fd1a7937e5265dbe12385c3fd0246a07a431279a523559b669c"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/rollback.sql",
+      "sha256": "89e0e14e9712a67e9a58960e53b52dc1bf08985d9baac8bf9ff4ae3ac3785368"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/rollback_verify.sql",
+      "sha256": "23635b9fa3ef6680a2007f088b510c2d750e1b1de8493f03afcfad95e5dc0baf"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/verify.sql",
+      "sha256": "865eb2c8419ac09947e6bf0e6dc73ebda147d10e56f5385089365dd9c5cdf844"
+    },
+    {
+      "path": "db/migrations/2026-10-27_trade_recipient_version/manifest.json",
+      "sha256": "640fa063fc2d9f4991f33024c9033ed326c15de1ccc8661b4b371e890f66d76b"
+    }
+  ]
+}

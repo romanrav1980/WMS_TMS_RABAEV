@@ -34,13 +34,13 @@ def save():
     OUT.mkdir(parents=True, exist_ok=True)
     pending=STATE.with_name(STATE.name+'.tmp')
     pending.write_text(json.dumps(s, separators=(',', ':'), ensure_ascii=True, default=str), encoding='utf-8')
-    for attempt in range(10):
+    for attempt in range(20):
         try:
             pending.replace(STATE)
             break
         except PermissionError:
-            if attempt==9:raise
-            time.sleep(0.05)
+            if attempt==19:raise
+            time.sleep(min(0.05 * 2**attempt, 0.5))
 
 
 def step(key, method, path, body=None, status=200):
@@ -142,7 +142,7 @@ def receive():
     s["phase"] = "RECEIVED"; save()
 
 
-def native_order(key, units, *, article=None, customer=None):
+def native_order(key, units, *, article=None, customer=None, uom='EA'):
     """The same QA native order fixture DML as tests/tradecase/live_full_pallet.py (no stock, reservation or task rows)."""
     f = s["fixture"]
     if key not in s:
@@ -152,8 +152,8 @@ def native_order(key, units, *, article=None, customer=None):
                 q.execute("select RRL_CUSTOMER_ORDER_SQ.nextval,RRL_CUSTOMER_ORDER_ROW_SQ.nextval from dual"); order, row = q.fetchone()
                 q.execute("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID,SHIPMENT_DATE,STATUS,SOURCE_SYSTEM,CREATED_BY)values(:o,:n,:c,:w,trunc(sysdate)+1,'OPEN','QA_TRADECASE_ONLY','admin')",
                           o=order, n=tag() + "." + key, c=customer if customer is not None else s["customer"], w=f["warehouse_id"])
-                q.execute("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,PRODUCT_NAME,UNIT_CODE,ORDER_QTY,WARE_ID,STATUS,CREATED_BY)values(:r,:o,1,:a,'C-0171 product A','EA',:q,:w,'OPEN','admin')",
-                          r=row, o=order, a=article if article is not None else f["article"], q=units, w=f["warehouse_id"]); conn.commit()
+                q.execute("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,PRODUCT_NAME,UNIT_CODE,ORDER_QTY,WARE_ID,STATUS,CREATED_BY)values(:r,:o,1,:a,'C-0171 product A',:u,:q,:w,'OPEN','admin')",
+                          r=row, o=order, a=article if article is not None else f["article"], q=units, u=uom, w=f["warehouse_id"]); conn.commit()
             finally:
                 q.callproc("RRL_STOCK_METADATA_TX.end_change")
         s[key] = dict(order=order, row=row); save()

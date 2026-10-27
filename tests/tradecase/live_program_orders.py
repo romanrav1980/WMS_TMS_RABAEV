@@ -16,7 +16,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 import live_topup_physical_660 as q
 
 q.OUT = q.ROOT / 'runtime/test-evidence/tradecase/2026-10-27/T08/program-orders'
-q.STATE = q.OUT / 'state.json'
+resumed_state = q.OUT / 'state.resumed.json'
+state_name = os.environ.get('TRADECASE_PROGRAM_STATE', resumed_state.name if resumed_state.exists() else 'state.json')
+assert Path(state_name).name == state_name, 'State filename must stay inside the fixture directory'
+assert not (resumed_state.exists() and state_name == 'state.json'), 'The recovered state supersedes the old checkpoint'
+q.STATE = q.OUT / state_name
 if q.STATE.exists():
     q.s.update(json.loads(q.STATE.read_text(encoding='utf-8')))
 s = q.s
@@ -125,7 +129,8 @@ def orders():
         customer = q.step('customer.'+number, 'POST', '/api/customers', dict(customer_code=q.tag()+'.'+number, customer_name='Program '+title, customer_type='LEGAL_ENTITY'))['customer_id']
         q.send('recipient.'+number, 'RECIPIENT', 'C'+number, dict(title=title, wms_customer_id=customer, target_owner_id='SNS', permitted_source_owners=['SNS'], buyout_mode='BEFORE_PICK', min_osg_days=osg, lead_time_days=0, allow_broken_box=False, allow_partial_ship=True, topup_enabled=False, topup_horizon_days=3 if number=='103' else None))
         q.send('order.'+number, 'ORDER', number, dict(recipient_id='C'+number, planned_ship_at=s['day']+'T12:00:00+03:00', lines=[dict(line_id='1', sku_id=sku, source_owner_id='SNS', target_owner_id='SNS', mrc=s['skus'][sku]['mrc'], quantity=str(boxes), uom='BOX', min_osg_days=osg)]))
-        native = q.native_order('order_'+number, boxes*10, article=s['skus'][sku]['article'], customer=customer)
+        native = q.native_order('order_'+number, boxes, article=s['skus'][sku]['article'], customer=customer,uom='BOX')
+        repair_unbound_fixture_uom(number,native,boxes)
         q.step('binding.'+number, 'POST', base+'/orders/'+number+'/binding', dict(operation_id=q.tag()+'.bind.'+number, expected_order_version=1, customer_order_id=native['order'], lines=[dict(line_id='1', customer_order_row_id=native['row'])]))
         plan = q.step('plan.'+number, 'POST', '/api/picking/plans', dict(operation_id=q.tag()+'.plan.'+number, customer_order_id=native['order']))['pick_plan_id']
         s['orders'][number] = dict(native, customer=customer, sku=sku, boxes=boxes, plan=plan); q.save()
@@ -141,6 +146,29 @@ def orders():
     assert len(tasks) == 600 and sum(t[4] for t in tasks) == 6000, (len(tasks), sum(t[4] for t in tasks))
     assert q.stock() == (11000, 6000, 1100), q.stock()
     s.update(main_wave=wid, main_tasks=tasks, phase='MAIN_WAVE'); q.save()
+
+
+def repair_unbound_fixture_uom(number,native,boxes):
+    """Correct only this fixture's earlier EA demand, before any binding or plan exists."""
+    key='native.box.uom.'+number
+    if key in s:return
+    with q.oracle_connection() as conn:
+        cur=conn.cursor()
+        cur.execute("select r.UNIT_CODE,r.ORDER_QTY,o.WARE_ID,o.SOURCE_SYSTEM from RRL_CUSTOMER_ORDER_ROW r "
+            "join RRL_CUSTOMER_ORDER o on o.CUSTOMER_ORDER_ID=r.CUSTOMER_ORDER_ID where r.CUSTOMER_ORDER_ROW_ID=:r",r=native['row'])
+        unit,qty,ware,source=cur.fetchone()
+        assert (ware,source)==(s['fixture']['warehouse_id'],'QA_TRADECASE_ONLY')
+        if (unit,qty)!=('BOX',boxes):
+            assert (unit,qty)==('EA',boxes*10)
+            cur.execute('select count(*) from RRL_PICK_PLAN where CUSTOMER_ORDER_ID=:o',o=native['order']);assert cur.fetchone()==(0,)
+            cur.execute('select count(*) from RRL_TRADE_ORDER_LINE where CUSTOMER_ORDER_ROW_ID=:r',r=native['row']);assert cur.fetchone()==(0,)
+            cur.callproc('RRL_STOCK_METADATA_TX.begin_change',['admin','warehouse_settings_edit'])
+            try:
+                cur.execute("update RRL_CUSTOMER_ORDER_ROW set UNIT_CODE='BOX',ORDER_QTY=:b where CUSTOMER_ORDER_ROW_ID=:r and UNIT_CODE='EA' and ORDER_QTY=:q",
+                    b=boxes,r=native['row'],q=boxes*10)
+                assert cur.rowcount==1;conn.commit()
+            finally:cur.callproc('RRL_STOCK_METADATA_TX.end_change')
+    s[key]=dict(uom='BOX',quantity=boxes);q.save()
 
 
 def proposals():
@@ -178,7 +206,8 @@ def proposals():
     assert proposal['approved_boxes'] == 60, proposal
     q.send('recipient.disabled.before.confirm','RECIPIENT','C103',dict(recipient,topup_enabled=False),version=3)
     denied('disabled.confirm',route+f"/topup-proposals/{proposal['proposal_id']}/confirm",dict(operation_id=q.tag()+'.disabled.confirm',expected_version=proposal['version']),'TOPUP_RECIPIENT_DISABLED')
-    assert q.stock()==(11000,6000,1100), q.stock()
+    if 'topup.confirm' not in s['steps']:
+        assert q.stock()==(11000,6000,1100), q.stock()
     q.send('recipient.reenabled','RECIPIENT','C103',recipient,version=4)
     forecast['recipient_version']=4
     q.send('need.reenabled','NEED','N1',forecast,version=3)
@@ -196,6 +225,149 @@ def denied(key,path,body,code):
     assert result['detail']['code'].startswith(code),result
 
 
+def topup_order():
+    assert s.get('phase')=='TOPUP_HELD',s.get('phase')
+    f=s['fixture'];base=f"/api/tradecase/warehouses/{f['warehouse_id']}";pid=s['proposal']['proposal_id']
+    if 'held_units'not in s:
+        s['held_units']=q.db('select u.PHYSICAL_UNIT_KEY,u.HARD_RESERVATION_ID from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_TOPUP_HOLD h on h.RESERVATION_ID=u.HARD_RESERVATION_ID where h.PROPOSAL_ID=:p order by u.PHYSICAL_UNIT_KEY',p=pid);q.save()
+    assert len(s['held_units'])==600
+    q.step('topup.sap','POST',base+f'/trips/T1/topup-proposals/{pid}/sap-reply',dict(operation_id=q.tag()+'.topup.sap',expected_version=s['proposal']['version'],source_id='TC03.SAP',event_id=q.tag()+'.sap104',outcome='ACCEPTED',sap_order_id='104'))
+    q.send('topup.order','ORDER','104',dict(order_kind='TOPUP',parent_trip_id='T1',recipient_id='C103',planned_ship_at=s['day']+'T12:00:00+03:00',lines=[dict(line_id='1',sku_id='A',source_owner_id='SNS',target_owner_id='SNS',mrc='200',quantity='60',uom='BOX',min_osg_days=50)]))
+    order=q.native_order('order_104',60,article=s['skus']['A']['article'],customer=s['orders']['103']['customer'],uom='BOX')
+    q.step('binding.104','POST',base+'/orders/104/binding',dict(operation_id=q.tag()+'.bind.104',expected_order_version=1,customer_order_id=order['order'],lines=[dict(line_id='1',customer_order_row_id=order['row'])]))
+    q.send('trip.topup','TRIP','T1',dict(s['trip'],orders=s['trip']['orders']+[dict(order_id='104',line_id='1',quantity='60')]),version=2)
+    tasks=q.wave('topup104',order['order'])
+    assert len(tasks)==60 and sum(t[4]for t in tasks)==600
+    adopted=q.db('select u.PHYSICAL_UNIT_KEY,u.HARD_RESERVATION_ID from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_TOPUP_ADOPTION a on a.RESERVATION_ID=u.HARD_RESERVATION_ID where a.PROPOSAL_ID=:p order by u.PHYSICAL_UNIT_KEY',p=pid)
+    assert [list(x)for x in adopted]==[list(x)for x in s['held_units']],'The same holds must reach picking'
+    assert q.stock()==(11000,6600,1100),q.stock()
+    s['orders']['104']=dict(order,customer=s['orders']['103']['customer'],sku='A',boxes=60)
+    s.update(topup_wave=s['topup104_wave_id'],topup_tasks=tasks,phase='TOPUP_WAVE');q.save()
+
+
+def pick():
+    """Move each independent box through its own task and bind it to its original order."""
+    from full_pallet_fixture import prepare_shipment
+    assert s.get('phase') in ('TOPUP_WAVE', 'PICKING'), s.get('phase')
+    f=s['fixture'];s['phase']='PICKING';q.save()
+    tasks=q.db("select t.TASK_ID,t.UID_PALLET,t.FROM_CELL,t.TO_CELL,t.QTY,p.CUSTOMER_ORDER_ID "
+        "from RRL_WAREHOUSE_TASK t join RRL_PICK_WAVE_TASK wt on wt.PICK_WAVE_TASK_ID=t.SOURCE_TASK_ID and wt.PICK_WAVE_ID=t.SOURCE_DOC_ID "
+        "join RRL_PICK_TASK p on p.PICK_TASK_ID=wt.PICK_TASK_ID "
+        "where t.TASK_SOURCE='WAVE' and t.SOURCE_DOC_ID in(:a,:b) and t.TASK_TYPE='PICKING_MOVE' order by t.TASK_ID",
+        a=s['main_wave'],b=s['topup_wave'])
+    assert len(tasks)==660 and sum(t[4] for t in tasks)==6600, (len(tasks),sum(t[4] for t in tasks))
+    orders={v['order']:(k,v) for k,v in s['orders'].items()}
+    for tid,pallet,src,dst,qty,native in tasks:
+        number,order=orders[native];key=str(tid)
+        assert qty==10
+        suffix=s.get('pick_retry_suffix',{}).get(key,'')
+        body=dict(operation_id=q.tag()+'.move.'+key+suffix,scanned_pallet=pallet,scanned_from_cell=src,scanned_to_cell=dst,fact_qty=str(qty))
+        moved=q.step('move.'+key+suffix,'POST',f'/api/warehouse-tasks/{tid}/complete',body)
+        if suffix:
+            assert q.step('move.compat.replay.'+key,'POST',f'/api/warehouse-tasks/{tid}/complete',body)==moved
+        if 'move_replay' not in s:
+            assert q.expect(200,q.http('POST',f'/api/warehouse-tasks/{tid}/complete',body))==moved
+            s['move_replay']=tid;q.save()
+        ships=s.setdefault('shipments',{})
+        if key not in ships:
+            fixture=dict(f,article=s['skus'][order['sku']]['article'])
+            st='P'+str(f['warehouse_id'])+number
+            assert len(st)<=15, 'Legacy shipment document key length'
+            ships[key]=dict(prepare_shipment(dict(fixture=fixture,native_order=native,shipment_identifier='PO27.ST.'+key,
+                shipment_quantity=qty,st_number=st)),order_number=number,pallet=pallet,cell=dst,st_number=st)
+            q.save()
+        path=f'/api/warehouse-tasks/{tid}/full-pallet-shipment'
+        if 'bind.ship.'+key not in s['steps']:
+            current=q.expect(200,q.http('GET',path))
+            q.step('bind.ship.'+key,'POST',path,dict(operation_id=q.tag()+'.ship.'+key,
+                shipment_identifier=ships[key]['shipment_identifier'],scanned_pallet=current['pallet_identifier'],
+                expected_stock_version=current['stock_version']))
+        if len([k for k in s['steps'] if k.startswith('bind.ship.')])%25==0:
+            print('Picked',sum(k.startswith('bind.ship.') for k in s['steps']),'of 660 BOX',flush=True)
+    fulfillment=q.db("select f.CUSTOMER_ORDER_ID,f.STATUS,count(*),sum(f.FACT_QTY) from RRL_CUSTOMER_ORDER_FULFILLMENT f "
+        "join RRL_CUSTOMER_ORDER o on o.CUSTOMER_ORDER_ID=f.CUSTOMER_ORDER_ID where o.WARE_ID=:w "
+        "group by f.CUSTOMER_ORDER_ID,f.STATUS order by f.CUSTOMER_ORDER_ID",w=f['warehouse_id'])
+    assert sorted(fulfillment)==sorted((o['order'],'PICKED',o['boxes'],o['boxes']*10) for o in s['orders'].values()),fulfillment
+    assert q.stock()==(11000,6600,1100),q.stock()
+    s.update(fulfillment=fulfillment,phase='PICKED');q.save()
+
+
+def prepare_pick_retry():
+    """Record a fresh logical attempt only after the known rejected task and its repaired context are read back."""
+    assert s.get('phase')=='PICKING'
+    f=s['fixture'];assert f['warehouse_id']==210069361
+    resolved=q.db("select RRL_TRADE_RECIPIENT_VERSION(:w,'C103',1) from dual",w=f['warehouse_id'])
+    assert resolved==[(4,)],resolved
+    key='4109';old=s['steps']['move.'+key]
+    assert 'result'not in old
+    assert q.db('select STATE from RRL_STOCK_OPERATION where OPERATION_ID=:o',o=old['body']['operation_id'])==[]
+    assert q.db('select STATUS,FACT_QTY from RRL_WAREHOUSE_TASK where TASK_ID=:t',t=int(key))==[('PLANNED',None)]
+    suffix='.recipient.compat'
+    assert s.setdefault('pick_retry_suffix',{}).get(key,suffix)==suffix
+    s['pick_retry_suffix'][key]=suffix
+    s['pick_retry_evidence']=dict(task_id=int(key),old_operation_id=old['body']['operation_id'],old_operation_rows=0,
+        task_status='PLANNED',resolved_recipient_version=4,reason='Known rejection before effect; preserve original request and use a fresh attempt after repair')
+    q.save()
+
+
+def transport():
+    assert s.get('phase')=='PICKED',s.get('phase')
+    f=s['fixture'];base='/api/admin/transport';dock='PO27D'+str(f['warehouse_id'])
+    with q.oracle_connection() as conn:
+        cur=conn.cursor();cur.execute('select count(*) from RRL_TT_DOCK where DOCK=:d',d=dock)
+        if cur.fetchone()==(0,):
+            cur.callproc('RRL_STOCK_CONFIG_API.begin_change',['admin','warehouse_settings_edit'])
+            try:
+                cur.execute('insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,660,0)',d=dock,w=f['warehouse_id']);conn.commit()
+            finally:cur.callproc('RRL_STOCK_CONFIG_API.end_change')
+    driver=q.step('transport.driver','POST',base+'/drivers',dict(name='Program QA '+f['tag'],license_number='TEST_NOT_ROAD_'+f['tag']),status=201)['id']
+    task=q.step('transport.create','POST',base+'/tasks',dict(transtype='10',shipment_date=s['day']))['task_id']
+    plate='PO27V'+str(f['warehouse_id'])
+    q.step('transport.configure','PATCH',base+'/tasks/'+str(task),dict(transport=plate,voditel_id=driver,dock=dock,shipment_time='12:00',primechanie='Owned program BOX test, not real dispatch'))
+    sts=sorted(set(x['st_number'] for x in s['shipments'].values()))
+    assert len(sts)==4,sts
+    q.step('transport.assign','POST',base+'/tasks/'+str(task)+'/sts',dict(st_numbers=sts))
+    s.update(transport=dict(transport_task_id=task,vehicle_number=plate,vehicle_id=s['vehicle'],dock=dock,driver_id=driver),phase='TRANSPORT_READY');q.save()
+
+
+def load():
+    """Scan and load independent boxes using the actual BOX type and confirmed box measurements."""
+    assert s.get('phase') in ('TRANSPORT_READY','LOADING'),s.get('phase')
+    s['phase']='LOADING';q.save();t=s['transport'];f=s['fixture']
+    physical={p['pallet']:(key,p['sku']) for key,p in s['pallets'].items()}
+    for key,ship in sorted(s['shipments'].items(),key=lambda x:int(x[0])):
+        ident=ship['shipment_identifier'];pallet=ship['pallet']
+        if 'floor.'+key not in s['steps']:
+            current=q.expect(200,q.http('GET','/api/inventory/pallet-floor-types?identifier='+pallet))
+            q.step('floor.'+key,'POST','/api/inventory/pallet-floor-types',dict(operation_id=q.tag()+'.floor.'+key,
+                identifier=pallet,pallet_type_id=s['box_type'],expected_version=current['version'],scan_pallet=pallet,
+                scan_cell=current['cell'],evidence_reference='OWN_SYNTHETIC_BOX_NOT_HARDWARE'))
+        if 'qc.'+key not in s['steps']:
+            n,sku=physical[pallet]
+            codes=[dict(system_code='CRPT',profile_code='TOBACCO',code=s['skus'][sku]['gtin']+f['tag'][:1]+n+str(i).zfill(2)) for i in range(1,11)]
+            current=q.expect(200,q.http('GET','/api/outgoing-quality/'+ident))
+            q.step('qc.'+key,'POST','/api/outgoing-quality/'+ident+'/scan',dict(operation_id=q.tag()+'.qc.'+key,
+                expected_composition_signature=current['composition_signature'],error_count=0,scans=codes))
+        if key not in s.setdefault('load_bodies',{}):
+            current=q.expect(200,q.http('GET','/api/transport/loading/single-preview?shipment_identifier='+ident))
+            s['load_bodies'][key]=dict(operation_id=q.tag()+'.load.'+key,identifier=ident,expected_version=current['expected_version'],
+                expected_composition_signature=current['composition_signature'],scan_container=pallet,scan_cell=current['snapshot']['cell'],
+                transport_task_id=t['transport_task_id'],scan_vehicle=t['vehicle_number'],scan_dock=t['dock'],
+                measurements=dict(origin='MANUAL_CONFIRMED',content_version=current['expected_version'],gross_weight_kg='10',width_m='0.4',depth_m='0.5',height_m='0.5'))
+            q.save()
+        body=s['load_bodies'][key]
+        result=q.step('load.'+key,'POST','/api/transport/loading/confirm-single',body)
+        if 'load_replay'not in s:
+            assert q.expect(200,q.http('POST','/api/transport/loading/confirm-single',body))==result
+            s['load_replay']=key;q.save()
+        count=sum(k.startswith('load.') for k in s['steps'])
+        if count%25==0:print('Loaded',count,'of 660 BOX',flush=True)
+    facts=q.db("select count(*),sum(GROSS_WEIGHT_KG),sum(BOUNDING_VOLUME_M3) from RRL_TT_HU_LOAD_FACT where TT_ID=:t and STATUS='LOADED'",t=t['transport_task_id'])
+    assert facts==[(660,6600,66)],facts
+    assert q.stock()==(4400,0,440),q.stock()
+    s.update(load_facts=facts,phase='LOADED');q.save()
+
+
 def main():
     os.environ['TRADECASE_ADMIN_USER'] = 'admin'
     os.environ.setdefault('TRADECASE_ADMIN_PASSWORD', 'admin123')
@@ -209,6 +381,7 @@ def main():
             return original_http(method, path, body, *args, **kwargs)
         q.http = budget_http
         globals()[stage]()
+        if s.get('error'):s.setdefault('previous_errors',[]).append(s.pop('error'));q.save()
     except Exception as error:
         s['error'] = str(error); q.save(); raise
     finally:

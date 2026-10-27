@@ -93,9 +93,9 @@ def _item(cur: Any, ware: int, context: dict, planned: list, need: dict, confirm
     capacity = box_capacity(context['max_weight'], context['max_volume'], context['dimensions'], planned, package, requested)
     if capacity['maximum_boxes'] is None:
         raise TradeTransportError('TOPUP_MIXED_PACKAGE_LAYOUT_REQUIRED', 409)
-    stock = _stock_boxes(cur, ware, sku_doc['wms_article_id'], need['sku_id'], terms, package['units_per_box'])
-    fit = min(capacity['fitting_boxes'], stock)
-    limit = 'SENDER_STOCK' if stock < capacity['fitting_boxes'] else 'CAPACITY' if capacity['fitting_boxes'] < requested else None
+    stock = _stock_boxes(cur, ware, sku_doc['wms_article_id'], need['sku_id'], terms, package['units_per_box']) if capacity['fitting_boxes'] else None
+    fit = min(capacity['fitting_boxes'], stock) if stock is not None else 0
+    limit = 'SENDER_STOCK' if stock is not None and stock < capacity['fitting_boxes'] else 'CAPACITY' if capacity['fitting_boxes'] < requested else None
     return dict(need=need, capacity=capacity, proposed_boxes=fit, uncovered_boxes=str(remaining - fit), already_confirmed_boxes=str(confirmed_boxes),
                 sender_stock_boxes=stock, limited_by=limit, article=sku_doc['wms_article_id'], **terms)
 
@@ -146,7 +146,7 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
                   order_versions=context['orders'], items=selected,
                   proposed_boxes=sum(x['proposed_boxes'] for x in selected),
                   physical_execution=False, approval_available=False, topup_order_created=False,
-                  sender_stock_checked=True, route_checked=False, stacking_rules_checked=False,
+                  sender_stock_checked=all(x['sender_stock_boxes'] is not None for x in selected), route_checked=False, stacking_rules_checked=False,
                   loading_mode='BOX_FIXED_ORIENTATION', loading_started=context['started'],
                   loaded=context['loaded'], floor_places_checked=False)
     # Time-dependent age is displayed but is not an identity/version input.

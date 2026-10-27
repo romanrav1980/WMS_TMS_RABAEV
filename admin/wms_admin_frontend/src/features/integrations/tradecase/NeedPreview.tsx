@@ -38,7 +38,7 @@ export function NeedPreview({ wh, id }: { wh: string; id: string }) {
         {result.forecast_kind === "MOVEMENT" && <><dt>План других рейсов</dt><dd>{quantity(result.planned_other_quantity)} шт.</dd><dt>Уже доставлено за период</dt><dd>{quantity(result.received_quantity)} шт.</dd></>}
         <dt>Основной подвоз</dt><dd>{quantity(result.current_trip_quantity)} шт.</dd><dt>Дополнительная потребность</dt><dd><b>{quantity(result.additional_quantity)} шт. / {quantity(result.additional_boxes)} кор.</b></dd>
       </dl>
-      <p>Сверьте основной подвоз с планом рейса. Перед выбором добивки проверьте свободный запас отправителя, маршрут и вместимость.</p>
+      <p>Сверьте подтверждённые перемещения за период. Откройте расчёт добивки рейса, чтобы учесть согласованные предложения и свободное место.</p>
       {result.supplies.length > 0 && <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Поставка</th><th>Версия</th><th>Количество, шт.</th><th>Учтена</th></tr></thead>
         <tbody>{result.supplies.map(s => <tr key={s.supply_id}><td>{s.supply_id}</td><td>{s.version}</td><td>{quantity(s.base_quantity)}</td><td>{ACCOUNT[s.accounted_as] ?? "требует проверки"}</td></tr>)}</tbody></table></div>}
       <Tech value={result} label="Расчёт: версии и источники" />

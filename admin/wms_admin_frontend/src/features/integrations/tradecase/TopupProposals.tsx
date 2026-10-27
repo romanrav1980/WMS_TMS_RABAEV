@@ -8,7 +8,7 @@ type Proposal = { proposal_id: number; trip_id: string; need_id: string; priorit
   min_expiry_date: string; units_per_box: number; need_boxes: string; proposed_boxes: number; approved_boxes: number; status: string; version: number;
   need_snapshot_at: string; max_age_minutes: number; sap_order_id: string | null; sap_reason: string | null; sap_order_received: boolean;
   holds: { reservation_id: number; base_quantity: string; status: string }[];
-  calculation: { limited_by: string | null; uncovered_boxes: string; sender_stock_boxes: number; already_confirmed_boxes: string } };
+  calculation: { limited_by: string | null; uncovered_boxes: string; sender_stock_boxes: number | null; already_confirmed_boxes: string } };
 type List = { items: Proposal[]; approval_available: boolean };
 type Action = "SAVE" | "ADJUST" | "REJECT" | "CONFIRM" | "RELEASE";
 export type TopupBody = { operation_id: string; action: Action; trip: string; proposal_id?: number; expected_version?: number; boxes?: number;
@@ -84,7 +84,7 @@ function ProposalCard({ p, approval, locked, act }: { p: Proposal; approval: boo
     <dl className="tc-fields">
       <dt>Потребность</dt><dd>{p.need_boxes} кор.{p.calculation.already_confirmed_boxes !== "0" ? `, уже подтверждено другими рейсами ${p.calculation.already_confirmed_boxes}` : ""}</dd>
       <dt>Предложено / к отправке</dt><dd>{p.proposed_boxes} / {p.approved_boxes} кор. ({p.units_per_box} шт. в коробе)</dd>
-      <dt>Почему столько</dt><dd>{p.calculation.limited_by ? LIMIT[p.calculation.limited_by] ?? p.calculation.limited_by : "покрывает потребность"}; осталось покрыть {p.calculation.uncovered_boxes} кор.; пригодно сверх основных заказов {p.calculation.sender_stock_boxes} кор.</dd>
+      <dt>Почему столько</dt><dd>{p.calculation.limited_by ? LIMIT[p.calculation.limited_by] ?? p.calculation.limited_by : "покрывает потребность"}; осталось покрыть {p.calculation.uncovered_boxes} кор.; {p.calculation.sender_stock_boxes == null ? "запас не проверялся" : `пригодно сверх основных заказов ${p.calculation.sender_stock_boxes} кор.`}</dd>
       <dt>Товар</dt><dd>собственник {p.source_owner_id}, МРЦ {p.mrc}, годен не раньше {p.min_expiry_date}</dd>
       {held.length > 0 && <><dt>Удержано</dt><dd>{held.reduce((a, h) => a + Number(h.base_quantity), 0)} шт., мест хранения: {held.length}</dd></>}
       {p.sap_order_id && <><dt>Заказ SAP</dt><dd>{p.sap_order_id} · {p.sap_order_received ? "заказ получен" : "документ заказа ещё не получен"}</dd></>}

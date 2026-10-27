@@ -4,11 +4,13 @@
 
 ## Текущая работа
 
+- 27.10: [Совместный план](roadmap/tradecase_joint_execution_20261027.md): отобраны350из660коробов; C0173 исправляет блокировку основного заказа после изменения настройки добивки. C0172 REVIEW передан,336тестов/gate/build и экран прогноза1440/390 прошли; полная приёмка ещё открыта.
+- 27.10: [Запрос NICORA/SAP](requirements/nicora_sap_stand_data_request_20261027.md): IDoc, дерево товаров/слоттинг, остатки, заказы и два прогноза. [Единицы](requirements/nicora_order_units_20261027.md): вниз в обоих режимах; при выключенном разрешении загружать с ошибкой интеграции. [Google Документ](https://docs.google.com/document/d/1jQDT6Q75OkmHUIp0NyBweIoc7L8bVUEavR-LiZQ5knI) обновлён; новые адаптеры ещё не реализованы.
 - [Защитные строки единиц](database/existing_unit_guards_20261026.md) применены8/8/8; [снимок и индекс](database/stock_verify_snapshot_20261026.md) —11/10/11. Запуск660мест прошёлHTTP/56,5с; запуск и разрешение отбора имеют единый90сdeadline, прочие команды30с, mutex6с.
 
 - [Коробный рейс](database/carton_trip_bounds_20261026.md): пределы1000мест/4000истории применены,660заданий отобраны и назначены33687. [Отдельный прогон660мест завершён](roadmap/tradecase_evening_result_20261026.md): выезд/повтор/DONE/0H0/QAзакрыт. Исходные3заказа/660→640 открыты.
 
-- 27.10: [Три заказа/1100 коробов](roadmap/tradecase_program_orders_20261027.md): приёмка идёт. [Добивка по прогнозу перемещений/X получателя](requirements/tradecase_topup_forecast_20261027.md): [Oracle-проверка](database/trade_topup_forecast_guard_20261027.md) и [окно1000](database/trade_topup_source_window_20261027.md) применены7/7/7; гонка двух рейсов прошла. Исправляется [отмена назначения](database/trade_cancelled_trip_assignments_20261027.md). T01 готов, T02–T12 частичны. Codex работает сам; Claude недоступен до29.10.
+- 27.10: [Три заказа/1100 коробов](roadmap/tradecase_program_orders_20261027.md): приёмка возобновляется из сохранённого запроса после ошибки записи состояния. [Добивка по прогнозу перемещений/X получателя](requirements/tradecase_topup_forecast_20261027.md): [Oracle-проверка](database/trade_topup_forecast_guard_20261027.md), [окно1000](database/trade_topup_source_window_20261027.md) и [отмена назначения](database/trade_cancelled_trip_assignments_20261027.md) применены7/7/7; гонка двух рейсов и очистка отдельного набора прошли. T01 готов, T02–T12 частичны.
 
 - [Параллельные чтения и аудит](runbooks/tradecase_audit_concurrency_20261026.md): аудит вынесен из HTTP-потока, целостность журналов проверена. SQL обеспеченности сокращён до одного чтения с равным результатом; общее ускорение восьми HTTP-запросов не подтверждено.
 
