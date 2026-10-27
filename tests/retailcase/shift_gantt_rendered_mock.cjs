@@ -33,11 +33,17 @@ try{for(const width of [360,390,1440]){
  const card=page.locator('.ops-right');for(const status of ['PARTIAL','WAIT_REPLENISHMENT','PICKED'])await card.getByText(status,{exact:false}).waitFor();
  await page.getByRole('button',{name:/Риски запуска/}).click();await card.getByText(/Недостача ждёт решения/).waitFor();
  await page.getByRole('button',{name:'Волна UI-WAVE',exact:true}).click();await card.getByText(/Подготовка не проверена полностью/).waitFor();
- assert.equal(await page.locator('.ops-center [data-help-id="shift.scene.stage.UNREAD"] [role="button"]').count(),1);
- assert.equal(await page.locator('.ops-center [data-help-id="shift.scene.stage.CLEAR"] [role="button"]').count(),0);
+ // Open CASE tasks give the wave a PICK stage even when another preparation source failed.
+ // Stage groups are SVG <g> containers, not buttons. Only wave items inside them are selectable.
+ const pickStage=page.locator('.ops-center [data-help-id="shift.scene.stage.PICK"]');
+ const clearStage=page.locator('.ops-center [data-help-id="shift.scene.stage.CLEAR"]');
+ assert.equal(await pickStage.count(),1);
+ assert.equal(await pickStage.locator('[role="button"]').count(),1);
+ assert.equal(await clearStage.count(),1);
+ assert.equal(await clearStage.locator('[role="button"]').count(),0);
  const missingHelp=await page.locator('button:visible').evaluateAll(xs=>xs.filter(x=>!x.title||!x.dataset.helpId).map(x=>x.textContent));assert.deepEqual(missingHelp,[]);
  await page.keyboard.press("Escape");await page.mouse.move(0,0);await page.locator("body").click({position:{x:2,y:2}});
  await page.screenshot({path:path.join(out,`shift-${width}.png`),fullPage:true});
  assert.deepEqual(errors,[]);assert.deepEqual(unexpected,[]);assert.ok(posts.every(p=>p==='/api/picking/shift-overview'));
- results.push({width,status:'PASS',checks:['actual open CASE statuses','actual pending shortage','failed preparation UNREAD not CLEAR','four resource families','all visible buttons help'],all_network_intercepted:true,synthetic_readonly_post:posts});await ctx.close();
+ results.push({width,status:'PASS',checks:['actual open CASE statuses','actual pending shortage','failed preparation remains risky while open CASE tasks stay in PICK','SVG stage containers and selectable wave items','four resource families','all visible buttons help'],all_network_intercepted:true,synthetic_readonly_post:posts});await ctx.close();
 }const assets=fs.readdirSync(path.join(dist,'assets')).filter(x=>/\.(js|css)$/.test(x)).map(name=>({name,sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(dist,'assets',name))).digest('hex')}));fs.writeFileSync(path.join(out,'rendered-mock.json'),JSON.stringify({status:'PASS',kind:'OFFLINE_PRODUCTION_BUNDLE_MOCK',actual_api_calls:0,oracle_writes:0,hardware:false,assets,results},null,2));console.log(JSON.stringify(results));}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -35,6 +35,21 @@ def test_loading_confirmations_bind_frozen_vehicle_and_dock_and_departure_once()
     assert all(e['fact_start_at']==e['fact_finish_at']for e in projection.events)
 
 
+def test_timeline_response_keeps_only_assignments_for_visible_or_unscheduled_events():
+    projection = TimelineProjection(1)
+    lane = projection.lane("RESOURCE:1", "CASE_PICKER", "Picker")
+    projection.add({"event_id": "VISIBLE", "kind": "TASK"}, [lane])
+    projection.add({"event_id": "UNSCHEDULED", "kind": "TASK"}, [lane])
+    projection.add({"event_id": "OUTSIDE_WINDOW", "kind": "TASK"}, [lane])
+
+    result = projection.assignments_for_event_ids({"VISIBLE", "UNSCHEDULED"})
+
+    assert result == [
+        {"event_id": "UNSCHEDULED", "resource_id": lane},
+        {"event_id": "VISIBLE", "resource_id": lane},
+    ]
+
+
 def test_half_open_boundary_is_not_a_conflict():
     assert not overlaps("2026-10-15T01:00:00+00:00", "2026-10-15T02:00:00+00:00",
                         instant("2026-10-15T02:00:00+00:00"), instant("2026-10-15T03:00:00+00:00"))

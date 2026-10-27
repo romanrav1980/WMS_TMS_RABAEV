@@ -6,12 +6,12 @@
   "hardware": false,
   "assets": [
     {
-      "name": "index-DlOjP9zi.css",
-      "sha256": "4abe950ff16f64e7bc464d7cef9fe12855e5836d4a2b9566ff190b95d5ee0485"
+      "name": "index-23Uoum5C.js",
+      "sha256": "1156e7b8f6df1628984f5301d7196fd9b76b7445c720f6d623d78f6e081dbb3b"
     },
     {
-      "name": "index-DoiCfn1S.js",
-      "sha256": "089481fec7b14c811c605a590069fd842a8369eceab844f53583777cabbb4af2"
+      "name": "index-UN4mUN46.css",
+      "sha256": "9b60127517e260943cd3b79aebb1aa8d862c1fc932958d9b2383c1cf329c51b8"
     }
   ],
   "results": [
@@ -21,7 +21,8 @@
       "checks": [
         "actual open CASE statuses",
         "actual pending shortage",
-        "failed preparation UNREAD not CLEAR",
+        "failed preparation remains risky while open CASE tasks stay in PICK",
+        "SVG stage containers and selectable wave items",
         "four resource families",
         "all visible buttons help"
       ],
@@ -36,7 +37,8 @@
       "checks": [
         "actual open CASE statuses",
         "actual pending shortage",
-        "failed preparation UNREAD not CLEAR",
+        "failed preparation remains risky while open CASE tasks stay in PICK",
+        "SVG stage containers and selectable wave items",
         "four resource families",
         "all visible buttons help"
       ],
@@ -51,7 +53,8 @@
       "checks": [
         "actual open CASE statuses",
         "actual pending shortage",
-        "failed preparation UNREAD not CLEAR",
+        "failed preparation remains risky while open CASE tasks stay in PICK",
+        "SVG stage containers and selectable wave items",
         "four resource families",
         "all visible buttons help"
       ],

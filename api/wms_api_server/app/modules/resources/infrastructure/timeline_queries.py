@@ -109,8 +109,9 @@ def transport_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
         order by o.TT_ID,o.ORD,o.ID fetch first 2001 rows only""", params)
 
 
-def loading_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
-    return read_rows(cur, """select f.LOAD_OPERATION_ID,f.TT_ID,f.VEHICLE_NUMBER,f.DOCK,f.STATUS,
+def loading_rows(cur: Any, params: dict[str, Any], *, actor_is_admin: bool = False) -> list[dict[str, Any]]:
+    owner_denial = "1=0" if actor_is_admin else "(a.PHYSICAL_UNIT_KEY is not null and RRL_TRADE_STOCK_GUARD.owner_allowed(:actor,f.WARE_ID,a.OWNER_ID,0)<>1)"
+    sql = f"""select f.LOAD_OPERATION_ID,f.TT_ID,f.VEHICLE_NUMBER,f.DOCK,f.STATUS,
         f.DEPARTURE_OPERATION_ID,
         to_char(f.LOADED_AT at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') LOADED_AT,
         to_char(f.DEPARTED_AT at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') DEPARTED_AT
@@ -132,5 +133,6 @@ def loading_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
             and rawtohex(RRL_STOCK_LOCK_API.resource_key('UNIT',a.PHYSICAL_UNIT_KEY))=j.K
           where j.R=60 and((a.PHYSICAL_UNIT_KEY is null
             and exists(select 1 from RRL_TRADE_SITE site where site.WARE_ID=f.WARE_ID))
-            or(a.PHYSICAL_UNIT_KEY is not null and RRL_TRADE_STOCK_GUARD.owner_allowed(:actor,f.WARE_ID,a.OWNER_ID,0)<>1)))
-        order by f.LOADED_AT,f.LOAD_OPERATION_ID fetch first 2001 rows only""", params)
+            or {owner_denial}))
+        order by f.LOADED_AT,f.LOAD_OPERATION_ID fetch first 2001 rows only"""
+    return read_rows(cur, sql, params)

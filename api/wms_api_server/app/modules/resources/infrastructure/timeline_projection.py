@@ -60,6 +60,10 @@ class TimelineProjection:
             if key is not None and key in self.resources:
                 self.bindings.add((event["event_id"], key))
 
+    def assignments_for_event_ids(self, event_ids: set[str]) -> list[dict[str, str]]:
+        return [{"event_id": event_id, "resource_id": resource_id}
+                for event_id, resource_id in sorted(self.bindings) if event_id in event_ids]
+
     def attendance(self, row: dict[str, Any]) -> None:
         self.add({"event_id": "ATTENDANCE:" + row["plan_operation_id"], "kind": "ATTENDANCE",
                   "label": "План выхода", "source": "RRL_WORKLOAD_ATTENDANCE", "source_id": row["plan_operation_id"],

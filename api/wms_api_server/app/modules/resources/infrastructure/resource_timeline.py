@@ -47,7 +47,9 @@ class ResourceTimeline:
                 events.append(event)
             elif event["time_status"] == "TIME_UNRESOLVED":
                 unscheduled.append(event)
-        bindings = [{"event_id": event, "resource_id": resource} for event, resource in sorted(projection.bindings)]
+        visible_ids = {event["event_id"] for event in events}
+        visible_ids.update(event["event_id"] for event in unscheduled)
+        bindings = projection.assignments_for_event_ids(visible_ids)
         return {"warehouse_id": warehouse, "start_at": start.isoformat(), "finish_at": finish.isoformat(),
                 "observed_at": now.isoformat(), "access_revision": revision, "warehouse_time_zone": None,
                 "resources": list(projection.resources.values()), "events": events, "unscheduled": unscheduled,
@@ -109,7 +111,10 @@ class ResourceTimeline:
                 row["clock_version"] = clock.get("version")
                 row["aware_operation"] = clock.get("operations", {}).get(int(row["op_id"]))
                 projection.transport(row)
-            for row in loading_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish}):
+            cur.execute("select RRL_ACCESS_API.is_admin(:actor) from dual", actor=actor)
+            actor_is_admin = cur.fetchone()[0] == 1
+            for row in loading_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish},
+                                    actor_is_admin=actor_is_admin):
                 projection.loading(row)
         if "yard" in allowed:
             # Visits touching the window with their immutable event times, owner-filtered natively. Before the migration the
