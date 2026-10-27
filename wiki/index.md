@@ -8,7 +8,7 @@
 
 - [Коробный рейс](database/carton_trip_bounds_20261026.md): пределы1000мест/4000истории применены,660заданий отобраны и назначены33687. [Отдельный прогон660мест завершён](roadmap/tradecase_evening_result_20261026.md): выезд/повтор/DONE/0H0/QAзакрыт. Исходные3заказа/660→640 открыты.
 
-- 27.10: [Три заказа/1100 коробов](roadmap/tradecase_program_orders_20261027.md): склад210069361, приёмка идёт. Владелец уточнил [добивку по прогнозу перемещений и X дней получателя](requirements/tradecase_topup_forecast_20261027.md). [Окно запаса1000](database/trade_topup_source_window_20261027.md) применено7/7/7. T01 завершён, T02–T12 частичны. [Контекст](../coordination/tradecase-20261019/RESUME_LATEST.md). Codex работает сам; Claude недоступен до29.10.
+- 27.10: [Три заказа/1100 коробов](roadmap/tradecase_program_orders_20261027.md): приёмка идёт. [Добивка по прогнозу перемещений/X получателя](requirements/tradecase_topup_forecast_20261027.md): [Oracle-проверка](database/trade_topup_forecast_guard_20261027.md) и [окно1000](database/trade_topup_source_window_20261027.md) применены7/7/7; гонка двух рейсов прошла. Исправляется [отмена назначения](database/trade_cancelled_trip_assignments_20261027.md). T01 готов, T02–T12 частичны. Codex работает сам; Claude недоступен до29.10.
 
 - [Параллельные чтения и аудит](runbooks/tradecase_audit_concurrency_20261026.md): аудит вынесен из HTTP-потока, целостность журналов проверена. SQL обеспеченности сокращён до одного чтения с равным результатом; общее ускорение восьми HTTP-запросов не подтверждено.
 

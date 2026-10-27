@@ -1,0 +1,25 @@
+{
+  "migration_id": "2026-10-27-cancelled-trip-assignments",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_TRADE_DOCUMENT_API|PACKAGE": "4B3423E4169309930DC4F54F88AE1373CBA41132B98F201DDCF8320B43B04670",
+    "RRL_TRADE_DOCUMENT_API|PACKAGE BODY": "E4BB0683DCFA1C64A974B0ACEA2E7A01375FD1E1AA97A2F1E658D5105281B2B9"
+  },
+  "after_sources": {
+    "RRL_TRADE_DOCUMENT_API|PACKAGE": "4B3423E4169309930DC4F54F88AE1373CBA41132B98F201DDCF8320B43B04670",
+    "RRL_TRADE_DOCUMENT_API|PACKAGE BODY": "72C71E5CA42066E07EC387DECA2CA74A3794926FC5558EB27F342E74179E193E"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "b2d043fb5ab5763265c8dbe15ca5283418e74c484e42fce21b67cafdd5ef77ba",
+    "apply.sql": "673d87d6cb66592814a8b9da75703d04c8ce02f36581189a4bd4e5a0018ecd95",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "745e77e16157fda4014af83f1afe7f08043a49b5f27492d5deaf3ef17d5ebf55",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "ac0a4f003ca6722cedadbe9b957ffbc4c4ae5a24e3299d8ba21b6fba22ccef1a",
+    "restore_rrl_trade_document_api_package_body.sql": "925d106cc49c05bb66e50c9bb55ade93846f44ed732eada0dd16a8bc535f09ce",
+    "rollback.sql": "d7446cdcae9669cb1c0c76883823b78262594c2b19a37e8686df848c7dd138dc",
+    "rrl_trade_document_api_package_body.sql": "87cac3232b9c88e06c79db3c089d45217d19038abb88db28ff8bff03c030aeb5",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

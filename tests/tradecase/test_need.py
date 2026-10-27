@@ -76,3 +76,14 @@ def test_topup_defaults_off_and_requires_receiver_horizon_when_enabled():
     assert TradeRecipient.model_validate(dict(data,topup_enabled=True,topup_horizon_days=3)).topup_horizon_days==3
     with pytest.raises(ValueError):
         TradeRecipient.model_validate(dict(data,topup_enabled=True,topup_horizon_days=0))
+
+
+def test_movement_forecast_deducts_all_confirmed_movements_in_its_period():
+    supplies=[supply('MAIN',quantity='10',status='PLANNED',current_trip=True),supply('OTHER',quantity='20',status='PLANNED'),
+              supply('TRANSIT',quantity='10'),supply('DELIVERED',quantity='10',status='RECEIVED'),
+              supply('OLD',quantity='90',expected_at=NOW-timedelta(days=1)),supply('LATE',quantity='90',expected_at=NOW+timedelta(days=2)),
+              supply('UNCONFIRMED',quantity='90',confirmed=False)]
+    result=net_need(body(forecast_kind='MOVEMENT',forecast_quantity='100',target_quantity='0',available_quantity='0',supplies=supplies),10,NOW,60)
+    assert result['additional_boxes']=='50'
+    assert result['planned_other_quantity']=='200' and result['received_quantity']=='100'
+    assert {x['accounted_as']for x in result['supplies']} >= {'BEFORE_HORIZON','AFTER_HORIZON','UNCONFIRMED','DELIVERED'}

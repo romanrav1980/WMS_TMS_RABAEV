@@ -1,0 +1,48 @@
+{
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/after_sources.sql",
+      "sha256": "b2d043fb5ab5763265c8dbe15ca5283418e74c484e42fce21b67cafdd5ef77ba"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/apply.sql",
+      "sha256": "673d87d6cb66592814a8b9da75703d04c8ce02f36581189a4bd4e5a0018ecd95"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/before.sql",
+      "sha256": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/before_sources.sql",
+      "sha256": "745e77e16157fda4014af83f1afe7f08043a49b5f27492d5deaf3ef17d5ebf55"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/compile_dependents.sql",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/frozen-manifest.json",
+      "sha256": "bb0a4191c944ef2dc5c73ed1e60dab9cdec9d4d8a9a9e6fdd8924b52e0bbf6dc"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/README.md",
+      "sha256": "ac0a4f003ca6722cedadbe9b957ffbc4c4ae5a24e3299d8ba21b6fba22ccef1a"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/restore_rrl_trade_document_api_package_body.sql",
+      "sha256": "925d106cc49c05bb66e50c9bb55ade93846f44ed732eada0dd16a8bc535f09ce"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/rollback.sql",
+      "sha256": "d7446cdcae9669cb1c0c76883823b78262594c2b19a37e8686df848c7dd138dc"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/rrl_trade_document_api_package_body.sql",
+      "sha256": "87cac3232b9c88e06c79db3c089d45217d19038abb88db28ff8bff03c030aeb5"
+    },
+    {
+      "path": "db/migrations/2026-10-27_cancelled_trip_assignments/verify.sql",
+      "sha256": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+    }
+  ]
+}

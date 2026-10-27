@@ -68,6 +68,19 @@ def _stock_boxes(cur: Any, ware: int, article: str, sku: str, terms: dict, units
     return max(0, int((Decimal(eligible) - Decimal(protected)) // units_per_box))
 
 
+def _uncovered_confirmations(cur: Any, ware: int, key: str, need: dict) -> Decimal:
+    """Forecast already covers matched SAP movements; subtract each confirmed top-up only once."""
+    cur.execute("select APPROVED_BOXES,SAP_ORDER_ID from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=:w and NEED_ID=:n and STATUS in('CONFIRMED','SAP_ACCEPTED') order by PROPOSAL_ID fetch first 1001 rows only", w=ware,n=key)
+    rows=cur.fetchall()
+    if len(rows)>1000:raise TradeTransportError('TOPUP_CONFIRMATION_BOUND_1000',409)
+    covered={x['supply_id']:Decimal(x['base_quantity'])/need['units_per_box'] for x in need['supplies']
+             if x['accounted_as'] in {'CURRENT_TRIP','IN_TRANSIT','PLANNED_OTHER_TRIP','DELIVERED'}}
+    total=sum((Decimal(boxes)for boxes,_ in rows),Decimal(0))
+    matched=sum((min(Decimal(boxes),covered.get(order,Decimal(0)))for boxes,order in rows),Decimal(0))
+    need['topup_need_boxes']=str(Decimal(need['additional_boxes'])+matched)
+    return total-matched
+
+
 def _item(cur: Any, ware: int, context: dict, planned: list, need: dict, confirmed_boxes: Decimal) -> dict:
     packages = context['packages']
     if need['sku_id'] not in packages:
@@ -122,13 +135,7 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
             raise TradeTransportError('TOPUP_NEED_EXPIRED:'+key, 409)
         if not datetime.fromisoformat(need['period_from']) <= departure <= datetime.fromisoformat(need['period_until']):
             raise TradeTransportError('TOPUP_NEED_HORIZON_MISMATCH:'+key, 409)
-        primary = sum((p['boxes']*p['units_per_box'] for p in context['planned']
-                       if (p['recipient_id'],p['sku_id']) == identity), Decimal(0))
-        if primary != Decimal(need['current_trip_quantity']):
-            raise TradeTransportError('TOPUP_PRIMARY_SNAPSHOT_MISMATCH:'+key, 409)
-        # The part of this trip's top-up already inside the TRIP is in need.current_trip_quantity (checked above): not again.
-        inside = sum((t['inside'] for t in confirmed_topups if t['need_id'] == key), Decimal(0))
-        confirmed = Decimal(cur.callfunc('RRL_TRADE_TOPUP_READ.need_confirmed_boxes', oracledb.DB_TYPE_NUMBER, [ware, key, None])) - inside
+        confirmed = _uncovered_confirmations(cur, ware, key, need)
         item = _item(cur, ware, context, planned, need, confirmed)
         item['priority'] = len(selected)+1
         selected.append(item)
@@ -150,7 +157,7 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
                  profile_version=result['profile_version'], profile_base_hash=result['profile_base_hash'],
                  order_versions=result['order_versions'], max_age_minutes=body.max_age_minutes,
                  items=[dict(need_id=x['need']['document_id'], version=x['need']['document_version'],
-                             signature=x['need']['calculation_signature'], proposed_boxes=x['proposed_boxes']) for x in selected])
+                             signature=x['need']['calculation_signature'], proposed_boxes=x['proposed_boxes'], need_boxes=x['need']['topup_need_boxes']) for x in selected])
     result['calculation_signature'] = sha256(json.dumps(basis,default=str,sort_keys=True,separators=(',',':')).encode()).hexdigest()
     return result
 

@@ -49,11 +49,12 @@ def _items(calculation: dict[str, Any]) -> list[dict[str, Any]]:
                         need_snapshot_at=snapshot.strftime("%Y-%m-%dT%H:%M:%S.%f+00:00"), priority=x["priority"], recipient_id=need["recipient_id"],
                         sku_id=need["sku_id"], article=x["article"], units_per_box=need["units_per_box"], source_owner_id=x["source_owner_id"],
                         target_owner_id=x["target_owner_id"], mrc=_number(x["mrc"]), min_expiry_date=x["min_expiry_date"],
-                        need_boxes=_number(need["additional_boxes"]), proposed_boxes=x["proposed_boxes"],
+                        need_boxes=_number(need.get("topup_need_boxes",need["additional_boxes"])), proposed_boxes=x["proposed_boxes"],
                         calculation=dict(capacity=x["capacity"], uncovered_boxes=x["uncovered_boxes"], limited_by=x["limited_by"],
                                          sender_stock_boxes=x["sender_stock_boxes"], already_confirmed_boxes=x["already_confirmed_boxes"],
                                          need=dict(forecast_quantity=need["forecast_quantity"], target_quantity=need["target_quantity"],
                                                    available_quantity=need["available_quantity"], in_transit_quantity=need["in_transit_quantity"],
+                                                   planned_other_quantity=need.get("planned_other_quantity","0"),received_quantity=need.get("received_quantity","0"),
                                                    current_trip_quantity=need["current_trip_quantity"], additional_boxes=need["additional_boxes"]))))
     return out
 

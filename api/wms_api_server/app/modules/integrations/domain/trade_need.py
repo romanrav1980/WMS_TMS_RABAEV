@@ -10,21 +10,29 @@ def net_need(body:dict[str,Any],units_per_box:int,now:datetime,max_age_minutes:i
     for supply in body['supplies']:
         old=selected.get(supply['supply_id'])
         if old is None or supply['version']>old['version']:selected[supply['supply_id']]=supply
-    incoming=Decimal(0);primary=Decimal(0);evidence=[]
+    incoming=Decimal(0);primary=Decimal(0);planned_other=Decimal(0);received=Decimal(0);evidence=[]
+    movement=body.get('forecast_kind')=='MOVEMENT'
     for key,supply in sorted(selected.items()):
         quantity=base(supply['quantity'],supply['uom']);category='EXCLUDED'
-        if supply['status']=='RECEIVED':category='IN_AVAILABLE'
+        if movement and supply['expected_at']<body['period_from']:category='BEFORE_HORIZON'
+        elif supply['status']=='RECEIVED':
+            category='IN_AVAILABLE'
+            if movement and supply['confirmed'] and supply['expected_at']<=body['period_until']:
+                received+=quantity;category='DELIVERED'
         elif supply['status']=='CANCELLED':category='CANCELLED'
         elif supply['expected_at']>body['period_until']:category='AFTER_HORIZON'
         elif not supply['confirmed']:category='UNCONFIRMED'
         elif supply['current_trip']:primary+=quantity;category='CURRENT_TRIP'
         elif supply['status']=='IN_TRANSIT':incoming+=quantity;category='IN_TRANSIT'
-        else:category='PLANNED_OTHER_TRIP'
+        else:
+            category='PLANNED_OTHER_TRIP'
+            if movement:planned_other+=quantity
         evidence.append(dict(supply_id=key,version=supply['version'],status=supply['status'],base_quantity=str(quantity),accounted_as=category))
     forecast=base(body['forecast_quantity'],body['uom']);target=base(body['target_quantity'],body['uom']);available=base(body['available_quantity'],body['uom'])
     age=(now-body['snapshot_at']).total_seconds()/60
     if age<0:raise ValueError('NEED_SNAPSHOT_IN_FUTURE')
-    value=max(Decimal(0),forecast+target-available-incoming-primary)
+    value=max(Decimal(0),forecast+target-available-incoming-primary-planned_other-received)
     return dict(base_uom='EA',forecast_quantity=str(forecast),target_quantity=str(target),available_quantity=str(available),in_transit_quantity=str(incoming),current_trip_quantity=str(primary),
+                planned_other_quantity=str(planned_other),received_quantity=str(received),
                 additional_quantity=str(value),additional_boxes=str(value/units_per_box),supplies=evidence,snapshot_at=body['snapshot_at'].isoformat(),
                 age_minutes=round(age,3),max_age_minutes=max_age_minutes,expired=age>max_age_minutes,physical_execution=False,approval_available=False)

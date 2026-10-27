@@ -136,6 +136,16 @@ def test_forecast_gates_run_before_stock_selection(monkeypatch, change, code):
     assert error.value.code == code+':N1'
 
 
+@pytest.mark.parametrize('order_in_forecast,additional,expected,base', [(False,'2','2','2'),(True,'1','1','2'),(True,'0','1','1')])
+def test_confirmed_topup_is_deducted_once_after_its_sap_order_enters_forecast(order_in_forecast,additional,expected,base):
+    class Cursor:
+        def execute(self,*args,**kwargs):pass
+        def fetchall(self):return [(1,'SAP104'),(1,None)]
+    need=dict(units_per_box=10,additional_boxes=additional,supplies=[dict(supply_id='SAP104',base_quantity='10',accounted_as='PLANNED_OTHER_TRIP')]if order_in_forecast else [])
+    assert str(trade_topup._uncovered_confirmations(Cursor(),1,'N1',need))==expected
+    assert need['topup_need_boxes']==base
+
+
 class _Posting:
     def __init__(self, error: StockPostingError | None):
         self.error, self.commands = error, []
