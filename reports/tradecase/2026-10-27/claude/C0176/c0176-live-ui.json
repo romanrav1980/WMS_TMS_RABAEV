@@ -1,0 +1,85 @@
+{
+ "kind": "LIVE_OWN_PREVIEW_SERVED_API_NO_STUB",
+ "trip": 33704,
+ "st": "PR27b744a60c93.ST",
+ "checks": [
+  {
+   "w": 1440,
+   "case": "live places of the own assembly"
+  },
+  {
+   "w": 1440,
+   "case": "server executed the removal, the reply was lost: unknown outcome, command kept"
+  },
+  {
+   "w": 1440,
+   "case": "after reload the same command was retried and returned the stored receipt; 1 place removed once"
+  },
+  {
+   "w": 390,
+   "case": "real click on the visible ST button opened the places (no overlap)"
+  },
+  {
+   "w": 390,
+   "case": "real removal on the phone",
+   "size": {
+    "viewport": 390,
+    "page": 390
+   }
+  },
+  {
+   "w": 390,
+   "case": "help button opened the published article trip-place-removal"
+  },
+  {
+   "w": 1440,
+   "case": "own identity without the dispatcher right: places read refused 403"
+  }
+ ],
+ "posts": [
+  {
+   "w": 1440,
+   "body": {
+    "st_number": "PR27b744a60c93.ST",
+    "member_ids": [
+     643003
+    ],
+    "expected_source_hash": "D1A6A556D7EB92004A50AABC909E5E9FFAAE81FD965ABBC59F7E242B35FF7CBC",
+    "reason": "Reduced trip, one place stays at the warehouse",
+    "operation_id": "TT.PLACES:e4e21862-c340-42b8-bde7-9700d4e4e9f5"
+   },
+   "lost": true
+  },
+  {
+   "w": 1440,
+   "body": {
+    "st_number": "PR27b744a60c93.ST",
+    "member_ids": [
+     643003
+    ],
+    "expected_source_hash": "D1A6A556D7EB92004A50AABC909E5E9FFAAE81FD965ABBC59F7E242B35FF7CBC",
+    "reason": "Reduced trip, one place stays at the warehouse",
+    "operation_id": "TT.PLACES:e4e21862-c340-42b8-bde7-9700d4e4e9f5"
+   },
+   "lost": false
+  }
+ ],
+ "errors": [],
+ "lost_reply_status": 200,
+ "denied": {
+  "status": 403,
+  "body": {
+   "detail": {
+    "code": "ACCESS_DENIED",
+    "outcome_confirmed": true,
+    "retry_same_operation_id": false
+   }
+  }
+ },
+ "status": "PASS",
+ "oracle_after": {
+  "on_trip": 4,
+  "journal_rows": 2,
+  "operations": 2
+ }
+}

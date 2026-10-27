@@ -9,3 +9,4 @@ export type { HelpEntry } from "./help/catalog";
 export { PlatformEntry } from "./entry/PlatformEntry";
 export { KnowledgeEditorPage } from "./knowledge-editor";
 export { WorkplaceHome } from "./workspaces";
+export { useApiRead } from "./access-admin/useApiRead";

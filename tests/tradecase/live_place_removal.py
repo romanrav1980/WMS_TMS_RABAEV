@@ -23,7 +23,9 @@ from app.main import app
 from tools.mcp.tms_mcp_server import oracle_connection
 
 OUT = ROOT / "runtime/test-evidence/tradecase/2026-10-27/C0176"
-AFTER_KIT = "--after-kit" in sys.argv
+UI_FIXTURE = "--ui-fixture" in sys.argv  # keep an own trip with one assembly of 6 places for the live screen check; --retire FILE later
+AFTER_KIT = "--after-kit" in sys.argv or UI_FIXTURE
+PLACES = 6 if UI_FIXTURE else 4
 PASSWORD = re.search(r"PASS=(\S+?)[`,)\s]", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))[1]
 TAG = "PR27" + uuid4().hex[:10]
 WARE = 240000000 + secrets.randbelow(9000000)
@@ -60,9 +62,11 @@ def run():
         q = c.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"])
         try:
             out = q.var(oracledb.DB_TYPE_NUMBER); q.callproc("RRL_TRANSPORT_EDIT_API.create_trip", ["1", datetime(2026, 10, 29), "admin", out]); state["trip"] = int(out.getvalue())
-            for i in range(1, 5):
+            for i in range(1, PLACES + 1):
                 uid = TAG + ".PLACE." + str(i)
                 pid = int(q.callfunc("RRL_SBORKA_PALLETS_ADD2", oracledb.DB_TYPE_NUMBER, [ST, TAG + ".ADDR", i, uid, "1", datetime(2026, 10, 29), "", "admin", WARE]))
+                # One planning row per place (the full_pallet_fixture writer): the dispatcher's ST list joins the rows.
+                assert int(q.callfunc("RRL_SBORKA_PALLET_ROWS_ADD4", oracledb.DB_TYPE_NUMBER, [uid, TAG + ".ART", "C-0176 QA place", "", "EA", 0, "", 10, "", 10, 0, None, TAG[:14], WARE, 1])) > 0
                 state["members"].append([pid, uid])
             c.commit()
         finally:
@@ -75,7 +79,14 @@ def run():
         report["status"] = "KIT_PENDING"; return
     places = call("GET", f"/api/transport/trips/{trip}/sts/{ST}/places")
     report["places_before"] = places
-    assert places["on_trip"] == 4 and [p["member_id"] for p in places["places"]] == [m[0] for m in state["members"]]
+    if UI_FIXTURE:  # an own identity without the dispatcher right, for the real 403 on the screen
+        actor, secret = "PR27" + uuid4().hex[:9], secrets.token_hex(16)
+        with oracle_connection() as c:
+            q = c.cursor(); q.execute("insert into RUSERS(ID,PASS,NAME,USER_GROUP,WARE_ID,DELETED,PRAVO_ADMIN_LOGIN)values(:a,:p,'C-0176 UI QA no dispatcher right','TC03QA',:w,0,1)", a=actor, p=secret, w=WARE); c.commit()
+        state["ui"] = dict(trip=trip, st=ST, warehouse=WARE, members=[m[0] for m in state["members"]], denied_actor=actor, denied_password=secret)
+        (OUT / "ui-fixture.json").write_text(json.dumps(dict(tag=TAG, **state["ui"]), indent=1), encoding="utf-8")
+        report["status"] = "UI_FIXTURE_READY"; return
+    assert places["on_trip"] == PLACES and [p["member_id"] for p in places["places"]] == [m[0] for m in state["members"]]
     report["checks"].append("Places of the assembly read with membership, load and shipment flags and the membership version; all 4 on the trip")
     ids = [m[0] for m in state["members"]]
     body = dict(operation_id=TAG + ".remove", st_number=ST, member_ids=ids[2:], expected_source_hash=places["source_hash"], reason="Reduced trip keeps 2 places")
@@ -129,6 +140,7 @@ def retire():
         q = c.cursor()
         for pid, uid in state["members"]:
             q.execute("delete from RRL_SBORKA_PALLETS where ID=:p and PALLET_UID=:u and TRANSTASK_ID is null", p=pid, u=uid)
+            q.execute("delete from RRL_SBORKA_PALLET_ROWS where PALLET_UID=:u and not exists(select 1 from RRL_SBORKA_PALLETS where PALLET_UID=:u)", u=uid)
         if state["trip"]:
             q.execute("update RRL_TRANSPORT_TASK set DELETED=1 where ID=:t and USER_ID='admin'", t=state["trip"])
         q.execute("update RRL_ACCESS_OBJECT set ACTIVE=0 where KIND='WAREHOUSE' and OBJECT_ID=:w", w=str(WARE))
@@ -144,12 +156,20 @@ def db_on_trip():
 
 
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["--retire"]:  # retire an earlier own UI fixture from its evidence file
+        old = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")); assert old["tag"].startswith("PR27") and not old["state"].get("retired")
+        TAG, WARE, ST = old["tag"], old["warehouse"], old["tag"] + ".ST"; state.update(old["state"]); report.update(tag=TAG, warehouse=WARE)
+        if state.get("ui"):
+            with oracle_connection() as c:
+                q = c.cursor(); q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'", a=state["ui"]["denied_actor"]); c.commit()
+            state["ui"].pop("denied_password", None)
+        retire(); report["status"] = "RETIRED"; save(); print(json.dumps(state, default=str)[:800]); sys.exit(0)
     try:
         run()
     except Exception as exc:
         report["error"] = repr(exc)[:3000]; raise
     finally:
-        if state["created"]:
+        if state["created"] and report["status"] != "UI_FIXTURE_READY":
             try:
                 retire()
             except Exception as exc:

@@ -9,4 +9,8 @@
   .dispatch-trips-toolbar, .dispatch-trip-title-row, .dispatch-trip-meta-row, .dispatch-tabs { flex-wrap: wrap; }
   .dispatch-trip-meta-row input, .dispatch-trip-meta-row select { max-width: 100%; min-width: 0; }
   .dispatch-right-panel { width: auto; min-width: 0; border-left: 0; border-top: 1px solid #c8d8c8; }
+  /* C-0176: the trip card keeps its natural height on a phone; only the ST list scrolls inside its own box, so its last rows are
+     not clipped under the filter panel that follows the workspace. */
+  .dispatch-trip-detail-section { flex: none; overflow: visible; }
+  .dispatch-trip-sts-wrap { max-height: 60vh; }
 }

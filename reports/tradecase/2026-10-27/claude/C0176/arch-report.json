@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "files": 1271,
+  "cycle_components": 0,
+  "debt_items": 72,
+  "regressions": {},
+  "stale_allowances": [
+    "function-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx:TransportDispatchPage"
+  ],
+  "invalid_debt_entries": []
+}

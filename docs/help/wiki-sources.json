@@ -141,5 +141,16 @@
     "section": "Работа",
     "status": "APPROVED",
     "owner": "resources"
+  },
+  {
+    "source_id": "trip-place-removal",
+    "article_id": "trip-place-removal",
+    "space_id": "general",
+    "title": "Снять часть мест сборки с рейса",
+    "summary": "Выборочное снятие физических мест одной сборки с рейса: порядок, что не меняется и когда снять нельзя.",
+    "path": "wiki/runbooks/transport_trip_place_removal.md",
+    "section": "Порядок выборочного снятия",
+    "status": "APPROVED",
+    "owner": "transport"
   }
 ]
