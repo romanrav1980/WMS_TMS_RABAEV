@@ -1,0 +1,52 @@
+{
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/001_function.sql",
+      "sha256": "94b6037860ec88e075ff65654de326d113b77d65a6ca65933518b260aade193a"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/after_sources.sql",
+      "sha256": "6b7fb8b82f4f1a1d7c6cef3e06c79255c0587fd137a807d58d84a712e591083f"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/apply.sql",
+      "sha256": "a314d1c89a87b63ba1dbb926a71df7db8e317d3b1405a8ed975368563bf7b15d"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/before_sources.sql",
+      "sha256": "c59086e5d72e176a3b5c29d8db5bec479a3dd7d3048995a883dbcdd46e8da963"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/compile_dependents.sql",
+      "sha256": "9237ba047b4b3df2d7c3697b2f6f85ed2deaa18f787eb296a2cb63bff8dd3b84"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/manifest.json",
+      "sha256": "81bed8f98bb79ceef2e1464a59bf0f2c5aa49750e9fd30ac8cf7ff0480a5aea3"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/preflight.sql",
+      "sha256": "1ed2cb4e1922656fb1c4e1d8e81448508a06cf3f1b25ccf90e4dae020e11c49e"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/README.md",
+      "sha256": "70ac43784f90b76c6f632a3cc87f0793092d4fea52446e4a2ea19127e93ad464"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/restore_function.sql",
+      "sha256": "db5b21ea8cdf54e6818e1cb9b750cfc13ebe19fb981a0b54bca08c338efa37ca"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/rollback.sql",
+      "sha256": "c5b9934604e37a4a51a54400379087d42c89776c38a1781cd3a100d92a6fedc1"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/rollback_verify.sql",
+      "sha256": "e74a67c95928a4f29609a99e5e01305674e25dee94013fd4acd216a353e724c6"
+    },
+    {
+      "path": "db/migrations/2026-10-27_grouped_st_assignment/verify.sql",
+      "sha256": "8140cd2443145b996583ef42cd9d2158562f9bb5b8e5c3e9b7ae38396987d287"
+    }
+  ]
+}
