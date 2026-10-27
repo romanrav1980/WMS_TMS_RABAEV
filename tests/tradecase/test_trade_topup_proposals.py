@@ -88,6 +88,38 @@ def test_terms_come_from_main_order_of_same_recipient_and_goods(monkeypatch):
     assert ambiguous.value.code == "TOPUP_STOCK_TERMS_AMBIGUOUS"
 
 
+@pytest.mark.parametrize('basis,lead,expiry', [('SHIP_DATE', 3, '2026-12-11'), ('DELIVERY_DATE', 3, '2026-12-14')])
+def test_another_sku_for_existing_stop_uses_recipient_and_sku_masters(basis, lead, expiry):
+    docs = _Docs({'O1': _order('STORE', {'sku_id': 'B'}),
+                  'STORE': dict(permitted_source_owners=['SNS'], target_owner_id='SNS', min_osg_days=50, osg_basis=basis, lead_time_days=lead),
+                  'A': dict(permitted_mrc=['200']), 'SNS': dict(active=True)})
+    trip = dict(planned_departure_at='2026-10-22T08:00:00Z', orders=[dict(order_id='O1', line_id='L1')])
+    assert trade_topup._terms(docs, 1, trip, 'STORE', 'A') == dict(source_owner_id='SNS', target_owner_id='SNS', mrc='200', min_expiry_date=expiry)
+
+
+@pytest.mark.parametrize('owners,prices', [(['SNS', 'BLC'], ['200']), (['SNS'], ['200', '220'])])
+def test_another_sku_cannot_choose_ambiguous_owner_or_price(owners, prices):
+    docs = _Docs({'O1': _order('STORE', {'sku_id': 'B'}),
+                  'STORE': dict(permitted_source_owners=owners, target_owner_id='SNS', min_osg_days=50),
+                  'A': dict(permitted_mrc=prices)})
+    trip = dict(planned_departure_at='2026-10-22T08:00:00Z', orders=[dict(order_id='O1', line_id='L1')])
+    with pytest.raises(TradeTransportError) as error:
+        trade_topup._terms(docs, 1, trip, 'STORE', 'A')
+    assert error.value.code == 'TOPUP_STOCK_TERMS_AMBIGUOUS'
+
+
+@pytest.mark.parametrize('kind', ['STORE', 'A', 'SNS'])
+def test_another_sku_rejects_inactive_recipient_sku_or_owner(kind):
+    masters = {'O1': _order('STORE', {'sku_id': 'B'}),
+               'STORE': dict(permitted_source_owners=['SNS'], target_owner_id='SNS', min_osg_days=50),
+               'A': dict(permitted_mrc=['200']), 'SNS': dict(active=True)}
+    masters[kind]['active'] = False
+    trip = dict(planned_departure_at='2026-10-22T08:00:00Z', orders=[dict(order_id='O1', line_id='L1')])
+    with pytest.raises(TradeTransportError) as error:
+        trade_topup._terms(_Docs(masters), 1, trip, 'STORE', 'A')
+    assert error.value.code == 'TRADE_CAPACITY_SOURCE_INACTIVE'
+
+
 class _Posting:
     def __init__(self, error: StockPostingError | None):
         self.error, self.commands = error, []

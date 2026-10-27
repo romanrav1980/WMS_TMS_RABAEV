@@ -42,13 +42,27 @@ def _confirmed(cur: Any, ware: int, trip_id: str, trip: dict) -> list[dict]:
 
 
 def _terms(cur: Any, ware: int, trip: dict, recipient: str, sku: str) -> dict:
-    """Owner/MRC/shelf-life come from the main order of the same recipient and goods; unknown terms block the top-up."""
-    found = set()
+    """Use the matching main line, or unambiguous masters for another SKU at an existing stop."""
+    found = set(); recipient_on_trip = False
     for assignment in trip['orders']:
         order, _ = _document(cur, ware, 'ORDER', assignment['order_id'])
         line = next((x for x in order['lines'] if x['line_id'] == assignment['line_id']), None)
+        recipient_on_trip |= order.get('recipient_id') == recipient and line is not None
         if order.get('recipient_id') == recipient and line and line['sku_id'] == sku:
             found.add((line['source_owner_id'], line['target_owner_id'], str(line['mrc']), int(line.get('min_osg_days') or 0)))
+    if not found and recipient_on_trip:
+        recipient_doc, _ = _document(cur, ware, 'RECIPIENT', recipient)
+        sku_doc, _ = _document(cur, ware, 'SKU', sku)
+        owners, prices = recipient_doc['permitted_source_owners'], sku_doc['permitted_mrc']
+        if len(owners) != 1 or len(prices) != 1:
+            raise TradeTransportError('TOPUP_STOCK_TERMS_AMBIGUOUS', 409)
+        _document(cur, ware, 'OWNER', owners[0])
+        if recipient_doc['target_owner_id'] != owners[0]:
+            _document(cur, ware, 'OWNER', recipient_doc['target_owner_id'])
+        days = recipient_doc['min_osg_days']
+        if recipient_doc.get('osg_basis') == 'DELIVERY_DATE':
+            days += recipient_doc['lead_time_days']
+        found.add((owners[0], recipient_doc['target_owner_id'], str(prices[0]), days))
     if not found:
         raise TradeTransportError('TOPUP_STOCK_TERMS_REQUIRED', 409)
     if len(found) > 1:

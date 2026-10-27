@@ -1,0 +1,48 @@
+{
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/after_sources.sql",
+      "sha256": "f11be480bfae6530e780a58524ffd85c22ee1f83617f235d45552b59955c975d"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/apply.sql",
+      "sha256": "0875fcd8352cec4ba0148d9632766160703095b0ed62dd1393d85879448cdbe3"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/before.sql",
+      "sha256": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/before_sources.sql",
+      "sha256": "9dbab8e86ca78c7489fef9b1d5719e56167ca92a84452c821ef7eb2174dd5814"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/compile_dependents.sql",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/frozen-manifest.json",
+      "sha256": "b987becbafe280a60802d339ea9442b12b5e97fce9fb11eb3427c232670d41dd"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/README.md",
+      "sha256": "b12dd58f0b43b3a3b01a2ef57ed8543c484e6acd5d63d56e310dcce475dd7cb2"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/restore_rrl_trade_topup_read_package_body.sql",
+      "sha256": "149c18f6ad6945260e2ec2c3b3e703e6a684798af19a4ce4812437fcefc5ca66"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/rollback.sql",
+      "sha256": "ae8d3a90064b87ef9ccb5daeb5bb3fc6362a3eba14fac96add4a83237ed88bac"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/rrl_trade_topup_read_package_body.sql",
+      "sha256": "b2991fa0f2b1cd52c9f7b3b6d2043c926e03afe2811a9c60fe4063884f41956d"
+    },
+    {
+      "path": "db/migrations/2026-10-27_topup_source_window/verify.sql",
+      "sha256": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+    }
+  ]
+}

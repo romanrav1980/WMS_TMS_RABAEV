@@ -1,0 +1,25 @@
+{
+  "migration_id": "2026-10-27-topup-source-window",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_TRADE_TOPUP_READ|PACKAGE": "5987C010916C9691A9FA2F8DED68311547E19CE338DD4CFAF0B2CBFCBDBD3C72",
+    "RRL_TRADE_TOPUP_READ|PACKAGE BODY": "262D48C95844795FA4F94BC5D32E59F87A3230E4C0E99BBEA043CC4F3D795B09"
+  },
+  "after_sources": {
+    "RRL_TRADE_TOPUP_READ|PACKAGE": "5987C010916C9691A9FA2F8DED68311547E19CE338DD4CFAF0B2CBFCBDBD3C72",
+    "RRL_TRADE_TOPUP_READ|PACKAGE BODY": "6BA2FB57761040168EEC9553EDD0947206DC8905D93070863BBCCFE75F612F5C"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "f11be480bfae6530e780a58524ffd85c22ee1f83617f235d45552b59955c975d",
+    "apply.sql": "0875fcd8352cec4ba0148d9632766160703095b0ed62dd1393d85879448cdbe3",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "9dbab8e86ca78c7489fef9b1d5719e56167ca92a84452c821ef7eb2174dd5814",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "b12dd58f0b43b3a3b01a2ef57ed8543c484e6acd5d63d56e310dcce475dd7cb2",
+    "restore_rrl_trade_topup_read_package_body.sql": "149c18f6ad6945260e2ec2c3b3e703e6a684798af19a4ce4812437fcefc5ca66",
+    "rollback.sql": "ae8d3a90064b87ef9ccb5daeb5bb3fc6362a3eba14fac96add4a83237ed88bac",
+    "rrl_trade_topup_read_package_body.sql": "b2991fa0f2b1cd52c9f7b3b6d2043c926e03afe2811a9c60fe4063884f41956d",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}
