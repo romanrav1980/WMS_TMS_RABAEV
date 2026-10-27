@@ -1,0 +1,96 @@
+{
+ "kind": "INTERCEPTED_API_ONLY_NO_LIVE_WRITE",
+ "scenarios": [
+  {
+   "w": 360,
+   "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
+   "body": {
+    "operation_id": "CASE.PICK.UI:86eae013-e77b-4579-9260-72729166fd36",
+    "net_weight_kg": "1.250",
+    "scan_cell": "A-01",
+    "scan_container": "146000000000000123",
+    "unit_scans": []
+   },
+   "state": "Отбор проведён: нетто 1.250 кг введено вручную. Товар и резерв находятся в составе паллеты отбора.",
+   "size": {
+    "viewport": 360,
+    "page": 360
+   }
+  },
+  {
+   "w": 390,
+   "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
+   "body": {
+    "operation_id": "CASE.PICK.UI:595fd338-bbbe-491d-838e-a22f81788608",
+    "net_weight_kg": "1.250",
+    "scan_cell": "A-01",
+    "scan_container": "146000000000000123",
+    "unit_scans": []
+   },
+   "state": "Отбор проведён: нетто 1.250 кг введено вручную. Товар и резерв находятся в составе паллеты отбора.",
+   "size": {
+    "viewport": 390,
+    "page": 390
+   }
+  },
+  {
+   "w": 1440,
+   "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
+   "body": {
+    "operation_id": "CASE.PICK.UI:785e6d1e-088c-4cbf-b4e3-e3fa7cc925f4",
+    "net_weight_kg": "1.250",
+    "scan_cell": "A-01",
+    "scan_container": "146000000000000123",
+    "unit_scans": []
+   },
+   "state": "Отбор проведён: нетто 1.250 кг введено вручную. Товар и резерв находятся в составе паллеты отбора.",
+   "size": {
+    "viewport": 1440,
+    "page": 1440
+   }
+  },
+  {
+   "w": 390,
+   "case": "503 unknown -> reload -> changed value refused locally -> exact retry with identical bytes -> receipt",
+   "posts": 2
+  },
+  {
+   "w": 360,
+   "case": "409 confirmed refusal: command cleared, no retry offered",
+   "state": "Ручное нетто не принято: Manual NET weight is only for a line whose base unit is KG. Команда завершена, товар не проведён."
+  },
+  {
+   "w": 360,
+   "case": "409 OPERATION_CONTENT_CONFLICT after unknown: saved command kept (not shown as success)",
+   "state": "{\"code\":\"OPERATION_CONTENT_CONFLICT\",\"outcome_confirmed\":false,\"retry_same_operation_id\":false,\"operation_id_conflict\":true} Исход не подтверждён: повторите сохранённую команду."
+  },
+  {
+   "w": 1440,
+   "case": "KG line without capture or manual NET: no request",
+   "state": "Выберите нетто-показание весового поста или отметьте «Весов нет — ввести нетто вручную»."
+  },
+  {
+   "w": 390,
+   "case": "marked KG: forced manual NET, codes required, sent with unit_scans",
+   "body": {
+    "operation_id": "CASE.PICK.UI:94efc874-1b33-430c-b66f-9daf1608eba6",
+    "net_weight_kg": "0.5",
+    "scan_cell": "A-01",
+    "scan_container": "146000000000000123",
+    "unit_scans": [
+     {
+      "system_code": "CHZ",
+      "profile_code": "UNIT",
+      "code": "0104600000000017215ABC"
+     }
+    ]
+   }
+  },
+  {
+   "w": 1440,
+   "case": "non-KG line: manual hidden, regular /confirm unchanged"
+  }
+ ],
+ "errors": [],
+ "status": "PASS"
+}

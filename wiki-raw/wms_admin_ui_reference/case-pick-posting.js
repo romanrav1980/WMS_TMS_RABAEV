@@ -5,7 +5,7 @@
   const saved = () => {
     const value=JSON.parse(localStorage.getItem(key()) || "null");
     if(value&&(!Number.isSafeInteger(value.task)||value.task<1||!Number.isSafeInteger(value.line)||value.line<1||
-      !["confirm","weighted-box","weigh-line","short"].includes(value.route||"confirm")||!value.payload||
+      !["confirm","weighted-box","weigh-line","weigh-line-manual","short"].includes(value.route||"confirm")||!value.payload||
       typeof window.cpCaseShortIntent.identity(value)!=="string"||!/^[A-Za-z0-9_.:-]{1,100}$/.test(window.cpCaseShortIntent.identity(value))))
       throw Error("Сохранённая команда повреждена. Отправка заблокирована.");
     return value;
@@ -28,16 +28,17 @@
     const policyScope=key();
     currentPolicy = null;
     window.cpCaseMarking.show(null);cpTsdEl("cpTsdMethod").textContent="Читаю настройки способа отбора…";
-    window.cpWeightedBox.show({serialized_weight_boxes:false,profiles:[]});cpTsdEl("cpTsdFactQty").disabled=true;
+    window.cpWeightedBox.show({serialized_weight_boxes:false,profiles:[]});window.cpManualNet.show(null);cpTsdEl("cpTsdFactQty").disabled=true;
     if (!line || !task) return;
     cpTsdFetch("/api/case-pick/tasks/" + task.case_pick_task_id + "/lines/" + line.case_pick_line_id + "/marking-policy")
       .then(policy => {
         if(generation !== policyGeneration||policyScope!==key()||task.case_pick_task_id!==cpTsd.task?.case_pick_task_id||line.case_pick_line_id!==cpTsdCurrentLine()?.case_pick_line_id)return;
-        currentPolicy = policy; window.cpWeightedBox.show(policy);
+        currentPolicy = policy; window.cpWeightedBox.show(policy); window.cpManualNet.show(policy);
         window.cpCaseMarking.show(policy);
         window.cpCaseDraft.mount(task,line,policy);
         cpTsdEl("cpTsdMethod").textContent=policy.serialized_weight_boxes?"Весовая коробка: этикетка → коды применимых профилей → подтверждение массы системой.":
-          policy.loose_weight_kg?"Товар на развес: ячейка → паллета отбора → архивное нетто-показание. Ручной факт недоступен.":
+          policy.loose_weight_kg?"Товар на развес: ячейка → паллета отбора → архивное нетто-показание; если весов нет — нетто вручную. Накопленный факт рассчитает система.":
+          policy.weighted_kg&&policy.marking_required?"Маркированный товар на развес: ячейка → паллета отбора → коды всех профилей → нетто вручную. Накопленный факт рассчитает система.":
           policy.marking_required?"Маркированный товар: ячейка → паллета отбора → уникальные коды всех профилей → накопленный факт.":
           "Коробочный / поштучный отбор: ячейка → паллета отбора → штрихкод товара или коробки → накопленный факт.";
 
@@ -62,9 +63,11 @@
         else {
         if(!currentPolicy)throw new Error("Дождитесь загрузки настроек товара.");
         const weighted = Boolean(currentPolicy.serialized_weight_boxes);
-        const weighed = Boolean(currentPolicy.loose_weight_kg);
+        const manual = window.cpManualNet.active(), weighed = Boolean(currentPolicy.loose_weight_kg) && !manual;
+        // C-0189: a KG line (weighted_kg) never goes to the generic cumulative-fact confirm.
+        if(currentPolicy.weighted_kg && !weighted && !weighed && !manual)throw new Error("Для товара на развес выберите нетто-показание весов или введите нетто вручную.");
         const quantity=cpTsdEl("cpTsdFactQty").value.trim();
-        if(!weighted && !weighed && !/^[0-9]{1,18}([.][0-9]{1,9})?$/.test(quantity))throw new Error("Введите накопленный факт в базовой единице.");
+        if(!weighted && !weighed && !manual && !/^[0-9]{1,18}([.][0-9]{1,9})?$/.test(quantity))throw new Error("Введите накопленный факт в базовой единице.");
         let payload={operation_id:"CASE.PICK.UI:"+crypto.randomUUID(),fact_qty:quantity,
           scan_cell:cpTsdEl("cpTsdScanCell").value.trim(),scan_product:cpTsdEl("cpTsdScanProduct").value.trim()||null,
           scan_box:cpTsdEl("cpTsdScanBox").value.trim()||null,scan_container:cpTsdEl("cpTsdScanContainer").value.trim(),
@@ -73,8 +76,10 @@
           equipment_id:cpTsd.session?.equipment_id||null,actor:cpTsdPicker()};
         if(!payload.scan_cell || !payload.scan_container)throw new Error("Отсканируйте ячейку и идентификатор паллеты отбора.");
         if(weighted)payload=window.cpWeightedBox.payload(payload.operation_id,payload.scan_cell,payload.scan_container);
+        if(weighed&&!window.cpWeightedBox.selectedScale())throw new Error("Выберите нетто-показание весового поста или отметьте «Весов нет — ввести нетто вручную».");
         if(weighed)payload=window.cpWeightedBox.netPayload(payload.operation_id,payload.scan_cell,payload.scan_container);
-        intent={task:task.case_pick_task_id,line:line.case_pick_line_id,route:weighted?"weighted-box":weighed?"weigh-line":"confirm",payload,draft:window.cpCaseDraft.capture(task.case_pick_task_id,line.case_pick_line_id)};
+        if(manual)payload=window.cpManualNet.payload(payload.operation_id,payload.scan_cell,payload.scan_container,currentPolicy.marking_required?window.cpCaseMarking.collect():[]);
+        intent={task:task.case_pick_task_id,line:line.case_pick_line_id,route:weighted?"weighted-box":manual?"weigh-line-manual":weighed?"weigh-line":"confirm",payload,draft:window.cpCaseDraft.capture(task.case_pick_task_id,line.case_pick_line_id)};
         }
         const wire=JSON.stringify(intent);localStorage.setItem(storageKey,wire);
         if(localStorage.getItem(storageKey)!==wire)throw Error("Запрос не сохранён. Отправка не выполнена.");pending();
@@ -95,7 +100,8 @@
       try{window.cpCaseDraft.settle(intent.draft);}catch(error){draftNotice=" "+error.message;}
       const task=await cpTsdFetch("/api/case-pick/tasks/"+intent.task);
       if(storageKey!==key())return;cpTsd.task=task;
-      cpTsdRender();cpTsdSetState((intent.route==="short"?"Недостача #"+result.case_pick_short_id+" зарегистрирована. Решение и восстановление — в рабочем месте управления сборкой.":"Отбор проведён. Товар и резерв находятся в составе паллеты отбора.")+draftNotice);
+      cpTsdRender();cpTsdSetState((intent.route==="short"?"Недостача #"+result.case_pick_short_id+" зарегистрирована. Решение и восстановление — в рабочем месте управления сборкой.":
+        intent.route==="weigh-line-manual"?"Отбор проведён: нетто "+intent.payload.net_weight_kg+" кг введено вручную. Товар и резерв находятся в составе паллеты отбора.":"Отбор проведён. Товар и резерв находятся в составе паллеты отбора.")+draftNotice);
     } catch(error) {
       if(storageKey!==key())return;
       if(attempted && !priorUnknown && localStorage.getItem(storageKey)===capturedRaw && error.detail?.outcome_confirmed===true && !error.detail?.retry_same_operation_id && !error.detail?.operation_id_conflict && error.detail?.code!=="OPERATION_CONTENT_CONFLICT") {
@@ -104,7 +110,8 @@
       }
       let unresolved = false;
       try { unresolved = !!(storageKey && localStorage.getItem(storageKey)); } catch (_) {}
-      cpTsdSetState(error.message + (unresolved ? " Исход не подтверждён: повторите сохранённую команду." : ""));
+      const manualRefusal=error.detail?.code==="WEIGHED_CASE_MANUAL_REJECTED"?"Ручное нетто не принято: "+(error.detail.message||error.detail.code)+". Команда завершена, товар не проведён.":null;
+      cpTsdSetState((manualRefusal||error.message) + (unresolved ? " Исход не подтверждён: повторите сохранённую команду." : ""));
     } finally {
       busy=false;window.cpTsdStockBusy=false;cpTsdEl("cpTsdConfirm").disabled=cpTsdEl("cpTsdRetryPosting").disabled=false;
       try{pending();}catch(error){cpTsdSetState(error.message);}
