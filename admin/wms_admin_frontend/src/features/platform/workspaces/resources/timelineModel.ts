@@ -136,7 +136,15 @@ export function groupRows(rows: Row[], f: Filters, typeLabel: (t: ResourceType) 
 }
 
 /** Работы без времени или без ресурса — отдельная очередь, длительность не выдумывается. */
-export type QueueItem = { event: TimelineEvent; reason: "NO_TIME" | "NO_RESOURCE" | "NO_ZONE" };
+export type QueueItem = { event: TimelineEvent; reason: "NO_TIME" | "NO_RESOURCE" | "NO_ZONE" | "BEFORE_WINDOW" | "OUTSIDE_WINDOW" };
+/** C-0181: работы, которые сервер вернул в окно, но все их отметки вне шкалы (например, завершённая без окончания, начатая до окна).
+ *  Без этого сводка считает их, а на шкале и в очереди их не найти. */
+export function outsideWindow(rows: Row[], from: number, to: number): QueueItem[] {
+  const byEvent = new Map<string, Bar[]>();
+  for (const r of rows) for (const b of r.bars) (byEvent.get(b.event.event_id) ?? byEvent.set(b.event.event_id, []).get(b.event.event_id)!).push(b);
+  return [...byEvent.values()].filter(bs => bs.every(b => b.end < from || b.start > to))
+    .map(bs => ({ event: bs[0].event, reason: bs.every(b => b.end < from) ? "BEFORE_WINDOW" as const : "OUTSIDE_WINDOW" as const }));
+}
 export function unscheduled(t: ResourceTimeline): QueueItem[] {
   const tz = zoneKnown(t) ? t.warehouse.time_zone : null;
   const bound = new Map<string, TimelineBinding[]>();

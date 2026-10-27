@@ -1,0 +1,962 @@
+{
+ "8093-220793322-2026-10-27": {
+  "status": 200,
+  "ms": 425,
+  "resources": {
+   "CASE_PICKER": 6,
+   "DOCK": 2
+  },
+  "events": {
+   "CASE_PICK_TASK": 3
+  },
+  "assignments": 3,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.613369+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "RESOURCE:86",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:87",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:88",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "CASE_PICK_TASK:1161",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1161 · волна 605",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1161,
+    "wave_id": 605,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:31.226612+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   },
+   {
+    "event_id": "CASE_PICK_TASK:1162",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1162 · волна 606",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1162,
+    "wave_id": 606,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:34.050767+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   }
+  ]
+ },
+ "8093-220793322-2026-10-20": {
+  "status": 200,
+  "ms": 186,
+  "resources": {
+   "CASE_PICKER": 6,
+   "DOCK": 2,
+   "VEHICLE": 6
+  },
+  "events": {
+   "CASE_PICK_TASK": 6,
+   "LOAD_CONFIRMATION": 2,
+   "TRIP_DEPARTURE": 1,
+   "YARD_VISIT": 5,
+   "YARD_DOCK": 5
+  },
+  "assignments": 21,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:47.798212+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "RESOURCE:86",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:87",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:88",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "CASE_PICK_TASK:1161",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1161 · волна 605",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1161,
+    "wave_id": 605,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:31.226612+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   },
+   {
+    "event_id": "CASE_PICK_TASK:1162",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1162 · волна 606",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1162,
+    "wave_id": 606,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:34.050767+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   }
+  ]
+ },
+ "8093-226192056-2026-10-27": {
+  "status": 200,
+  "ms": 573,
+  "resources": {
+   "DOCK": 1,
+   "VEHICLE": 1
+  },
+  "events": {
+   "LOAD_CONFIRMATION": 8
+  },
+  "assignments": 16,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.347390+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "DOCK:226192056:TR27D226192056",
+    "kind": "DOCK",
+    "label": "TR27D226192056",
+    "warehouse_id": 226192056,
+    "source_state": "UNKNOWN",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   },
+   {
+    "resource_id": "VEHICLE:TR27V226192056",
+    "kind": "VEHICLE",
+    "label": "TR27V226192056",
+    "warehouse_id": 226192056,
+    "source_state": null,
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "LOAD_CONFIRMATION:TR27.f7123876.load.4446",
+    "kind": "LOAD_CONFIRMATION",
+    "label": "Погрузка подтверждена · рейс 33697",
+    "source": "RRL_TT_HU_LOAD_FACT",
+    "source_id": "TR27.f7123876.load.4446",
+    "trip_id": 33697,
+    "status": "DONE",
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-27T05:57:51.092793+00:00",
+    "fact_finish_at": "2026-10-27T05:57:51.092793+00:00",
+    "time_status": "AWARE_FACT"
+   },
+   {
+    "event_id": "LOAD_CONFIRMATION:TR27.f7123876.load.4447",
+    "kind": "LOAD_CONFIRMATION",
+    "label": "Погрузка подтверждена · рейс 33697",
+    "source": "RRL_TT_HU_LOAD_FACT",
+    "source_id": "TR27.f7123876.load.4447",
+    "trip_id": 33697,
+    "status": "DONE",
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-27T05:57:53.613341+00:00",
+    "fact_finish_at": "2026-10-27T05:57:53.613341+00:00",
+    "time_status": "AWARE_FACT"
+   }
+  ]
+ },
+ "8093-226192056-2026-10-20": {
+  "status": 200,
+  "ms": 189,
+  "resources": {
+   "DOCK": 1
+  },
+  "events": {},
+  "assignments": 0,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:48.557812+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "DOCK:226192056:TR27D226192056",
+    "kind": "DOCK",
+    "label": "TR27D226192056",
+    "warehouse_id": 226192056,
+    "source_state": "UNKNOWN",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   }
+  ],
+  "sample_events": []
+ },
+ "8088-220793322-2026-10-27": {
+  "status": 200,
+  "ms": 693,
+  "resources": {
+   "CASE_PICKER": 6,
+   "DOCK": 2
+  },
+  "events": {
+   "CASE_PICK_TASK": 3
+  },
+  "assignments": 3,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.200885+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "RESOURCE:86",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:87",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:88",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "CASE_PICK_TASK:1161",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1161 · волна 605",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1161,
+    "wave_id": 605,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:31.226612+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   },
+   {
+    "event_id": "CASE_PICK_TASK:1162",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1162 · волна 606",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1162,
+    "wave_id": 606,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:34.050767+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   }
+  ]
+ },
+ "8088-220793322-2026-10-20": {
+  "status": 200,
+  "ms": 248,
+  "resources": {
+   "CASE_PICKER": 6,
+   "DOCK": 2,
+   "VEHICLE": 6
+  },
+  "events": {
+   "CASE_PICK_TASK": 6,
+   "LOAD_CONFIRMATION": 2,
+   "TRIP_DEPARTURE": 1,
+   "YARD_VISIT": 5,
+   "YARD_DOCK": 5
+  },
+  "assignments": 21,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.482676+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "RESOURCE:86",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:87",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   },
+   {
+    "resource_id": "RESOURCE:88",
+    "kind": "CASE_PICKER",
+    "label": "Factory CASE QA",
+    "warehouse_id": 220793322,
+    "source_state": "AVAILABLE",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": [],
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "CASE_PICK_TASK:1161",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1161 · волна 605",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1161,
+    "wave_id": 605,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:31.226612+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   },
+   {
+    "event_id": "CASE_PICK_TASK:1162",
+    "kind": "CASE_PICK_TASK",
+    "label": "Сборка 1162 · волна 606",
+    "source": "RRL_CASE_PICK_TASK",
+    "source_id": 1162,
+    "wave_id": 606,
+    "status": "CONTROLLED",
+    "total_lines": 1,
+    "picked_lines": 1,
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-21T23:14:34.050767+00:00",
+    "fact_finish_at": null,
+    "time_status": "AWARE_FACT",
+    "legacy_time": {
+     "fact_finish": null
+    },
+    "fact_finish_status": "UNRESOLVED"
+   }
+  ]
+ },
+ "8088-226192056-2026-10-27": {
+  "status": 200,
+  "ms": 282,
+  "resources": {
+   "DOCK": 1,
+   "VEHICLE": 1
+  },
+  "events": {
+   "LOAD_CONFIRMATION": 8
+  },
+  "assignments": 16,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:49.729460+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "DOCK:226192056:TR27D226192056",
+    "kind": "DOCK",
+    "label": "TR27D226192056",
+    "warehouse_id": 226192056,
+    "source_state": "UNKNOWN",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   },
+   {
+    "resource_id": "VEHICLE:TR27V226192056",
+    "kind": "VEHICLE",
+    "label": "TR27V226192056",
+    "warehouse_id": 226192056,
+    "source_state": null,
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   }
+  ],
+  "sample_events": [
+   {
+    "event_id": "LOAD_CONFIRMATION:TR27.f7123876.load.4446",
+    "kind": "LOAD_CONFIRMATION",
+    "label": "Погрузка подтверждена · рейс 33697",
+    "source": "RRL_TT_HU_LOAD_FACT",
+    "source_id": "TR27.f7123876.load.4446",
+    "trip_id": 33697,
+    "status": "DONE",
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-27T05:57:51.092793+00:00",
+    "fact_finish_at": "2026-10-27T05:57:51.092793+00:00",
+    "time_status": "AWARE_FACT"
+   },
+   {
+    "event_id": "LOAD_CONFIRMATION:TR27.f7123876.load.4447",
+    "kind": "LOAD_CONFIRMATION",
+    "label": "Погрузка подтверждена · рейс 33697",
+    "source": "RRL_TT_HU_LOAD_FACT",
+    "source_id": "TR27.f7123876.load.4447",
+    "trip_id": 33697,
+    "status": "DONE",
+    "plan_start_at": null,
+    "plan_finish_at": null,
+    "fact_start_at": "2026-10-27T05:57:53.613341+00:00",
+    "fact_finish_at": "2026-10-27T05:57:53.613341+00:00",
+    "time_status": "AWARE_FACT"
+   }
+  ]
+ },
+ "8088-226192056-2026-10-20": {
+  "status": 200,
+  "ms": 567,
+  "resources": {
+   "DOCK": 1
+  },
+  "events": {},
+  "assignments": 0,
+  "sources": [
+   {
+    "source_id": "registry",
+    "status": "READY",
+    "permission": "resource_management_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "attendance",
+    "status": "READY",
+    "permission": "resource_shift_view",
+    "limit": 500,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "warehouse_tasks",
+    "status": "READY",
+    "permission": "warehouse_task_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "case_tasks",
+    "status": "READY",
+    "permission": "case_pick_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "transport",
+    "status": "READY",
+    "permission": "transport_dispatch_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "sessions",
+    "status": "READY",
+    "permission": "resource_session_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   },
+   {
+    "source_id": "yard",
+    "status": "READY",
+    "permission": "tradecase_view",
+    "limit": 2000,
+    "observed_at": "2026-10-27T15:10:50.327922+00:00"
+   }
+  ],
+  "tz": null,
+  "sample_resources": [
+   {
+    "resource_id": "DOCK:226192056:TR27D226192056",
+    "kind": "DOCK",
+    "label": "TR27D226192056",
+    "warehouse_id": 226192056,
+    "source_state": "UNKNOWN",
+    "availability": "UNKNOWN",
+    "zone_code": null,
+    "qualifications": null,
+    "last_signal": null
+   }
+  ],
+  "sample_events": []
+ }
+}

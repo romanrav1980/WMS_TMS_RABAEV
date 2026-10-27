@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { HelpButton } from "../../help/HelpButton";
 import { ganttHelp } from "./ganttHelp";
-import { axisMinutes, buildRows, fmtAxis, groupRows, nowAxis, stateNow, summarize, ticks, unscheduled, zoneKnown } from "./timelineModel";
+import { axisMinutes, buildRows, fmtAxis, groupRows, nowAxis, outsideWindow, stateNow, summarize, ticks, unscheduled, zoneKnown } from "./timelineModel";
 import type { Bar, Filters, Group, Row } from "./timelineModel";
 import { RESOURCE_TYPES } from "./timelineTypes";
 import type { GanttSelection, ResourceTimeline, ResourceType } from "./timelineTypes";
@@ -9,6 +9,8 @@ import "./gantt.css";
 
 const ZOOMS = [{ min: 120, label: "2 ч" }, { min: 240, label: "4 ч" }, { min: 480, label: "8 ч" }, { min: 720, label: "12 ч" }, { min: 1440, label: "сутки" }, { min: 0, label: "всё окно" }];
 const ROW_CAP = 300;
+const QUEUE_REASON = { NO_TIME: "нет времени", NO_ZONE: "время без пояса", NO_RESOURCE: "нет ресурса",
+  BEFORE_WINDOW: "начата до окна, окончание у источника неизвестно — на шкалу не ставится", OUTSIDE_WINDOW: "отметки вне окна шкалы" } as const;
 const typeLabel = (t: ResourceType) => RESOURCE_TYPES.find(x => x.id === t)?.label ?? t;
 const typeShort = (t: ResourceType) => RESOURCE_TYPES.find(x => x.id === t)?.short ?? t;
 
@@ -30,15 +32,18 @@ export function ResourceGantt({ timeline, selection, onSelect, initialTypes, wav
   const span = zoom ? Math.min(zoom, to - from) : to - from;
   const view = { from: Math.max(from, Math.min(viewStart, to - span)), to: 0 }; view.to = view.from + span;
   const rows = useMemo(() => buildRows(timeline), [timeline]);
+  const counts = useMemo(() => { const c = new Map<ResourceType, number>(); for (const r of timeline.resources) c.set(r.resource_type, (c.get(r.resource_type) ?? 0) + 1); return c; }, [timeline]);
+  const absent = RESOURCE_TYPES.filter(t => filters.types.has(t.id) && !counts.get(t.id)).map(t => t.label);
   const groups = useMemo(() => groupRows(rows, filters, typeLabel), [rows, filters]);
   // Очередь без времени/ресурса фильтруется тем же точным wave_id, когда фильтр волны активен.
-  const queue = useMemo(() => unscheduled(timeline).filter(q => filters.waveId == null || q.event.wave_id === filters.waveId), [timeline, filters.waveId]);
+  const queue = useMemo(() => [...unscheduled(timeline), ...outsideWindow(rows, from, to)].filter(q => filters.waveId == null || q.event.wave_id === filters.waveId), [timeline, rows, from, to, filters.waveId]);
   const visibleRows = groups.flatMap(g => g.rows);
   const sum = summarize(timeline, visibleRows);
   const now = nowAxis(timeline);
   const pan = (dir: number) => setViewStart(Math.max(from, Math.min(to - span, view.from + dir * span / 2)));
   return <section className="rg" aria-label="Общий Гант ресурсов" data-warehouse={timeline.warehouse.warehouse_id} data-window={timeline.window.start_at}>
-    <GanttToolbar filters={filters} setFilters={setFilters} zoom={zoom} setZoom={setZoom} pan={pan} canPan={span < to - from} clearWave={clearWave} />
+    <GanttToolbar filters={filters} setFilters={setFilters} zoom={zoom} setZoom={setZoom} pan={pan} canPan={span < to - from} clearWave={clearWave} counts={counts} />
+    {absent.length > 0 && <p className="ops-note">Нет в ответе источника: {absent.join(", ")} — реестр ресурсов склада не вернул ресурсов этого типа. Это ограничение данных, а не «свободны».</p>}
     <p className="rg-summary" aria-live="polite">
       Ресурсов {sum.resources} · работ {sum.events} (по event_id) · назначений {sum.bindings} · пересечений {sum.conflicts}{timeline.overlap_limit != null && (timeline.overlaps?.length ?? 0) >= timeline.overlap_limit ? ` (не меньше; предел сервера ${timeline.overlap_limit})` : ""}
       {sum.quantifiedEvents > 0 && ` · количество указано у ${sum.quantifiedEvents} работ (отдельно в карточках, без общего объёма разных товаров)`}
@@ -55,7 +60,7 @@ export function ResourceGantt({ timeline, selection, onSelect, initialTypes, wav
   </section>;
 }
 
-function GanttToolbar({ filters, setFilters, zoom, setZoom, pan, canPan, clearWave }: { filters: Filters; setFilters: (f: Filters) => void; zoom: number; setZoom: (z: number) => void; pan: (d: number) => void; canPan: boolean; clearWave: () => void }) {
+function GanttToolbar({ filters, setFilters, zoom, setZoom, pan, canPan, clearWave, counts }: { filters: Filters; setFilters: (f: Filters) => void; zoom: number; setZoom: (z: number) => void; pan: (d: number) => void; canPan: boolean; clearWave: () => void; counts: Map<ResourceType, number> }) {
   const toggle = (t: ResourceType) => { const next = new Set(filters.types); if (next.has(t)) next.delete(t); else next.add(t); setFilters({ ...filters, types: next }); };
   return <div className="rg-toolbar">
     {filters.waveId != null && <span className="ops-chip ship" title={ganttHelp.waveFilter.text} data-help-id={ganttHelp.waveFilter.id}>
@@ -65,7 +70,7 @@ function GanttToolbar({ filters, setFilters, zoom, setZoom, pan, canPan, clearWa
     <label className="rg-search">Поиск <input type="search" value={filters.query} onChange={e => setFilters({ ...filters, query: e.target.value })}
       placeholder="код, зона, задание, рейс" title={ganttHelp.search.text} data-help-id={ganttHelp.search.id} /></label>
     <div role="group" aria-label="Типы ресурсов" className="rg-seg">{RESOURCE_TYPES.map(t =>
-      <button key={t.id} type="button" aria-pressed={filters.types.has(t.id)} title={ganttHelp.type.text} data-help-id={ganttHelp.type.id + "." + t.id} onClick={() => toggle(t.id)}>{t.label}</button>)}</div>
+      <button key={t.id} type="button" aria-pressed={filters.types.has(t.id)} title={ganttHelp.type.text} data-help-id={ganttHelp.type.id + "." + t.id} onClick={() => toggle(t.id)}>{t.label} <small>{counts.get(t.id) ?? 0}</small></button>)}</div>
     <label>Группы <select value={filters.groupBy} onChange={e => setFilters({ ...filters, groupBy: e.target.value as Filters["groupBy"] })} title={ganttHelp.group.text} data-help-id={ganttHelp.group.id}>
       <option value="type">по типу</option><option value="warehouse">по складу/РЦ</option></select></label>
     <label className="rg-check"><input type="checkbox" checked={filters.onlyConflicts} onChange={e => setFilters({ ...filters, onlyConflicts: e.target.checked })} title={ganttHelp.conflicts.text} data-help-id={ganttHelp.conflicts.id} /> только пересечения</label>
@@ -121,7 +126,7 @@ function GanttRow({ row, view, now, selection, onSelect, waveId }: { row: Row; v
   return <div className={"rg-row" + (selected ? " selected" : "")} role="row">
     <button type="button" className="rg-label" role="rowheader" aria-pressed={selected} title={`${ganttHelp.row.text}\n${st.label}: ${st.basis}${row.untimed.length ? `\nНазначено работ без времени: ${row.untimed.length}` : ""}`} data-help-id={ganttHelp.row.id}
       onClick={() => onSelect({ kind: "resource", key: r.resource_key })}>
-      <b>{r.code}</b><small>{typeShort(r.resource_type)}{r.zone_code ? " · " + r.zone_code : ""}{row.untimed.length ? ` · без времени ${row.untimed.length}` : ""}</small>
+      <b>{r.code}</b><small>{typeShort(r.resource_type)}{r.name ? " · " + r.name : ""}{r.zone_code ? " · " + r.zone_code : ""}{row.untimed.length ? ` · без времени ${row.untimed.length}` : ""}</small>
       <i className={"rg-state " + st.tone}>{st.label}</i>
     </button>
     <div className="rg-track unknown" title={ganttHelp.unknown.text}>
@@ -147,12 +152,12 @@ function GanttBar({ bar, view, selection, onSelect }: { bar: Bar; view: View; se
 
 function UnscheduledQueue({ queue, selection, onSelect }: { queue: ReturnType<typeof unscheduled>; selection: GanttSelection; onSelect: (s: GanttSelection) => void }) {
   return <section className="rg-queue" aria-label="Очередь без времени">
-    <h4 title={ganttHelp.queue.text} data-help-id={ganttHelp.queue.id}>Без времени или без ресурса <small>{queue.length}</small></h4>
+    <h4 title={ganttHelp.queue.text} data-help-id={ganttHelp.queue.id}>Без времени, без ресурса или вне шкалы <small>{queue.length}</small></h4>
     {queue.length === 0 ? <p className="rg-empty">Все работы окна имеют время и ресурс.</p> :
       <ul>{queue.slice(0, 60).map(q => <li key={q.event.event_id}>
         <button type="button" aria-pressed={selection?.kind === "event" && selection.id === q.event.event_id} title={ganttHelp.queue.text} data-help-id={ganttHelp.queue.id}
           onClick={() => onSelect({ kind: "event", id: q.event.event_id })}>
-          <b>{q.event.title}</b><small>{q.reason === "NO_TIME" ? "нет времени" : q.reason === "NO_ZONE" ? "время без пояса" : "нет ресурса"}{q.event.status ? " · " + q.event.status : ""}</small>
+          <b>{q.event.title}</b><small>{QUEUE_REASON[q.reason]}{q.event.status ? " · " + q.event.status : ""}</small>
         </button></li>)}</ul>}
     {queue.length > 60 && <p className="rg-empty">Показано 60 из {queue.length}.</p>}
   </section>;

@@ -71,10 +71,12 @@ export function adaptTimeline(raw: unknown): ResourceTimeline {
   const availability = new Map<string, Availability[]>();
   const attendanceIds = new Map(attendance.map(e => [e.event_id, e]));
   const types = new Map<string, ResourceType>();
+  // C-0181: одинаковые подписи реестра (например, шесть «Factory CASE QA») неразличимы в строках — добавляется id ресурса сервера.
+  const labels = new Map<string, number>(); for (const r of t.resources) if (r.label) labels.set(r.label, (labels.get(r.label) ?? 0) + 1);
   const resources: TimelineResource[] = t.resources.map(r => {
     assertShape(typeof r.resource_id === "string" && typeof r.kind === "string", "ресурс без resource_id/kind");
     const type = KIND[r.kind] ?? "OTHER"; types.set(r.resource_id, type);
-    return { resource_key: r.resource_id, resource_type: type, resource_id: r.resource_id, code: r.label || r.resource_id, name: null,
+    return { resource_key: r.resource_id, resource_type: type, resource_id: r.resource_id, code: r.label || r.resource_id, name: r.label && (labels.get(r.label) ?? 0) > 1 ? r.resource_id : null,
       warehouse_id: r.warehouse_id, zone_code: r.zone_code ?? null, kind_raw: r.kind, source_state: r.source_state, availability: [], link: null,
       // null — источник не прочитан/неприменим; [] — текущих допусков нет. Допуск не равен доступности (C-0089).
       qualifications: r.qualifications == null ? null : r.qualifications.map(q => q.task_type + (q.legacy_valid_until ? ` до ${q.legacy_valid_until.replace("T", " ").slice(0, 16)} (без пояса)` : "")),
