@@ -1,0 +1,25 @@
+{
+ "stages": [
+  "FIXTURE",
+  "WAVE",
+  "PICK_KG_MANUAL_NET",
+  "PICK_EA",
+  "TREE",
+  "TRANSPORT"
+ ],
+ "manual_route": "/api/case-pick/tasks/{task}/lines/{line}/weigh-line-manual",
+ "transport": "TRANSPORT_NOT_WIRED (stop after TREE)",
+ "cleanup": [
+  "HU_DETACH_CASE:<case_kg>",
+  "HU_DETACH_CASE:<case_ea>",
+  "CASE_CARRIER_RETURN:<case_kg>",
+  "CASE_CARRIER_RETURN:<case_ea>",
+  "RESERVATION_RELEASE:wave",
+  "TARE_BOOK_CANCEL:<case_kg>",
+  "TARE_BOOK_CANCEL:<case_ea>",
+  "TARE_COUNT_ZERO",
+  "WAVE_EXECUTION_FINISH_OR_CANCEL",
+  "INVENTORY_COUNT_ZERO",
+  "ASSERT_WAREHOUSE_ZERO_STOCK_AND_RESERVATION"
+ ]
+}
