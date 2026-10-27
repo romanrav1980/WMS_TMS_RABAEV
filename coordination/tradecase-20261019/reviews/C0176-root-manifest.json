@@ -1,0 +1,52 @@
+{
+  "files": [
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/000_preflight.sql",
+      "sha256": "5d6b41a2d55e2e3a1870e742cffc13a9c761e803fb44227f1b457744c44399a3"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/001_journal_table.sql",
+      "sha256": "cd03e9a89f3e8327d9dfbec63b81e0504c8b60465c37873d7929148264bde6f6"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/002_writer.sql",
+      "sha256": "7272faf0d4f7e433e71dbbca1b6477702e546cd634240878999e5b806dc953bf"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/003_removal_spec.sql",
+      "sha256": "2a6e5a0432246c6787f8097a9d3f326b89e721bd7d672a012d1c017a36c916e2"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/004_removal_body.sql",
+      "sha256": "a6ed1f47b559c7f1bbb3cba4fa35575c16e7e3b081d205d408515e5b415fdd55"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/apply.sql",
+      "sha256": "b6c02d10d0765ebb42d00402d7cf386b24768aabbc2daffddd5debf8bfad9907"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/before_writer.sql",
+      "sha256": "2df89e4432021c6e72f2ee06db26e33220a2b4b2c3bb032913fe150040cb26b4"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/manifest.json",
+      "sha256": "4e4cb931ba7250a047f7fb49953d0f9243cc771197f3cecea92a4047a9ab8e23"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/README.md",
+      "sha256": "719236ffdd170f9b4da888e5284740c502c48c6da205b48c3e097f0253c4189f"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/rollback.sql",
+      "sha256": "d6a2cec3f5c22c504d13b41b46231890aa95440de2469704dcdb860d5330c478"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/rollback_verify.sql",
+      "sha256": "2289686d40ace464ab0b66790718615e25be668421b21f92009335fa613913a8"
+    },
+    {
+      "path": "db/migrations/2026-10-27_tt_selected_places/verify.sql",
+      "sha256": "9dc4de5ac74d55ff4de1bab843bec4a0b16b8491254a77b157e045e94b793046"
+    }
+  ]
+}

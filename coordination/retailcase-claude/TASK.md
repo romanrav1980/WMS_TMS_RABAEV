@@ -1,3 +1,7 @@
+# ACTIVE REVIEW C0176 — UI rev1, native взял root
+
+C0176 не закрыт до устранения замечаний REVIEW в конце CODEX_TO_CLAUDE.md. Root сам добавляет компиляцию зависимостей, обновляет frozen manifest и применяет native; native SQL и backend-reader не трогай параллельно. Твоя работа — UI rev1: существующие intent/access helpers, поздний ответ после смены контекста, реальный вход на390, справка и корректное количество. После root API_READY проверь реальный UI безstub. Это продолжение C0176, не новая задача/лимит. Ответь ACK и продолжай.
+
 # ACTIVE C0176 — выборочное снятие мест с рейса
 
 Прочитай TASK_C0176_SELECTED_PLACES.md и конец CODEX_TO_CLAUDE.md. C0175 RELEASE принят к root-ревью; не продолжать его без согласования.

@@ -72,3 +72,24 @@ def test_command_outcome_flags(monkeypatch, code, status, confirmed, retry):
     r = TestClient(app).post("/api/transport/trips/1/place-removals", json=dict(operation_id="TT.PLACES.1", st_number="ST1", member_ids=[5],
                                                                                expected_source_hash=HASH, reason="Reduced trip"))
     assert r.status_code == status and r.json()["detail"] == {"code": code, "outcome_confirmed": confirmed, "retry_same_operation_id": retry}
+
+
+def test_reader_refuses_a_place_without_warehouse_before_converting_its_id():
+    from contextlib import contextmanager
+    from app.modules.transport.infrastructure.place_removal import OraclePlaceRemoval
+    from app.modules.transport.contracts_place_removal import PlaceRemovalError
+    class Cursor:
+        def execute(self, *args, **kwargs):
+            pass
+        def fetchall(self):
+            return [(1, 'P1', 'A1', 10, 0, None, 0)]
+    class Gateway:
+        @contextmanager
+        def transaction(self, *args):
+            yield Cursor()
+    try:
+        OraclePlaceRemoval(Gateway()).places(10, 'S1', 'actor')
+    except PlaceRemovalError as exc:
+        assert (exc.code, exc.status) == ('ST_WAREHOUSE_REQUIRED', 409)
+    else:
+        raise AssertionError('A place without warehouse must be refused')

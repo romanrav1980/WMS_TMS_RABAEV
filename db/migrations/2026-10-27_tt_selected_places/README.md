@@ -18,3 +18,5 @@
 - Журнал `RRL_TT_PLACE_REMOVAL_CMD`.
 
 Откат: только над точными after SHA и только при пустом журнале (`TT_PLACE_REMOVAL_HISTORY_PRESENT`). Применяет root.
+
+Root review rev1: apply and rollback explicitly compile RRL_TRANSPORT_PLAN_API and RRL_ST_DEFER_API bodies after replacing the function and before the zero-INVALID check. Function and package source candidates are unchanged.

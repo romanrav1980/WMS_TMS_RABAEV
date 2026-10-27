@@ -12,3 +12,10 @@
   - 403 и OPERATION_CONFLICT для команды — `outcome_confirmed=false`.
 - UI: компонент `features/transport/TransportStPlaceRemoval.tsx` в панели «Паллеты СТ» диспетчера (обе вкладки).
 - Товар, резерв, адреса, коды, получатель и заказ операция не меняет.
+
+
+## Независимое ревью перед применением
+
+Root review rev1 добавляет явную перекомпиляцию двух зависимых тел при применении и откате. Исходник функции и нового пакета не изменён; frozen manifest обновлён с отметкой root-review-1. Reader теперь возвращает ST_WAREHOUSE_REQUIRED/409 для места без склада вместо TypeError/500. Native ещё не применён.
+
+Root manifest: coordination/tradecase-20261019/reviews/C0176-root-manifest.json, SHA c9156b03fe39a012d63505f936875dcd3f0f3ec28601b96a1a3fd64fe1cc5932. После checkpoint выполнить apply/пустой rollback/reapply, только затем разрешить живые команды. UI rev1 с существующими helper, мобильным входом и справкой остаётся у Claude; его STUB не принят за живое действие.

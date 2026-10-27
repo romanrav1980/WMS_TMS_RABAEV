@@ -5,6 +5,7 @@ Master data and external acknowledgments are synthetic; this is not ERP acceptan
 Resume the same state after interruption; do not reopen a closed fixture.
 """
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 import json
 import os
 from pathlib import Path
@@ -339,6 +340,8 @@ def reduce():
     topup = sorted((k for k, v in s['shipments'].items() if v['order_number'] == '104'), key=int)
     assert len(topup) == 60
     s.setdefault('retained_shipment_keys', topup[-20:]); q.save()
+    if 'retained_before_reduce' not in s:
+        s['retained_before_reduce'] = retained_snapshot(); q.save()
     st = s['shipments'][topup[0]]['st_number']
     if 'reduction.member_ids' not in s:
         ids = dict((uid, int(mid)) for mid, uid in q.db(
@@ -412,10 +415,103 @@ def load():
     s.update(load_facts=facts,phase='LOADED');q.save()
 
 
+def retained_snapshot():
+    pallets = [s['shipments'][k]['pallet'] for k in s['retained_shipment_keys']]
+    assert len(pallets) == 20 and len(set(pallets)) == 20
+    binds = {f'p{i}': value for i, value in enumerate(pallets)}
+    rows = q.db("select u.CURRENT_UID,r.CELL,u.PHYSICAL_UNIT_KEY,c.SYSTEM_CODE,dbms_lob.substr(c.RAW_CODE,4000,1),"
+        "a.OWNER_ID,u.HARD_RESERVATION_ID,u.STOCK_STATUS,r.REMAIN,r.HARD_RESERVED_BASE "
+        "from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY "
+        "join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID "
+        "join RRL_REMAINS r on r.UID_POLETA=u.CURRENT_UID and r.REMAIN>0 "
+        "where u.CURRENT_UID in("+','.join(':'+k for k in binds)+") order by u.CURRENT_UID,u.PHYSICAL_UNIT_KEY,c.SYSTEM_CODE", **binds)
+    result = [[str(v) if v is not None else None for v in row] for row in rows]
+    assert len(result) == len({r[2] for r in result}) == len({r[4] for r in result}) == 200
+    assert {r[5] for r in result} == {'SNS'}
+    assert all(r[1] and r[6] and Decimal(r[8]) == Decimal(r[9]) == 10 for r in result)
+    return result
+
+
+def documents():
+    assert s.get('phase') == 'LOADED', s.get('phase')
+    w = s['fixture']['warehouse_id']; tt = s['transport']['transport_task_id']
+    assert retained_snapshot() == s['retained_before_reduce']
+    for number, order in s['orders'].items():
+        composition = q.step('composition.'+number, 'POST', '/api/tradecase/order-compositions/report',
+                             dict(warehouse_id=w, order_id=number))
+        assert composition['units'] == composition['codes'] == order['boxes']*10
+        for system,sender in [('SAP','TC03.SAP'),('SKM','TC03.SKM')]:
+            q.step('composition.'+number+'.'+system, 'POST', '/api/tradecase/order-compositions/acknowledgments',
+                dict(schema_version=1,warehouse_id=w,order_id=number,system_code=system,sender_id=sender,
+                     event_id=q.tag()+'.composition.'+number+'.'+system,composition_no=composition['composition_no'],
+                     signature=composition['signature'],outcome='ACCEPTED',occurred_at=datetime.now(timezone.utc).isoformat()))
+    route = f'/api/tradecase/warehouses/{w}/trips/T1'
+    execution = q.step('execution.loaded640','GET',route+'/execution')
+    assert len(execution['loads']) == 640
+    q.step('document.640','POST',route+'/transport-document',
+        dict(operation_id=q.tag()+'.doc640',source_id='TC03.SAP',external_event_id=q.tag()+'.doc640',
+             expected_trip_version=3,expected_binding_version=1,document_version=1,document_status='READY',
+             external_document_id='TEST_640_RETAIN20_NOT_INDUSTRIAL',manifest_signature=execution['manifest_signature'],
+             occurred_at=datetime.now(timezone.utc).isoformat()))
+    s['phase'] = 'DOCUMENT_READY'; q.save()
+
+
+def depart():
+    assert s.get('phase') == 'DOCUMENT_READY', s.get('phase')
+    tt = s['transport']['transport_task_id']; body = dict(operation_id=q.tag()+'.depart640')
+    result = q.step('depart640','POST',f'/api/transport/loading/{tt}/depart',body)
+    assert q.expect(200,q.http('POST',f'/api/transport/loading/{tt}/depart',body)) == result
+    assert result['physical_places'] == 640 and q.stock() == (4600,200,460), result
+    assert retained_snapshot() == s['retained_before_reduce']
+    rows = q.db("select EVENT_OUTBOX_ID,EVENT_TYPE,STATUS,PAYLOAD_JSON from RRL_EVENT_OUTBOX "
+                "where CORRELATION_ID=:op and EVENT_TYPE in('TRADECASE_SHIPMENT_SAP','TRADECASE_SHIPMENT_SKM') order by EVENT_OUTBOX_ID",
+                op=body['operation_id'])
+    assert len(rows) == 8, len(rows)  # Four orders, two recipients of each shipment event.
+    events = [dict(id=i,event_type=kind,status=status,payload=value if isinstance(value,dict) else json.loads(value))
+              for i,kind,status,value in rows]
+    (q.OUT/'shipment-events-640.json').write_text(json.dumps(events,ensure_ascii=False,indent=1),encoding='utf-8')
+    expected = {'101':2000,'102':1500,'103':2500,'104':400}; unit_sets={}; code_sets={}
+    retained_keys = {r[2] for r in s['retained_before_reduce']}; retained_codes = {r[4] for r in s['retained_before_reduce']}
+    for system in ('SAP','SKM'):
+        messages = [x['payload'] for x in events if x['payload']['system_code'] == system]
+        assert len(messages) == 4 and {x['order_id'] for x in messages} == set(expected)
+        for msg in messages: assert int(msg['quantity']) == msg['unit_count'] == len(msg['units']) == expected[msg['order_id']]
+        keys = [u['physical_unit_key'] for msg in messages for u in msg['units']]
+        codes = [c['code'] for msg in messages for u in msg['units'] for c in u['codes']]
+        assert len(keys) == len(set(keys)) == len(codes) == len(set(codes)) == 6400
+        assert not retained_keys.intersection(keys) and not retained_codes.intersection(codes)
+        unit_sets[system] = set(keys); code_sets[system] = set(codes)
+    assert unit_sets['SAP'] == unit_sets['SKM'] and code_sets['SAP'] == code_sets['SKM']
+    s['shipment_events'] = [dict(id=x['id'],system=x['payload']['system_code'],order=x['payload']['order_id'],
+                                 units=x['payload']['unit_count'],quantity=x['payload']['quantity'],status=x['status']) for x in events]
+    s['phase'] = 'DEPARTED_640'; q.save()
+
+
+def finish():
+    assert s.get('phase') == 'DEPARTED_640', s.get('phase')
+    assert q.stock() == (4600,200,460) and retained_snapshot() == s['retained_before_reduce']
+    expected = {'101':[('SHIPPED',200,2000)],'102':[('SHIPPED',150,1500)],'103':[('SHIPPED',250,2500)],
+                '104':[('PICKED',20,200),('SHIPPED',40,400)]}
+    for number,order in s['orders'].items():
+        actual = q.db('select STATUS,count(*),sum(FACT_QTY)from RRL_CUSTOMER_ORDER_FULFILLMENT where CUSTOMER_ORDER_ID=:o group by STATUS order by STATUS',o=order['order'])
+        assert actual == expected[number], (number,actual)
+    s['final_waves'] = {}
+    for wave in (s['main_wave'],s['topup_wave']):
+        execution = q.expect(200,q.http('GET',f'/api/picking/waves/{wave}/execution'))
+        if execution['ready']:
+            q.step('finish.'+str(wave),'POST',f'/api/picking/waves/{wave}/finish-execution',dict(operation_id=q.tag()+'.finish.'+str(wave)))
+        s['final_waves'][str(wave)] = q.db('select STATUS from RRL_PICK_WAVE where PICK_WAVE_ID=:w',w=wave)
+    assert q.db("select count(*)from USER_OBJECTS where STATUS='INVALID'") == [(0,)]
+    s.update(phase='DEPARTED_640_RETAINED_20',protected_final_result='PASS_640_20',
+             final_stock=list(q.stock()),external_acceptance='NOT_VERIFIED_SYNTHETIC_RESPONSES')
+    q.save()
+
+
 def main():
     os.environ['TRADECASE_ADMIN_USER'] = 'admin'
     os.environ.setdefault('TRADECASE_ADMIN_PASSWORD', 'admin123')
     assert s.get('phase') != 'CLOSED', 'Never reopen a closed fixture'
+    assert not s.get('protected_final_result'), 'Keep the verified retained stock; do not reopen this fixture'
     try:
         setup()
         stage = sys.argv[1] if len(sys.argv)>1 else 'receive'

@@ -30,6 +30,8 @@ end;
 /
 drop package RRL_TT_PLACE_REMOVAL_API;
 @@before_writer.sql
+alter package RRL_TRANSPORT_PLAN_API compile body;
+alter package RRL_ST_DEFER_API compile body;
 drop table RRL_TT_PLACE_REMOVAL_CMD purge;
 @@rollback_verify.sql
 merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-27-tt-selected-places' MIGRATION_ID from dual)x on(d.MIGRATION_ID=x.MIGRATION_ID)

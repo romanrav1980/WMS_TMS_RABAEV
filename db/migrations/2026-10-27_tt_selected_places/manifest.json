@@ -1,7 +1,7 @@
 {
  "target": "RABAEV/orcl",
  "migration_id": "2026-10-27-tt-selected-places",
- "revision": "C-0176",
+ "revision": "C-0176-root-review-1",
  "status": "NOT_APPLIED",
  "applied_by_claude": false,
  "new_objects": {
@@ -37,10 +37,11 @@
   "002_writer.sql": "7272faf0d4f7e433e71dbbca1b6477702e546cd634240878999e5b806dc953bf",
   "003_removal_spec.sql": "2a6e5a0432246c6787f8097a9d3f326b89e721bd7d672a012d1c017a36c916e2",
   "004_removal_body.sql": "a6ed1f47b559c7f1bbb3cba4fa35575c16e7e3b081d205d408515e5b415fdd55",
-  "apply.sql": "f225a05538ad90a149b5afacc33286d92e06c144e62dd246679eadd66ef0c48f",
+  "apply.sql": "b6c02d10d0765ebb42d00402d7cf386b24768aabbc2daffddd5debf8bfad9907",
   "before_writer.sql": "2df89e4432021c6e72f2ee06db26e33220a2b4b2c3bb032913fe150040cb26b4",
-  "rollback.sql": "08c41a8efa09d9baf2e173dd35faf427084018fd98c338daf32a76f5de8720e1",
+  "rollback.sql": "d6a2cec3f5c22c504d13b41b46231890aa95440de2469704dcdb860d5330c478",
   "rollback_verify.sql": "2289686d40ace464ab0b66790718615e25be668421b21f92009335fa613913a8",
   "verify.sql": "9dc4de5ac74d55ff4de1bab843bec4a0b16b8491254a77b157e045e94b793046"
- }
+ },
+ "root_review": "Explicit dependent-body compilation before verification; captured before sources unchanged"
 }
