@@ -147,6 +147,63 @@ def tree_findings(composition: dict[str, Any], expected: dict[str, Any]) -> list
     return out
 
 
+# K-0217: each refusal must be the expected native rule, not any 403/409 (an unrelated denial must not look green).
+EXPECTED_REFUSALS = {
+    "stale_parent_version": "HU_CONTENT_VERSION_CONFLICT",
+    "foreign_carrier_scan": "HU_CASE_CARRIER_SCAN_REQUIRED",
+    "changed_body_same_operation": "OPERATION_CONTENT_CONFLICT",
+    "other_cell": "HU_PACK_SAME_LOCATION_REQUIRED",
+}
+UNCERTAIN_CODES = {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "LOCK_RETRY_EXHAUSTED", "CONNECTION_UNUSABLE", "STOCK_RELEASE_NOT_ACTIVE",
+                   "POSTED_CONNECTION_RESET_FAILED"}
+
+
+def refusal_matches(value: Any, expected: str) -> bool:
+    """The API puts the native rule either in detail.code or in detail.reason (HU routes: code + rule_reason)."""
+    detail = value.get("detail", {}) if isinstance(value, dict) else {}
+    if not isinstance(detail, dict):
+        return False
+    return any(isinstance(detail.get(k), str) and detail[k].split(":")[0].strip() == expected for k in ("code", "reason"))
+
+
+def check_refusal(name: str, value: Any, before: dict[str, Any], after: dict[str, Any]) -> None:
+    if not refusal_matches(value, EXPECTED_REFUSALS[name]):
+        raise RunnerStop(f"UNEXPECTED_REFUSAL:{name}:{str(value)[:300]}")
+    if after != before:
+        raise RunnerStop(f"REFUSAL_CHANGED_PARENT_COMPOSITION:{name}")
+
+
+def native_status(error: BaseException | None) -> int:
+    """200 posted; 409 confirmed native refusal; 0 unknown outcome (must be repeated with the same bytes)."""
+    if error is None:
+        return 200
+    code, oracle = getattr(error, "code", None), getattr(error, "oracle_code", None)
+    if code is not None and code not in UNCERTAIN_CODES and oracle not in (20891, 20892, 20893):
+        return 409
+    return 0
+
+
+def cleanup_scope_findings(rows: list[tuple], reservations: int, foreign_tasks: int, allowed_uids: set[str], expected: dict[str, str]) -> list[str]:
+    """K-0217: INVENTORY_COUNT may zero only this run's own lots (registered lots and its CASE carrier lots) with the exact expected
+    remainder per article; anything else on the warehouse stops cleanup before the count."""
+    out = []
+    totals: dict[str, Decimal] = {}
+    for uid, cell, article, unit, version, quantity in rows:
+        if uid not in allowed_uids:
+            out.append(f"FOREIGN_UID:{uid}")
+        if article not in expected:
+            out.append(f"FOREIGN_ARTICLE:{article}")
+        totals[article] = totals.get(article, Decimal(0)) + Decimal(str(quantity))
+    for article, qty in expected.items():
+        if totals.get(article, Decimal(0)) != Decimal(qty):
+            out.append(f"REMAINDER_MISMATCH:{article}:{totals.get(article, Decimal(0))}!={qty}")
+    if reservations:
+        out.append(f"ACTIVE_RESERVATIONS:{reservations}")
+    if foreign_tasks:
+        out.append(f"FOREIGN_OPEN_TASKS:{foreign_tasks}")
+    return out
+
+
 def cleanup_plan(state: dict[str, Any]) -> list[str]:
     """Ordered native reversals for exactly what this run created; journals and history are kept."""
     plan = [f"HU_DETACH_CASE:{t}" for t in state.get("tree_attached", [])]
@@ -212,16 +269,34 @@ class Live:
                 q.callproc("RRL_STOCK_CONFIG_API.end_change")
 
     def post(self, key: str, kind: str, metadata: dict[str, Any], source: dict[str, Any]) -> Any:
-        """Native StockPosting with a journaled operation id (the same id on resume)."""
-        if key in self.s["posts"]:
-            return self.s["posts"][key]["result"]
+        """Native StockPosting through the same journal (K-0217): the exact serialized command is stored before posting; a repeat
+        posts those stored bytes; changed content under the same key stops; an unknown outcome blocks every later step."""
+        command = {"operation_id": f"{self.s['tag']}.{key}", "command_type": kind, "actor": "admin", "source": source, "metadata": metadata}
+        jkey = "native." + key
+        wire = self.journal.record(jkey, "NATIVE", kind, command); self.save()
+        if jkey in self.journal.results:
+            return self.journal.results[jkey]["value"]
+        stored = json.loads(wire)
+        error, result = None, None
+        try:
+            result = self.stock_post(stored)
+        except Exception as exc:  # classified below; nothing is swallowed
+            error = exc
+        status = native_status(error)
+        try:
+            value = self.journal.outcome(jkey, status, result if error is None else {"code": getattr(error, "code", type(error).__name__),
+                                                                                   "reason": getattr(error, "rule_reason", None)})
+        finally:
+            self.save()
+        if status != 200:
+            raise RunnerStop(f"NATIVE_REFUSED:{jkey}:{value}")
+        return value
+
+    def stock_post(self, command: dict[str, Any]) -> Any:
         from app.modules.inventory.contracts_stock import StockCommand
         from app.modules.inventory.infrastructure.stock_posting_uow import StockPosting
-        op = f"{self.s['tag']}.{key}"
-        self.s["posts"][key] = {"operation_id": op, "kind": kind}; self.save()
-        result = StockPosting().post(StockCommand(operation_id=op, command_type=kind, actor="admin", source=source, metadata=metadata, lines=()))
-        self.s["posts"][key]["result"] = result; self.save()
-        return result
+        return StockPosting().post(StockCommand(operation_id=command["operation_id"], command_type=command["command_type"], actor=command["actor"],
+                                                source=command["source"], metadata=command["metadata"], lines=()))
 
     def get(self, path: str) -> Any:
         r = self.http.get(self.api + path)
@@ -427,9 +502,8 @@ class Live:
         negatives["other_cell"] = attach_case_body(f"{tag}.NEG.CELL", other, ea["task"], version(other), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"])
         refusals = {}
         for name, body in negatives.items():
-            refusals[name] = self.send("neg." + name, "POST", "/api/warehouse-hus/attach-case", body, expect=(403, 409))
-        if self.composition(parent) != before:
-            raise RunnerStop("REFUSAL_CHANGED_PARENT_COMPOSITION")
+            refusals[name] = self.send("neg." + name, "POST", "/api/warehouse-hus/attach-case", body, expect=(409,))
+            check_refusal(name, refusals[name], before, self.composition(parent))  # per refusal: exact rule + parent unchanged
         self.s["refusals"] = refusals; self.save()
         self.send("attach.ea", "POST", "/api/warehouse-hus/attach-case",
                   attach_case_body(f"{tag}.ATTACH.EA", parent, ea["task"], version(parent), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"]))
@@ -459,6 +533,8 @@ class Live:
                       "reason": "C0190 mixed tree cleanup"})
             self.s["tree_attached"].remove(task); self.save()
         for role, case in self.s.get("cases", {}).items():
+            carrier_lots = [r[0] for r in self.read("select LOT_UID from RRL_CASE_CARRIER_LOT where CASE_PICK_TASK_ID=:t", t=case["task"])]
+            self.s.setdefault("carrier_lots", {})[role] = sorted(set(self.s.get("carrier_lots", {}).get(role, [])) | set(carrier_lots)); self.save()
             lots = [r[0] for r in self.read("select h.LOT_UID from RRL_CASE_CARRIER_LOT h where h.CASE_PICK_TASK_ID=:t and exists(select 1 from RRL_REMAINS r where r.UID_POLETA=h.LOT_UID and r.REMAIN>0)", t=case["task"])]
             version = self.one("select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t", t=case["task"])
             self.post(f"return.{role}", "CASE_CARRIER_RETURN", {"destinations": {uid: case["cell"] for uid in lots}, "allow_empty": not lots,
@@ -480,10 +556,23 @@ class Live:
                 self.post("wave.finish", "WAVE_EXECUTION_FINISH", {"disposition": "RETURNED_TO_PLANNING", "reason": "C0190 native return; demand remains"}, {"wave_id": self.s["wave"]})
             elif status not in ("CANCELLED", "DONE"):
                 self.post("wave.cancel", "WAVE_CANCEL", {"reason": "C0190 retire fixture"}, {"document_type": "PICK_WAVE", "document_id": self.s["wave"]})
+        rows = self.read("select r.UID_POLETA,r.CELL,p.ARTICUL,r.BASE_UOM,r.STOCK_VERSION,r.REMAIN from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA "
+                         "join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0", w=ware)
+        allowed = set(self.s.get("lots", {}).values()) | {uid for uids in self.s.get("carrier_lots", {}).values() for uid in uids}
+        a = self.s.get("articles", {})
+        registered = {"kg": str(Decimal(self.s["measurements"]["manual_net_kg"]) * 2), "ea": str(int(EA_QTY) * 2)} if a else {}
+        expected = {a[role]: qty for role, qty in registered.items() if "native.register." + role in self.journal.results}  # only lots this run posted
+        reservations = self.one("select count(*) from RRL_STOCK_RESERVATION r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.STATUS in('ACTIVE','ALLOCATED','PICKING') and r.BASE_QTY>0", w=ware)
+        own = [c["task"] for c in self.s.get("cases", {}).values()] or [-1]
+        foreign_tasks = self.one("select count(*) from RRL_CASE_PICK_TASK where WARE_ID=:w and CASE_PICK_TASK_ID not in(" + ",".join(str(int(t)) for t in own) + ")", w=ware) + \
+            self.one("select count(*) from RRL_WAREHOUSE_TASK t join RRL_CELLS c on c.CELL=t.FROM_CELL where c.WARE_ID=:w and t.STATUS not in('DONE','CANCELLED')", w=ware)
+        findings = cleanup_scope_findings(rows, reservations, foreign_tasks, allowed, expected)
+        self.s["cleanup_scope"] = {"rows": rows, "findings": findings}; self.save()
+        if findings:
+            raise RunnerStop("CLEANUP_SCOPE_REFUSED:" + ",".join(findings))  # nothing is counted when anything else is present
         counts = [{"uid": uid, "cell": cell, "article": article, "unit": unit, "quantity": "0", "expected_stock_version": int(version), "unit_keys": [
                     r[0] for r in self.read("select PHYSICAL_UNIT_KEY from RRL_WMS_RECEIPT_UNIT where CURRENT_UID=:u and CURRENT_CELL=:c and STOCK_STATUS='AVAILABLE'", u=uid, c=cell)]}
-                  for uid, cell, article, unit, version in self.read("select r.UID_POLETA,r.CELL,p.ARTICUL,r.BASE_UOM,r.STOCK_VERSION from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA "
-                                                                     "join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0", w=ware)]
+                  for uid, cell, article, unit, version, _ in rows]
         if counts:
             self.post("count.zero", "INVENTORY_COUNT", {"reason": "C0190 end isolated mixed tree", "counts": counts}, {"revision_id": self.s["revision"]})
         left = self.one("select nvl(sum(r.REMAIN),0),nvl(sum(r.HARD_RESERVED_BASE),0) from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w", w=ware)

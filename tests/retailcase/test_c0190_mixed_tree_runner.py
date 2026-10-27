@@ -186,3 +186,109 @@ def test_live_modes_require_an_explicit_api(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["runner", "run"])
     with pytest.raises(SystemExit):
         runner.main()
+
+
+# ---------------- K-0217 rework: cleanup scope, native journal, exact refusals ----------------
+
+OWN = {"MT.LOT.K", "MT.LOT.E", "CASELOT:K:1", "CASELOT:E:1"}
+EXPECTED_LEFT = {"MTK": "19.2", "MTE": "8"}
+ROWS = [("MT.LOT.K", "PK", "MTK", "KG", 3, "9.6"), ("CASELOT:K:1", "PK", "MTK", "KG", 1, "9.6"),
+        ("MT.LOT.E", "PE", "MTE", "EA", 3, "4"), ("CASELOT:E:1", "PE", "MTE", "EA", 1, "4")]
+
+
+def test_cleanup_scope_accepts_only_this_runs_lots_with_the_exact_remainder():
+    assert runner.cleanup_scope_findings(ROWS, 0, 0, OWN, EXPECTED_LEFT) == []
+
+
+@pytest.mark.parametrize("rows,reservations,tasks,code", [
+    (ROWS + [("OTHER.LOT", "PK", "MTK", "KG", 1, "0")], 0, 0, "FOREIGN_UID:OTHER.LOT"),
+    (ROWS + [("MT.LOT.K", "PK", "SHARED", "EA", 1, "0")], 0, 0, "FOREIGN_ARTICLE:SHARED"),
+    (ROWS[:-1], 0, 0, "REMAINDER_MISMATCH:MTE"),
+    (ROWS, 1, 0, "ACTIVE_RESERVATIONS:1"),
+    (ROWS, 0, 2, "FOREIGN_OPEN_TASKS:2"),
+])
+def test_cleanup_refuses_anything_that_is_not_this_runs_exact_state(rows, reservations, tasks, code):
+    findings = runner.cleanup_scope_findings(rows, reservations, tasks, OWN, EXPECTED_LEFT)
+    assert any(f.startswith(code) for f in findings), findings
+
+
+class PostingError(Exception):
+    def __init__(self, code, oracle_code=None, rule_reason=None):
+        super().__init__(code); self.code, self.oracle_code, self.rule_reason = code, oracle_code, rule_reason
+
+
+@pytest.mark.parametrize("error,status", [(None, 200), (PostingError("STOCK_RULE_REJECTED", 20886, "X"), 409), (PostingError("RESULT_UNCERTAIN"), 0),
+                                          (PostingError("CASE", 20891), 0), (OSError("reset"), 0)])
+def test_native_outcome_classification(error, status):
+    assert runner.native_status(error) == status
+
+
+def native_live(folder, answers):
+    live = live_with([], folder)
+    calls = []
+
+    def stock_post(command):
+        stored = json.loads((folder / "state.json").read_text(encoding="utf-8"))["journal"]["steps"]
+        calls.append((command, any(k.startswith("native.") for k in stored)))  # the command was journaled before posting
+        answer = answers.pop(0)
+        if isinstance(answer, BaseException):
+            raise answer
+        return answer
+    live.stock_post = stock_post
+    return live, calls
+
+
+def test_native_command_is_journaled_before_posting_and_retried_with_identical_content(work):
+    live, calls = native_live(work, [PostingError("RESULT_UNCERTAIN"), {"operation_id": "MT28T.return.kg"}])
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME:native.return.kg"):
+        live.post("return.kg", "CASE_CARRIER_RETURN", {"destinations": {"L": "PK"}}, {"case_task_id": 1})
+    assert live.journal.unknown == "native.return.kg" and calls[0][1] is True
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME_PENDING:native.return.kg"):
+        live.post("count.zero", "INVENTORY_COUNT", {"counts": []}, {"revision_id": 1})  # later stages are blocked
+    assert live.post("return.kg", "CASE_CARRIER_RETURN", {"destinations": {"L": "PK"}}, {"case_task_id": 1}) == {"operation_id": "MT28T.return.kg"}
+    assert calls[0][0] == calls[1][0] and calls[0][0]["operation_id"] == "MT28T.return.kg"
+    assert live.post("return.kg", "CASE_CARRIER_RETURN", {"destinations": {"L": "PK"}}, {"case_task_id": 1}) == {"operation_id": "MT28T.return.kg"} and len(calls) == 2
+
+
+def test_changed_native_content_under_the_same_operation_is_refused_before_posting(work):
+    live, calls = native_live(work, [PostingError("RESULT_UNCERTAIN")])
+    with pytest.raises(runner.RunnerStop):
+        live.post("count.zero", "INVENTORY_COUNT", {"counts": [{"uid": "L", "quantity": "0", "expected_stock_version": 3}]}, {"revision_id": 1})
+    with pytest.raises(runner.RunnerStop, match="STEP_CONTENT_CHANGED:native.count.zero"):
+        live.post("count.zero", "INVENTORY_COUNT", {"counts": [{"uid": "L", "quantity": "0", "expected_stock_version": 4}]}, {"revision_id": 1})
+    assert len(calls) == 1  # re-read quantities never reuse the operation id with other content
+
+
+def test_confirmed_native_refusal_is_final_not_unknown(work):
+    live, calls = native_live(work, [PostingError("STOCK_RULE_REJECTED", 20886, "CASE_RETURN_DESTINATION_REQUIRED")])
+    with pytest.raises(runner.RunnerStop, match="NATIVE_REFUSED"):
+        live.post("return.ea", "CASE_CARRIER_RETURN", {}, {"case_task_id": 2})
+    assert live.journal.unknown is None and live.journal.results["native.return.ea"]["status"] == 409
+
+
+BEFORE = {"nodes": [{"uid": "MT.PAL", "version": 3}]}
+
+
+@pytest.mark.parametrize("name,detail", [
+    ("stale_parent_version", {"code": "STOCK_RULE_REJECTED", "reason": "HU_CONTENT_VERSION_CONFLICT"}),
+    ("foreign_carrier_scan", {"code": "HU_CASE_CARRIER_SCAN_REQUIRED"}),
+    ("other_cell", {"code": "STOCK_RULE_REJECTED", "reason": "HU_PACK_SAME_LOCATION_REQUIRED: cell"}),
+    ("changed_body_same_operation", {"code": "OPERATION_CONTENT_CONFLICT"}),
+])
+def test_each_refusal_must_be_its_expected_rule_with_the_parent_unchanged(name, detail):
+    runner.check_refusal(name, {"detail": detail}, BEFORE, BEFORE)
+    with pytest.raises(runner.RunnerStop, match="REFUSAL_CHANGED_PARENT_COMPOSITION"):
+        runner.check_refusal(name, {"detail": detail}, BEFORE, {"nodes": [{"uid": "MT.PAL", "version": 4}]})
+
+
+@pytest.mark.parametrize("name", list(runner.EXPECTED_REFUSALS))
+def test_an_unrelated_denial_does_not_pass_as_the_expected_refusal(name):
+    for wrong in ({"detail": {"code": "ACCESS_DENIED"}}, {"detail": "Permission required"}, {"detail": {"code": "HU_CHILD_ALREADY_HAS_PARENT"}}):
+        with pytest.raises(runner.RunnerStop, match="UNEXPECTED_REFUSAL"):
+            runner.check_refusal(name, wrong, BEFORE, BEFORE)
+
+
+def test_tree_stage_checks_every_negative_by_name():
+    import inspect
+    source = inspect.getsource(runner.Live.tree)
+    assert all(f'"{name}"' in source for name in runner.EXPECTED_REFUSALS) and "check_refusal(name" in source and "expect=(409,)" in source

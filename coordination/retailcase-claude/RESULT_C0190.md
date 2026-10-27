@@ -8,7 +8,7 @@ No existing script covers the criterion from `tradecase_nested_shipping_20261023
 
 ## Files
 - `scripts/c0190_mixed_tree_runner.py` (root runs it; Claude did not run it in live modes)
-- `tests/retailcase/test_c0190_mixed_tree_runner.py` (offline, 32 tests)
+- `tests/retailcase/test_c0190_mixed_tree_runner.py` (offline, 55 tests)
 - `reports/tradecase/2026-10-28/claude/C0190/plan.json` (output of `plan`)
 
 ## How it works
@@ -76,3 +76,30 @@ Modes: `plan` (default, no network or Oracle) · `preflight` (read only) · `run
   - Unconfirmed assumptions: two orders give two separate CASEs; the EA unit code from the template's rows; attach-case of a picked CASE without a prior close/bind-shipment; tare availability fields.
 - **Open:** TRANSPORT (control/LOAD/DEPART), the store receipt by the root SSCC, and the separately confirmed gross weight of the parent (`Measurements MANUAL_CONFIRMED` on HU move).
 - **General confirm gap (root-owned, not changed):** `/confirm` accepts a client fact_qty for KG without provenance. The runner does not use it for KG; it uses it only for the EA line.
+
+## Rework K-0217 (the same task; the three blockers fixed)
+1. **Cleanup only for this run's state.**
+   - Before `INVENTORY_COUNT`, `cleanup_scope_findings` checks the warehouse:
+     - only UIDs from the fixture (the two registered lots) and the carrier lots of this run's CASEs (`RRL_CASE_CARRIER_LOT`, saved to the state before the return);
+     - only the two run articles;
+     - the remainder per article exactly equals what was registered (KG = 2×NET, EA = 8), counted only for lots actually posted in the journal;
+     - 0 active reservations; no other CASEs on the warehouse and no open warehouse tasks.
+   - Any deviation → `CLEANUP_SCOPE_REFUSED:<findings>`, and nothing is counted.
+2. **Native StockPosting through the same journal.**
+   - `post()` stores the full serialized command `{operation_id, command_type, actor, source, metadata}` under the key `native.<key>` **before** the call, and calls StockPosting with exactly the stored content.
+   - Outcome: 200 posted; 409 confirmed refusal (code and reason recorded); 0 unknown (`RESULT_UNCERTAIN`/`REQUEST_DEADLINE`/… or oracle 20891–20893, or any exception without a code). An unknown outcome blocks every later step until the same command is repeated.
+   - Content recomputed after re-reading the quantities under the same key → `STEP_CONTENT_CHANGED` before posting. Cleanup never reuses an operation_id with different content.
+3. **Exact refusals and the composition after each one.**
+   - Negative steps accept only 409 and check the expected rule in `detail.code` or `detail.reason`:
+     - stale parent version → `HU_CONTENT_VERSION_CONFLICT`;
+     - someone else's carrier scan → `HU_CASE_CARRIER_SCAN_REQUIRED`;
+     - another cell → `HU_PACK_SAME_LOCATION_REQUIRED`;
+     - changed body with the same operation → `OPERATION_CONTENT_CONFLICT`.
+   - After **each** refusal the parent composition is re-read and must equal the composition before the refusals. An unrelated denial (ACCESS_DENIED, 403 Permission required, HU_CHILD_ALREADY_HAS_PARENT) → `UNEXPECTED_REFUSAL`.
+- **New tests (+23):**
+  - cleanup: accepts the run's lots and refuses another UID, another article, a remainder mismatch, an active reservation and other tasks;
+  - native outcome classification;
+  - the command is in the journal before posting; an unknown outcome blocks later steps; a retry is identical; a completed one is not repeated; changed content is refused before posting; a confirmed refusal is final;
+  - each refusal by its expected code plus an unchanged composition; unrelated denials do not pass;
+  - the TREE stage checks every negative by name.
+- **Checks:** 55 passed; gate, encoding and architecture PASS. Store receipt and TRANSPORT unchanged (outside the runner, reported explicitly). Live modes not run; no Oracle writes.
