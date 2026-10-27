@@ -1,7 +1,7 @@
 """Weighted box scanning feeds the existing CASE posting command."""
 from fastapi import APIRouter, Depends, HTTPException
 from ...platform.public import AdminUser, require_permission
-from ..contracts_weighted_case import WeightedCaseRequest, WeighedLineRequest, WeightedCasePort, weighted_case_service
+from ..contracts_weighted_case import ManualNetLineRequest, WeightedCaseRequest, WeighedLineRequest, WeightedCasePort, weighted_case_service
 
 router = APIRouter(prefix="/api/case-pick", tags=["case-pick"])
 
@@ -26,6 +26,18 @@ def confirm_weighed_line(task: int, line: int, body: WeighedLineRequest,
                 **service.weigh_line(task, line, body, user.username)}
     except ValueError as exc:
         raise HTTPException(409, {"code": "WEIGHED_CASE_SOURCE_REJECTED", "message": str(exc),
+                                 "outcome_confirmed": True, "retry_same_operation_id": False}) from exc
+
+
+@router.post("/tasks/{task}/lines/{line}/weigh-line-manual")
+def confirm_manual_net_line(task: int, line: int, body: ManualNetLineRequest,
+                            user: AdminUser = Depends(require_permission("case_pick_execute")),
+                            service: WeightedCasePort = Depends(weighted_case_service)) -> dict:
+    try:
+        return {"case_pick_task_id": task, "case_pick_line_id": line,
+                **service.weigh_line_manual(task, line, body, user.username)}
+    except ValueError as exc:
+        raise HTTPException(409, {"code": "WEIGHED_CASE_MANUAL_REJECTED", "message": str(exc),
                                  "outcome_confirmed": True, "retry_same_operation_id": False}) from exc
 
 
