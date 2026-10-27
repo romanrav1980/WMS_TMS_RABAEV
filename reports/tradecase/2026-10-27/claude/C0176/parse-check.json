@@ -1,0 +1,21 @@
+{
+ "002_writer.sql": {
+  "codes": [
+   "ORA-06550",
+   "PLS-00904"
+  ],
+  "syntax_error": false,
+  "message": "ORA-06550: line 50, column 5:\nPLS-00904: insufficient privilege to access object RRL_TT_MEMBERSHIP_CTX_API\nORA-06550: line 50, column 5:\nPL/SQL: Statement ignored\nORA-06550: line 52, column 5:\nPLS-00904: insufficient privilege to access object RRL_TT_MEMBERSHIP_CTX_API\nORA-06550: line 52, column 5:\nPL/SQL: Statement ignored\nORA-06550: line 59, column 28:\nPLS-00904: insufficient privilege to access object RRL_TT_MEMBERSHIP_CTX_API\nORA-06550: line 59, column 28:\nPL/SQL: Statement ignored\nHelp: https://docs.oracle.com/error-help/db/ora-06550/"
+ },
+ "004_removal_body.sql": {
+  "codes": [
+   "ORA-00942",
+   "ORA-06550",
+   "PLS-00201",
+   "PLS-00306",
+   "PLS-00320"
+  ],
+  "syntax_error": false,
+  "message": "ORA-06550: line 18, column 106:\nPLS-00201: identifier 'RRL_TT_PLACE_REMOVAL_CMD' must be declared\nORA-06550: line 18, column 106:\nPL/SQL: Item ignored\nORA-06550: line 20, column 24:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 20, column 3:\nPL/SQL: SQL Statement ignored\nORA-06550: line 21, column 6:\nPLS-00320: the declaration of the type of this expression is incomplete or malformed\nORA-06550: line 21, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 22, column 13:\nPLS-00320: the declaration of the type of this expression is incomplete or malformed\nORA-06550: line 22, column 3:\nPL/SQL: Statement ignored\nORA-06550: line 62, column 12:\nPLS-00306: wrong number or types of arguments in call to 'RRL_TT_ADD_PALL'\nORA-06550: line 62, column 4:\nPL/SQL: Statement ignored\nORA-06550: line 69, column 16:\nPL/SQL: ORA-00942: table or view does not exist\nORA-06550: line 69, column"
+ }
+}

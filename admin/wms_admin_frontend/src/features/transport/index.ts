@@ -7,3 +7,4 @@ export {StPagesBar} from "./StPagesBar";
 export {useTripDeepLink} from "./useTripDeepLink";
 export {VehicleChange,vehicleChangeError} from "./VehicleChange";
 export {saveTripEdit} from "./vehicleEditIntent";
+export {TransportStPlaceRemoval} from "./TransportStPlaceRemoval";

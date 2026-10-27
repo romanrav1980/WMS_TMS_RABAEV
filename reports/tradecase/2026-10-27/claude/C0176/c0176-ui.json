@@ -1,0 +1,126 @@
+{
+ "kind": "OWN_PREVIEW_REAL_LOGIN_REAL_TRIP_READ_ONLY_STUB_NEW_ENDPOINTS",
+ "trip": 33698,
+ "st": "P210069361104",
+ "checks": [
+  {
+   "w": 1440,
+   "case": "places list of the selected assembly shown"
+  },
+  {
+   "w": 1440,
+   "case": "503 kept the saved command and offers the exact retry"
+  },
+  {
+   "w": 1440,
+   "case": "retry sent the identical body (same operation id and membership version); success shown"
+  },
+  {
+   "w": 1440,
+   "case": "layout",
+   "size": {
+    "viewport": 1440,
+    "page": 1440
+   },
+   "own": {
+    "left": 0,
+    "right": 1276,
+    "width": 1276
+   }
+  },
+  {
+   "w": 1440,
+   "case": "403 on reload clears the places"
+  },
+  {
+   "w": 390,
+   "case": "existing page: right panel intercepts the ST row button on 390; panel opened by a click event on the button"
+  },
+  {
+   "w": 390,
+   "case": "places list of the selected assembly shown"
+  },
+  {
+   "w": 390,
+   "case": "503 kept the saved command and offers the exact retry"
+  },
+  {
+   "w": 390,
+   "case": "retry sent the identical body (same operation id and membership version); success shown"
+  },
+  {
+   "w": 390,
+   "case": "layout",
+   "size": {
+    "viewport": 390,
+    "page": 390
+   },
+   "own": {
+    "left": 0,
+    "right": 390,
+    "width": 390
+   }
+  },
+  {
+   "w": 390,
+   "case": "403 on reload clears the places"
+  }
+ ],
+ "writes": [],
+ "errors": [],
+ "posts": [
+  {
+   "w": 1440,
+   "body": {
+    "operation_id": "TT.PLACES.8b58bd57-0afa-4100-9d05-4176d67aaa63",
+    "st_number": "P210069361104",
+    "member_ids": [
+     904,
+     905
+    ],
+    "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "reason": "Reduced trip keeps 4 places"
+   }
+  },
+  {
+   "w": 1440,
+   "body": {
+    "operation_id": "TT.PLACES.8b58bd57-0afa-4100-9d05-4176d67aaa63",
+    "st_number": "P210069361104",
+    "member_ids": [
+     904,
+     905
+    ],
+    "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "reason": "Reduced trip keeps 4 places"
+   }
+  },
+  {
+   "w": 390,
+   "body": {
+    "operation_id": "TT.PLACES.42e6be1e-66e6-4493-90da-e0cb3d71afdb",
+    "st_number": "P210069361104",
+    "member_ids": [
+     904,
+     905
+    ],
+    "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "reason": "Reduced trip keeps 4 places"
+   }
+  },
+  {
+   "w": 390,
+   "body": {
+    "operation_id": "TT.PLACES.42e6be1e-66e6-4493-90da-e0cb3d71afdb",
+    "st_number": "P210069361104",
+    "member_ids": [
+     904,
+     905
+    ],
+    "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "reason": "Reduced trip keeps 4 places"
+   }
+  }
+ ],
+ "status": "PASS"
+}

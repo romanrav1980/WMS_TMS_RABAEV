@@ -101,3 +101,7 @@ from .contracts_extra_stop import ExtraStopPort, extra_stop_service
 from .api.extra_stop_routes import router as extra_stop_router
 
 from .infrastructure.extra_stop import OracleExtraStop
+
+from .contracts_place_removal import PlaceRemovalPort, place_removal_service
+from .api.place_removal_routes import router as place_removal_router
+from .infrastructure.place_removal import OraclePlaceRemoval

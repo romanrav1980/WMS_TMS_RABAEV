@@ -397,6 +397,8 @@ app.include_router(transport_preflight_router)
 app.dependency_overrides[transport_preflight_service] = preflight_service
 from .extra_stop_composition import register_extra_stop
 register_extra_stop(app)
+from .place_removal_composition import register_place_removal
+register_place_removal(app)
 from .case_paper_composition import register_case_paper
 register_case_paper(app)
 from .yard_plan_composition import register_yard_plans

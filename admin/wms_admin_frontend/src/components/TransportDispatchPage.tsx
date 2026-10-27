@@ -1,5 +1,5 @@
 import { adminAuthorization, adminBasicAuth, currentSessionCredentials } from "../api";
-import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError, saveTripEdit } from "../features/transport";
+import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError, saveTripEdit, TransportStPlaceRemoval } from "../features/transport";
 import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
@@ -2184,7 +2184,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   onClose={() => setPalletStNum(null)}
                 />
               )}
-
+              {palletStNum && selectedTask && <TransportStPlaceRemoval tripId={selectedTask.ID} stNumber={palletStNum} disabled={loading || selectedTask.CONDITION === "Отгружен" || !!selectedTask.PAY_ORDER_ID} onChanged={() => void reloadSelectedTaskSts(selectedTask.ID)} />}
               </> /* end Sprint 74 collapsible */}
             </div>
           ) : (
@@ -2492,7 +2492,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   loading={palletLoading}
                   onClose={() => setPalletStNum(null)}
                 />
-              )}
+              )}{palletStNum && selectedTask && <TransportStPlaceRemoval tripId={selectedTask.ID} stNumber={palletStNum} disabled={loading || selectedTask.CONDITION === "Отгружен" || !!selectedTask.PAY_ORDER_ID} onChanged={() => void reloadSelectedTaskSts(selectedTask.ID)} />}
             </div>
           ) : (
             <div className="dispatch-no-task">
