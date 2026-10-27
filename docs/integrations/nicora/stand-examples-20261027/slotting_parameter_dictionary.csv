@@ -1,0 +1,2 @@
+parameter_code,meaning,value_type,allowed_values,synthetic
+TEST_SELECTION_CLASS,ТЕСТ: различение примеров без утверждения алгоритма,STRING,PACK|WEIGHT,true

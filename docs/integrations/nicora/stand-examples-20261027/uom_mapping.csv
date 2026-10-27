@@ -1,0 +1,6 @@
+source_system,source_uom,exchange_uom,meaning
+SYNTHETIC,EA,EA,штука
+SYNTHETIC,BOX,BOX,коробка
+SYNTHETIC,BLK,BLK,блок
+SYNTHETIC,G,G,грамм
+SYNTHETIC,KG,KG,килограмм

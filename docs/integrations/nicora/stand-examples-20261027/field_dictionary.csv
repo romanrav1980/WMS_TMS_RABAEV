@@ -1,0 +1,212 @@
+file,field,type,required,meaning_and_validation
+addresses.csv,address_id,ID,да,Устойчивый код физического адреса.
+addresses.csv,country,COUNTRY,да,Страна ISO 3166-1 alpha-2.
+addresses.csv,city,TEXT,да,Населённый пункт.
+addresses.csv,street_address,TEXT,да,"Улица, дом и уточнение."
+addresses.csv,timezone,TZ,да,Часовой пояс IANA для календаря адреса.
+addresses.csv,latitude,DEC,нет,Проверенная широта от −90 до 90 градусов.
+addresses.csv,longitude,DEC,нет,Проверенная долгота от −180 до 180; вместе с широтой.
+warehouses.csv,warehouse_id,ID,да,Устойчивый код склада.
+warehouses.csv,name,TEXT,да,Название склада.
+warehouses.csv,address_id,ID,да,Ссылка на addresses.
+warehouses.csv,plant_code,ID,нет,"Фактический завод SAP; пусто, если неприменим."
+warehouses.csv,storage_location_code,ID,нет,"Фактическое место хранения SAP, если одно."
+warehouses.csv,shipping_point_code,ID,нет,"Фактический пункт отгрузки SAP, если один."
+warehouses.csv,active,BOOL,да,Активность карточки.
+recipients.csv,recipient_id,ID,да,Устойчивый код одного адреса получения.
+recipients.csv,customer_id,ID,да,Код клиента; у клиента может быть несколько адресов.
+recipients.csv,recipient_kind,ENUM,да,STORE или WAREHOUSE_ADDRESS.
+recipients.csv,name,TEXT,да,Название адреса получения.
+recipients.csv,active,BOOL,да,Активность адресата.
+recipients.csv,address_id,ID,да,Ссылка на addresses.
+recipients.csv,timezone,TZ,да,Совпадает с поясом addresses.
+recipients.csv,source_warehouse_id,ID,нет,Один источник; несколько — в recipient_sources.
+recipients.csv,topup_enabled,BOOL,да,Разрешение добивки только по прогнозу перемещений.
+recipients.csv,topup_horizon_days,INT,условно,При topup_enabled=true обязательно и больше нуля.
+recipients.csv,receipt_strategy,ENUM,нет,"WEIGHT, PAPER_COUNT, APP_SCAN; пусто — способ не выбран."
+recipients.csv,valid_from,DATE,да,Начало действия включительно.
+recipients.csv,valid_to,DATE,нет,Конец действия исключительно; пусто — не задан.
+recipient_sources.csv,recipient_id,ID,да,Ссылка на recipients.
+recipient_sources.csv,warehouse_id,ID,да,Ссылка на warehouses.
+recipient_sources.csv,priority,INT,нет,Положительный приоритет; порядок выбора подтвердить паспортом.
+recipient_sources.csv,valid_from,DATE,да,Начало действия включительно.
+recipient_sources.csv,valid_to,DATE,нет,Конец действия исключительно.
+delivery_windows.csv,address_id,ID,да,Ссылка на addresses.
+delivery_windows.csv,calendar_date,DATE,условно,Дата начала; требуется она либо weekday.
+delivery_windows.csv,weekday,INT,условно,1 понедельник … 7 воскресенье; не вместе с calendar_date.
+delivery_windows.csv,window_start,TIME,условно,Начало в календаре адреса; обязательно у открытого окна.
+delivery_windows.csv,window_end,TIME,условно,Конец в календаре адреса; обязательно у открытого окна.
+delivery_windows.csv,end_day_offset,INT,условно,"0 тот же день, 1 следующий; обязательно у открытого окна."
+delivery_windows.csv,service_minutes,DEC,нет,Фактическое время обслуживания; неотрицательное.
+delivery_windows.csv,is_closed,BOOL,да,true закрывает день; поля окна и длительности пустые.
+products.csv,product_id,ID,да,Исходный товар SAP; ведущие нули сохранять.
+products.csv,name,TEXT,да,Название товара.
+products.csv,active,BOOL,да,Активность карточки.
+products.csv,base_uom,UOM,да,Базовая единица; пересчёт в неё 1/1.
+products.csv,order_uom,UOM,да,Предпочтительная единица заказа.
+products.csv,batch_required,BOOL,да,Требуется ли партия в запасе.
+products.csv,expiry_required,BOOL,да,Требуется ли дата окончания срока.
+products.csv,single_handling_uom,BOOL,да,Ограничена ли обработка одной единицей.
+products.csv,standard_handling_uom,UOM,условно,Обязательно при single_handling_uom=true.
+products.csv,round_to_standard_handling_uom,BOOL,да,"При false строка в иной единице загружается вниз с ошибкой, не отклоняется."
+products.csv,handling_step,DEC,условно,При единственной единице — положительный шаг в standard_handling_uom.
+products.csv,handling_policy_revision,REV,да,Редакция настройки обработки.
+products.csv,valid_from,DATE,да,Начало действия включительно.
+products.csv,valid_to,DATE,нет,Конец действия исключительно.
+uom_mapping.csv,source_system,ID,да,Логическая система источника.
+uom_mapping.csv,source_uom,ID,да,Код в исходном сообщении.
+uom_mapping.csv,exchange_uom,UOM,да,Код единицы в этом CSV-профиле.
+uom_mapping.csv,meaning,TEXT,да,Смысл единицы; коэффициент по каждому SKU отдельно.
+product_uom.csv,product_id,ID,да,Ссылка на products.
+product_uom.csv,uom,UOM,да,Единица количества или упаковки.
+product_uom.csv,numerator,POSINT,да,Положительный числитель пересчёта в базу SKU.
+product_uom.csv,denominator,POSINT,да,Положительный знаменатель; ноль запрещён.
+product_uom.csv,net_weight,DEC,нет,Номинальное нетто одной упаковки.
+product_uom.csv,gross_weight,DEC,нет,"Брутто одной упаковки, не меньше нетто."
+product_uom.csv,weight_uom,UOM,условно,G или KG; обязательно при наличии массы.
+product_uom.csv,length,DEC,нет,Положительная длина упаковки.
+product_uom.csv,width,DEC,нет,Положительная ширина упаковки.
+product_uom.csv,height,DEC,нет,Положительная высота упаковки.
+product_uom.csv,dimension_uom,ENUM,условно,"MM, CM, M; обязательно при размерах."
+product_uom.csv,conversion_revision,REV,да,Редакция коэффициента.
+product_uom.csv,base_scale,INT,да,Десятичные знаки в базе SKU: 0…9.
+product_uom.csv,quantity_step,DEC,нет,Положительный шаг в uom этой строки.
+product_uom.csv,valid_from,DATE,да,Начало действия включительно.
+product_uom.csv,valid_to,DATE,нет,Конец действия исключительно.
+product_barcodes.csv,product_id,ID,да,Ссылка на products.
+product_barcodes.csv,uom,UOM,да,Единица с действующим коэффициентом SKU.
+product_barcodes.csv,barcode,ID,да,Код как строка без удаления ведущих нулей.
+product_barcodes.csv,barcode_type,ENUM,да,INTERNAL у примера; реальный тип описать по источнику.
+product_categories.csv,taxonomy_id,ID,да,Код дерева каталога.
+product_categories.csv,taxonomy_revision,REV,да,Редакция дерева.
+product_categories.csv,category_id,ID,да,Устойчивый код узла внутри дерева.
+product_categories.csv,parent_category_id,ID,нет,Родитель; пусто только у корня.
+product_categories.csv,name,TEXT,да,Название узла.
+product_categories.csv,is_leaf,BOOL,да,Признак конечного узла; глубина ветвей может различаться.
+product_categories.csv,active,BOOL,да,Активность узла.
+product_categories.csv,valid_from,DATE,да,Начало действия включительно.
+product_categories.csv,valid_to,DATE,нет,Конец действия исключительно.
+product_category_assignments.csv,product_id,ID,да,Ссылка на products.
+product_category_assignments.csv,taxonomy_id,ID,да,Ссылка на дерево.
+product_category_assignments.csv,taxonomy_revision,REV,да,Редакция дерева.
+product_category_assignments.csv,category_id,ID,да,Конечный узел product_categories.
+product_category_assignments.csv,purpose,ENUM,да,SLOTTING в примере; иные назначения согласовать.
+product_category_assignments.csv,assignment_revision,REV,да,Редакция привязки.
+product_category_assignments.csv,valid_from,DATE,да,Начало действия включительно.
+product_category_assignments.csv,valid_to,DATE,нет,Конец действия исключительно.
+category_slotting_parameters.csv,taxonomy_id,ID,да,Дерево категории.
+category_slotting_parameters.csv,category_id,ID,да,Конечная категория.
+category_slotting_parameters.csv,parameter_code,ID,да,Код из словаря параметров.
+category_slotting_parameters.csv,value,TEXT,условно,Значение по value_type; пусто при ссылке на профиль.
+category_slotting_parameters.csv,value_type,ENUM,да,"STRING, DECIMAL, BOOLEAN, PROFILE_REF."
+category_slotting_parameters.csv,uom,UOM,нет,Единица числового значения при применимости.
+category_slotting_parameters.csv,profile_id,ID,нет,"Ссылка на отдельно переданный профиль, если используется."
+category_slotting_parameters.csv,valid_from,DATE,да,Начало действия включительно.
+category_slotting_parameters.csv,valid_to,DATE,нет,Конец действия исключительно.
+category_slotting_parameters.csv,revision,REV,да,Редакция параметра.
+slotting_parameter_dictionary.csv,parameter_code,ID,да,Код параметра категории.
+slotting_parameter_dictionary.csv,meaning,TEXT,да,Смысл параметра.
+slotting_parameter_dictionary.csv,value_type,ENUM,да,"STRING, DECIMAL, BOOLEAN, PROFILE_REF."
+slotting_parameter_dictionary.csv,allowed_values,TEXT,нет,Допустимые значения через символ вертикальной черты.
+slotting_parameter_dictionary.csv,synthetic,BOOL,да,"true — тестовый параметр, не правило NICORA."
+owners.csv,owner_id,ID,да,Устойчивый код собственника.
+owners.csv,name,TEXT,да,Название собственника.
+owners.csv,active,BOOL,да,Активность карточки.
+batches.csv,product_id,ID,да,Ссылка на products.
+batches.csv,batch_id,ID,да,Код партии как строка.
+batches.csv,manufactured_date,DATE,нет,Дата изготовления при наличии.
+batches.csv,expiry_date,DATE,условно,Обязательно при expiry_required=true.
+stocks.csv,snapshot_at,TIMESTAMP,да,Момент единого снимка со смещением UTC.
+stocks.csv,warehouse_id,ID,да,Ссылка на warehouses.
+stocks.csv,storage_location_id,ID,да,Код места хранения внутри склада; смысл задаёт паспорт.
+stocks.csv,product_id,ID,да,Ссылка на products.
+stocks.csv,owner_id,ID,условно,При раздельном учёте — ссылка на owners.
+stocks.csv,batch_id,ID,условно,Обязательно при batch_required=true.
+stocks.csv,expiry_date,DATE,условно,Обязательно при expiry_required=true.
+stocks.csv,physical_qty,DEC,да,"Физический запас, включая блокировку и резерв."
+stocks.csv,blocked_qty,DEC,да,Заблокированная часть без пересечения с резервом.
+stocks.csv,reserved_qty,DEC,да,Зарезервированная часть без пересечения с блокировкой.
+stocks.csv,uom,UOM,да,"Общая единица трёх количеств, с пересчётом SKU."
+orders.csv,order_id,ID,да,Устойчивый идентификатор заказа.
+orders.csv,revision,REV,да,Возрастающая редакция документа.
+orders.csv,document_type,ID,да,Тип по словарю источника; STORE_ORDER — тестовый тип.
+orders.csv,customer_id,ID,да,"Клиент, совпадающий с карточкой адресата."
+orders.csv,recipient_id,ID,да,Конкретный адрес получения.
+orders.csv,source_warehouse_id,ID,да,Согласованный склад-отправитель.
+orders.csv,created_at,TIMESTAMP,да,Время создания исходного документа.
+orders.csv,changed_at,TIMESTAMP,да,"Изменение этой редакции, не раньше создания."
+orders.csv,status,ENUM,да,"OPEN, PARTIAL, COMPLETED, CANCELLED; реальные статусы сопоставить."
+orders.csv,requested_arrival_from,TIMESTAMP,да,Начало планового окна прибытия включительно.
+orders.csv,requested_arrival_to,TIMESTAMP,да,"Конец окна, строго позже начала."
+order_lines.csv,order_id,ID,да,Ссылка на заголовок заказа.
+order_lines.csv,revision,REV,да,Редакция заголовка.
+order_lines.csv,line_id,ID,да,Устойчивый номер строки внутри заказа.
+order_lines.csv,product_id,ID,да,Ссылка на products.
+order_lines.csv,requested_qty,DEC,да,Исходно заказанное количество.
+order_lines.csv,fulfilled_qty,DEC,да,Уже исполненное в исходной единице.
+order_lines.csv,cancelled_qty,DEC,да,Отменённое в исходной единице.
+order_lines.csv,open_qty,DEC,да,Открытое количество; не суммировать с requested.
+order_lines.csv,uom,UOM,да,Исходная единица всех четырёх количеств.
+order_lines.csv,status,ENUM,да,"OPEN, PARTIAL, COMPLETED, CANCELLED."
+order_schedule.csv,order_id,ID,да,Ссылка на заказ.
+order_schedule.csv,revision,REV,да,Редакция заказа.
+order_schedule.csv,line_id,ID,да,Ссылка на строку.
+order_schedule.csv,schedule_id,ID,да,Устойчивый код срока внутри строки.
+order_schedule.csv,requested_arrival_from,TIMESTAMP,да,Начало окна прибытия.
+order_schedule.csv,requested_arrival_to,TIMESTAMP,да,"Конец окна, позже начала."
+order_schedule.csv,open_qty,DEC,да,Открытая часть этого срока.
+order_schedule.csv,uom,UOM,да,Единица исходной строки.
+sales_forecast.csv,forecast_id,ID,да,Идентификатор набора продаж.
+sales_forecast.csv,revision,REV,да,Редакция; разные редакции не суммировать.
+sales_forecast.csv,generated_at,TIMESTAMP,да,Время расчёта прогноза.
+sales_forecast.csv,scenario,ID,да,Сценарий; BASE выбран паспортом примера.
+sales_forecast.csv,recipient_id,ID,да,Адрес магазина.
+sales_forecast.csv,product_id,ID,да,Ссылка на products.
+sales_forecast.csv,sales_date,DATE,да,Дата продажи в календаре адресата.
+sales_forecast.csv,quantity,DEC,да,Натуральное прогнозное количество.
+sales_forecast.csv,uom,UOM,да,Единица с пересчётом SKU.
+movement_forecast.csv,forecast_id,ID,да,Код прогноза плановых перемещений.
+movement_forecast.csv,revision,REV,да,Редакция; прежнюю не суммировать с новой.
+movement_forecast.csv,generated_at,TIMESTAMP,да,Время расчёта.
+movement_forecast.csv,recipient_id,ID,да,Адрес магазина или склада-получателя.
+movement_forecast.csv,product_id,ID,да,Ссылка на products.
+movement_forecast.csv,receipt_date,DATE,да,Дата планового получения у адресата.
+movement_forecast.csv,quantity,DEC,да,Плановое количество по quantity_basis паспорта.
+movement_forecast.csv,uom,UOM,да,Единица с пересчётом SKU.
+movement_forecast.csv,source_warehouse_id,ID,нет,"Склад, если он задан планом; пусто не выбирает источник автоматически."
+supplies.csv,supply_id,ID,да,Устойчивый код поставки.
+supplies.csv,line_id,ID,да,Устойчивая строка поставки.
+supplies.csv,revision,REV,да,Редакция строки.
+supplies.csv,recipient_id,ID,да,Адрес назначения.
+supplies.csv,product_id,ID,да,Ссылка на products.
+supplies.csv,source_warehouse_id,ID,да,Источник поставки.
+supplies.csv,planned_receipt_at,TIMESTAMP,да,Плановое прибытие.
+supplies.csv,actual_receipt_at,TIMESTAMP,условно,Обязательно при DELIVERED; до получения пусто.
+supplies.csv,quantity,DEC,да,Текущее количество без отменённой части.
+supplies.csv,uom,UOM,да,Единица с пересчётом SKU.
+supplies.csv,status,ENUM,да,"PLANNED, IN_TRANSIT, DELIVERED, CANCELLED."
+supplies.csv,order_id,ID,нет,Исходный заказ; может быть вне охвата пакета.
+supplies.csv,order_line_id,ID,условно,"Строка заказа, если указан order_id."
+supply_forecast_links.csv,supply_id,ID,да,Ссылка на supplies.
+supply_forecast_links.csv,line_id,ID,да,Строка поставки.
+supply_forecast_links.csv,forecast_id,ID,да,"Ссылка на movement_forecast, не на продажи."
+supply_forecast_links.csv,forecast_revision,REV,да,Редакция прогноза.
+supply_forecast_links.csv,recipient_id,ID,да,Совпадает у поставки и прогноза.
+supply_forecast_links.csv,product_id,ID,да,Совпадает у поставки и прогноза.
+supply_forecast_links.csv,forecast_date,DATE,да,receipt_date строки прогноза.
+supply_forecast_links.csv,quantity,DEC,да,Отнесённое к прогнозу количество поставки.
+supply_forecast_links.csv,uom,UOM,да,Единица отнесённого количества.
+expected_order_import.csv,order_id,ID,да,Ссылка на исходный заказ.
+expected_order_import.csv,revision,REV,да,Редакция заказа.
+expected_order_import.csv,line_id,ID,да,Строка заказа.
+expected_order_import.csv,source_quantity,DEC,да,Открытое количество до нормализации.
+expected_order_import.csv,source_uom,UOM,да,Исходная единица.
+expected_order_import.csv,processing_quantity,DEC,условно,"После пересчёта и округления вниз; пусто, если пересчёт не разрешён."
+expected_order_import.csv,processing_uom,UOM,условно,Единица обработки; пусто при неизвестной настройке.
+expected_order_import.csv,difference_base_quantity,DEC,условно,Исходное в базе минус принятое в базе; пусто при неизвестном коэффициенте.
+expected_order_import.csv,base_uom,UOM,да,Базовая единица товара.
+expected_order_import.csv,conversion_revision,REV,условно,Применённая редакция пересчёта; пусто при её отсутствии.
+expected_order_import.csv,handling_policy_revision,REV,да,Применённая редакция настройки.
+expected_order_import.csv,load_outcome,ENUM,да,"LOADED, LOADED_WITH_ERROR, STORED_UNRESOLVED; не смешивать с REJECTED."
+expected_order_import.csv,integration_error_code,ID,условно,Обязательно при LOADED_WITH_ERROR/STORED_UNRESOLVED.
+expected_order_import.csv,warehouse_task_required,BOOL,да,false при нуле либо неразрешённом пересчёте.

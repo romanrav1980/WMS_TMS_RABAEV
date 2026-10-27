@@ -1,0 +1,4 @@
+address_id,calendar_date,weekday,window_start,window_end,end_day_offset,service_minutes,is_closed
+A_S1,2026-10-28,,08:00:00,12:00:00,0,20,false
+A_S2,2026-10-28,,22:00:00,02:00:00,1,30,false
+A_S1,2026-11-01,,,,,,true

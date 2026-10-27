@@ -1,0 +1,4 @@
+recipient_id,customer_id,recipient_kind,name,active,address_id,timezone,source_warehouse_id,topup_enabled,topup_horizon_days,receipt_strategy,valid_from,valid_to
+S001_A1,000001,STORE,ТЕСТ: магазин 1,true,A_S1,Asia/Tbilisi,DC001,true,3,APP_SCAN,2026-10-01,
+S002_A1,000002,STORE,ТЕСТ: магазин 2,true,A_S2,Asia/Tbilisi,DC001,false,,PAPER_COUNT,2026-10-01,
+WH002_A1,000003,WAREHOUSE_ADDRESS,ТЕСТ: склад 2,true,A_WH2,Asia/Tbilisi,DC001,true,2,WEIGHT,2026-10-01,

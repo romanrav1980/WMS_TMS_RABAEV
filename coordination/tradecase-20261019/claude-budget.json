@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 36,
-  "used": 36,
+  "limit": 37,
+  "used": 37,
   "requests": [
     {
       "id": "C-0130",
@@ -275,6 +275,14 @@
       "task": "Complete original T08 40/20 trip reduction after adoption, one small real flow",
       "authorization": "Owner 2026-10-27 resumed joint execution and delegation",
       "status": "registered_before_delivery"
+    },
+    {
+      "id": "C-0175",
+      "task": "T02: order UOM normalization, durable loaded-with-error and down-rounding",
+      "registered_at": "2026-10-27T09:44:30.395275+03:00",
+      "status": "ACK + CONTRACT K-0177; root approved bounded contract; BUSY",
+      "delivery": "existing file channel",
+      "authorization": "Owner explicitly requests continuing all sprints jointly with Claude in latest message"
     }
   ],
   "additional_grants": [
@@ -568,5 +576,16 @@
     }
   ],
   "claude_unavailable_until": null,
-  "new_requests_allowed": true
+  "new_requests_allowed": true,
+  "additional_cycles": [
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: продолжай пока не выполнишь все спринты вместе с клодом",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0175"
+      ]
+    }
+  ]
 }

@@ -1,0 +1,2 @@
+supply_id,line_id,revision,recipient_id,product_id,source_warehouse_id,planned_receipt_at,actual_receipt_at,quantity,uom,status,order_id,order_line_id
+SUP01,10,1,S001_A1,000000000000100001,DC001,2026-10-28T09:00:00+04:00,,1,BOX,PLANNED,,

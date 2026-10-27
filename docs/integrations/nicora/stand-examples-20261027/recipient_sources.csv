@@ -1,0 +1,4 @@
+recipient_id,warehouse_id,priority,valid_from,valid_to
+S001_A1,DC001,,2026-10-01,
+S002_A1,DC001,,2026-10-01,
+WH002_A1,DC001,,2026-10-01,

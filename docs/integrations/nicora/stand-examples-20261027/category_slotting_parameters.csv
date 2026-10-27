@@ -1,0 +1,3 @@
+taxonomy_id,category_id,parameter_code,value,value_type,uom,profile_id,valid_from,valid_to,revision
+CATALOG,DRY_PACK,TEST_SELECTION_CLASS,PACK,STRING,,,2026-10-01,,1
+CATALOG,WEIGHT,TEST_SELECTION_CLASS,WEIGHT,STRING,,,2026-10-01,,1

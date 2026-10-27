@@ -1,0 +1,5 @@
+taxonomy_id,taxonomy_revision,category_id,parent_category_id,name,is_leaf,active,valid_from,valid_to
+CATALOG,1,ROOT,,ТЕСТ: товары,false,true,2026-10-01,
+CATALOG,1,DRY,ROOT,ТЕСТ: штучные,false,true,2026-10-01,
+CATALOG,1,DRY_PACK,DRY,ТЕСТ: упаковки,true,true,2026-10-01,
+CATALOG,1,WEIGHT,ROOT,ТЕСТ: весовые,true,true,2026-10-01,

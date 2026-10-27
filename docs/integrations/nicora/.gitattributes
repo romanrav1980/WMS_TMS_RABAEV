@@ -1,0 +1,4 @@
+stand-examples-20261027/*.csv text eol=lf
+stand-examples-20261027/*.json text eol=lf
+stand-examples-20261027/*.md text eol=lf
+*.zip binary

@@ -1,0 +1,36 @@
+{
+  "profile_id": "NICORA_STAND_CSV_PROPOSAL_1",
+  "synthetic": true,
+  "source_system": "SYNTHETIC",
+  "sap_product": null,
+  "sap_release": null,
+  "sap_client": null,
+  "logical_system": null,
+  "middleware": null,
+  "source_timezone": "Asia/Tbilisi",
+  "encoding": "UTF-8",
+  "csv_delimiter": ",",
+  "decimal_separator": ".",
+  "document_update_mode": "FULL_REVISION",
+  "validity_interval": "[valid_from,valid_to)",
+  "stock_semantics": {
+    "physical_includes_blocked": true,
+    "physical_includes_reserved": true,
+    "blocked_reserved_overlap": false
+  },
+  "movement_forecast": {
+    "quantity_basis": "GROSS_PLAN",
+    "horizon_anchor": "PLANNED_DEPARTURE_DATE_IN_RECIPIENT_CALENDAR",
+    "horizon_interval": "[anchor,anchor+topup_horizon_days)",
+    "missing_day": "MISSING"
+  },
+  "sales_forecast": {
+    "period_from": "2026-10-28",
+    "period_to_exclusive": "2026-11-28",
+    "active_scenario": "BASE",
+    "missing_day": "MISSING",
+    "revision_selection": "highest revision for the same forecast_id and scope"
+  },
+  "idoc_mapping_status": "AWAITING_REAL_WE60_AND_ANONYMIZED_IDOC",
+  "transport_data_included": false
+}

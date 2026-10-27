@@ -1,0 +1,5 @@
+order_id,revision,line_id,source_quantity,source_uom,processing_quantity,processing_uom,difference_base_quantity,base_uom,conversion_revision,handling_policy_revision,load_outcome,integration_error_code,warehouse_task_required
+O1,1,10,25,EA,2,BOX,1,EA,1,1,LOADED,,true
+O2,1,10,25,EA,2,BOX,1,EA,1,1,LOADED_WITH_ERROR,ROUNDING_NOT_ALLOWED,true
+O3,1,10,1250,G,1.250,KG,0.000,KG,1,1,LOADED,,true
+O4,1,10,1,BLK,0,BOX,6,EA,1,1,LOADED_WITH_ERROR,ZERO_AFTER_ROUNDING,false

@@ -1,0 +1,5 @@
+address_id,country,city,street_address,timezone,latitude,longitude
+A_DC1,GE,Тестовый город,Тестовый склад 1,Asia/Tbilisi,,
+A_S1,GE,Тестовый город,Тестовый магазин 1,Asia/Tbilisi,,
+A_S2,GE,Тестовый город,Тестовый магазин 2,Asia/Tbilisi,,
+A_WH2,GE,Тестовый город,Тестовый склад-получатель,Asia/Tbilisi,,

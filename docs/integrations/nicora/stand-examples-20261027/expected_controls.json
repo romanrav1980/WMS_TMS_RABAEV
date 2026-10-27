@@ -1,0 +1,27 @@
+{
+  "sales_totals": [
+    {
+      "recipient_id": "S001_A1",
+      "product_id": "000000000000100001",
+      "uom": "EA",
+      "quantity": "744"
+    },
+    {
+      "recipient_id": "S001_A1",
+      "product_id": "000000000000100003",
+      "uom": "KG",
+      "quantity": "38.750"
+    },
+    {
+      "recipient_id": "S002_A1",
+      "product_id": "000000000000100002",
+      "uom": "EA",
+      "quantity": "372"
+    }
+  ],
+  "sales_days": 31,
+  "sales_rows": 93,
+  "free_stock_product_100001_EA": "84",
+  "movement_need_4_minus_supply_1_BOX": "3",
+  "runtime_acceptance": false
+}

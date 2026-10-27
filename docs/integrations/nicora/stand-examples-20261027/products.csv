@@ -1,0 +1,4 @@
+product_id,name,active,base_uom,order_uom,batch_required,expiry_required,single_handling_uom,standard_handling_uom,round_to_standard_handling_uom,handling_step,handling_policy_revision,valid_from,valid_to
+000000000000100001,ТЕСТ: штучный A,true,EA,BOX,false,false,true,BOX,true,1,1,2026-10-01,
+000000000000100002,ТЕСТ: штучный B,true,EA,BOX,false,false,true,BOX,false,1,1,2026-10-01,
+000000000000100003,ТЕСТ: весовой,true,KG,KG,true,true,true,KG,true,0.001,1,2026-10-01,

@@ -1,0 +1,3 @@
+warehouse_id,name,address_id,plant_code,storage_location_code,shipping_point_code,active
+DC001,ТЕСТ: отправитель,A_DC1,,,,true
+WH002,ТЕСТ: получатель,A_WH2,,,,true

@@ -1,0 +1,2 @@
+supply_id,line_id,forecast_id,forecast_revision,recipient_id,product_id,forecast_date,quantity,uom
+SUP01,10,MF01,1,S001_A1,000000000000100001,2026-10-28,1,BOX

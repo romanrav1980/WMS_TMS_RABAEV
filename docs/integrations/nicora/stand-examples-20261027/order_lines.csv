@@ -1,0 +1,5 @@
+order_id,revision,line_id,product_id,requested_qty,fulfilled_qty,cancelled_qty,open_qty,uom,status
+O1,1,10,000000000000100001,25,0,0,25,EA,OPEN
+O2,1,10,000000000000100002,25,0,0,25,EA,OPEN
+O3,1,10,000000000000100003,1250,0,0,1250,G,OPEN
+O4,1,10,000000000000100001,1,0,0,1,BLK,OPEN

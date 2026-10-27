@@ -1,0 +1,19 @@
+{
+  "document_url": "https://docs.google.com/document/d/1wftqBkWDad207yB1iXTbtLW5FeApc1aq4--K3N1x8QA",
+  "archive_url": "https://drive.google.com/file/d/1Fo0cWh8gvNT44rhirYl_xR6MBpX7D0F9/view",
+  "folder_id": "1pW3IcFVpYw-0YGAJm4C_s6C2ztNNyhuk",
+  "folder_verified": true,
+  "csv_business_files": 24,
+  "dictionary_fields": 211,
+  "native_tables": 24,
+  "verified_native_cells": 940,
+  "sales_rows": 93,
+  "sales_days": 31,
+  "archive_sha256": "472e4b905f48d3e2a8d38954e207aebd5da4202224c610d7b3788b0f83a49ab3",
+  "manifest_all_hashes": "PASS",
+  "zip_matches_local_files": "PASS",
+  "pdf_export_bytes": 449210,
+  "pdf_review": "Contact sheet and table page inspected; pinned headers and rows that do not split across pages verified",
+  "runtime_acceptance": false,
+  "pdf_final_pages": 21
+}

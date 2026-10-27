@@ -1,0 +1,190 @@
+{
+  "package_id": "SYNTHETIC-NICORA-20261027-01",
+  "schema_version": "NICORA_STAND_CSV_PROPOSAL_1",
+  "source_system": "SYNTHETIC",
+  "created_at": "2026-10-27T18:10:00+04:00",
+  "mode": "FULL",
+  "scope": {
+    "recipient_ids": [
+      "S001_A1",
+      "S002_A1",
+      "WH002_A1"
+    ],
+    "warehouse_ids": [
+      "DC001",
+      "WH002"
+    ],
+    "sales_period_from": "2026-10-28",
+    "sales_period_to_exclusive": "2026-11-28"
+  },
+  "files": [
+    {
+      "file_name": "addresses.csv",
+      "record_count": 4,
+      "sha256": "ae487f72480096cdd2c765834aa2a81da66e5b6d9efbd7c0d6df095420666e9d",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "batches.csv",
+      "record_count": 1,
+      "sha256": "7aca639c26772f0fc0d1d128e3a4b654e6ade5bc1534bc4de415cfc0ecc0ce1c",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "category_slotting_parameters.csv",
+      "record_count": 2,
+      "sha256": "cfdedd97bb6012e449ea31c5a1d5b89c27b6905c4f8e63d238ec665236b19892",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "delivery_windows.csv",
+      "record_count": 3,
+      "sha256": "6d11d1c2554cf87e0310739302e819abceae62a8248d0c274715ca80ddaeda2a",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "expected_controls.json",
+      "record_count": null,
+      "sha256": "a8f8f8e303a1c7e6cf57c296763e09d22341307cd3f785c29c398b0aaca1ac0a",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "expected_order_import.csv",
+      "record_count": 4,
+      "sha256": "af46bfec1fa845dafde186338f2e58c9eb3090ab01a5d699caa0dfb8b221e7db",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "field_dictionary.csv",
+      "record_count": 211,
+      "sha256": "afe6490fca57ac0f998339d98714ffd9e79b1df25859eb3c5f0c5fd33caeab00",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "movement_forecast.csv",
+      "record_count": 4,
+      "sha256": "65fdc0e7a2b71515fb81278a82d9a2730d23fc0296eeb61b121d1ec4a67fc445",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "order_lines.csv",
+      "record_count": 4,
+      "sha256": "2540fcf5c46f1dbdc8b5c845945dd4969f7928d5e649823b988adbc09cd42907",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "order_schedule.csv",
+      "record_count": 1,
+      "sha256": "d9f1af3d0fdbd45c2ae2fddef38d84ad320bc9e114620416732f0ce5bf85049d",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "orders.csv",
+      "record_count": 4,
+      "sha256": "07eeec8707f4874c558fb036ce8a2b5f7f2b9d9fc2daaccdd8428c6a962e37ad",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "owners.csv",
+      "record_count": 1,
+      "sha256": "b7263b6f826c1c2aa733dfdc080e6d1ae359a3eaa89a944f4c19e4be827acef4",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "passport.json",
+      "record_count": null,
+      "sha256": "fc7278813d70e70572eb3c475f606c8e1cd31eff8d93d5205d8840dbe3693240",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "product_barcodes.csv",
+      "record_count": 2,
+      "sha256": "374214a0d6df69502a1461af7277190ee3ead259ebc67346b253df65e9876bc6",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "product_categories.csv",
+      "record_count": 4,
+      "sha256": "fbd951bc7a6e93680e79dbaeeda178e60792979417a809213bcb3ed20ebb3e9a",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "product_category_assignments.csv",
+      "record_count": 3,
+      "sha256": "d47b4c4f599bb88fec99d7c937f50223f38633889fabd92ada5b60d7e0827266",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "product_uom.csv",
+      "record_count": 8,
+      "sha256": "eaccdfb2bb2317f76be8f2b2310bfdad0651c726fd605175e3608f89363a8831",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "products.csv",
+      "record_count": 3,
+      "sha256": "e5ac75be23e3236bccdc6d6a6c7d7be8c84fdba8560d8af38eb7f321f40b0f97",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "README.md",
+      "record_count": null,
+      "sha256": "989cd0bd9902eeb58502c32736b2b1ac2c33a7e32eefcefa617f60efa12d37ad",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "recipient_sources.csv",
+      "record_count": 3,
+      "sha256": "290645409f471cff5924fe627c5c522fa57a1e736dcdbffbcad7adcb72ed50ed",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "recipients.csv",
+      "record_count": 3,
+      "sha256": "559ba867eb49b384116ae2f296129dec82ab9f26dc3e20b5e1a3a374c826b455",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "sales_forecast.csv",
+      "record_count": 93,
+      "sha256": "83d14b8254bae5fcf7ed8fe660c182adf821a781f8c95efbb61eda4d8782ff5e",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "slotting_parameter_dictionary.csv",
+      "record_count": 1,
+      "sha256": "4211e50f141d66343791c1b9f51357cfc26ddbf09d19b8a23bce3ad32ad71a5c",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "stocks.csv",
+      "record_count": 3,
+      "sha256": "73a4ea8621a43cb15e22b87d4be9536ff399a4b77d65a2ceeb29be7c7cd22da0",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "supplies.csv",
+      "record_count": 1,
+      "sha256": "b10334d52b8112134b58573e912d938c7364f1ff9aa478aa63d23da3cc03ce34",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "supply_forecast_links.csv",
+      "record_count": 1,
+      "sha256": "388ec386f905aab67b795d21b538083e791466d9c452f5c647dbf921bf5c6852",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "uom_mapping.csv",
+      "record_count": 5,
+      "sha256": "f6e777eaa67a749d8e36f6710f66bc0681a2df27ecbd27a557b706e6021dcc12",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    },
+    {
+      "file_name": "warehouses.csv",
+      "record_count": 2,
+      "sha256": "2b63d6076f250496e4cd94aa1901a2506fc286d47ec17ecfa55f5361a2636c99",
+      "exported_at": "2026-10-27T18:10:00+04:00"
+    }
+  ]
+}

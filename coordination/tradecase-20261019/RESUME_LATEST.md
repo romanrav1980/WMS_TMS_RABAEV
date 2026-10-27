@@ -1,3 +1,11 @@
+## Последняя задача владельца: приложение NICORA опубликовано
+
+Отдельный Google Документ со словарём211полей и примерами: https://docs.google.com/document/d/1wftqBkWDad207yB1iXTbtLW5FeApc1aq4--K3N1x8QA . ZIP24CSV/паспорт/manifest: https://drive.google.com/file/d/1Fo0cWh8gvNT44rhirYl_xR6MBpX7D0F9/view . Оба рядом в ChatGPT, metadata/readback подтверждены. 940ячеек сверены, локальные SHA/ZIP/ссылки/дерево/месяц проверены; PDF в runtime/nicora-export-fields-review.pdf, таблицы с повтором заголовка и без разрыва строки. Локальные файлы docs/integrations/nicora/, wiki/requirements/nicora_export_fields_examples_20261027.md. Это синтетический профиль CSV, не выдуманный IDoc и не приёмка SAP. Публикации GitHub нет.
+
+Владелец поручил продолжать все спринты совместно с Claude. C0175 зарегистрирован до передачи, бюджет37/37, K0177 ACK+CONTRACT подтверждает BUSY. Claude делает новые единицы заказов, owns contracts_tradecase.py, tradecase_documents.py, order_units.py и NOT_APPLIED native тела RRL_TRADE_ORDER_API/RRL_TRADE_DOCUMENT_API. Root согласовал контракт в конце CODEX_TO_CLAUDE.md. Не менять эти файлы параллельно. Live baseKG в TRADECASE и NI02 остаются открытыми; чистые тесты дробности не выдать за их реализацию. Claude не перезапускает API и не трогает root210069361.
+
+Root возвращается к640/20: все660мест уже назначены33698;60мест добивки в одномST. Проверить решение частичного снятия фактических мест через существующий единый writer; не делать прямойSQL-обход и не переименовыватьST ради теста. Состав после частичного снятия может сохранять номерST; требуется проверить текущие ограничения и права/идемпотентность. DEPART660 запрещён. Ниже состояние транспорта остаётся актуальным до новой стадии.
+
 ## Актуальное продолжение 27.10 после назначения рейса
 
 Рабочий набор 210069361, state.resumed.json: TRANSPORT_READY. Все 660 коробов отобраны и назначены рейсу 33698 четырьмя СТ 200/150/250/60. Остаток 11000/H6600/1100. grouped-st-assignment применён/откачен/повторно применён 9/9/9 после ae1d2a8c, INVALID0. Первый запрос после компиляции дал ORA-04068/503; readback доказал отсутствие частичного эффекта, повтор исходного запроса прошёл. Доказательство reports/tradecase/2026-10-27/codex/grouped-st-assignment.json.
