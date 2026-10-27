@@ -19,5 +19,9 @@ def case_pick_policy(gateway: Any, task_id: int, line_id: int) -> dict:
     """, {"article": rows[0]["articul"]})
     if len(profiles) > 50:
         raise ValueError("Marking profile bound exceeded")
-    return {"article": rows[0]["articul"], "marking_required": bool(rows[0]["marking_required"]), "profiles": profiles, "serialized_weight_boxes": bool(rows[0]["serialized_weight_boxes"]),
-            "loose_weight_kg": bool(rows[0]["weighted_kg"]) and not bool(rows[0]["marking_required"]) and not bool(rows[0]["serialized_weight_boxes"])}
+    marking = bool(rows[0]["marking_required"])
+    serialized = bool(rows[0]["serialized_weight_boxes"])
+    weighted_kg = bool(rows[0]["weighted_kg"]) and not serialized
+    return {"article": rows[0]["articul"], "marking_required": marking, "profiles": profiles,
+            "serialized_weight_boxes": serialized, "weighted_kg": weighted_kg,
+            "loose_weight_kg": weighted_kg and not marking}
