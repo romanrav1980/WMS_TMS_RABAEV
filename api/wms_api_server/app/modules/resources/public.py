@@ -153,9 +153,17 @@ from .api.yard_routes import router as yard_router
 from .contracts_yard_plan import YardPlanPort, yard_plan_service
 from .api.yard_plan_routes import router as yard_plan_router
 from .infrastructure.yard_dock_plans import OracleYardDockPlans
+from .contracts_yard_status import YardDockStatusPort, yard_dock_status_service
+from .api.yard_dock_status_routes import router as yard_dock_status_router
+from .infrastructure.yard_dock_status import OracleYardDockStatus
 
 
 def build_yard_service() -> YardPort:
     from ...oracle_gateway import OracleGateway
     from .infrastructure.yard_visits import OracleYardVisits
     return OracleYardVisits(OracleGateway())
+
+
+def build_yard_dock_status_service() -> YardDockStatusPort:
+    from ...oracle_gateway import OracleGateway
+    return OracleYardDockStatus(OracleGateway())

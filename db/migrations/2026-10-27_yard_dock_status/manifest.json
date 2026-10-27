@@ -1,0 +1,40 @@
+{
+  "target": "RABAEV/orcl",
+  "migration_id": "2026-10-27-yard-dock-status",
+  "revision": "T10 dock health status writer",
+  "status": "NOT_APPLIED",
+  "applied_by_claude": false,
+  "new_objects": [
+    "RRL_YARD_DOCK_STATUS_EVENT (+append-only trigger)",
+    "RRL_YARD_DOCK_STATUS_API"
+  ],
+  "existing_objects_called": [
+    "RRL_ACCESS_API.allowed",
+    "RRL_ACCESS_REV",
+    "RRL_TRADE_SITE (FOR UPDATE)",
+    "RRL_TT_DOCK",
+    "SYS.DBMS_CRYPTO.hash"
+  ],
+  "lock_order": "tradecase_yard_operate -> RRL_ACCESS_REV share -> RRL_TRADE_SITE row -> recheck tradecase_yard_operate -> exact operation receipt lookup -> exactly one RRL_TT_DOCK row FOR UPDATE",
+  "rollback": "refuses after any status event; before first event, removes only new package/journal objects and leaves legacy dock values unchanged",
+  "live_read_only_discovery": {
+    "RRL_TT_DOCK_rows": 185,
+    "exact_warehouse_dock_pairs": 185,
+    "duplicate_exact_pairs": 0,
+    "pairs_duplicated_only_after_upper_trim": 0,
+    "lowercase_or_mixed_case_dock_names": 152,
+    "DOCK_IS_BLOCKED": {
+      "0": 185
+    },
+    "active_indexes": []
+  },
+  "files_sha256": {
+    "000_preflight.sql": "309082ae57a3e14924f3793f70bf4351628235717c43a8e7eece51fd4e756e13",
+    "001_schema.sql": "9052a2c98f25177604c3ba39b9ba672873d3099080a19a2bbb90511e044d4008",
+    "002_status_api.sql": "f545176d9c2ea952cfa37e8e3a4686b946cb24b18df62c3f8eb3fe8093fb4e24",
+    "apply.sql": "1e9e75f332b3e1d4119a2d5f7a021d6770bd47d7bd32bca86735c48910843402",
+    "rollback.sql": "7db284423d2c5908eb2578d3689f1f06bd5cbd61e2bfe1369f9b1519a7fdda5e",
+    "rollback_verify.sql": "ffe02c8a73391dcc4639d70e509cd034c3df137253dfc1faf720ec90b7302890",
+    "verify.sql": "924ad0740ed5ce83fa50a5559f49da8289b4ef60ff2d62428b682392f4b54410"
+  }
+}
