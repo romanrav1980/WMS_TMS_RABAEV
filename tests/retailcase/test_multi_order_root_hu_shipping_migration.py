@@ -30,3 +30,15 @@ def test_migration_does_not_expand_access_to_protected_stock_cores():
     assert "RRL_STOCK_MULTI_ORDER_SHIP" not in read("rollback.sql")
     assert "RRL_STOCK_MULTI_ORDER_SHIP" not in read("verify.sql")
     assert "RRL_STOCK_MULTI_ORDER_SHIP" not in read("rollback_verify.sql")
+
+
+def test_multi_order_branch_matches_root_binding_contract_without_splitting_cases():
+    core = read("002_shipping_core.sql")
+    binding = (ROOT / "api" / "wms_api_server" / "app" / "modules" / "inventory" / "infrastructure" / "root_shipment_binding.py").read_text(encoding="utf-8")
+    transport = (ROOT / "scripts" / "c0191_mixed_tree_transport.py").read_text(encoding="utf-8")
+    assert "for role in (\"kg\", \"ea\")" in transport
+    assert "LEGACY_SBORKA_PALLET_ID=:sid" in binding
+    assert "where LEGACY_SBORKA_PALLET_ID=:sid and PALLET_UID=:p" in binding
+    assert "where f.LEGACY_SBORKA_PALLET_ID=v_id and f.PALLET_UID=v_uid" in core
+    assert "RRL_STOCK_FULFILLMENT_FACT.project_ship(v_id,v_uid,sl.get_number('customer_order_id')" in core
+    assert "update RRL_CASE_PICK_TASK set STATUS='SHIPPED'" in core
