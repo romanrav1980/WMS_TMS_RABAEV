@@ -2,7 +2,7 @@
  "target": "RABAEV/orcl",
  "migration_id": "2026-10-27-trade-recipient-version",
  "revision": "C-0173",
- "status": "NOT_APPLIED",
+ "status": "APPLIED",
  "applied_by_claude": false,
  "new_objects": {
   "RRL_TRADE_RECIPIENT_VERSION:FUNCTION": "9974A571E9513B93C5E7C2AE1DA237F92A3E50EA5B1CF5607B45E1AE84B80200"

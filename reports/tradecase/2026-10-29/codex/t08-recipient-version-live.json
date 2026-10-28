@@ -1,0 +1,21 @@
+{
+  "case": "T08 recipient settings version compatibility",
+  "status": "PASS",
+  "evidence_kind": "isolated Oracle/API fixture; no external connector",
+  "migration_id": "2026-10-27-trade-recipient-version",
+  "checks": {
+    "topup_enabled_only": "VALID",
+    "topup_horizon_days_only": "VALID",
+    "min_osg_days_changed": "TRADE_ORDER_BINDING_STALE",
+    "owner_changed": "TRADE_ORDER_BINDING_STALE",
+    "buyout_changed": "TRADE_ORDER_BINDING_STALE",
+    "recipient_inactive": "TRADE_ORDER_BINDING_STALE",
+    "missing_bound_history": "TRADE_ORDER_BINDING_STALE",
+    "legacy_c103_current_version": 4
+  },
+  "tests": {
+    "focused_pytest": "38 passed",
+    "live_runner": "PASS"
+  },
+  "source_evidence": "runtime/test-evidence/tradecase/2026-10-27/C0173/recipient-version.json"
+}

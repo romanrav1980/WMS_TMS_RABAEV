@@ -1,7 +1,7 @@
-"""C-0173: an order bound to recipient v1 must not become stale when only top-up settings change, and must when anything else does.
-Own new warehouse and documents through the existing API (no stock, reservations or tasks). For each recipient version: the LIVE
-RRL_TRADE_PICK_CONTEXT answer (compatible(...) returns TRADE_ORDER_BINDING_STALE when the line context is invalid) and the C-0173
-candidate function evaluated as a local copy inside a READ ONLY transaction (nothing is created or applied). Plus READ ONLY C103."""
+"""C-0173: an order bound to recipient v1 stays usable when only top-up settings change.
+The script creates isolated documents only. It calls the installed
+RRL_TRADE_RECIPIENT_VERSION function read-only. The former strict predicate is
+kept as a historical baseline; it is not presented as the current package."""
 from datetime import datetime, timedelta, timezone
 import json
 import os
@@ -22,7 +22,6 @@ from live_document_acceptance import http, expect, CALLS
 from tools.mcp.tms_mcp_server import oracle_connection
 
 OUT = ROOT / "runtime/test-evidence/tradecase/2026-10-27/C0173"
-FUNCTION = (ROOT / "reports/tradecase/2026-10-27/claude/C0173/function_source.sql").read_text(encoding="utf-8").strip()
 PROTECTED = {225837931, 213059748, 225687965, 210564699, 210069361, 223214750, 225290508}
 report = dict(status="FAIL", checks=[], versions=[])
 
@@ -32,13 +31,12 @@ def save():
     (OUT / "recipient-version.json").write_text(json.dumps(dict(report, http=CALLS), indent=1, ensure_ascii=False, default=str), encoding="utf-8")
 
 
-def candidate(ware, recipient, bound):
-    """The exact candidate source as a local function of an anonymous block, READ ONLY; returns its result."""
-    block = "declare r number;\n " + FUNCTION + "\nbegin r:=RRL_TRADE_RECIPIENT_VERSION(:w,:c,:b);:o:=r;end;"
+def resolved_recipient_version(ware, recipient, bound):
+    """Read the installed compatibility function; it performs no mutation."""
     with oracle_connection() as c:
-        q = c.cursor(); q.execute("set transaction read only"); out = q.var(oracledb.DB_TYPE_NUMBER)
-        q.execute(block, w=ware, c=recipient, b=bound, o=out); c.rollback()
-        value = out.getvalue()
+        q = c.cursor(); q.execute("set transaction read only")
+        q.execute("select RRL_TRADE_RECIPIENT_VERSION(:w,:c,:b) from dual", w=ware, c=recipient, b=bound)
+        value = q.fetchone()[0]; c.rollback()
         return None if value is None else int(value)
 
 
@@ -57,12 +55,12 @@ def line_valid(row, version_sql, **binds):
         n = q.fetchone()[0]; c.rollback(); return n == 1
 
 
-def live_context(row, ware):
+def legacy_strict_baseline(row, ware):
     return "VALID" if line_valid(row, "l.RECIPIENT_VERSION") else "TRADE_ORDER_BINDING_STALE"
 
 
 def candidate_context(row, ware, recipient):
-    version = candidate(ware, recipient, 1)
+    version = resolved_recipient_version(ware, recipient, 1)
     return version, ("VALID" if version is not None and line_valid(row, ":v", v=version) else "TRADE_ORDER_BINDING_STALE")
 
 
@@ -108,10 +106,10 @@ def run():
     expect(200, http("POST", base + "/orders/O1/binding", dict(operation_id=t + ".bind", expected_order_version=1, customer_order_id=order, lines=[dict(line_id="1", customer_order_row_id=row)])))
     report.update(native_order=order, native_row=row); save()
     def observe(label, version, expect_candidate, expect_live_stale):
-        live, (cand, cand_context) = live_context(row, ware), candidate_context(row, ware, "C1")
-        report["versions"].append(dict(label=label, recipient_version=version, live=live, candidate=cand, candidate_context=cand_context)); save()
+        strict, (cand, cand_context) = legacy_strict_baseline(row, ware), candidate_context(row, ware, "C1")
+        report["versions"].append(dict(label=label, recipient_version=version, legacy_strict_baseline=strict, resolved_recipient_version=cand, resolved_context=cand_context)); save()
         assert cand == expect_candidate and (cand_context == "VALID") == (expect_candidate is not None), (label, cand, cand_context)
-        assert (live == "TRADE_ORDER_BINDING_STALE") == expect_live_stale, (label, live)
+        assert (strict == "TRADE_ORDER_BINDING_STALE") == expect_live_stale, (label, strict)
     observe("v1 bound", 1, 1, False)
     # The same accepted snapshot of v1 resent under a new event id: one snapshot, not an ambiguous history.
     report["v1_resend"] = send("RECIPIENT", "C1", recipient, 1, ".resend")
@@ -126,19 +124,19 @@ def run():
     send("RECIPIENT", "C1", dict(recipient, topup_enabled=True, buyout_mode="IN_TRANSIT"), 6); observe("v6 buyout changed", 6, None, True)
     send("RECIPIENT", "C1", dict(recipient, active=False), 7); observe("v7 inactive", 7, None, True)
     send("RECIPIENT", "C1", dict(recipient, topup_enabled=True), 8); observe("v8 back to v1 except top-up", 8, 8, True)
-    report["checks"].append("Live package: every later recipient version makes the bound line stale (the blocker)")
-    report["checks"].append("Candidate: only top-up-only versions are compatible; OSG, owners, buyout and inactive stay stale")
+    report["checks"].append("Legacy strict baseline rejects every later recipient version")
+    report["checks"].append("Installed compatibility function accepts only top-up-only versions; OSG, owners, buyout and inactive remain stale")
     report["checks"].append(f"Bound v1 resent under a new event id: accepted records {report['v1_accepted_records']}; still compatible (same snapshot, not ambiguous)")
     # Missing history of the bound version: candidate refuses (a bound version that never had an accepted message).
-    report["missing_history"] = candidate(ware, "C1", 99); assert report["missing_history"] is None
-    report["c103"] = dict(bound=1, live=None, candidate=candidate(210069361, "C103", 1))
+    report["missing_history"] = resolved_recipient_version(ware, "C1", 99); assert report["missing_history"] is None
+    report["c103"] = dict(bound=1, legacy_strict_baseline=None, resolved_recipient_version=resolved_recipient_version(210069361, "C103", 1))
     with oracle_connection() as c:
         q = c.cursor(); q.execute("set transaction read only")
         q.execute("select ol.CUSTOMER_ORDER_ROW_ID from RRL_TRADE_ORDER_LINK l join RRL_TRADE_ORDER_LINE ol on ol.CUSTOMER_ORDER_ID=l.CUSTOMER_ORDER_ID where l.WARE_ID=210069361 and l.EXTERNAL_ID='103' fetch first 1 rows only")
         c103_row = q.fetchone()[0]; c.rollback()
-    report["c103"]["live"] = live_context(c103_row, 210069361)
-    assert report["c103"]["candidate"] == 4 and report["c103"]["live"] == "TRADE_ORDER_BINDING_STALE", report["c103"]
-    report["checks"].append("READ ONLY 210069361/C103 bound v1: live stale, candidate returns current v4")
+    report["c103"]["legacy_strict_baseline"] = legacy_strict_baseline(c103_row, 210069361)
+    assert report["c103"]["resolved_recipient_version"] == 4 and report["c103"]["legacy_strict_baseline"] == "TRADE_ORDER_BINDING_STALE", report["c103"]
+    report["checks"].append("READ ONLY 210069361/C103 bound v1: strict baseline is stale; installed function returns current v4")
     report["status"] = "PASS"
 
 

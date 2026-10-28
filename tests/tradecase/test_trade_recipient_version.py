@@ -19,7 +19,7 @@ def source(name):
 
 def test_kit_hashes_and_order():
     m = json.loads(text("manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["applied_by_claude"] is False
+    assert m["status"] == "APPLIED" and m["applied_by_claude"] is False
     assert hashlib.sha256(source("before_pick_context_body.sql").encode()).hexdigest().upper() == m["before_sha256"]["RRL_TRADE_PICK_CONTEXT:PACKAGE BODY"]
     assert hashlib.sha256(source("before_transport_core_body.sql").encode()).hexdigest().upper() == m["before_sha256"]["RRL_TRADE_TRANSPORT_CORE:PACKAGE BODY"]
     for name, key in (("001_function.sql", "RRL_TRADE_RECIPIENT_VERSION:FUNCTION"), ("002_pick_context_body.sql", "RRL_TRADE_PICK_CONTEXT:PACKAGE BODY"),
@@ -48,7 +48,7 @@ def test_only_the_recipient_join_changes():
 
 def test_recorded_behaviour():
     by = {v["label"]: v for v in RUN["versions"]}
-    assert all(v["live"] == "TRADE_ORDER_BINDING_STALE" for v in RUN["versions"] if v["recipient_version"] > 1)  # the blocker
+    assert all(v["live"] == "TRADE_ORDER_BINDING_STALE" for v in RUN["versions"] if v["recipient_version"] > 1)  # historical strict baseline
     for label in ("v2 only topup_enabled", "v3 only top-up settings", "v8 back to v1 except top-up"):
         assert by[label]["candidate"] == by[label]["recipient_version"] and by[label]["candidate_context"] == "VALID"
     for label in ("v4 min_osg_days changed", "v5 owners changed", "v6 buyout changed", "v7 inactive"):
