@@ -460,6 +460,13 @@ from .infrastructure.pallet_floor_type import PalletFloorType
 def build_pallet_floor_type(gateway: Any,posting: Any)->PalletFloorPort:
     return PalletFloorType(gateway,posting)
 
+from .contracts_root_shipment import RootShipmentBindRequest,RootShipmentPort,root_shipment_service
+from .api.root_shipment_routes import router as root_shipment_router
+from .infrastructure.root_shipment_binding import RootShipmentBinding
+
+def build_root_shipment_binding(gateway: Any)->RootShipmentPort:
+    return RootShipmentBinding(gateway)
+
 from .contracts_case_type import CaseTypePort,case_type_service
 from .api.case_type_routes import router as case_type_router
 from .infrastructure.case_type import CaseType

@@ -453,6 +453,8 @@ app.dependency_overrides[waiting_task_dependency]=waiting_task_service
 
 from .prepared_carrier_routes import register_prepared_carrier_routes
 register_prepared_carrier_routes(app)
+from .modules.inventory.public import root_shipment_router, root_shipment_service, build_root_shipment_binding; from .oracle_gateway import OracleGateway  # C-0193
+app.include_router(root_shipment_router); app.dependency_overrides[root_shipment_service] = lambda: build_root_shipment_binding(OracleGateway())
 
 from .modules.inventory.public import quality_scope_router,quality_scope_service
 from .quality_scope_composition import quality_scope
