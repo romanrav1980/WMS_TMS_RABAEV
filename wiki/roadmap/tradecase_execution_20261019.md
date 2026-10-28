@@ -381,8 +381,8 @@ C0193 provides a root-HU binding route. C0191 now uses that route once for the i
 ## 2026-10-28 - T06 root-HU tare booking
 
 - A `CONTAINER` root uses `TARE_BOOK`, not `RRL_PALLET_FLOOR_TYPE`. Loading reads the held HU tare booking.
-- Migration `db/migrations/2026-10-28_root_hu_tare_scans/001_root_hu_tare_book_scans.sql` is applied to Oracle. A root booking records `expected_root_version`, `scan_place`, and `scan_cell`.
-- C0190 books the root before CASE attachment. Booking after child CASE tare holds is refused with `TARE_NESTED_PLACE_ALREADY_BOOKED`. C0191 uses the saved booking during transport preparation.
+- Миграция `db/migrations/2026-10-28_root_hu_tare_scans/001_root_hu_tare_book_scans.sql` подготовлена, но не применена к Oracle. При применении корневая запись тары сохранит `expected_root_version`, `scan_place` и `scan_cell`.
+- Offline C0190 подготавливает запись тары корня до присоединения CASE. Живое бронирование и отказ `TARE_NESTED_PLACE_ALREADY_BOOKED` не приняты, пока DDL не применён.
 - Focused verification: 129 tests passed at this checkpoint. Fixture `MT28139952A4B` remains historical evidence because its child CASE bookings already exist. A new isolated fixture uses a separate tag.
 
 ## 2026-10-28 ? T06 multi-order root HU shipment candidate
