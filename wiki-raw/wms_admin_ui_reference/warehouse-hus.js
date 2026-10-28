@@ -1,7 +1,22 @@
 (() => {
   const el=id=>document.getElementById(id);
-  let view=null,pending=null,damaged=null,busy=false,generation=0,identity="";
+  let view=null,pending=null,damaged=null,bindPending=null,bindDamaged=null,busy=false,generation=0,identity="";
   const intent=window.wmsHuIntent;
+  // C-0193 root bind body differs from HU commands, so it uses the same durable store owner under its own key.
+  function validBind(v){
+    const b=v?.body;
+    return !!(v&&typeof v==="object"&&!Array.isArray(v)&&v.action==="bind-shipment"&&b&&typeof b==="object"&&!Array.isArray(b)
+      &&Object.keys(b).sort().join()==="expected_root_version,operation_id,scanned_root,shipment_identifier"
+      &&typeof b.operation_id==="string"&&b.operation_id.length<=80&&/^[A-Za-z0-9_.:-]+$/.test(b.operation_id)
+      &&typeof b.shipment_identifier==="string"&&b.shipment_identifier.length>0&&b.shipment_identifier.length<=100
+      &&typeof b.scanned_root==="string"&&b.scanned_root.length>0&&b.scanned_root.length<=200
+      &&Number.isSafeInteger(b.expected_root_version)&&b.expected_root_version>=0);
+  }
+  const bindIntent=window.wmsCommandIntent.create("wms-hu-bind-intent:",validBind,{invalid:"Некорректная сохранённая привязка корня к СТ."});
+  const bindConfirms=(saved,data)=>!!data&&data.operation_id===saved.body.operation_id&&data.status==="BOUND"&&data.root===saved.body.scanned_root
+    &&data.shipment_identifier===saved.body.shipment_identifier&&Array.isArray(data.cases)&&data.cases.length>0;
+  const bindStatus=text=>{el("huBindStatus").textContent=text;};
+  const bindable=()=>!!view&&!view.historical_composition&&view.nodes[0].kind==="CONTAINER"&&!(view.ancestors||[]).length&&view.nodes.some(node=>node.kind==="CASE");
   const requestedIdentifier=new URLSearchParams(window.location.search).get("identifier")||"";
   const key=()=>"wms-hu-intent:"+window.wmsAdminAuth.state.apiBase+":"+(window.wmsAdminAuth.state.user?.username||"");
   const base=()=>window.wmsAdminAuth.state.apiBase.replace(/\/$/,"");
@@ -9,13 +24,18 @@
   function controls(){
     document.querySelectorAll("main input,main select,main button").forEach(node=>{node.disabled=busy;});
     el("huRetry").hidden=!pending;
-    el("huRecoverDamaged").hidden=!damaged;
+    el("huRecoverDamaged").hidden=!(damaged||bindDamaged);
+    const saved=!!pending||!!damaged||!!bindPending||!!bindDamaged;
     for(const id of ["huCreate","huAttach","huDetach","huMove","huShip","huUnpack","huPlanMove","huRepackSlot","huRelocateSlot"]){
-      el(id).disabled=busy||!!pending||!!damaged||(id!=="huCreate"&&(!view||view.historical_composition));
+      el(id).disabled=busy||saved||(id!=="huCreate"&&(!view||view.historical_composition));
     }
+    el("huBindBlock").hidden=!(bindable()||bindPending||bindDamaged);
+    el("huBind").hidden=!!bindPending;el("huBindRetry").hidden=!bindPending;
+    el("huBind").disabled=busy||saved||!bindable();
+    el("huBindShipment").disabled=busy||!!bindPending||!!bindDamaged;
     const note=el("huRecoveryStatus");
-    note.textContent=damaged?"Повреждённый запрос блокирует новые операции. Сверьте текущее место и журнал операций; архив сохраняет исходный текст и не отменяет проведённое движение.":pending?"Ответ на сохранённую операцию не подтверждён. Повтор отправит исходный идентификатор, версии и сканы.":"";
-    note.hidden=!(pending||damaged);
+    note.textContent=damaged||bindDamaged?"Повреждённый запрос блокирует новые операции. Сверьте текущее место и журнал операций; архив сохраняет исходный текст и не отменяет проведённое движение.":pending?"Ответ на сохранённую операцию не подтверждён. Повтор отправит исходный идентификатор, версии и сканы.":bindPending?"Ответ на сохранённую привязку корня к СТ не подтверждён. Повтор отправит тот же номер операции, СТ, корень и версию; новую привязку не создавайте.":"";
+    note.hidden=!saved;
   }
   async function get(identifier){
     const r=await fetch(base()+"/api/warehouse-hus/composition?identifier="+encodeURIComponent(identifier),{headers:window.wmsAdminAuth.headers()});
@@ -66,7 +86,7 @@
   }
   async function submit(action){
     if(busy)return;
-    if(pending||damaged){status("Сначала восстановите сохранённую операцию.");return;}
+    if(pending||damaged||bindPending||bindDamaged){status("Сначала восстановите сохранённую операцию.");return;}
     busy=true;controls();const scope=key();
     try{
       if(!el("huContainerScan").value.trim())throw new Error("Отсканируйте внешнее грузовое место перед операцией.");
@@ -166,6 +186,59 @@
     try{const current=await get(data.root);if(key()===scope){view=current;view.scannedIdentifier=el("huIdentifier").value;render(current);}}
     catch(e){if(key()===scope)status("Операция подтверждена. Не удалось обновить состав: "+e.message);}
   }
+  async function bind(){
+    if(busy)return;
+    if(pending||damaged||bindPending||bindDamaged){status("Сначала восстановите сохранённую операцию.");return;}
+    busy=true;controls();const scope=key();
+    try{
+      const current=reviewed(),shipment=el("huBindShipment").value.trim();
+      if(!bindable())throw new Error("Привязать к СТ можно только верхний контейнер, в котором есть CASE.");
+      if(!shipment)throw new Error("Укажите идентификатор подготовленной СТ.");
+      const value={action:"bind-shipment",body:{operation_id:"HUBIND:"+crypto.randomUUID(),shipment_identifier:shipment,
+        scanned_root:current.root,expected_root_version:current.nodes[0].version}};
+      try{bindIntent.save(value);bindPending=value;}
+      catch(e){bindPending=null;throw new Error("Привязка не отправлена: "+e.message);}
+      await sendBind(scope,true);
+    }catch(e){bindStatus(e.message+(bindPending?" Повторите сохранённую привязку.":""));}
+    finally{busy=false;controls();}
+  }
+  function bindRefusal(code,detail){
+    if(code===403)return "Нет права привязывать корень к СТ на этом складе (ответ 403). Результат прежней отправки этим не подтверждён.";
+    if(detail&&typeof detail==="object"&&typeof detail.code==="string")
+      return "Отказ сервера: "+detail.code+(detail.message&&detail.message!==detail.code?" — "+detail.message:"")+
+        (detail.operation_id_conflict?". Номер операции уже использован с другим содержимым; прочитайте состав, новую привязку не создавайте.":".");
+    return "Ответ сервера "+code+": "+JSON.stringify(detail);
+  }
+  async function sendBind(scope,firstAttempt=false){
+    const record=bindIntent.read(),saved=record.value;
+    if(record.damaged||!saved||key()!==scope||JSON.stringify(saved)!==JSON.stringify(bindPending))
+      throw new Error("Сохранённый запрос изменился. Перечитайте состояние.");
+    const r=await fetch(base()+"/api/warehouse-hus/bind-shipment",{method:"POST",
+      headers:{...window.wmsAdminAuth.headers(),"Content-Type":"application/json"},body:JSON.stringify(saved.body)});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok){
+      const detail=data.detail;
+      if(firstAttempt&&![401,403].includes(r.status)&&detail?.operation_id===saved.body.operation_id
+        &&detail?.outcome_confirmed===true&&!detail?.retry_same_operation_id&&!detail?.operation_id_conflict){
+        bindIntent.settle(record);if(key()===scope)bindPending=null;
+      }
+      throw new Error(bindRefusal(r.status,detail||data));
+    }
+    if(!bindConfirms(saved,data))throw new Error("Ответ не соответствует сохранённой привязке. Повторите исходный запрос.");
+    if(key()!==scope)return;
+    bindIntent.settle(record);bindPending=null;el("huBindShipment").value="";
+    bindStatus("Корень "+data.root+" привязан к СТ "+data.shipment_identifier+". CASE в привязке: "+data.cases.length+
+      (data.idempotent?" (подтверждена уже проведённая привязка).":".")+" Операция "+data.operation_id);
+    try{const current=await get(saved.body.scanned_root);if(key()===scope){view=current;view.scannedIdentifier=el("huIdentifier").value;render(current);status("Состав перечитан. Версия "+current.nodes[0].version+".");}}
+    catch(e){if(key()===scope)status("Привязка подтверждена. Не удалось обновить состав: "+e.message);}
+  }
+  el("huBind").addEventListener("click",bind);
+  el("huBindRetry").addEventListener("click",async()=>{
+    if(busy||!bindPending)return;
+    busy=true;controls();const scope=key();
+    try{await sendBind(scope);}catch(e){bindStatus(e.message+" Повторите тот же сохранённый запрос или перечитайте состав.");}
+    finally{busy=false;controls();}
+  });
   el("huLoadSlots").addEventListener("click",async()=>{
     if(busy)return;
     try{
@@ -189,7 +262,7 @@
   el("huPlanMove").addEventListener("click",()=>submit("plan-move"));
   el("huRepackSlot").addEventListener("click",()=>submit("repack-slot"));
   el("huRelocateSlot").addEventListener("click",()=>submit("relocate-slot"));
-  el("huIdentifier").addEventListener("input",()=>{generation++;view=null;el("huContainerScan").value="";window.wmsHuTree?.clear();el("huRows").replaceChildren();el("huSummary").replaceChildren();el("huPlacement").replaceChildren();controls();});
+  el("huIdentifier").addEventListener("input",()=>{generation++;view=null;el("huContainerScan").value="";bindStatus("");window.wmsHuTree?.clear();el("huRows").replaceChildren();el("huSummary").replaceChildren();el("huPlacement").replaceChildren();controls();});
   el("huRetry").addEventListener("click",async()=>{
     if(busy||!pending)return;
     busy=true;controls();const scope=key();
@@ -202,25 +275,33 @@
     identity=next;view=null;generation++;pending=null;damaged=null;el("huContainerScan").value="";window.wmsHuTree?.clear();el("huRows").replaceChildren();el("huSummary").replaceChildren();el("huPlacement").replaceChildren();
     try{const record=intent.read();pending=record.value;damaged=record.damaged?record:null;if(pending)el("huIdentifier").value=pending.body.identifier;}
     catch(e){status("Не удалось прочитать сохранённую операцию: "+e.message);}
-    if(!pending&&requestedIdentifier)el("huIdentifier").value=requestedIdentifier;
+    bindPending=null;bindDamaged=null;bindStatus("");
+    try{const record=bindIntent.read();bindPending=record.value;bindDamaged=record.damaged?record:null;
+      if(bindPending){el("huBindShipment").value=bindPending.body.shipment_identifier;if(!pending)el("huIdentifier").value=bindPending.body.scanned_root;}}
+    catch(e){status("Не удалось прочитать сохранённую привязку: "+e.message);}
+    if(!pending&&!bindPending&&requestedIdentifier)el("huIdentifier").value=requestedIdentifier;
     controls();
-    if(!pending&&requestedIdentifier)load();
+    if(!pending&&(bindPending||requestedIdentifier))load();
   }
   el("huRecoverDamaged").addEventListener("click",async()=>{
-    if(busy||!damaged)return;
-    busy=true;controls();const record=damaged,scope=key(),identifier=el("huIdentifier").value;
+    if(busy||!(damaged||bindDamaged))return;
+    busy=true;controls();const record=damaged,bindRecord=bindDamaged,scope=key(),identifier=el("huIdentifier").value;
     try{
       if(!identifier)throw new Error("Укажите место для сверки.");
       const current=await get(identifier);
       if(scope!==key()||identifier!==el("huIdentifier").value)throw new Error("Контекст места изменился.");
       if(!current?.root||!Array.isArray(current.nodes)||!current.nodes.length)throw new Error("Состав не получен.");
-      intent.archiveDamaged(record);damaged=null;pending=null;view=current;view.scannedIdentifier=identifier;render(current);
+      if(record){intent.archiveDamaged(record);damaged=null;pending=null;}
+      if(bindRecord){bindIntent.archiveDamaged(bindRecord);bindDamaged=null;bindPending=null;}
+      view=current;view.scannedIdentifier=identifier;render(current);
       status("Исходный текст запроса сохранён в архиве. Текущий состав перечитан; прошлое движение не отменено.");
     }catch(e){status(e.message);}finally{busy=false;controls();}
   });
   window.addEventListener("storage",event=>{
-    if(event.key!==identity||busy)return;
-    try{const record=intent.read();pending=record.value;damaged=record.damaged?record:null;view=null;generation++;controls();}
+    let bindKey=null;try{bindKey=bindIntent.scope();}catch{}
+    if((event.key!==identity&&event.key!==bindKey)||busy)return;
+    try{const record=intent.read(),bound=bindIntent.read();pending=record.value;damaged=record.damaged?record:null;
+      bindPending=bound.value;bindDamaged=bound.damaged?bound:null;view=null;generation++;controls();}
     catch(e){status(e.message);}
   });
   window.addEventListener("wms-admin-auth-ready",auth);auth();
