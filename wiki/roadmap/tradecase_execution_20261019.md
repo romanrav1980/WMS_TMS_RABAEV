@@ -411,3 +411,6 @@ The unapplied root-HU shipment candidate now computes final-weight requirement a
 ## 2026-10-28 — T06 live read-only mixed-root baseline
 
 Read-only Oracle inspection of `MT285C7190E3A.ST.PAL` found one ST (643011), two `WAIT_CONTROL` CASE tasks (1184/1185) and two `PICKED` fulfillment rows, each linked to its CASE. The live QC status returns `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. The existing database therefore refuses the required one-root/one-ST/two-order case before any QC or load. No stock, reservation or fixture row changed. Evidence: [preflight](../../reports/tradecase/2026-10-28/codex/t06-mixed-root-readonly-preflight.json). The unapplied migration remains necessary; live DDL, compilation, QC, root HU shipment, replay and competing-shipment proof are open.
+
+
+Slow-SQL review of the same read-only case found no QC-specific API log row because the direct Oracle package call bypasses API logging. The newest long records belong to the already-fixed T10 timeline query. Decision: no index or query change for the QC refusal. Evidence: [slow-SQL review](../../reports/tradecase/2026-10-28/codex/t06-mixed-root-slow-sql-review.json).

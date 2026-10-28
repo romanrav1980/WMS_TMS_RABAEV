@@ -5619,3 +5619,5 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 2026-10-28: The local checkpoint contains the mixed-root final-weight guard; it is not published and does not apply Oracle DDL.
 
 2026-10-28: Read-only Oracle baseline for mixed root `MT285C7190E3A.ST.PAL` confirmed the actual blocker: two CASE/order fulfillment slices are bound to one ST, and current QC status returns `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. No stock, reservation or fixture row changed. Evidence is in `reports/tradecase/2026-10-28/codex/t06-mixed-root-readonly-preflight.json`.
+
+2026-10-28: Slow-SQL review after the mixed-root QC baseline read 20 latest log records. The direct package call does not write an API slow-log record; no latency issue is attributable to the refusal. The visible 9.4–12.8 s timeline records are the already-fixed T10 transport-window case. No index or unrelated query change was made. Evidence: `reports/tradecase/2026-10-28/codex/t06-mixed-root-slow-sql-review.json`.

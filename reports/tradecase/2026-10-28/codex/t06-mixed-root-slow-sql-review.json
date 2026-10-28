@@ -1,0 +1,148 @@
+{
+  "mode": "READ_ONLY",
+  "case": "RRL_STOCK_QC_GATE.status_json for MT285C7190E3A.ST.PAL",
+  "stock_effect": "NONE",
+  "rows": [
+    {
+      "elapsed_ms": "11485",
+      "operation_kind": "TRANSACTION",
+      "api_path": null,
+      "sql_text": "T10 timeline read-only profile",
+      "created_at": "2026-10-28 14:08:54.526698"
+    },
+    {
+      "elapsed_ms": "11749",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:07:08.366742"
+    },
+    {
+      "elapsed_ms": "11752",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:06:56.542690"
+    },
+    {
+      "elapsed_ms": "9433",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:06:44.713878"
+    },
+    {
+      "elapsed_ms": "12841",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:04:54.647517"
+    },
+    {
+      "elapsed_ms": "6",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:04:41.615220"
+    },
+    {
+      "elapsed_ms": "7",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/resources/timeline",
+      "sql_text": "Resource timeline native scoped read",
+      "created_at": "2026-10-28 14:04:40.936769"
+    },
+    {
+      "elapsed_ms": "637",
+      "operation_kind": "TRANSACTION",
+      "api_path": null,
+      "sql_text": "Claim short recovery lease",
+      "created_at": "2026-10-28 10:00:42.118708"
+    },
+    {
+      "elapsed_ms": "2495",
+      "operation_kind": "TRANSACTION",
+      "api_path": null,
+      "sql_text": "Claim short recovery lease",
+      "created_at": "2026-10-28 06:14:41.052401"
+    },
+    {
+      "elapsed_ms": "634",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/picking/waves/645/launch",
+      "sql_text": "Original wave launch continuation metadata",
+      "created_at": "2026-10-28 04:32:41.397221"
+    },
+    {
+      "elapsed_ms": "704",
+      "operation_kind": "CALL_NUMBER_PLSQL",
+      "api_path": null,
+      "sql_text": "begin :result := RRL_PICKING_API.create_plan(\n              p_customer_order_id => :customer_order_id,\n              p_plan_strategy => :plan_strategy, p_created_by => :created_by); end;",
+      "created_at": "2026-10-28 04:32:35.233661"
+    },
+    {
+      "elapsed_ms": "39",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/inventory/pallet-floor-types",
+      "sql_text": "Read current scoped full-pallet normative type",
+      "created_at": "2026-10-28 03:33:10.973310"
+    },
+    {
+      "elapsed_ms": "296",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/warehouse-hus/bind-shipment",
+      "sql_text": "Bind one root HU to one existing ST",
+      "created_at": "2026-10-28 03:11:09.971666"
+    },
+    {
+      "elapsed_ms": "127",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/case-pick/tasks/1182/bind-shipment",
+      "sql_text": "Bind physical CASE carrier to existing ST",
+      "created_at": "2026-10-28 02:32:09.638219"
+    },
+    {
+      "elapsed_ms": "1413",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/outgoing-quality/MT28139952A4B.ST.KG",
+      "sql_text": "Current warehouse QC status access",
+      "created_at": "2026-10-28 01:17:17.469125"
+    },
+    {
+      "elapsed_ms": "62",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/warehouse-hus/composition",
+      "sql_text": "Warehouse HU composition READ ONLY",
+      "created_at": "2026-10-28 01:12:32.498877"
+    },
+    {
+      "elapsed_ms": "505",
+      "operation_kind": "TRANSACTION",
+      "api_path": "/api/picking/waves/644/launch",
+      "sql_text": "Original wave launch continuation metadata",
+      "created_at": "2026-10-28 01:10:34.428368"
+    },
+    {
+      "elapsed_ms": "510",
+      "operation_kind": "CALL_NUMBER_PLSQL",
+      "api_path": null,
+      "sql_text": "begin :result := RRL_PICKING_API.create_plan(\n              p_customer_order_id => :customer_order_id,\n              p_plan_strategy => :plan_strategy, p_created_by => :created_by); end;",
+      "created_at": "2026-10-28 01:10:28.931747"
+    },
+    {
+      "elapsed_ms": "62",
+      "operation_kind": "TRANSACTION",
+      "api_path": null,
+      "sql_text": "Original wave launch continuation metadata",
+      "created_at": "2026-10-28 01:08:01.483628"
+    },
+    {
+      "elapsed_ms": "59",
+      "operation_kind": "TRANSACTION",
+      "api_path": null,
+      "sql_text": "Original wave launch continuation metadata",
+      "created_at": "2026-10-28 01:08:01.405478"
+    }
+  ],
+  "decision": "No slow row can be causally attributed to this direct package read: direct Oracle call bypasses API slow logger. Existing QC failure is a semantic guard, not a latency finding."
+}
