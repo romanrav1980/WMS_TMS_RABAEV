@@ -90,3 +90,18 @@ A resumed run with different inputs → `TRANSPORT_INPUTS_CHANGED_AFTER_START`. 
   - a foreign DOCID → collision;
   - a mismatching row is not reused.
 - gate, encoding and architecture PASS. No live Oracle/API runs. C0190/C0192 not changed.
+
+## Rework 2 K-0231 (the same C0191)
+- **Saved intent:** before every SHIPMENT metadata write, `shipment_writes[key].intent` = `shipment_intent(operation, CALL|EXEC, function|SQL, JSON-safe args/binds)` is saved to the state (Decimal/date as text, binds sorted; deterministic).
+  - On resume the regenerated descriptor is compared with the stored one; a difference → **`SHIPMENT_INTENT_CHANGED:<key>`** before reconciliation and before the write.
+  - The `ADD2` date is fixed once in the state (`st_day`), so the intent does not change on a resume the next day.
+- **The read-before/after reconciliation stays;** only a fully matching record is reused.
+- **Fulfillment (`fulfillment_match`):** exactly one row with order + ST id + `PALLET_UID` = the root shipment + the recipient address + `PLANNED` + `FACT_QTY` = `FACT_WEIGHT` = 0 + `QA_C0191_ONLY`.
+  - Any other value under the same order/ST → **`FULFILLMENT_MISMATCH`** before the insert; two rows → `FULFILLMENT_DUPLICATE`.
+- **Tests: 43 passed (+10):**
+  - the intent is saved before every CALL (checked inside the write) and covers all 6 writes; the ADD2 date is from the state;
+  - a changed intent on resume → stop with no writes;
+  - the descriptor is deterministic/JSON-safe, and an unknown kind is refused;
+  - 6 kinds of fulfillment mismatch → stop with no insert;
+  - a fully matching row is reused, a duplicate is a stop.
+- gate, encoding and architecture PASS. No live runs; C0190/C0192 not changed.

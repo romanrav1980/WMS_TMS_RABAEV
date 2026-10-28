@@ -187,7 +187,8 @@ class MetaLive:
         if "from RRL_SBORKA_PALLET_ROWS where PALLET_UID" in sql:
             return [(r["id"], r["qty"], r["docid"]) for r in self.rows if r["uid"] == b["u"] and r["article"] == b["a"]]
         if "from RRL_CUSTOMER_ORDER_FULFILLMENT" in sql:
-            return [(f["id"],) for f in self.fulfillments if f["order"] == b["o"] and f["pallet"] == b["s"]]
+            return [(f["id"], f["uid"], f["address"], f.get("status", "PLANNED"), f.get("qty", 0), f.get("weight", 0), f.get("source", "QA_C0191_ONLY"))
+                    for f in self.fulfillments if f["order"] == b["o"] and f["pallet"] == b["s"]]
         raise AssertionError(sql)
 
     def one(self, sql, **b):
@@ -206,11 +207,12 @@ def flow_with(live, fail_after_commit=()):
     flow = object.__new__(adapter.MixedTreeTransport)
     flow.live, flow.inputs, flow.tag, flow.ware = live, INPUTS, "MT28X", 231000001
     flow.t = live.s.setdefault("transport", {"inputs": INPUTS, "stages_done": []})
-    flow.writes = []
+    flow.writes, flow.intent_seen = [], []
     failing = set(fail_after_commit)
 
     def call(function, args):
         flow.writes.append(function)
+        flow.intent_seen.append(any(v.get("state") == "SENT" and v.get("intent", {}).get("target") == function for v in flow.t.get("shipment_writes", {}).values()))
         if function == "RRL_SBORKA_PALLETS_ADD2":
             live.pallets.append({"id": 900 + len(live.pallets), "st": args[0], "uid": args[3], "ware": args[8]}); result = live.pallets[-1]["id"]
         else:
@@ -225,7 +227,7 @@ def flow_with(live, fail_after_commit=()):
         if sql.startswith("update"):
             next(p for p in live.pallets if p["id"] == b["s"])["condition"] = 0
         else:
-            live.fulfillments.append({"id": 300 + len(live.fulfillments), "order": b["o"], "pallet": b["s"]})
+            live.fulfillments.append({"id": 300 + len(live.fulfillments), "order": b["o"], "pallet": b["s"], "uid": b["u"], "address": b["a"]})
     flow.metadata_call, flow.metadata_exec = call, execute
     return flow
 
@@ -285,3 +287,65 @@ def test_mismatching_existing_row_is_not_reused():
     live.rows.append({"id": 7, "uid": "MT28X.ST.PAL", "article": "MT28XK", "qty": "1", "docid": st})
     with pytest.raises(adapter.RunnerStop, match="ST_ROW_MISMATCH"):
         flow_with(live).ensure_shipment_metadata(st, "MT28X.ST.PAL")
+
+
+# ---------------- K-0231 rework 2: exact persisted intent and full fulfillment reconciliation ----------------
+
+def test_exact_intent_is_persisted_before_every_metadata_write():
+    live = MetaLive()
+    flow = flow_with(live)
+    flow.ensure_shipment_metadata(adapter.st_number_for("MT28X"), "MT28X.ST.PAL")
+    assert flow.intent_seen and all(flow.intent_seen)  # each CALL found its SENT intent already in the state
+    writes = flow.t["shipment_writes"]
+    assert set(writes) == {"st.pallet", "st.condition", "st.row.kg", "st.row.ea", "st.fulfillment.kg", "st.fulfillment.ea"}
+    pallet = writes["st.pallet"]["intent"]
+    assert pallet["kind"] == "CALL" and pallet["target"] == "RRL_SBORKA_PALLETS_ADD2" and pallet["args"][0] == adapter.st_number_for("MT28X")
+    assert pallet["args"][5] == flow.t["st_day"]  # the date is fixed once in the state, so the intent is stable on resume
+    assert writes["st.fulfillment.kg"]["intent"]["args"] == {"a": "QA STORE 1", "o": 501, "s": pallet and writes["st.pallet"]["result"], "u": "MT28X.ST.PAL"}
+
+
+def test_changed_intent_on_resume_stops_before_reconciling_or_writing():
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    flow = flow_with(live, fail_after_commit={"RRL_SBORKA_PALLET_ROWS_ADD4"})
+    with pytest.raises(RuntimeError):
+        flow.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    live.s["measurements"]["manual_net_kg"] = "9.7"  # regenerated row intent differs from the stored one
+    again = flow_with(live)
+    again.t = flow.t
+    with pytest.raises(adapter.RunnerStop, match="SHIPMENT_INTENT_CHANGED:st.row.kg"):
+        again.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert again.writes == []
+
+
+def test_shipment_intent_is_json_safe_and_deterministic():
+    from decimal import Decimal
+    from datetime import date
+    one = adapter.shipment_intent("k", "CALL", "F", [Decimal("9.60"), date(2026, 10, 29), None])
+    assert one == adapter.shipment_intent("k", "CALL", "F", [Decimal("9.60"), date(2026, 10, 29), None]) and one["args"] == ["9.60", "2026-10-29", None]
+    assert adapter.shipment_intent("k", "EXEC", "SQL", {"b": 1, "a": 2}) == adapter.shipment_intent("k", "EXEC", "SQL", {"a": 2, "b": 1})
+    with pytest.raises(adapter.RunnerStop):
+        adapter.shipment_intent("k", "DROP", "X", [])
+
+
+@pytest.mark.parametrize("field,value", [("uid", "OTHER.PAL"), ("address", "OTHER STORE"), ("status", "SHIPPED"), ("qty", 1), ("weight", "0.5"), ("source", "SAP")])
+def test_mismatching_fulfillment_under_the_same_order_and_st_stops_before_an_insert(field, value):
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    live.pallets.append({"id": 9, "st": st, "uid": "MT28X.ST.PAL", "ware": 231000001, "condition": 0})
+    for article, qty in (("MT28XK", "9.6"), ("MT28XE", "4")):
+        live.rows.append({"id": len(live.rows) + 1, "uid": "MT28X.ST.PAL", "article": article, "qty": qty, "docid": st})
+    row = {"id": 31, "order": 501, "pallet": 9, "uid": "MT28X.ST.PAL", "address": "QA STORE 1"}
+    row[field] = value
+    live.fulfillments.append(row)
+    flow = flow_with(live)
+    with pytest.raises(adapter.RunnerStop, match="FULFILLMENT_MISMATCH"):
+        flow.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert "insert" not in flow.writes and len(live.fulfillments) == 1
+
+
+def test_fully_matching_fulfillment_is_reused_and_duplicates_stop():
+    assert adapter.fulfillment_match([(5, "U", "A", "PLANNED", 0, 0, "QA_C0191_ONLY")], "U", "A") == 5
+    assert adapter.fulfillment_match([], "U", "A") is None
+    with pytest.raises(adapter.RunnerStop, match="FULFILLMENT_DUPLICATE"):
+        adapter.fulfillment_match([(5, "U", "A", "PLANNED", 0, 0, "QA_C0191_ONLY")] * 2, "U", "A")
