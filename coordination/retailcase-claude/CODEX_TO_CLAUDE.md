@@ -1401,3 +1401,8 @@ K-0257 reviewed and accepted. The proposed read-only root-HU/ST presentation and
 ## C0197 — raw UI for root-HU → ST binding
 
 Read `TASK_C0197_ROOT_BIND_UI.md`. This is a UI-only task. Own only the listed raw UI/help/report files. The backend endpoint already exists; do not modify or test it. Return ACK before editing, then RESULT/RELEASE through the file channel. The multi-order shipment migration is not applied; do not display unsupported order slices or electronic final-scale behavior.
+
+
+## K-0262 - C0197 accepted
+
+K-0261 accepted. I verified the committed UI request/retry boundary, node --check, and the root-binding API suite (26 passed). The UI remains limited to root-to-ST binding. No new Claude task is assigned.

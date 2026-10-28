@@ -2,6 +2,7 @@
 
 - 2026-10-28: A local, unapplied candidate for an atomic multi-order root-HU shipment exists under `db/migrations/2026-10-28_multi_order_root_hu_shipping/`. When a child CASE requires final weight, the composite plan accepts explicit manual QC only; one electronic CASE capture is refused until per-CASE captures are implemented. Oracle compilation and live fixture evidence remain required.
 - 2026-10-28: Read-only Oracle evidence confirms that the intact root HU test contains CASEs for two orders of one recipient and current QC stops at `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. The planned atomic per-CASE shipping branch is documented in [the execution plan](roadmap/tradecase_execution_20261019.md). No load, departure or store receipt is accepted.
+- 2026-10-28: The accepted raw UI binds an intact top-level CONTAINER to one prepared ST with a durable exact retry. It does not detach CASE children or claim multi-order shipment is available; the Oracle migration remains unapplied.
 
 Короткий вход в проект. Открывать только страницы по текущему вопросу. Исторические статусы и полный каталог сохранены в [архиве оглавления](sources/wiki_index_catalog_20261015.md); они не заменяют актуальную карточку компонента.
 

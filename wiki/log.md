@@ -5621,3 +5621,8 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 2026-10-28: Read-only Oracle baseline for mixed root `MT285C7190E3A.ST.PAL` confirmed the actual blocker: two CASE/order fulfillment slices are bound to one ST, and current QC status returns `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. No stock, reservation or fixture row changed. Evidence is in `reports/tradecase/2026-10-28/codex/t06-mixed-root-readonly-preflight.json`.
 
 2026-10-28: Slow-SQL review after the mixed-root QC baseline read 20 latest log records. The direct package call does not write an API slow-log record; no latency issue is attributable to the refusal. The visible 9.4–12.8 s timeline records are the already-fixed T10 transport-window case. No index or unrelated query change was made. Evidence: `reports/tradecase/2026-10-28/codex/t06-mixed-root-slow-sql-review.json`.
+## 2026-10-28 — C0197: привязка верхнего места к СТ
+
+- Принят commit `94655f28`: raw UI допускает привязку только верхнего `CONTAINER` с CASE, сохраняет точный запрос до POST и повторяет исходный `operation_id` при неопределённом результате.
+- Codex проверил `node --check wiki-raw/wms_admin_ui_reference/warehouse-hus.js` и `tests/retailcase/test_root_hu_shipment_bind.py`: 26 passed. UI обращается только к `/api/warehouse-hus/bind-shipment`; операций с отдельными CASE в нём нет.
+- Миграция multi-order root-HU не применена; отгрузка и подтверждение в магазине этим экраном не выполняются.
