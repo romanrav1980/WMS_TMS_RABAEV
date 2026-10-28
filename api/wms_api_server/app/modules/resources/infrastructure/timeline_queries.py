@@ -93,20 +93,27 @@ def case_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def transport_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
-    return read_rows(cur, """select o.ID OP_ID,o.TT_ID,o.OPERATION_CODE,t.TRANSPORT,t.DOCK,
+    # The legacy pallet table can hold tens of thousands of rows for a warehouse.
+    # Materialize the bounded operation window before correlating each candidate trip
+    # to its pallets and scoped dispatch grant.
+    return read_rows(cur, """with candidate_operations as (
+        select /*+ materialize */ o.ID OP_ID,o.TT_ID,o.OPERATION_CODE,o.ORD,o.PLAN_START,o.PLAN_END,o.FACT_START,o.FACT_END
+        from RRL_TT_OPERATIONS o
+        where ((o.PLAN_START<:local_finish and (o.PLAN_END>:local_start or o.PLAN_END is null))
+          or (o.FACT_START<:local_finish and (o.FACT_END>:local_start or o.FACT_END is null)))
+      )
+      select o.OP_ID,o.TT_ID,o.OPERATION_CODE,t.TRANSPORT,t.DOCK,
         (select max(a.VERSION_NO) from RRL_TT_TIME_APPROVAL a where a.TT_ID=t.ID) APPROVAL_VERSION,
         to_char(o.PLAN_START,'YYYY-MM-DD"T"HH24:MI:SS') PLAN_LOCAL_START,
         to_char(o.PLAN_END,'YYYY-MM-DD"T"HH24:MI:SS') PLAN_LOCAL_FINISH,
         to_char(o.FACT_START,'YYYY-MM-DD"T"HH24:MI:SS') FACT_LOCAL_START,
         to_char(o.FACT_END,'YYYY-MM-DD"T"HH24:MI:SS') FACT_LOCAL_FINISH
-        from RRL_TT_OPERATIONS o join RRL_TRANSPORT_TASK t on t.ID=o.TT_ID
-        where nvl(t.DELETED,0)=0
+      from candidate_operations o join RRL_TRANSPORT_TASK t on t.ID=o.TT_ID
+      where nvl(t.DELETED,0)=0
         and exists(select 1 from RRL_SBORKA_PALLETS p where p.TRANSTASK_ID=t.ID and p.WARE_ID=:ware)
         and not exists(select 1 from RRL_SBORKA_PALLETS p where p.TRANSTASK_ID=t.ID and
           (p.WARE_ID is null or RRL_ACCESS_API.allowed(:actor,'transport_dispatch_view','WAREHOUSE',to_char(p.WARE_ID))=0))
-        and ((o.PLAN_START<:local_finish and (o.PLAN_END>:local_start or o.PLAN_END is null))
-          or (o.FACT_START<:local_finish and (o.FACT_END>:local_start or o.FACT_END is null)))
-        order by o.TT_ID,o.ORD,o.ID fetch first 2001 rows only""", params)
+      order by o.TT_ID,o.ORD,o.OP_ID fetch first 2001 rows only""", params)
 
 
 def loading_rows(cur: Any, params: dict[str, Any], *, actor_is_admin: bool = False) -> list[dict[str, Any]]:
