@@ -2,7 +2,7 @@
  "target": "RABAEV/orcl",
  "migration_id": "2026-10-23-trade-short-guard-v2",
  "revision": "C-0170 v2 (supersedes the published DO-NOT-APPLY 2026-10-23_trade_short_guard)",
- "status": "NOT_APPLIED",
+ "status": "APPLIED",
  "applied_by_claude": false,
  "shared_objects_changed": {
   "RRL_TRADE_STOCK_GUARD:PACKAGE BODY": {

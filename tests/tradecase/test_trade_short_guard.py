@@ -1,4 +1,4 @@
-"""C-0170 offline checks: the NOT_APPLIED guard branch admitting CASE_SHORT_APPROVE on trade stock only for what its own plan locks,
+"""C-0170 offline checks: the applied guard branch admitting CASE_SHORT_APPROVE on trade stock only for what its own plan locks,
 the guarded rollback, the LIVE READ ONLY evidence (current refusal, existing current-owner check before the cached receipt), the approval
 UI wording and the root live runner guards."""
 import hashlib
@@ -36,7 +36,7 @@ def test_branch_binds_to_the_operation_plan():
 
 def test_kit_hashes_and_guarded_rollback():
     m = json.loads(text(KIT / "manifest.json"))
-    assert m["status"] == "NOT_APPLIED" and m["before_sha256"]["RRL_TRADE_STOCK_GUARD:PACKAGE BODY"] == "7D6E1781DB7F46AC66105865B83D583C2FF35A9A905C1D8B91C97421CF0A68EE"
+    assert m["status"] == "APPLIED" and m["before_sha256"]["RRL_TRADE_STOCK_GUARD:PACKAGE BODY"] == "7D6E1781DB7F46AC66105865B83D583C2FF35A9A905C1D8B91C97421CF0A68EE"
     stored = text(KIT / "before_guard_body.sql")[len("create or replace "):].rsplit("\n/\n", 1)[0]
     assert hashlib.sha256(stored.encode()).hexdigest().upper() == m["before_sha256"]["RRL_TRADE_STOCK_GUARD:PACKAGE BODY"]
     after = text(KIT / "001_guard_body.sql")[len("create or replace "):].rsplit("\n/\n", 1)[0]

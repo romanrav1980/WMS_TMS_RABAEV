@@ -1,0 +1,15 @@
+{
+  "case": "T07 bulk carton defer and departure current-source verification",
+  "status": "PASS",
+  "mode": "READ ONLY",
+  "oracle": {
+    "successor": "2026-10-23-trade-short-guard-v2",
+    "guard_checks": 7,
+    "stock": {"remain_ea": 7, "hard_reserved_ea": 5},
+    "applied_operations": ["NB22.LOAD.A", "NB22.WAIT.PLAN.B", "NB22.WAIT.COMPLETE.B"]
+  },
+  "business_result": "One carton departed on the first trip; the other carton remains on the second trip in waiting.",
+  "performance": {"slow_sql_rows": 0, "decision": "No index or rewrite: no slow row was recorded for the verified path."},
+  "limitations": ["Full concurrent posting matrix remains open.", "No external connector or equipment was used."],
+  "source_evidence": "runtime/test-evidence/tradecase/2026-10-22/T07/bulk-remainder-verification.json"
+}

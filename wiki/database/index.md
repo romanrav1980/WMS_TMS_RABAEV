@@ -1,6 +1,7 @@
 > Актуальное продолжение 121–130: [[retailcase_stock_posting_continuation_20261008]]. 47 package pairs; 10 ADAPTED / 21 UNCONVERTED; PREPARED, полного cutover нет.
 - [Root-HU → один ST, 29.10](root_hu_shipment_bind_20261029.md): миграция применена; один root с несколькими CASE привязывается к одному ST и одному получателю без разделения.
 - [T06: составная корневая паллета, 29.10](t06_multi_order_root_hu_20261029.md): миграции применены; KG+EA root прошёл `LOAD`/`DEPART` и приёмку магазина одним идентификатором.
+- [T07: перенос короба в ожидание, 29.10](tradecase_hu_defer_wait_20261022.md): текущий guard проверен после successor-миграции; отправленный короб и остаток в ожидании сохранили раздельные рейсы и баланс.
 
 # Database Mirror: Oracle Schema
 

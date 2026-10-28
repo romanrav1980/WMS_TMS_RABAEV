@@ -1,4 +1,4 @@
-# 2026-10-23 trade short guard v2 (C-0170) — NOT_APPLIED
+# 2026-10-23 trade short guard v2 (C-0170) — APPLIED
 
 Замена опубликованного комплекта `2026-10-23_trade_short_guard` (тот помечен «НЕ ПРИМЕНЯТЬ» и не меняется).
 
@@ -14,4 +14,4 @@
 Порядок: `apply.sql` (preflight: цель, хеш тела до изменения, 7 зависимостей, INVALID=0 → тело → verify → журнал миграций).
 `rollback.sql`: цель → проверка, что тело и зависимости совпадают с хешами «после» (`AFTER_SOURCE_DRIFT_REFUSED`) → отказ при истории
 (`TRADE_SHORT_HISTORY_PRESENT`: APPLIED CASE_SHORT_APPROVE на складе TRADECASE после APPLIED_AT миграции) → тело «до» → rollback_verify → журнал.
-Применяет только root. Claude ничего не применял.
+Применено в RABAEV/orcl 26.10.2026. Повторная проверка T07 использует этот зарегистрированный successor при сверке источника RRL_TRADE_STOCK_GUARD.
