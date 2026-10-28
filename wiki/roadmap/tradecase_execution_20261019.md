@@ -406,3 +406,8 @@ A read-only owner-scope acceptance found the two-day warehouse 1 timeline at 9.4
 The unapplied root-HU shipment candidate now computes final-weight requirement across all CASE slices. A mixed root with such a CASE accepts only an explicit `MANUAL_CONFIRMED` QC measurement. A single electronic final-scale capture is rejected until a per-CASE capture contract exists. C0191 now sends the manual-origin field instead of encoding the origin only in a note. Oracle preflight, 56 focused tests, architecture gate and UTF-8 check passed. The migration still needs explicit DDL permission, compilation, isolated mixed fixture, exact replay and competing-shipment refusal.
 
 2026-10-28: The local checkpoint contains the mixed-root final-weight guard; it is not published and does not apply Oracle DDL.
+
+
+## 2026-10-28 — T06 live read-only mixed-root baseline
+
+Read-only Oracle inspection of `MT285C7190E3A.ST.PAL` found one ST (643011), two `WAIT_CONTROL` CASE tasks (1184/1185) and two `PICKED` fulfillment rows, each linked to its CASE. The live QC status returns `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. The existing database therefore refuses the required one-root/one-ST/two-order case before any QC or load. No stock, reservation or fixture row changed. Evidence: [preflight](../../reports/tradecase/2026-10-28/codex/t06-mixed-root-readonly-preflight.json). The unapplied migration remains necessary; live DDL, compilation, QC, root HU shipment, replay and competing-shipment proof are open.

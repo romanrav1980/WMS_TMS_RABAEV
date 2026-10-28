@@ -5617,3 +5617,5 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 2026-10-28: T06 multi-order root-HU candidate was tightened before Oracle application. `RRL_WH_FINAL_SCALE_ADMISSION` now derives final-weight requirement from all CASE slices; a composite accepts explicit manual QC and rejects one electronic CASE capture. C0191 sends `measurement_origin=MANUAL_CONFIRMED`. 56 focused tests, architecture gate, UTF-8 and read-only Oracle preflight passed. Changed migration files remain unapplied; live DDL and mixed-fixture proof are open.
 
 2026-10-28: The local checkpoint contains the mixed-root final-weight guard; it is not published and does not apply Oracle DDL.
+
+2026-10-28: Read-only Oracle baseline for mixed root `MT285C7190E3A.ST.PAL` confirmed the actual blocker: two CASE/order fulfillment slices are bound to one ST, and current QC status returns `SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS`. No stock, reservation or fixture row changed. Evidence is in `reports/tradecase/2026-10-28/codex/t06-mixed-root-readonly-preflight.json`.

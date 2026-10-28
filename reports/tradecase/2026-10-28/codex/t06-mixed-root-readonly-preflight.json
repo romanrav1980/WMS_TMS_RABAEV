@@ -1,0 +1,59 @@
+{
+  "tag": "MT285C7190E3A",
+  "mode": "READ_ONLY",
+  "stock_effect": "NONE",
+  "queries": [
+    {
+      "name": "root",
+      "rows": [
+        [
+          643011,
+          "MT285C7190E3A.ST.PAL",
+          237807733,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "cases",
+      "rows": [
+        [
+          1184,
+          2249,
+          643011,
+          "WAIT_CONTROL",
+          2,
+          "CP645000000001184"
+        ],
+        [
+          1185,
+          2248,
+          643011,
+          "WAIT_CONTROL",
+          2,
+          "CP645000000001185"
+        ]
+      ]
+    },
+    {
+      "name": "fulfillment",
+      "rows": [
+        [
+          2248,
+          643011,
+          1185,
+          "PICKED"
+        ],
+        [
+          2249,
+          643011,
+          1184,
+          "PICKED"
+        ]
+      ]
+    }
+  ],
+  "status": "PASS",
+  "qc_status": "RETURNED",
+  "qc_payload": "{\"shipment_identifier\":\"MT285C7190E3A.ST.PAL\",\"document_id\":643011,\"required\":true,\"control_mode\":\"BOTH\",\"independent_controller_required\":true,\"ready\":false,\"weight_exemption_recorded\":false,\"reason\":\"ORA-20887: SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS\"}"
+}
