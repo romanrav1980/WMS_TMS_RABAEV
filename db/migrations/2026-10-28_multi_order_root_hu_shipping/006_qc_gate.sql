@@ -135,8 +135,7 @@ create or replace package body RRL_STOCK_QC_GATE as
    declare dom json_object_t:=json_object_t.parse(domain);task_no number;required_flag number:=0;begin
     task_no:=dom.get_number('case_task');j.put('case_task_id',task_no);j.put('case_content_version',dom.get_number('case_version'));j.put('composition_signature_version',signature_version_for_plan(domain));
     if dom.has('multi_order') then j.put('slices',dom.get_array('slices'));j.put('multi_order',true);end if;
-    if task_no is not null then select case when p.FINAL_WEIGHT_REQUIRED=1 and upper(p.LOAD_UNIT_CLASS)='CONTAINER'then 1 else 0 end into required_flag
-     from RRL_CASE_PICK_TASK c join RRL_PALLET_TYPE p on p.PALLET_TYPE_ID=c.PALLET_TYPE_ID where c.CASE_PICK_TASK_ID=task_no;end if;
+    required_flag:=RRL_WH_FINAL_SCALE_ADMISSION.required(domain);
     j.put('final_scale_required',required_flag=1);
    end;
    j.put('required',v_mode!='NONE');j.put('control_mode',v_mode);j.put('independent_controller_required',v_independent=1);

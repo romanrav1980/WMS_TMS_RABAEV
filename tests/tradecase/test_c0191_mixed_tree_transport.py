@@ -349,3 +349,57 @@ def test_fully_matching_fulfillment_is_reused_and_duplicates_stop():
     assert adapter.fulfillment_match([], "U", "A") is None
     with pytest.raises(adapter.RunnerStop, match="FULFILLMENT_DUPLICATE"):
         adapter.fulfillment_match([(5, "U", "A", "PLANNED", 0, 0, "QA_C0191_ONLY")] * 2, "U", "A")
+
+
+def test_shipment_binds_the_intact_root_once_without_detaching_children(monkeypatch):
+    live = FakeLive()
+    live.s.update({"articles": {"kg": "K", "ea": "E"}, "cases": {"kg": {"task": 1, "carrier": "S1"}, "ea": {"task": 2, "carrier": "S2"}}})
+    flow = adapter.MixedTreeTransport(live, INPUTS)
+    flow.ensure_shipment_metadata = lambda st, uid: None
+    snapshot = {**COMPOSITION, "nodes": [dict(node, cell="MT28XPK") for node in COMPOSITION["nodes"]], "quantities": [{"article": "K", "base_uom": "KG", "quantity": "9.6"}, {"article": "E", "base_uom": "EA", "quantity": "4"}], "findings": []}
+    live.composition = lambda identifier: snapshot
+    flow.shipment()
+    assert [(key, path) for key, _, path, _ in live.sent] == [("t.bind.root", "/api/warehouse-hus/bind-shipment")]
+    body = live.sent[0][3]
+    assert body["scanned_root"] == "MT28X.PAL" and body["expected_root_version"] == 7
+
+class FloorTareLive(FakeLive):
+    def __init__(self):
+        super().__init__()
+        self.s["transport"] = {"st_pallet": "MT28X.ST.PAL"}; self.s["root_tare_booking"] = "MT28X.ROOT.TARE.BOOK"
+
+    def composition(self, root):
+        return COMPOSITION
+
+    def get(self, path):
+        if path == "/api/outgoing-quality/MT28X.ST.PAL":
+            return {"composition_signature": "sig"}
+        if path.endswith("/availability"):
+            return [{"pallet_type_id": 1, "available_quantity": "0", "balance_version": 3}]
+        raise AssertionError(path)
+
+
+def test_root_tare_uses_existing_command_with_root_scans_not_floor_endpoint():
+    live = FloorTareLive()
+    flow = object.__new__(adapter.MixedTreeTransport)
+    flow.live, flow.inputs, flow.tag, flow.ware = live, INPUTS, "MT28X", 231000001
+    flow.t = live.s["transport"]
+    flow.root = "MT28X.PAL"
+    flow.floor_qc_tare()
+    calls = {key: (path, body) for key, _, path, body in live.sent}
+    assert "t.floor" not in calls
+    assert "t.tare.book" not in calls
+    assert live.s["root_tare_booking"] == "MT28X.ROOT.TARE.BOOK"
+
+
+def test_weight_qc_declares_manual_origin_instead_of_only_a_note():
+    data = dict(INPUTS, qc={"mode": "WEIGHT", "origin": "OPERATOR_MEASURED", "gross_weight": "14.0", "wood_weight": "2.0"})
+    live = FloorTareLive()
+    flow = object.__new__(adapter.MixedTreeTransport)
+    flow.live, flow.inputs, flow.tag, flow.ware = live, data, "MT28X", 231000001
+    flow.t = live.s["transport"]
+    flow.root = "MT28X.PAL"
+    flow.floor_qc_tare()
+    body = next(body for key, _, _, body in live.sent if key == "t.qc")
+    assert body["measurement_origin"] == "MANUAL_CONFIRMED"
+    assert "OPERATOR_MEASURED:QC_WEIGHT:MT28X" in body["note"]

@@ -399,3 +399,10 @@ Local checks: `tests/retailcase/test_multi_order_root_hu_shipping_migration.py` 
 
 A read-only owner-scope acceptance found the two-day warehouse 1 timeline at 9.4–12.8 s. Oracle profiling isolated 	ransport_rows: 11.29 s with zero rows, while all other sources were below 81 ms. The query now materializes the bounded operation window before correlating pallets and dispatch ACL. The same live Oracle gateway request completed in 277/101/81 ms with 3 events and 0 assignments. No index was added. A separately started current-code API on port 8096 returned HTTP 200 in 462/155/173 ms and was stopped after the check. The unknown existing process on 8088 was not changed. See [measurement](../../reports/tradecase/2026-10-28/codex/t10-transport-window-performance.json).
 
+
+
+## 2026-10-28 — T06 multi-order root QC boundary
+
+The unapplied root-HU shipment candidate now computes final-weight requirement across all CASE slices. A mixed root with such a CASE accepts only an explicit `MANUAL_CONFIRMED` QC measurement. A single electronic final-scale capture is rejected until a per-CASE capture contract exists. C0191 now sends the manual-origin field instead of encoding the origin only in a note. Oracle preflight, 56 focused tests, architecture gate and UTF-8 check passed. The migration still needs explicit DDL permission, compilation, isolated mixed fixture, exact replay and competing-shipment refusal.
+
+2026-10-28: The local checkpoint contains the mixed-root final-weight guard; it is not published and does not apply Oracle DDL.

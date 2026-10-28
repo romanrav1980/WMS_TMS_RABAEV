@@ -5613,3 +5613,7 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 - 2026-10-28: T10 live read-only timeline profile found 	ransport_rows scanning before its window filter (9.4–12.8 s). Bounded the operation window first; current-code Oracle gateway measurement is 277/101/81 ms with the same 3 events and no assignments. No index added; HTTP-after-reload remains open.
 
 - 2026-10-28: Confirmed the T10 transport-window rewrite through a temporary current-code API on port 8096: HTTP 200 in 462/155/173 ms, 3 events and 0 assignments. The temporary process was stopped; the unknown 8088 process was untouched.
+
+2026-10-28: T06 multi-order root-HU candidate was tightened before Oracle application. `RRL_WH_FINAL_SCALE_ADMISSION` now derives final-weight requirement from all CASE slices; a composite accepts explicit manual QC and rejects one electronic CASE capture. C0191 sends `measurement_origin=MANUAL_CONFIRMED`. 56 focused tests, architecture gate, UTF-8 and read-only Oracle preflight passed. Changed migration files remain unapplied; live DDL and mixed-fixture proof are open.
+
+2026-10-28: The local checkpoint contains the mixed-root final-weight guard; it is not published and does not apply Oracle DDL.

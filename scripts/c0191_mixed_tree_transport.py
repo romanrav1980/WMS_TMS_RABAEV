@@ -264,18 +264,19 @@ class MixedTreeTransport:
         uid = f"{self.tag}.ST.PAL"  # the external shipment identifier stays as before
         st = self.t.get("st_number") if len(str(self.t.get("st_number") or "")) <= DOCID_MAX and self.t.get("st_number") else st_number_for(self.tag)
         self.t.update(st_number=st, st_pallet=uid); live.save()
-        self.ensure_shipment_metadata(st, uid)
-        booking = {role: f"{self.tag}.TARE.BOOK.{role}" for role in cases}
-        for role, case in cases.items():  # a bound CASE is required for loading; binding happens on a free carrier, then the tree is rebuilt
-            version = lambda uid_: live.composition(uid_)["nodes"][0]["version"]
-            child = "CASE:" + str(case["task"])
-            if live.composition(child).get("ancestors"):
-                live.send(f"t.detach.{role}", "POST", "/api/warehouse-hus/detach-case", {**attach_case_body(f"{self.tag}.T.DETACH.{role}", self.root, case["task"],
-                          version(self.root), version(child), case["carrier"], None), "reason": "C0191 bind the CASE to its single shipment"})
-            live.send(f"t.bind.{role}", "POST", f"/api/case-pick/tasks/{case['task']}/bind-shipment",
-                      {"pallet_identifier": uid, "scan_container": case["carrier"], "expected_content_version": version(child)})
-            live.send(f"t.reattach.{role}", "POST", "/api/warehouse-hus/attach-case",
-                      attach_case_body(f"{self.tag}.T.ATTACH.{role}", self.root, case["task"], version(self.root), version(child), case["carrier"], booking[role]))
+        # A resumed root binding has already changed fulfillment rows to PICKED.
+        # Its exact journaled request supplies idempotency; do not re-run PLANNED-only metadata writes.
+        if not getattr(getattr(live, 'journal', None), 'results', {}).get('t.bind.root'):
+            self.ensure_shipment_metadata(st, uid)
+        # A root HU is one physical shipment. Bind all closed CASE children in one
+        # transaction; never detach a child merely to use the legacy CASE endpoint.
+        before = live.composition(self.root)
+        live.send("t.bind.root", "POST", "/api/warehouse-hus/bind-shipment", {
+            "operation_id": f"{self.tag}.T.BIND.ROOT",
+            "shipment_identifier": uid,
+            "scanned_root": self.root,
+            "expected_root_version": before["nodes"][0]["version"],
+        })
         snapshot = live.composition(self.root)
         cell = snapshot["nodes"][0]["cell"]
         findings = tree_findings(snapshot, {"case_tasks": [c["task"] for c in cases.values()], "cell": cell,
@@ -289,10 +290,10 @@ class MixedTreeTransport:
     def transport_task(self) -> None:
         live, i, base = self.live, self.inputs, "/api/admin/transport"
         if not live.read("select DOCK from RRL_TT_DOCK where DOCK=:d", d=i["dock"]):
-            live.meta("insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,10,0)", d=i["dock"], w=self.ware)
+            live.meta("insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,10,0)", "select count(*) from RRL_TT_DOCK where DOCK=:d and WARE_ID=:w and ORD=1 and COUNT_OF_PALLETS=10 and DOCK_IS_BLOCKED=0", d=i["dock"], w=self.ware)
         vehicle = live.send("t.vehicle", "POST", base + "/vehicles", {"num_plat": i["vehicle_number"], "transtype_id": "10", "max_weight_kg": 1000,
                             "max_pallets": i["vehicle_geometry"]["max_places"], "sobstvennyy": True}, expect=(200, 201))
-        driver = live.send("t.driver", "POST", base + "/drivers", {"name": i["driver_name"], "license_number": evidence("SYNTHETIC_FIXTURE", self.tag, "LICENSE")[:50]}, expect=(200, 201))
+        driver = live.send("t.driver.v2", "POST", base + "/drivers", {"name": i["driver_name"], "license_number": f"C0191-{self.tag[-9:]}"}, expect=(200, 201))
         task = live.send("t.task", "POST", base + "/tasks", {"transtype": "10", "shipment_date": i["shipment_date"]})
         self.t.update(vehicle_id=vehicle["id"], driver_id=driver["id"], transport_task_id=task["task_id"]); live.save()
         live.send("t.task.configure", "PATCH", f"{base}/tasks/{task['task_id']}", {"transport": i["vehicle_number"], "voditel_id": driver["id"], "dock": i["dock"],
@@ -309,10 +310,9 @@ class MixedTreeTransport:
     # -- FLOOR_QC_TARE: root physical floor type, outgoing quality of the ST, one held tare for the root --
     def floor_qc_tare(self) -> None:
         live, i = self.live, self.inputs
-        floor = live.get("/api/inventory/pallet-floor-types?identifier=" + self.root)
-        live.send("t.floor", "POST", "/api/inventory/pallet-floor-types", {"operation_id": f"{self.tag}.FLOOR", "identifier": self.root, "pallet_type_id": i["pallet_type_id"],
-                  "expected_version": floor["version"], "scan_pallet": self.root, "scan_cell": floor["cell"],
-                  "evidence_reference": evidence(i["root_measurements"]["origin"], self.tag, "FLOOR")})
+        root = live.composition(self.root)["nodes"][0]
+        if root.get("kind") != "CONTAINER" or not root.get("cell"):
+            raise RunnerStop("ROOT_HU_TARE_SOURCE_REQUIRED")
         st = self.t["st_pallet"]
         current = live.get("/api/outgoing-quality/" + st)
         qc = i["qc"]
@@ -321,13 +321,10 @@ class MixedTreeTransport:
                       "error_count": 0, "scans": [], "item_scans": []})
         else:
             live.send("t.qc", "POST", f"/api/outgoing-quality/{st}/weight", {"operation_id": f"{self.tag}.QC", "expected_composition_signature": current["composition_signature"],
-                      "gross_weight": qc["gross_weight"], "wood_weight": qc["wood_weight"], "note": evidence(qc["origin"], self.tag, "QC_WEIGHT")})
-        balance = next((r for r in live.get(f"/api/inventory/tare/warehouses/{self.ware}/availability") if r["pallet_type_id"] == i["pallet_type_id"]), {})
-        live.send("t.tare.count", "POST", "/api/inventory/tare/count", {"operation_id": f"{self.tag}.T.TARE.COUNT", "owner_ware_id": self.ware, "pallet_type_id": i["pallet_type_id"],
-                  "condition": "GOOD", "observed_quantity": str(int(Decimal(str(balance.get("available_quantity") or 0))) + 1), "expected_version": balance.get("balance_version") or 0,
-                  "reason": "C0191 synthetic root pallet count", "decision_reference": evidence("SYNTHETIC_FIXTURE", self.tag, "TARE")})
-        live.send("t.tare.book", "POST", "/api/inventory/tare/book", {"operation_id": f"{self.tag}.T.TARE.BOOK", "place_kind": "HU", "place_id": self.root,
-                  "expected_warehouse_id": self.ware, "pallet_type_id": i["pallet_type_id"]})
+                      "gross_weight": qc["gross_weight"], "wood_weight": qc["wood_weight"], "measurement_origin": "MANUAL_CONFIRMED", "note": evidence(qc["origin"], self.tag, "QC_WEIGHT")})
+        booking = live.s.get("root_tare_booking")
+        if booking != f"{self.tag}.ROOT.TARE.BOOK":
+            raise RunnerStop("ROOT_HU_TARE_BOOKING_REQUIRED")
 
     # -- LOAD: nested load of the root, exact replay, one APPLIED operation, goods leave once --
     def load(self) -> None:
@@ -365,7 +362,7 @@ class MixedTreeTransport:
         live.send("t.driver.binding", "PUT", f"/api/transport/driver-bindings/{self.t['driver_id']}", {"user_id": actor, "active": True, "expected_version": 0})
         live.send("t.tare.offer", "POST", "/api/inventory/tare/offer", {"operation_id": f"{self.tag}.T.TARE.OFFER", "task_id": self.t["transport_task_id"], "owner_ware_id": self.ware,
                   "pallet_type_id": i["pallet_type_id"], "condition": "GOOD", "from_kind": "WAREHOUSE", "from_id": str(self.ware), "to_kind": "VEHICLE",
-                  "to_id": str(self.t["vehicle_id"]), "quantity": "1", "scan_vehicle": i["vehicle_number"], "booking_operation_ids": [f"{self.tag}.T.TARE.BOOK"]})
+                  "to_id": str(self.t["vehicle_id"]), "quantity": "1", "scan_vehicle": i["vehicle_number"], "booking_operation_ids": [self.live.s["root_tare_booking"]]})
         self.send_as(actor, "t.tare.accept", "POST", "/api/inventory/tare/accept", {"operation_id": f"{self.tag}.T.TARE.ACCEPT",
                      "offer_operation_id": f"{self.tag}.T.TARE.OFFER", "accepted_quantity": "1", "scan_vehicle": i["vehicle_number"]})
 

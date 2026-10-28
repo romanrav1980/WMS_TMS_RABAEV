@@ -7,7 +7,8 @@
     "RRL_STOCK_QC_CASE",
     "RRL_QC_SCOPE_READ",
     "RRL_STOCK_QC_POLICY",
-    "RRL_STOCK_QC_GATE"
+    "RRL_STOCK_QC_GATE",
+    "RRL_WH_FINAL_SCALE_ADMISSION"
   ],
   "live_gate": [
     "commit migration source",

@@ -42,3 +42,14 @@ def test_multi_order_branch_matches_root_binding_contract_without_splitting_case
     assert "where f.LEGACY_SBORKA_PALLET_ID=v_id and f.PALLET_UID=v_uid" in core
     assert "RRL_STOCK_FULFILLMENT_FACT.project_ship(v_id,v_uid,sl.get_number('customer_order_id')" in core
     assert "update RRL_CASE_PICK_TASK set STATUS='SHIPPED'" in core
+
+
+def test_multi_order_final_weight_is_explicit_manual_until_per_case_scale_captures_exist():
+    admission = read("007_final_scale_admission.sql")
+    gate = read("006_qc_gate.sql")
+    assert "if d.has('multi_order') then" in admission
+    assert "MULTI_ORDER_FINAL_SCALE_PER_CASE_CAPTURE_REQUIRED" in admission
+    assert "MULTI_ORDER_MANUAL_WEIGHT_REQUIRED" in admission
+    assert "required_flag:=RRL_WH_FINAL_SCALE_ADMISSION.required(domain);" in gate
+    assert "@@007_final_scale_admission.sql" in read("apply.sql")
+    assert "@@905_before_final_scale_admission.sql" in read("rollback.sql")
