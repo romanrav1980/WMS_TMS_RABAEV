@@ -394,3 +394,7 @@ Static source checks, UTF-8 validation and the RETAILCASE architecture/tooling g
 
 Local checks: `tests/retailcase/test_multi_order_root_hu_shipping_migration.py` 4 passed; encoding passed; `scripts/retailcase_quality_gate.py --skip-typecheck` architecture phase passed. The migration remains unapplied. Required next proof is Oracle compilation, then a new isolated root-HU mixed KG/EA fixture with QC/final-scale, one root shipment, exact replay and competing-shipment refusal.
 
+
+## 2026-10-28 — T10 timeline transport-query latency
+
+A read-only owner-scope acceptance found the two-day warehouse 1 timeline at 9.4–12.8 s. Oracle profiling isolated 	ransport_rows: 11.29 s with zero rows, while all other sources were below 81 ms. The query now materializes the bounded operation window before correlating pallets and dispatch ACL. The same live Oracle gateway request completed in 277/101/81 ms with 3 events and 0 assignments. No index was added. The existing HTTP process on 8088 was not restarted because its owner could not be safely identified; HTTP-after-reload evidence remains open. See [measurement](../../reports/tradecase/2026-10-28/codex/t10-transport-window-performance.json).

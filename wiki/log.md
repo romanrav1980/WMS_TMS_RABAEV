@@ -5609,3 +5609,5 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 - 2026-10-28: Verified live Oracle source baseline for the unapplied multi-order root-HU shipment migration. Moved its branch inside RRL_STOCK_SHIPPING_CORE because protected stock, CASE, fulfillment and placement APIs only allow that caller; added three focused structural checks. See [[roadmap/tradecase_execution_20261019]].
 
 - 2026-10-28: Added the root-binding-to-multi-order-shipping contract check: one ST retains two fulfillment slices and the root remains indivisible. Focused migration checks: 4 passed.
+
+- 2026-10-28: T10 live read-only timeline profile found 	ransport_rows scanning before its window filter (9.4–12.8 s). Bounded the operation window first; current-code Oracle gateway measurement is 277/101/81 ms with the same 3 events and no assignments. No index added; HTTP-after-reload remains open.
