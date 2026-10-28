@@ -16,6 +16,7 @@ Any unexpected native answer stops the run with the exact code; nothing after it
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import secrets
@@ -57,9 +58,12 @@ def preflight_findings(snap: dict[str, Any]) -> list[str]:
         out.append("WAREHOUSE_NOT_EMPTY")
     if not snap.get("template_article"):
         out.append("TEMPLATE_ARTICLE_MISSING")
-    for name in ("parent_tare_kg", "manual_net_kg"):  # operator measurements; never invented
-        if not _positive(snap.get(name)):
-            out.append(name.upper() + "_REQUIRED")
+    if snap.get("require_measurements", True):
+        if not snap.get("fixture_config_recovery_verified"):
+            out.append("FIXTURE_CONFIG_RECOVERY_UNVERIFIED")
+        for name in ("parent_tare_kg", "manual_net_kg"):  # run inputs; never invented
+            if not _positive(snap.get(name)):
+                out.append(name.upper() + "_REQUIRED")
     return out
 
 
@@ -154,10 +158,6 @@ EXPECTED_REFUSALS = {
     "changed_body_same_operation": "OPERATION_CONTENT_CONFLICT",
     "other_cell": "HU_PACK_SAME_LOCATION_REQUIRED",
 }
-UNCERTAIN_CODES = {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "LOCK_RETRY_EXHAUSTED", "CONNECTION_UNUSABLE", "STOCK_RELEASE_NOT_ACTIVE",
-                   "POSTED_CONNECTION_RESET_FAILED"}
-
-
 def refusal_matches(value: Any, expected: str) -> bool:
     """The API puts the native rule either in detail.code or in detail.reason (HU routes: code + rule_reason)."""
     detail = value.get("detail", {}) if isinstance(value, dict) else {}
@@ -178,7 +178,9 @@ def native_status(error: BaseException | None) -> int:
     if error is None:
         return 200
     code, oracle = getattr(error, "code", None), getattr(error, "oracle_code", None)
-    if code is not None and code not in UNCERTAIN_CODES and oracle not in (20891, 20892, 20893):
+    # Only StockPosting explicit native-rule errors are confirmed refusals. Lookup,
+    # timeout, connection, and unrecognized failures remain unknown and require exact replay.
+    if code == "STOCK_RULE_REJECTED" and isinstance(oracle, int) and 20800 <= oracle <= 20899 and oracle not in (20891, 20892, 20893):
         return 409
     return 0
 
@@ -257,17 +259,83 @@ class Live:
             raise RunnerStop(f"EXPECTED_ONE_ROW:{sql[:60]}:{len(rows)}")
         return rows[0] if len(rows[0]) > 1 else rows[0][0]
 
-    def meta(self, sql: str, **binds: Any) -> None:
-        """Fixture metadata only, inside the native configuration boundary (ni042 pattern)."""
-        with self.connect() as c:
-            q = c.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"])
-            try:
-                q.execute(sql, binds); c.commit()
-            except BaseException:
-                c.rollback(); raise
-            finally:
-                q.callproc("RRL_STOCK_CONFIG_API.end_change")
+    def meta(self, sql: str, verify_sql: str, *, verify_binds: dict[str, Any] | None = None, expected: int = 1, **binds: Any) -> None:
+        """Apply one fixture row with durable intent and exact read-only reconciliation."""
+        verify_binds = verify_binds or binds
+        command = {"sql": sql, "binds": binds, "verify_sql": verify_sql, "verify_binds": verify_binds, "expected": expected}
+        digest = hashlib.sha256(json.dumps(command, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")).hexdigest()[:16]
+        key = "fixture." + digest
+        wire = self.journal.record(key, "ORACLE_CONFIG", "reconcile", command); self.save()
+        if key in self.journal.results:
+            return
+        stored = json.loads(wire)
 
+        def verified() -> int:
+            return int(self.one(stored["verify_sql"], **stored["verify_binds"]))
+
+        actual = verified()
+        if actual == stored["expected"]:
+            self.journal.outcome(key, 200, {"reconciled": True, "count": actual}); self.save(); return
+        if actual != 0:
+            self.journal.unknown = key; self.save()
+            raise RunnerStop(f"FIXTURE_RECONCILIATION_MISMATCH:{key}:count={actual}:expected={stored['expected']}")
+        try:
+            with self.connect() as c:
+                q = c.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"])
+                try:
+                    q.execute(stored["sql"], stored["binds"]); c.commit()
+                except BaseException:
+                    c.rollback(); raise
+                finally:
+                    q.callproc("RRL_STOCK_CONFIG_API.end_change")
+        except BaseException:
+            try:
+                if verified() == stored["expected"]:
+                    self.journal.outcome(key, 200, {"reconciled_after_error": True}); self.save(); return
+            except BaseException:
+                pass
+            try:
+                self.journal.outcome(key, 0, None)
+            finally:
+                self.save()
+            raise AssertionError("unreachable")
+        actual = verified()
+        if actual != stored["expected"]:
+            self.journal.unknown = key; self.save()
+            raise RunnerStop(f"FIXTURE_VERIFY_FAILED:{key}:count={actual}:expected={stored['expected']}")
+        self.journal.outcome(key, 200, {"count": actual}); self.save()
+    def fixture_revision(self, warehouse: int) -> int:
+        """Create or reconcile this empty warehouse's single revision before any stock command."""
+        key, body = "fixture.revision", {"warehouse": warehouse, "actor": "admin"}
+        wire = self.journal.record(key, "ORACLE_CONFIG", "REVIZION.create_revizion", body); self.save()
+        if key in self.journal.results:
+            return int(self.journal.results[key]["value"]["revision"])
+
+        def existing() -> list[tuple]:
+            return self.read("select ID from RRL_REVIZION where WARE_ID=:w and USER_ID='admin' order by ID", w=warehouse)
+
+        rows = existing()
+        if len(rows) == 1:
+            revision = int(rows[0][0]); self.journal.outcome(key, 200, {"revision": revision, "reconciled": True}); self.save(); return revision
+        if rows:
+            self.journal.unknown = key; self.save(); raise RunnerStop(f"FIXTURE_REVISION_MISMATCH:{len(rows)}")
+        import oracledb
+        try:
+            with self.connect() as c:
+                revision = int(c.cursor().callfunc("REVIZION.create_revizion", oracledb.DB_TYPE_NUMBER, [warehouse, "admin"])); c.commit()
+        except BaseException:
+            rows = existing()
+            if len(rows) == 1:
+                revision = int(rows[0][0]); self.journal.outcome(key, 200, {"revision": revision, "reconciled_after_error": True}); self.save(); return revision
+            try:
+                self.journal.outcome(key, 0, None)
+            finally:
+                self.save()
+            raise AssertionError("unreachable")
+        rows = existing()
+        if len(rows) != 1 or int(rows[0][0]) != revision:
+            self.journal.unknown = key; self.save(); raise RunnerStop(f"FIXTURE_REVISION_VERIFY_FAILED:{rows}")
+        self.journal.outcome(key, 200, {"revision": revision}); self.save(); return revision
     def post(self, key: str, kind: str, metadata: dict[str, Any], source: dict[str, Any]) -> Any:
         """Native StockPosting through the same journal (K-0217): the exact serialized command is stored before posting; a repeat
         posts those stored bytes; changed content under the same key stops; an unknown outcome blocks every later step."""
@@ -352,11 +420,14 @@ class Live:
                     warehouse_case_tasks=self.one("select count(*) from RRL_CASE_PICK_TASK where WARE_ID=:w", w=ware),
                     warehouse_waves=self.one("select count(*) from RRL_PICK_WAVE where WARE_ID=:w", w=ware),
                     template_article=bool(self.read("select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1'")),
-                    parent_tare_kg=args.parent_tare_kg, manual_net_kg=args.manual_net_kg)
+                    parent_tare_kg=args.parent_tare_kg, manual_net_kg=args.manual_net_kg,
+                    fixture_config_recovery_verified=True, require_measurements=args.mode == "run")
         findings = preflight_findings(snap)
         self.s["preflight"] = {k: v for k, v in snap.items() if k != "openapi_paths"} | {"manual_route_present": MANUAL_ROUTE in paths, "findings": findings}
-        self.s.setdefault("measurements", {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg})
-        if self.s["measurements"] != {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg} and self.s.get("stages_done"):
+        supplied_measurements = args.parent_tare_kg is not None and args.manual_net_kg is not None
+        if supplied_measurements:
+            self.s.setdefault("measurements", {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg})
+        if supplied_measurements and self.s.get("measurements") != {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg} and self.s.get("stages_done"):
             findings.append("MEASUREMENTS_CHANGED_AFTER_START")  # a resumed run must keep the original operator values
         self.save()
         return findings
@@ -376,34 +447,45 @@ class Live:
         kg, ea = tag + "K", tag + "E"
         cells = {"src": tag + "S", "kg": tag + "PK", "ea": tag + "PE", "cpt": "CPT_" + str(ware)}
         self.s.update(articles={"kg": kg, "ea": ea}, cells=cells); self.save()
-        barcode = lambda: "046" + str(secrets.randbelow(10 ** 11)).zfill(11)
-        self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;"
-                  "x.ABC_GROUP:='A';x.TYPE_W:=3;x.UNIT_TYPE:='KG';insert into RRL_ARTICULS values x;end;", old=template, a=kg, b=barcode())
-        self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)"
-                  "values(:a,'KG','KG',1,1,1,6,'C0190 mixed tree KG')", a=kg)
-        self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;"
-                  "x.ABC_GROUP:='A';insert into RRL_ARTICULS values x;end;", old=template, a=ea, b=barcode())
-        self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)"
-                  "select :a,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,'C0190 copy of template EA' from RRL_STOCK_UOM_CONVERSION where ARTICUL=:old", a=ea, old=template)
+        barcodes = self.s.setdefault("fixture_barcodes", {"kg": "046" + str(secrets.randbelow(10 ** 11)).zfill(11), "ea": "046" + str(secrets.randbelow(10 ** 11)).zfill(11)})
+        self.save()
+        self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;x.ABC_GROUP:='A';x.TYPE_W:=3;x.UNIT_TYPE:='KG';insert into RRL_ARTICULS values x;end;",
+                  "select count(*) from RRL_ARTICULS where ACTICUL=:a", old=template, a=kg, b=barcodes["kg"])
+        self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)values(:a,'KG','KG',1,1,1,6,'C0190 mixed tree KG')",
+                  "select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a and INPUT_UOM='KG' and BASE_UOM='KG'", a=kg)
+        self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;x.ABC_GROUP:='A';insert into RRL_ARTICULS values x;end;",
+                  "select count(*) from RRL_ARTICULS where ACTICUL=:a", old=template, a=ea, b=barcodes["ea"])
+        template_uom_count = int(self.one("select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a", a=template))
+        if not template_uom_count:
+            raise RunnerStop("TEMPLATE_UOM_MISSING")
+        self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)select :a,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,'C0190 copy of template EA' from RRL_STOCK_UOM_CONVERSION where ARTICUL=:old",
+                  "select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a", expected=template_uom_count, a=ea, old=template)
         if self.one("select count(*) from RRL_ARTICULS where ACTICUL=:a and TYPE_W in(2,3,5,6,7)", a=ea):
             raise RunnerStop("TEMPLATE_ARTICLE_IS_WEIGHTED: the EA child would not be a shelf BOX/EA pick")
         for article in (kg, ea):
-            self.meta("insert into RRL_SKU_RECEIPT_POLICY(ARTICUL,POLICY_VERSION,MARKING_REQUIRED,SERIALIZED_WEIGHT_BOXES,UPDATED_BY)values(:a,1,0,0,'admin')", a=article)
-            self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('SKU',:a),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD", a=article)
-        self.meta("insert into RRL_WARES(ID,NAME,PREFIX,SPIS_OTBOR_ON_SCAN_OPALL)values(:w,:n,'Q9',1)", w=ware, n="C0190 mixed tree " + tag)
-        self.meta("insert into RRL_RECEIPT_WARE_SETTINGS(WARE_ID,OUTGOING_QC_MODE,OUTGOING_QC_INDEPENDENT)values(:w,'BOTH',1)", w=ware)
+            self.meta("insert into RRL_SKU_RECEIPT_POLICY(ARTICUL,POLICY_VERSION,MARKING_REQUIRED,SERIALIZED_WEIGHT_BOXES,UPDATED_BY)values(:a,1,0,0,'admin')",
+                      "select count(*) from RRL_SKU_RECEIPT_POLICY where ARTICUL=:a and POLICY_VERSION=1", a=article)
+            self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('SKU',:a),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD",
+                      "select count(*) from RRL_STOCK_POLICY_GUARD where POLICY_KEY=RRL_STOCK_LOCK_API.resource_key('SKU',:a)", a=article)
+        self.meta("insert into RRL_WARES(ID,NAME,PREFIX,SPIS_OTBOR_ON_SCAN_OPALL)values(:w,:n,'Q9',1)",
+                  "select count(*) from RRL_WARES where ID=:w", w=ware, n="C0190 mixed tree " + tag)
+        self.meta("insert into RRL_RECEIPT_WARE_SETTINGS(WARE_ID,OUTGOING_QC_MODE,OUTGOING_QC_INDEPENDENT)values(:w,'BOTH',1)",
+                  "select count(*) from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w", w=ware)
         for role, cell in cells.items():
-            self.meta("insert into RRL_CELLS(CELL,WARE_ID,X,Y,Z,OTBOR,IS_SYSTEM)values(:c,:w,0,0,0,:p,:s)", c=cell, w=ware, p=int(role in ("kg", "ea")), s=int(role == "cpt"))
-            self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('CELL',:c),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD", c=cell)
+            self.meta("insert into RRL_CELLS(CELL,WARE_ID,X,Y,Z,OTBOR,IS_SYSTEM)values(:c,:w,0,0,0,:p,:s)",
+                      "select count(*) from RRL_CELLS where CELL=:c and WARE_ID=:w", c=cell, w=ware, p=int(role in ("kg", "ea")), s=int(role == "cpt"))
+            self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('CELL',:c),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD",
+                      "select count(*) from RRL_STOCK_POLICY_GUARD where POLICY_KEY=RRL_STOCK_LOCK_API.resource_key('CELL',:c)", c=cell)
+        faces = self.s.setdefault("fixture_faces", {})
         for role, article in (("kg", kg), ("ea", ea)):
-            face = self.one("select RRL_PICK_FACE_SQ.nextval from dual")
-            self.meta("insert into RRL_PICK_FACE(PICK_FACE_ID,WARE_ID,CELL_CODE,MAX_VOLUME,CREATED_BY)values(:f,:w,:c,null,'admin')", f=face, w=ware, c=cells[role])
-            self.meta("insert into RRL_PICK_FACE_ARTICUL(PICK_FACE_ARTICUL_ID,PICK_FACE_ID,ARTICUL,BOX_VOLUME_M3,USE_ARTICUL_REPLENISH_RULE,REPLENISHMENT_QTY_MODE)"
-                      "values(RRL_PICK_FACE_ARTICUL_SQ.nextval,:f,:a,.24,0,'FULL_PALLET')", f=face, a=article)
-        import oracledb
-        with self.connect() as c:
-            self.s["revision"] = int(c.cursor().callfunc("REVIZION.create_revizion", oracledb.DB_TYPE_NUMBER, [ware, "admin"])); c.commit()
-
+            face = faces.get(role)
+            if face is None:
+                face = int(self.one("select RRL_PICK_FACE_SQ.nextval from dual")); faces[role] = face; self.save()
+            self.meta("insert into RRL_PICK_FACE(PICK_FACE_ID,WARE_ID,CELL_CODE,MAX_VOLUME,CREATED_BY)values(:f,:w,:c,null,'admin')",
+                      "select count(*) from RRL_PICK_FACE where PICK_FACE_ID=:f and WARE_ID=:w and CELL_CODE=:c", f=face, w=ware, c=cells[role])
+            self.meta("insert into RRL_PICK_FACE_ARTICUL(PICK_FACE_ARTICUL_ID,PICK_FACE_ID,ARTICUL,BOX_VOLUME_M3,USE_ARTICUL_REPLENISH_RULE,REPLENISHMENT_QTY_MODE)values(RRL_PICK_FACE_ARTICUL_SQ.nextval,:f,:a,.24,0,'FULL_PALLET')",
+                      "select count(*) from RRL_PICK_FACE_ARTICUL where PICK_FACE_ID=:f and ARTICUL=:a", f=face, a=article)
+        self.s["revision"] = self.fixture_revision(ware); self.save()
     # -- WAVE: one recipient, two orders (KG, EA) -> two CASE tasks; tare booked, claimed and started --
     def wave(self) -> None:
         tag, ware, a, cells = self.s["tag"], self.s["warehouse"], self.s["articles"], self.s["cells"]
@@ -419,9 +501,9 @@ class Live:
         picking, plans = PickingService(), []
         for role, qty, unit in (("kg", net, "KG"), ("ea", EA_QTY, self.one("select nvl(max(UNIT_CODE),'EA') from RRL_CUSTOMER_ORDER_ROW where ARTICUL=(select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1')"))):
             order = self.one("select RRL_CUSTOMER_ORDER_SQ.nextval from dual")
-            self.meta("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID)values(:o,:n,:c,:w)", o=order, n=f"{tag}.ORD.{role}", c=customer, w=ware)
+            self.meta("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID)values(:o,:n,:c,:w)", "select count(*) from RRL_CUSTOMER_ORDER where CUSTOMER_ORDER_ID=:o", o=order, n=f"{tag}.ORD.{role}", c=customer, w=ware)
             self.meta("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,ORDER_QTY,UNIT_CODE)values(RRL_CUSTOMER_ORDER_ROW_SQ.nextval,:o,1,:a,:q,:u)",
-                      o=order, a=a[role], q=Decimal(qty), u=unit)
+                      "select count(*) from RRL_CUSTOMER_ORDER_ROW where CUSTOMER_ORDER_ID=:o and LINE_NO=1 and ARTICUL=:a", o=order, a=a[role], q=str(qty), u=unit)
             plans.append(picking.create_plan(PickingPlanCreateRequest(customer_order_id=order, created_by="admin")))
         wave = picking.create_wave(PickWaveCreateRequest(wave_code=tag + ".WAVE", ware_id=ware, created_by="admin"))
         self.s["wave"] = wave; self.save()

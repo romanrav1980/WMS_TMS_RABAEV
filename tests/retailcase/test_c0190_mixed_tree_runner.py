@@ -16,8 +16,18 @@ CLEAN = dict(api_ready=True, openapi_paths={runner.MANUAL_ROUTE}, weighted_kg_fi
              warehouse_stock_rows=0, warehouse_case_tasks=0, warehouse_waves=0, template_article=True, parent_tare_kg="21.5", manual_net_kg="9.6")
 
 
+def test_read_only_preflight_does_not_require_operator_measurements():
+    snapshot = CLEAN | {"parent_tare_kg": None, "manual_net_kg": None, "require_measurements": False}
+    assert runner.preflight_findings(snapshot) == []
+
+
+def test_live_preflight_blocks_until_fixture_configuration_recovery_is_proven():
+    assert "FIXTURE_CONFIG_RECOVERY_UNVERIFIED" in runner.preflight_findings(CLEAN)
+    assert runner.preflight_findings(CLEAN | {"fixture_config_recovery_verified": True}) == []
+
+
 def test_clean_snapshot_may_start():
-    assert runner.preflight_findings(CLEAN) == []
+    assert runner.preflight_findings(CLEAN | {"fixture_config_recovery_verified": True}) == []
 
 
 @pytest.mark.parametrize("change,code", [
@@ -218,7 +228,9 @@ class PostingError(Exception):
 
 
 @pytest.mark.parametrize("error,status", [(None, 200), (PostingError("STOCK_RULE_REJECTED", 20886, "X"), 409), (PostingError("RESULT_UNCERTAIN"), 0),
-                                          (PostingError("CASE", 20891), 0), (OSError("reset"), 0)])
+                                          (PostingError("CASE", 20891), 0), (PostingError("RESOURCE_NOT_FOUND", 1403), 0),
+                                          (PostingError("STOCK_RULE_REJECTED", 20891), 0), (PostingError("REQUEST_DEADLINE", 20886), 0),
+                                          (OSError("reset"), 0)])
 def test_native_outcome_classification(error, status):
     assert runner.native_status(error) == status
 
@@ -292,3 +304,79 @@ def test_tree_stage_checks_every_negative_by_name():
     import inspect
     source = inspect.getsource(runner.Live.tree)
     assert all(f'"{name}"' in source for name in runner.EXPECTED_REFUSALS) and "check_refusal(name" in source and "expect=(409,)" in source
+
+class _MetaCursor:
+    def __init__(self, store):
+        self.store = store
+
+    def callproc(self, *_args):
+        return None
+
+    def execute(self, *_args):
+        self.store["calls"] += 1
+        if self.store.get("commit_then_drop"):
+            self.store["count"] = 1
+            self.store["commit_then_drop"] = False
+            raise OSError("connection dropped after commit")
+        if self.store.get("drop_before_commit"):
+            self.store["drop_before_commit"] = False
+            raise OSError("connection dropped before commit")
+        self.store["count"] = 1
+
+
+class _MetaConnection:
+    def __init__(self, store):
+        self.store = store
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def cursor(self):
+        return _MetaCursor(self.store)
+
+    def commit(self):
+        return None
+
+    def rollback(self):
+        return None
+
+
+def _meta_live(store):
+    live = object.__new__(runner.Live)
+    live.s, live.journal = {}, runner.Journal()
+    live.save = lambda: None
+    live.connect = lambda: _MetaConnection(store)
+    live.one = lambda _sql, **_binds: store["count"]
+    return live
+
+
+def test_fixture_metadata_is_reconciled_before_repeat_and_never_posted_twice():
+    store = {"count": 0, "calls": 0}
+    live = _meta_live(store)
+    live.meta("insert fixture", "select count(*) from fixture")
+    assert store == {"count": 1, "calls": 1}
+    live.meta("insert fixture", "select count(*) from fixture")
+    assert store == {"count": 1, "calls": 1}
+
+
+def test_fixture_metadata_accepts_a_commit_that_lost_its_response():
+    store = {"count": 0, "calls": 0, "commit_then_drop": True}
+    live = _meta_live(store)
+    live.meta("insert fixture", "select count(*) from fixture")
+    assert store["calls"] == 1 and live.journal.unknown is None
+    assert next(iter(live.journal.results.values()))["value"]["reconciled_after_error"] is True
+
+
+def test_fixture_metadata_blocks_later_steps_until_the_same_intent_reconciles():
+    store = {"count": 0, "calls": 0, "drop_before_commit": True}
+    live = _meta_live(store)
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME"):
+        live.meta("insert fixture", "select count(*) from fixture")
+    assert live.journal.unknown and store["count"] == 0
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME_PENDING"):
+        live.journal.record("fixture.other", "ORACLE_CONFIG", "reconcile", {})
+    live.meta("insert fixture", "select count(*) from fixture")
+    assert store["count"] == 1 and live.journal.unknown is None

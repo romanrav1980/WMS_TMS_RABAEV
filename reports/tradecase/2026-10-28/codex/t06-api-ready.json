@@ -1,0 +1,11 @@
+{
+    "checked_at":  "2026-10-28T01:52:33.8103943+03:00",
+    "base_url":  "http://127.0.0.1:8088",
+    "health":  "ok",
+    "manual_net_route":  "/api/case-pick/tasks/{task}/lines/{line}/weigh-line-manual",
+    "route_present":  true,
+    "marking_policy_route":  true,
+    "process_id":  62992,
+    "scope":  "Read-only API/Oracle preflight only; no weight values or warehouse writes",
+    "source_revision":  "3d261382847fc3541644d6dc09888cd6a5ca0ab2"
+}

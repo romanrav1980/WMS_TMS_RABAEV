@@ -1,0 +1,26 @@
+{
+ "tag": "MT289DA89B3D1",
+ "posts": {},
+ "warehouse": 231693372,
+ "preflight": {
+  "api_ready": true,
+  "weighted_kg_field": true,
+  "tag_rows": 0,
+  "warehouse": 231693372,
+  "warehouse_exists": false,
+  "warehouse_stock_rows": 0,
+  "warehouse_case_tasks": 0,
+  "warehouse_waves": 0,
+  "template_article": true,
+  "parent_tare_kg": null,
+  "manual_net_kg": null,
+  "require_measurements": false,
+  "manual_route_present": true,
+  "findings": []
+ },
+ "journal": {
+  "steps": {},
+  "results": {},
+  "unknown": null
+ }
+}

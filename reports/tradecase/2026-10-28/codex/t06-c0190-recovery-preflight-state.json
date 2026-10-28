@@ -1,0 +1,27 @@
+{
+ "tag": "MT287CA085B6C",
+ "posts": {},
+ "warehouse": 234887495,
+ "preflight": {
+  "api_ready": true,
+  "weighted_kg_field": true,
+  "tag_rows": 0,
+  "warehouse": 234887495,
+  "warehouse_exists": false,
+  "warehouse_stock_rows": 0,
+  "warehouse_case_tasks": 0,
+  "warehouse_waves": 0,
+  "template_article": true,
+  "parent_tare_kg": null,
+  "manual_net_kg": null,
+  "fixture_config_recovery_verified": true,
+  "require_measurements": false,
+  "manual_route_present": true,
+  "findings": []
+ },
+ "journal": {
+  "steps": {},
+  "results": {},
+  "unknown": null
+ }
+}

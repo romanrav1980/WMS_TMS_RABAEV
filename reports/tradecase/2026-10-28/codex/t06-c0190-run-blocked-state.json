@@ -1,0 +1,30 @@
+{
+ "tag": "MT28573288EF8",
+ "posts": {},
+ "warehouse": 237836330,
+ "preflight": {
+  "api_ready": true,
+  "weighted_kg_field": true,
+  "tag_rows": 0,
+  "warehouse": 237836330,
+  "warehouse_exists": false,
+  "warehouse_stock_rows": 0,
+  "warehouse_case_tasks": 0,
+  "warehouse_waves": 0,
+  "template_article": true,
+  "parent_tare_kg": null,
+  "manual_net_kg": null,
+  "require_measurements": true,
+  "manual_route_present": true,
+  "findings": [
+   "FIXTURE_CONFIG_RECOVERY_UNVERIFIED",
+   "PARENT_TARE_KG_REQUIRED",
+   "MANUAL_NET_KG_REQUIRED"
+  ]
+ },
+ "journal": {
+  "steps": {},
+  "results": {},
+  "unknown": null
+ }
+}
