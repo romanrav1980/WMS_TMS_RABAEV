@@ -120,10 +120,10 @@ def test_tree_defects_are_found(mutate, code):
 
 
 def test_cleanup_plan_reverses_exactly_what_was_created_in_order():
-    state = {"tree_attached": [1, 2], "cases": {"kg": {"task": 1}, "ea": {"task": 2}}, "wave": 9, "tare_bookings": ["B1", "B2"], "lots": {"kg": "L1"}}
+    state = {"tree_attached": [1, 2], "cases": {"kg": {"task": 1}, "ea": {"task": 2}}, "wave": 9, "tare_bookings": ["B1", "B2"], "root_tare_booking": "ROOT", "lots": {"kg": "L1"}}
     plan = runner.cleanup_plan(state)
     assert plan == ["HU_DETACH_CASE:1", "HU_DETACH_CASE:2", "CASE_CARRIER_RETURN:1", "CASE_CARRIER_RETURN:2", "RESERVATION_RELEASE:wave",
-                    "TARE_BOOK_CANCEL:B1", "TARE_BOOK_CANCEL:B2", "TARE_COUNT_ZERO", "WAVE_EXECUTION_FINISH_OR_CANCEL", "INVENTORY_COUNT_ZERO",
+                    "TARE_BOOK_CANCEL:B1", "TARE_BOOK_CANCEL:B2", "TARE_BOOK_CANCEL:ROOT", "TARE_COUNT_ZERO", "WAVE_EXECUTION_FINISH_OR_CANCEL", "INVENTORY_COUNT_ZERO",
                     "ASSERT_WAREHOUSE_ZERO_STOCK_AND_RESERVATION"]
     assert runner.cleanup_plan({}) == ["ASSERT_WAREHOUSE_ZERO_STOCK_AND_RESERVATION"]  # nothing created, nothing reversed
 
@@ -189,7 +189,7 @@ def test_plan_mode_needs_no_network_or_oracle(capsys, monkeypatch):
     monkeypatch.setattr(sys, "argv", ["runner", "plan"])
     assert runner.main() == 0
     out = json.loads(capsys.readouterr().out)
-    assert out["manual_route"] == runner.MANUAL_ROUTE and out["transport"].startswith("TRANSPORT_NOT_WIRED")
+    assert out["manual_route"] == runner.MANUAL_ROUTE and out["transport"] == "C0191 requires --transport-inputs after TREE"
 
 
 def test_live_modes_require_an_explicit_api(monkeypatch):
@@ -285,7 +285,7 @@ BEFORE = {"nodes": [{"uid": "MT.PAL", "version": 3}]}
     ("stale_parent_version", {"code": "STOCK_RULE_REJECTED", "reason": "HU_CONTENT_VERSION_CONFLICT"}),
     ("foreign_carrier_scan", {"code": "HU_CASE_CARRIER_SCAN_REQUIRED"}),
     ("other_cell", {"code": "STOCK_RULE_REJECTED", "reason": "HU_PACK_SAME_LOCATION_REQUIRED: cell"}),
-    ("changed_body_same_operation", {"code": "OPERATION_CONTENT_CONFLICT"}),
+    ("changed_body_same_operation", {"code": "STOCK_RULE_REJECTED", "reason": "OPERATION_CONFLICT"}),
 ])
 def test_each_refusal_must_be_its_expected_rule_with_the_parent_unchanged(name, detail):
     runner.check_refusal(name, {"detail": detail}, BEFORE, BEFORE)
@@ -380,3 +380,257 @@ def test_fixture_metadata_blocks_later_steps_until_the_same_intent_reconciles():
         live.journal.record("fixture.other", "ORACLE_CONFIG", "reconcile", {})
     live.meta("insert fixture", "select count(*) from fixture")
     assert store["count"] == 1 and live.journal.unknown is None
+
+def test_fixture_verification_passes_only_parameters_used_in_select():
+    store = {"count": 0, "calls": 0}
+    live = _meta_live(store)
+    def verify(sql, **binds):
+        assert binds == {"a": "TEST"}
+        return store["count"]
+    live.one = verify
+    live.meta("insert fixture(:a,:b)", "select count(*) from fixture where id=:a", a="TEST", b="unused")
+    assert store["calls"] == 1
+
+
+def test_saved_http_refusal_still_stops_on_resume(work):
+    live = live_with([(409, {"detail": {"code": "DENIED"}})], work)
+    for _ in range(2):
+        with pytest.raises(runner.RunnerStop, match="UNEXPECTED_STATUS"):
+            live.send("attach", "POST", "/a", {"operation_id": "same"})
+    assert len(live.http.sent) == 1
+
+def test_saved_native_refusal_still_stops_on_resume(work):
+    live, calls = native_live(work, [PostingError("STOCK_RULE_REJECTED", 20886, "DENIED")])
+    for _ in range(2):
+        with pytest.raises(runner.RunnerStop, match="NATIVE_REFUSED"):
+            live.post("return.kg", "CASE_CARRIER_RETURN", {}, {"case_task_id": 1})
+    assert len(calls) == 1
+
+def test_failed_state_replace_preserves_previous_durable_journal(work, monkeypatch):
+    live = live_with([], work)
+    live.save()
+    original = live.file.read_bytes()
+    live.journal.record("pick", "POST", "/p", {"operation_id": "same"})
+    def refuse_replace(*args):
+        raise PermissionError("file locked")
+    monkeypatch.setattr(runner.os, "replace", refuse_replace)
+    with pytest.raises(PermissionError):
+        live.save()
+    assert live.file.read_bytes() == original
+    pending = live.file.with_name(live.file.name + ".pending")
+    assert "pick" in json.loads(pending.read_text(encoding="utf-8"))["journal"]["steps"]
+    assert live.http.sent == []
+
+def test_resume_can_traverse_completed_steps_to_reach_unknown_step():
+    j = runner.Journal()
+    j.record("first", "POST", "/first", {"x": 1})
+    j.outcome("first", 200, {"ok": True})
+    j.record("second", "POST", "/second", {"x": 2})
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME"):
+        j.outcome("second", 0, None)
+    assert j.record("first", "POST", "/first", {"x": 1})
+    assert j.unknown == "second"
+    with pytest.raises(runner.RunnerStop, match="STEP_CONTENT_CHANGED"):
+        j.record("first", "POST", "/first", {"x": 3})
+    with pytest.raises(runner.RunnerStop, match="UNKNOWN_OUTCOME_PENDING"):
+        j.record("third", "POST", "/third", {})
+    j.record("second", "POST", "/second", {"x": 2})
+    j.outcome("second", 200, {"ok": True})
+    assert j.unknown is None
+
+def test_fixture_changed_statement_cannot_reuse_same_identity():
+    live = _meta_live({"count": 0, "calls": 0})
+    live.meta("insert original", "select count(*) from fixture where id=:a", a="OWN")
+    with pytest.raises(runner.RunnerStop, match="STEP_CONTENT_CHANGED"):
+        live.meta("insert changed", "select count(*) from fixture where id=:a", a="OWN")
+
+
+def test_unjournaled_existing_fixture_is_refused_on_every_attempt():
+    store = {"count": 1, "calls": 0}
+    live = _meta_live(store)
+    with pytest.raises(runner.RunnerStop, match="FIXTURE_ALREADY_EXISTS"):
+        live.meta("insert fixture", "select count(*) from fixture")
+    with pytest.raises(runner.RunnerStop, match="FIXTURE_REFUSED"):
+        live.meta("insert fixture", "select count(*) from fixture")
+    assert store["calls"] == 0
+
+
+def test_fixture_unknown_boundary_is_durable_before_execute():
+    store = {"count": 0, "calls": 0}
+    live = _meta_live(store)
+    original_connect = live.connect
+    def connect():
+        assert live.journal.unknown.startswith("fixture.")
+        return original_connect()
+    live.connect = connect
+    live.meta("insert fixture", "select count(*) from fixture")
+    assert live.journal.unknown is None
+
+def test_fixture_identifier_survives_restart_without_allocating_another(work):
+    live = live_with([], work)
+    calls = []
+    def allocate():
+        calls.append(1)
+        return 42
+    assert live.fixture_value("order.kg", allocate) == 42
+    restored = live_with([], work)
+    restored.s = json.loads(live.file.read_text(encoding="utf-8"))
+    assert restored.fixture_value("order.kg", allocate) == 42
+    assert len(calls) == 1
+
+def test_document_lost_reply_recovers_created_id_without_second_create(work):
+    live = live_with([], work)
+    rows, calls = [], []
+    def create():
+        calls.append(1)
+        rows.append((51,))
+        raise OSError("reply lost")
+    with pytest.raises(OSError):
+        live.create_fixture_document("wave", {"warehouse": 1}, lambda: rows, create)
+    assert live.journal.unknown == "document.wave"
+    assert live.create_fixture_document("wave", {"warehouse": 1}, lambda: rows, create) == 51
+    assert len(calls) == 1 and live.journal.unknown is None
+
+
+def test_document_unknown_without_visible_result_never_repeats_create(work):
+    live = live_with([], work)
+    calls = []
+    def create():
+        calls.append(1)
+        raise OSError("connection lost")
+    with pytest.raises(OSError):
+        live.create_fixture_document("plan", {"order": 2}, lambda: [], create)
+    with pytest.raises(runner.RunnerStop, match="DOCUMENT_OUTCOME_UNRESOLVED"):
+        live.create_fixture_document("plan", {"order": 2}, lambda: [], create)
+    assert len(calls) == 1
+@pytest.mark.parametrize("lost_at", ["attach.kg", "attach.ea", "after_tree"])
+def test_tree_resume_reuses_original_versions_and_preserves_both_children(work, monkeypatch, lost_at):
+    live = live_with([], work)
+    live.s.update(warehouse=1, cells={"src": "SRC"}, articles={"kg": "K", "ea": "E"},
+                  measurements={"parent_tare_kg": "20", "manual_net_kg": "9.6"},
+                  cases={"kg": {"task": 11, "carrier": "CP11", "pallet_type": 1}, "ea": {"task": 12, "carrier": "CP12", "pallet_type": 1}})
+    attached, seen, failures = [], {}, []
+    live.one = lambda sql, **kwargs: 2 if "CONTENT_VERSION" in sql else "PICK"
+    live.get = lambda path: [{"pallet_type_id": 1, "physical_quantity": "0", "balance_version": 0}] if "/availability" in path else []
+    live.composition = lambda uid: {"nodes": [{"version": len(attached) + 1, "cell": "PICK"}], "children": list(attached)}
+    live.replay_equal = lambda key: None
+    monkeypatch.setattr(runner, "tree_findings", lambda *args: [])
+    def send(key, method, path, body, expect=(200,)):
+        wire = live.journal.record(key, method, path, body)
+        if key in seen:
+            assert seen[key] == wire
+        seen[key] = wire
+        if key in live.journal.results:
+            return live.journal.results[key]["value"]
+        if key.startswith("attach."):
+            task = body["child_case_task_id"]
+            if task not in attached:
+                attached.append(task)
+            if key == lost_at and not failures:
+                failures.append(key)
+                live.journal.unknown = key
+                live.save()
+                raise OSError("reply lost after commit")
+        value = {"detail": {"code": runner.EXPECTED_REFUSALS[key[4:]]}} if key.startswith("neg.") else {"ok": True}
+        live.journal.outcome(key, 409 if key.startswith("neg.") else 200, value)
+        live.save()
+        return value
+    live.send = send
+    if lost_at != "after_tree":
+        with pytest.raises(OSError):
+            live.tree()
+    else:
+        live.tree()
+    live.s = json.loads(live.file.read_text(encoding="utf-8"))
+    live.tree()
+    assert attached == [11, 12]
+    assert live.s["tree_attached"] == [11, 12]
+    assert len(live.s["refusals"]) == 4
+
+
+def test_transport_inputs_are_explicit_json_and_never_inferred(tmp_path):
+    inputs = tmp_path / "transport.json"
+    inputs.write_text(json.dumps({"store_address": "QA"}), encoding="utf-8")
+    assert runner.load_transport_inputs(str(inputs)) == {"store_address": "QA"}
+    with pytest.raises(runner.RunnerStop, match="TRANSPORT_INPUTS_FILE_REQUIRED"):
+        runner.load_transport_inputs(None)
+    with pytest.raises(runner.RunnerStop, match="TRANSPORT_INPUTS_FILE_MISSING"):
+        runner.load_transport_inputs(str(tmp_path / "missing.json"))
+    (tmp_path / "invalid.json").write_text("[", encoding="utf-8")
+    with pytest.raises(runner.RunnerStop, match="TRANSPORT_INPUTS_FILE_INVALID"):
+        runner.load_transport_inputs(str(tmp_path / "invalid.json"))
+    (tmp_path / "list.json").write_text("[]", encoding="utf-8")
+    with pytest.raises(runner.RunnerStop, match="TRANSPORT_INPUTS_OBJECT_REQUIRED"):
+        runner.load_transport_inputs(str(tmp_path / "list.json"))
+
+def test_cleanup_expected_remainder_uses_persisted_post_load_values_only():
+    state = {"articles": {"kg": "MTK", "ea": "MTE"}, "measurements": {"manual_net_kg": "9.6"}}
+    assert runner.cleanup_expected_remainder(state) == {"MTK": "19.2", "MTE": "8"}
+    state["transport"] = {"expected_remainder_after_load": {"MTK": "9.6", "MTE": "4"}}
+    assert runner.cleanup_expected_remainder(state) == {"MTK": "9.6", "MTE": "4"}
+    state["transport"]["expected_remainder_after_load"] = {"MTK": "20", "MTE": "4"}
+    with pytest.raises(runner.RunnerStop, match="TRANSPORT_REMAINDER_INVALID"):
+        runner.cleanup_expected_remainder(state)
+
+def test_finalizer_sql_persists_command_and_reconciles_a_post_commit_error(work):
+    live = live_with([], work)
+    state, calls = {"retired": 0}, []
+
+    def one(sql, **binds):
+        return state["retired"]
+
+    class Connection:
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def cursor(self):
+            return self
+        def execute(self, sql, binds):
+            calls.append((sql, binds))
+            state["retired"] = 1
+            raise OSError("post-commit disconnect")
+        def commit(self):
+            pass
+
+    live.one = one
+    live.connect = lambda: Connection()
+    live.finalizer_sql(
+        "retire.driver",
+        "update RUSERS set DELETED=1 where ID=:id",
+        {"id": "MT28D0123456ab"},
+        "select count(*) from RUSERS where ID=:id and DELETED=1",
+        {"id": "MT28D0123456ab"},
+        1,
+    )
+    assert len(calls) == 1
+    saved = live.journal.results["finalizer.retire.driver"]
+    assert saved["status"] == 200 and saved["value"]["reconciled_after_error"] is True
+    live.finalizer_sql(
+        "retire.driver",
+        "update RUSERS set DELETED=1 where ID=:id",
+        {"id": "MT28D0123456ab"},
+        "select count(*) from RUSERS where ID=:id and DELETED=1",
+        {"id": "MT28D0123456ab"},
+        1,
+    )
+    assert len(calls) == 1
+
+def test_finalizer_sql_marks_unknown_when_initial_read_only_reconciliation_fails(work):
+    live = live_with([], work)
+    def failing_one(sql, **binds):
+        raise RuntimeError("invalid bind name")
+    live.one = failing_one
+
+    with pytest.raises(RuntimeError, match="invalid bind name"):
+        live.finalizer_sql(
+            "repair.bad_read",
+            "update RRL_SBORKA_PALLETS set DOCID=:p_new where ID=:p_id",
+            {"p_new": "SAFE", "p_id": 1},
+            "select count(*) from RRL_SBORKA_PALLETS where ID=:p_id and DOCID=:p_new",
+            {"p_new": "SAFE", "p_id": 1},
+            1,
+        )
+
+    assert live.journal.unknown == "finalizer.repair.bad_read"
+    assert "finalizer.repair.bad_read" not in live.journal.results

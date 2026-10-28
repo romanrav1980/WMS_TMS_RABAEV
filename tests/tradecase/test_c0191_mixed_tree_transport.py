@@ -12,7 +12,7 @@ sys.modules["c0191_transport"] = adapter
 SPEC.loader.exec_module(adapter)  # import performs no live work
 
 INPUTS = {"store_address": "QA STORE 1", "vehicle_number": "MT28V1", "dock": "MT28D1", "driver_name": "C0191 QA driver", "paper_reference": "PAPER-1",
-          "pallet_type_id": 1, "shipment_date": "2026-11-01", "store_policy_expected_version": 0,
+          "pallet_type_id": 1, "transport_type_id": "10", "shipment_date": "2026-11-01", "store_policy_expected_version": 0,
           "root_measurements": {"origin": "SYNTHETIC_FIXTURE", "gross_weight_kg": "30.2", "width_m": "1.2", "depth_m": "0.8", "height_m": "1.1"},
           "qc": {"mode": "SCAN"},
           "vehicle_geometry": {"cargo_length_mm": 3000, "cargo_width_mm": 2400, "cargo_height_mm": 2400, "outer_height_mm": 3000, "outer_length_mm": 6000, "max_places": 2}}
@@ -25,6 +25,7 @@ def test_complete_inputs_pass():
 @pytest.mark.parametrize("path,value,code", [
     (("store_address",), "", "INPUT_REQUIRED:store_address"),
     (("pallet_type_id",), 0, "INPUT_REQUIRED:pallet_type_id"),
+    (("transport_type_id",), "", "INPUT_REQUIRED:transport_type_id"),
     (("shipment_date",), "01.11.2026", "INPUT_REQUIRED:shipment_date"),
     (("store_policy_expected_version",), -1, "INPUT_REQUIRED:store_policy_expected_version"),
     (("root_measurements", "origin"), "GUESSED", "INPUT_REQUIRED:root_measurements.origin"),

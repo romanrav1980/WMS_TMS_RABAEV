@@ -1,8 +1,12 @@
 > Актуальное продолжение 121–130: [[retailcase_stock_posting_continuation_20261008]]. 47 package pairs; 10 ADAPTED / 21 UNCONVERTED; PREPARED, полного cutover нет.
+- [T06 ????????? ???????? ???????, 29.10](t06_multi_order_root_hu_20261029.md): ???????? applied; one-root/two-CASE `LOAD`/`DEPART` ????????????; ??????? ???????? ???????? ????????.
 
 # Database Mirror: Oracle Schema
 
 - [Дополнительный заезд23.10](trade_extra_stop_20261023.md): C0154 исправлен по ревью, root готовит native приёмку; внешнего заказа SAP пока нет.
+- [Допуск добивки по паллетоместам27.10](tradecase_topup_floor_admission_20261027.md): без подтверждённого типа паллеты, числа мест и штабелирования предложение не сохраняется и запас не резервируется.
+- [Статус ворот двора27.10](yard_dock_status_20261027.md): миграция применена, live API BLOCK/UNBLOCK и точные повторы прошли; экран 1440/390 и интеграционный UI-gate проверяет Claude.
+- [Выборочное снятие мест C-0176](tt_selected_places_20261027.md): APPLIED в RABAEV@orcl; native/API проверены живым тестом 4 мест, точным повтором, конфликтом, конкуренцией и правами; в тестовом складе нет активного доступа/паллет, аудит сохранён.
 
 - [Транспортный metadata fence23.10](transport_metadata_fence_20261023.md): подготовлен scoped вход в существующую блокировку конфигурации; кандидат ещё не применён.
 
@@ -165,3 +169,5 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 - [[stock_large_plan_budget_20261026]] — измеренный предел6сна попытку при сохранении общего30с; приёмка ещё продолжается.
 
 - [[topup_whole_pallet_20261026]] — классификация собственного полного удержания добивки как FULL_PALLET; независимая проверка продолжается.
+
+- [Root HU multi-order shipping](tradecase_nested_shipping_20261023.md): one physical root HU remains indivisible; shipment of several orders for one recipient needs an atomic `RRL_STOCK_SHIPPING_CORE` branch.

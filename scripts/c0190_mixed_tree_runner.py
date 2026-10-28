@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import json
 import re
 import secrets
@@ -26,6 +27,10 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Callable
 from uuid import uuid4
+
+# C0191 imports this module for its journal and exception contract. When this file
+# is executed as a script, retain the same module identity for fail-closed stops.
+sys.modules.setdefault("c0190_runner", sys.modules[__name__])
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "runtime/test-evidence/tradecase/2026-10-28/T06/mixed-tree"
@@ -37,6 +42,22 @@ EA_QTY = "4"
 
 class RunnerStop(RuntimeError):
     """A fail-closed stop: the reason names the exact blocker; nothing after it is attempted."""
+
+
+def load_transport_inputs(path: str | None) -> dict[str, Any]:
+    """Read the explicit C0191 input contract; never infer a recipient or measurements."""
+    if not path:
+        raise RunnerStop("TRANSPORT_INPUTS_FILE_REQUIRED")
+    source = Path(path)
+    if not source.is_file():
+        raise RunnerStop(f"TRANSPORT_INPUTS_FILE_MISSING:{source}")
+    try:
+        value = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RunnerStop(f"TRANSPORT_INPUTS_FILE_INVALID:{source}") from exc
+    if not isinstance(value, dict):
+        raise RunnerStop("TRANSPORT_INPUTS_OBJECT_REQUIRED")
+    return value
 
 
 # ---------------------------------------------------------------- pure, offline-tested parts
@@ -102,7 +123,7 @@ class Journal:
         old = self.steps.get(key)
         if old and (old["method"], old["path"], old["wire"]) != (method, path, wire):
             raise RunnerStop(f"STEP_CONTENT_CHANGED:{key}")
-        if self.unknown and self.unknown != key:
+        if self.unknown and self.unknown != key and key not in self.results:
             raise RunnerStop(f"UNKNOWN_OUTCOME_PENDING:{self.unknown}")
         self.steps.setdefault(key, {"method": method, "path": path, "wire": wire})
         return self.steps[key]["wire"]
@@ -155,7 +176,7 @@ def tree_findings(composition: dict[str, Any], expected: dict[str, Any]) -> list
 EXPECTED_REFUSALS = {
     "stale_parent_version": "HU_CONTENT_VERSION_CONFLICT",
     "foreign_carrier_scan": "HU_CASE_CARRIER_SCAN_REQUIRED",
-    "changed_body_same_operation": "OPERATION_CONTENT_CONFLICT",
+    "changed_body_same_operation": "OPERATION_CONFLICT",
     "other_cell": "HU_PACK_SAME_LOCATION_REQUIRED",
 }
 def refusal_matches(value: Any, expected: str) -> bool:
@@ -206,6 +227,36 @@ def cleanup_scope_findings(rows: list[tuple], reservations: int, foreign_tasks: 
     return out
 
 
+def cleanup_expected_remainder(state: dict[str, Any]) -> dict[str, str]:
+    """Return the only stock that this runner may count down.
+
+    Before C0191 LOAD this is the stock registered by C0190. A completed C0191
+    load replaces it with the persisted unpicked remainder. Values are never
+    inferred from a later database read because that could widen a resumed
+    cleanup operation.
+    """
+    articles = state.get("articles") or {}
+    measurements = state.get("measurements") or {}
+    if not articles:
+        return {}
+    registered = {
+        articles["kg"]: str(Decimal(str(measurements["manual_net_kg"])) * 2),
+        articles["ea"]: str(Decimal(EA_QTY) * 2),
+    }
+    transport = state.get("transport") or {}
+    remainder = transport.get("expected_remainder_after_load")
+    if remainder is None:
+        return registered
+    if not isinstance(remainder, dict) or set(remainder) != set(registered):
+        raise RunnerStop("TRANSPORT_REMAINDER_INVALID")
+    try:
+        parsed = {article: Decimal(str(quantity)) for article, quantity in remainder.items()}
+    except Exception as exc:
+        raise RunnerStop("TRANSPORT_REMAINDER_INVALID") from exc
+    if any(quantity < 0 or quantity > Decimal(registered[article]) for article, quantity in parsed.items()):
+        raise RunnerStop("TRANSPORT_REMAINDER_INVALID")
+    return {article: str(quantity) for article, quantity in parsed.items()}
+
 def cleanup_plan(state: dict[str, Any]) -> list[str]:
     """Ordered native reversals for exactly what this run created; journals and history are kept."""
     plan = [f"HU_DETACH_CASE:{t}" for t in state.get("tree_attached", [])]
@@ -215,7 +266,9 @@ def cleanup_plan(state: dict[str, Any]) -> list[str]:
         plan.append("RESERVATION_RELEASE:wave")
     for t in state.get("tare_bookings", []):
         plan.append(f"TARE_BOOK_CANCEL:{t}")
-    if state.get("tare_bookings"):
+    if state.get("root_tare_booking"):
+        plan.append(f"TARE_BOOK_CANCEL:{state["root_tare_booking"]}")
+    if state.get("tare_bookings") or state.get("root_tare_booking"):
         plan.append("TARE_COUNT_ZERO")
     if state.get("wave"):
         plan.append("WAVE_EXECUTION_FINISH_OR_CANCEL")
@@ -246,7 +299,12 @@ class Live:
     def save(self) -> None:
         self.s["journal"] = self.journal.to_json()
         self.file.parent.mkdir(parents=True, exist_ok=True)
-        self.file.write_text(json.dumps(self.s, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
+        temporary = self.file.with_name(self.file.name + ".pending")
+        with temporary.open("w", encoding="utf-8") as output:
+            output.write(json.dumps(self.s, indent=1, ensure_ascii=False, default=str))
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary, self.file)
 
     def read(self, sql: str, **binds: Any) -> list[tuple]:
         with self.connect() as c:
@@ -261,12 +319,18 @@ class Live:
 
     def meta(self, sql: str, verify_sql: str, *, verify_binds: dict[str, Any] | None = None, expected: int = 1, **binds: Any) -> None:
         """Apply one fixture row with durable intent and exact read-only reconciliation."""
-        verify_binds = verify_binds or binds
+        if verify_binds is None:
+            names = set(re.findall(r":([A-Za-z][A-Za-z0-9_]*)", verify_sql))
+            verify_binds = {name: binds[name] for name in names}
         command = {"sql": sql, "binds": binds, "verify_sql": verify_sql, "verify_binds": verify_binds, "expected": expected}
-        digest = hashlib.sha256(json.dumps(command, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")).hexdigest()[:16]
+        identity = {"verify_sql": verify_sql, "verify_binds": verify_binds}
+        digest = hashlib.sha256(json.dumps(identity, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:16]
         key = "fixture." + digest
+        resuming = key in self.journal.steps
         wire = self.journal.record(key, "ORACLE_CONFIG", "reconcile", command); self.save()
         if key in self.journal.results:
+            if self.journal.results[key]["status"] != 200:
+                raise RunnerStop(f"FIXTURE_REFUSED:{key}")
             return
         stored = json.loads(wire)
 
@@ -274,11 +338,15 @@ class Live:
             return int(self.one(stored["verify_sql"], **stored["verify_binds"]))
 
         actual = verified()
+        if actual == stored["expected"] and not resuming:
+            self.journal.outcome(key, 409, {"code": "FIXTURE_ALREADY_EXISTS"}); self.save()
+            raise RunnerStop(f"FIXTURE_ALREADY_EXISTS:{key}")
         if actual == stored["expected"]:
             self.journal.outcome(key, 200, {"reconciled": True, "count": actual}); self.save(); return
         if actual != 0:
             self.journal.unknown = key; self.save()
             raise RunnerStop(f"FIXTURE_RECONCILIATION_MISMATCH:{key}:count={actual}:expected={stored['expected']}")
+        self.journal.unknown = key; self.save()
         try:
             with self.connect() as c:
                 q = c.cursor(); q.callproc("RRL_STOCK_CONFIG_API.begin_change", ["admin", "warehouse_settings_edit"])
@@ -304,38 +372,84 @@ class Live:
             self.journal.unknown = key; self.save()
             raise RunnerStop(f"FIXTURE_VERIFY_FAILED:{key}:count={actual}:expected={stored['expected']}")
         self.journal.outcome(key, 200, {"count": actual}); self.save()
-    def fixture_revision(self, warehouse: int) -> int:
-        """Create or reconcile this empty warehouse's single revision before any stock command."""
-        key, body = "fixture.revision", {"warehouse": warehouse, "actor": "admin"}
-        wire = self.journal.record(key, "ORACLE_CONFIG", "REVIZION.create_revizion", body); self.save()
-        if key in self.journal.results:
-            return int(self.journal.results[key]["value"]["revision"])
+    def finalizer_sql(self, key: str, sql: str, binds: dict[str, Any], verify_sql: str, verify_binds: dict[str, Any], expected: int) -> None:
+        """Run a fixture-retirement SQL command with persisted intent and read-only recovery.
 
-        def existing() -> list[tuple]:
-            return self.read("select ID from RRL_REVIZION where WARE_ID=:w and USER_ID='admin' order by ID", w=warehouse)
+        A first invocation refuses a pre-existing expected result. A resume after
+        a saved intent reconciles the exact expected result, otherwise executes
+        the stored SQL once and verifies it. An uncertain commit keeps the
+        journal blocked until the same command is reconciled.
+        """
+        journal_key = "finalizer." + key
+        command = {"sql": sql, "binds": binds, "verify_sql": verify_sql, "verify_binds": verify_binds, "expected": expected}
+        was_started = journal_key in self.journal.steps
+        wire = self.journal.record(journal_key, "ORACLE_FINALIZER", "reconcile", command)
+        self.save()
+        if journal_key in self.journal.results:
+            saved = self.journal.results[journal_key]
+            if saved["status"] != 200:
+                raise RunnerStop(f"FINALIZER_REFUSED:{journal_key}:{saved['value']}")
+            return
+        stored = json.loads(wire)
 
-        rows = existing()
-        if len(rows) == 1:
-            revision = int(rows[0][0]); self.journal.outcome(key, 200, {"revision": revision, "reconciled": True}); self.save(); return revision
-        if rows:
-            self.journal.unknown = key; self.save(); raise RunnerStop(f"FIXTURE_REVISION_MISMATCH:{len(rows)}")
-        import oracledb
+        def verified() -> int:
+            return int(self.one(stored["verify_sql"], **stored["verify_binds"]))
+
         try:
-            with self.connect() as c:
-                revision = int(c.cursor().callfunc("REVIZION.create_revizion", oracledb.DB_TYPE_NUMBER, [warehouse, "admin"])); c.commit()
+            actual = verified()
         except BaseException:
-            rows = existing()
-            if len(rows) == 1:
-                revision = int(rows[0][0]); self.journal.outcome(key, 200, {"revision": revision, "reconciled_after_error": True}); self.save(); return revision
+            self.journal.unknown = journal_key
+            self.save()
+            raise
+        if actual == stored["expected"]:
+            if not was_started:
+                self.journal.outcome(journal_key, 409, {"code": "FINALIZER_ALREADY_APPLIED"})
+                self.save()
+                raise RunnerStop(f"FINALIZER_ALREADY_APPLIED:{journal_key}")
+            self.journal.outcome(journal_key, 200, {"reconciled": True, "count": actual})
+            self.save()
+            return
+        if actual != 0:
+            self.journal.unknown = journal_key
+            self.save()
+            raise RunnerStop(f"FINALIZER_RECONCILIATION_MISMATCH:{journal_key}:count={actual}:expected={stored['expected']}")
+        self.journal.unknown = journal_key
+        self.save()
+        try:
+            with self.connect() as connection:
+                cursor = connection.cursor()
+                cursor.execute(stored["sql"], stored["binds"])
+                connection.commit()
+        except BaseException:
             try:
-                self.journal.outcome(key, 0, None)
+                if verified() == stored["expected"]:
+                    self.journal.outcome(journal_key, 200, {"reconciled_after_error": True})
+                    self.save()
+                    return
+            except BaseException:
+                pass
+            try:
+                self.journal.outcome(journal_key, 0, None)
             finally:
                 self.save()
             raise AssertionError("unreachable")
-        rows = existing()
-        if len(rows) != 1 or int(rows[0][0]) != revision:
-            self.journal.unknown = key; self.save(); raise RunnerStop(f"FIXTURE_REVISION_VERIFY_FAILED:{rows}")
-        self.journal.outcome(key, 200, {"revision": revision}); self.save(); return revision
+        actual = verified()
+        if actual != stored["expected"]:
+            self.journal.unknown = journal_key
+            self.save()
+            raise RunnerStop(f"FINALIZER_VERIFY_FAILED:{journal_key}:count={actual}:expected={stored['expected']}")
+        self.journal.outcome(journal_key, 200, {"count": actual})
+        self.save()
+    def fixture_revision(self, warehouse: int) -> int:
+        """Create or reconcile this empty warehouse's single revision before any stock command."""
+        def create() -> int:
+            import oracledb
+            with self.connect() as connection:
+                result = int(connection.cursor().callfunc("REVIZION.create_revizion", oracledb.DB_TYPE_NUMBER, [warehouse, "admin"]))
+                connection.commit()
+                return result
+        return self.create_fixture_document("revision", {"warehouse": warehouse, "actor": "admin"},
+            lambda: self.read("select ID from RRL_REVIZION where WARE_ID=:w and USER_ID='admin' order by ID", w=warehouse), create)
     def post(self, key: str, kind: str, metadata: dict[str, Any], source: dict[str, Any]) -> Any:
         """Native StockPosting through the same journal (K-0217): the exact serialized command is stored before posting; a repeat
         posts those stored bytes; changed content under the same key stops; an unknown outcome blocks every later step."""
@@ -343,7 +457,10 @@ class Live:
         jkey = "native." + key
         wire = self.journal.record(jkey, "NATIVE", kind, command); self.save()
         if jkey in self.journal.results:
-            return self.journal.results[jkey]["value"]
+            saved = self.journal.results[jkey]
+            if saved["status"] != 200:
+                raise RunnerStop(f"NATIVE_REFUSED:{jkey}:{saved['value']}")
+            return saved["value"]
         stored = json.loads(wire)
         error, result = None, None
         try:
@@ -375,13 +492,17 @@ class Live:
     def send(self, key: str, method: str, path: str, body: Any, expect: tuple[int, ...] = (200,)) -> Any:
         wire = self.journal.record(key, method, path, body); self.save()
         if key in self.journal.results:
-            return self.journal.results[key]["value"]
+            saved = self.journal.results[key]
+            if saved["status"] not in expect:
+                raise RunnerStop(f"UNEXPECTED_STATUS:{key}:HTTP{saved['status']}:{str(saved['value'])[:300]}")
+            return saved["value"]
         try:
             r = self.http.request(method, self.api + path, content=wire.encode(), headers={"Content-Type": "application/json"})
             status = r.status_code
             value = r.json() if r.headers.get("content-type", "").startswith("application/json") else r.text[:500]
         except Exception:  # network: outcome unknown
             status, value = 0, None
+        self.s["last_response"] = {"key": key, "status": status, "value": value}
         try:
             result = self.journal.outcome(key, status, value)
         finally:
@@ -422,13 +543,30 @@ class Live:
                     template_article=bool(self.read("select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1'")),
                     parent_tare_kg=args.parent_tare_kg, manual_net_kg=args.manual_net_kg,
                     fixture_config_recovery_verified=True, require_measurements=args.mode == "run")
-        findings = preflight_findings(snap)
-        self.s["preflight"] = {k: v for k, v in snap.items() if k != "openapi_paths"} | {"manual_route_present": MANUAL_ROUTE in paths, "findings": findings}
+        actual_scope = {key: snap[key] for key in ("tag_rows", "warehouse_exists", "warehouse_stock_rows", "warehouse_case_tasks", "warehouse_waves")}
+        resumed = self.s.get("run_admitted") == {"tag": tag, "warehouse": ware}
+        scope_errors = []
+        if resumed:
+            checks = {
+                "WAREHOUSE_IDENTITY_CHANGED": ("select count(*) from RRL_WARES where ID=:w and NAME<>:n", {"w": ware, "n": "C0190 mixed tree " + tag}),
+                "FOREIGN_WAVE_IN_FIXTURE": ("select count(*) from RRL_PICK_WAVE where WARE_ID=:w and WAVE_CODE<>:n", {"w": ware, "n": tag + ".WAVE"}),
+                "FOREIGN_ORDER_IN_FIXTURE": ("select count(*) from RRL_CUSTOMER_ORDER where WARE_ID=:w and ORDER_NO not in(:k,:e)", {"w": ware, "k": tag + ".ORD.kg", "e": tag + ".ORD.ea"}),
+                "FOREIGN_SKU_IN_FIXTURE": ("select count(*) from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA where c.WARE_ID=:w and p.ARTICUL not in(:k,:e)", {"w": ware, "k": tag + "K", "e": tag + "E"}),
+            }
+            scope_errors = [code for code, (sql, binds) in checks.items() if self.one(sql, **binds)]
+            if not scope_errors:
+                for key in actual_scope:
+                    snap[key] = 0
+        findings = preflight_findings(snap) + scope_errors
+        self.s["preflight"] = {k: v for k, v in snap.items() if k != "openapi_paths"} | {"manual_route_present": MANUAL_ROUTE in paths, "findings": findings, "actual_scope": actual_scope, "resumed": resumed}
+        self.s.setdefault("measurement_evidence", "SYNTHETIC_SOFTWARE_FIXTURE" if getattr(args, "synthetic_measurements", False) else "OPERATOR_SUPPLIED_UNVERIFIED")
         supplied_measurements = args.parent_tare_kg is not None and args.manual_net_kg is not None
         if supplied_measurements:
             self.s.setdefault("measurements", {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg})
-        if supplied_measurements and self.s.get("measurements") != {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg} and self.s.get("stages_done"):
+        if supplied_measurements and self.s.get("measurements") != {"parent_tare_kg": args.parent_tare_kg, "manual_net_kg": args.manual_net_kg} and self.journal.steps:
             findings.append("MEASUREMENTS_CHANGED_AFTER_START")  # a resumed run must keep the original operator values
+        if not findings and args.mode == "run":
+            self.s["run_admitted"] = {"tag": tag, "warehouse": ware}
         self.save()
         return findings
 
@@ -441,21 +579,57 @@ class Live:
         done.append(name); self.s["last_verified_stage"] = name; self.save()
 
     # -- FIXTURE: new tagged warehouse, KG + EA articles, cells, pick faces, revision (ni042 sequence) --
+    def create_fixture_document(self, name: str, request: dict[str, Any], lookup: Callable[[], list[tuple]], create: Callable[[], int]) -> int:
+        """Recover a committed document; never repeat a non-idempotent creator after an uncertain result."""
+        key = "document." + name
+        resumed = key in self.journal.steps
+        self.journal.record(key, "CREATE_DOCUMENT", name, request)
+        self.save()
+        if key in self.journal.results:
+            saved = self.journal.results[key]
+            if saved["status"] != 200:
+                raise RunnerStop(f"DOCUMENT_REFUSED:{name}")
+            return int(saved["value"])
+        rows = lookup()
+        if rows:
+            if not resumed or len(rows) != 1:
+                self.journal.outcome(key, 409, {"code": "DOCUMENT_COLLISION"}); self.save()
+                raise RunnerStop(f"DOCUMENT_COLLISION:{name}")
+            result = int(rows[0][0])
+            self.journal.outcome(key, 200, result); self.save()
+            return result
+        if resumed:
+            self.journal.unknown = key; self.save()
+            raise RunnerStop(f"DOCUMENT_OUTCOME_UNRESOLVED:{name}")
+        self.journal.unknown = key; self.save()
+        result = int(create())
+        rows = lookup()
+        if rows != [(result,)]:
+            raise RunnerStop(f"DOCUMENT_VERIFY_FAILED:{name}")
+        self.journal.outcome(key, 200, result); self.save()
+        return result
+    def fixture_value(self, name: str, factory: Callable[[], Any]) -> Any:
+        """Persist generated fixture inputs before any command can reference them."""
+        values = self.s.setdefault("fixture_values", {})
+        if name not in values:
+            values[name] = factory()
+            self.save()
+        return values[name]
     def fixture(self) -> None:
         tag, ware = self.s["tag"], self.s["warehouse"]
-        template = self.one("select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1'")
+        template = self.fixture_value("template_article", lambda: self.one("select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1'"))
         kg, ea = tag + "K", tag + "E"
         cells = {"src": tag + "S", "kg": tag + "PK", "ea": tag + "PE", "cpt": "CPT_" + str(ware)}
         self.s.update(articles={"kg": kg, "ea": ea}, cells=cells); self.save()
         barcodes = self.s.setdefault("fixture_barcodes", {"kg": "046" + str(secrets.randbelow(10 ** 11)).zfill(11), "ea": "046" + str(secrets.randbelow(10 ** 11)).zfill(11)})
         self.save()
         self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;x.ABC_GROUP:='A';x.TYPE_W:=3;x.UNIT_TYPE:='KG';insert into RRL_ARTICULS values x;end;",
-                  "select count(*) from RRL_ARTICULS where ACTICUL=:a", old=template, a=kg, b=barcodes["kg"])
+                  "select count(*) from RRL_ARTICULS where ACTICUL=:a and BARCODE_SHT=:b and TYPE_W=3 and UNIT_TYPE='KG'", old=template, a=kg, b=barcodes["kg"])
         self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)values(:a,'KG','KG',1,1,1,6,'C0190 mixed tree KG')",
-                  "select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a and INPUT_UOM='KG' and BASE_UOM='KG'", a=kg)
+                  "select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a and INPUT_UOM='KG' and BASE_UOM='KG' and POLICY_VERSION=1 and NUMERATOR=1 and DENOMINATOR=1 and BASE_SCALE=6", a=kg)
         self.meta("declare x RRL_ARTICULS%rowtype;begin select *into x from RRL_ARTICULS where ACTICUL=:old;x.ACTICUL:=:a;x.BARCODE_SHT:=:b;x.ABC_GROUP:='A';insert into RRL_ARTICULS values x;end;",
-                  "select count(*) from RRL_ARTICULS where ACTICUL=:a", old=template, a=ea, b=barcodes["ea"])
-        template_uom_count = int(self.one("select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a", a=template))
+                  "select count(*) from RRL_ARTICULS where ACTICUL=:a and BARCODE_SHT=:b and ABC_GROUP='A'", old=template, a=ea, b=barcodes["ea"])
+        template_uom_count = self.fixture_value("template_uom_count", lambda: int(self.one("select count(*) from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a", a=template)))
         if not template_uom_count:
             raise RunnerStop("TEMPLATE_UOM_MISSING")
         self.meta("insert into RRL_STOCK_UOM_CONVERSION(ARTICUL,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,PROVENANCE)select :a,INPUT_UOM,BASE_UOM,POLICY_VERSION,NUMERATOR,DENOMINATOR,BASE_SCALE,'C0190 copy of template EA' from RRL_STOCK_UOM_CONVERSION where ARTICUL=:old",
@@ -464,18 +638,28 @@ class Live:
             raise RunnerStop("TEMPLATE_ARTICLE_IS_WEIGHTED: the EA child would not be a shelf BOX/EA pick")
         for article in (kg, ea):
             self.meta("insert into RRL_SKU_RECEIPT_POLICY(ARTICUL,POLICY_VERSION,MARKING_REQUIRED,SERIALIZED_WEIGHT_BOXES,UPDATED_BY)values(:a,1,0,0,'admin')",
-                      "select count(*) from RRL_SKU_RECEIPT_POLICY where ARTICUL=:a and POLICY_VERSION=1", a=article)
+                      "select count(*) from RRL_SKU_RECEIPT_POLICY where ARTICUL=:a and POLICY_VERSION=1 and MARKING_REQUIRED=0 and SERIALIZED_WEIGHT_BOXES=0", a=article)
             self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('SKU',:a),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD",
                       "select count(*) from RRL_STOCK_POLICY_GUARD where POLICY_KEY=RRL_STOCK_LOCK_API.resource_key('SKU',:a)", a=article)
         self.meta("insert into RRL_WARES(ID,NAME,PREFIX,SPIS_OTBOR_ON_SCAN_OPALL)values(:w,:n,'Q9',1)",
-                  "select count(*) from RRL_WARES where ID=:w", w=ware, n="C0190 mixed tree " + tag)
-        self.meta("insert into RRL_RECEIPT_WARE_SETTINGS(WARE_ID,OUTGOING_QC_MODE,OUTGOING_QC_INDEPENDENT)values(:w,'BOTH',1)",
-                  "select count(*) from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w", w=ware)
+                  "select count(*) from RRL_WARES where ID=:w and NAME=:n and PREFIX='Q9' and SPIS_OTBOR_ON_SCAN_OPALL=1", w=ware, n="C0190 mixed tree " + tag)
+        transport_inputs = load_transport_inputs(self.s.get("transport_inputs_file")) if self.s.get("transport_inputs_file") else {}
+        qc_mode = (transport_inputs.get("qc") or {}).get("mode", "BOTH")
+        if qc_mode not in ("SCAN", "WEIGHT", "BOTH"):
+            raise RunnerStop("FIXTURE_QC_MODE_INVALID")
+        self.s["fixture_qc_mode"] = qc_mode; self.save()
+        self.meta("insert into RRL_RECEIPT_WARE_SETTINGS(WARE_ID,OUTGOING_QC_MODE,OUTGOING_QC_INDEPENDENT)values(:w,:m,1)",
+                  "select count(*) from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w and OUTGOING_QC_MODE=:m and OUTGOING_QC_INDEPENDENT=1", w=ware, m=qc_mode)
         for role, cell in cells.items():
             self.meta("insert into RRL_CELLS(CELL,WARE_ID,X,Y,Z,OTBOR,IS_SYSTEM)values(:c,:w,0,0,0,:p,:s)",
-                      "select count(*) from RRL_CELLS where CELL=:c and WARE_ID=:w", c=cell, w=ware, p=int(role in ("kg", "ea")), s=int(role == "cpt"))
+                      "select count(*) from RRL_CELLS where CELL=:c and WARE_ID=:w and OTBOR=:p and IS_SYSTEM=:s", c=cell, w=ware, p=int(role in ("kg", "ea")), s=int(role == "cpt"))
             self.meta("insert into RRL_STOCK_POLICY_GUARD(POLICY_KEY,LOCK_ID)select RRL_STOCK_LOCK_API.resource_key('CELL',:c),nvl(max(LOCK_ID),900000000)+1 from RRL_STOCK_POLICY_GUARD",
                       "select count(*) from RRL_STOCK_POLICY_GUARD where POLICY_KEY=RRL_STOCK_LOCK_API.resource_key('CELL',:c)", c=cell)
+        if qc_mode in ("WEIGHT", "BOTH"):
+            for role, article, base_uom, base_weight in (("kg", kg, "KG", "1"), ("ea", ea, "EA", ".15")):
+                self.meta("insert into RRL_RECEIPT_SKU_RULE(WARE_ID,ARTICUL,PICK_CELL,MIN_SHELF_DAYS,SOURCE_PICK_MODE,STOCK_ALLOC_CLASS,PICK_STEP_BASE,ALLOCATION_VERSION,ALLOW_PICK_BATCH_MIX,QC_BASE_WEIGHT_KG,QC_BOX_WEIGHT_KG,QC_WEIGHT_VERSION,QC_WEIGHT_BASE_UOM)values(:w,:a,:c,0,'AFTER_PUTAWAY','OTHER',1,1,0,:base,.2,1,:u)",
+                          "select count(*) from RRL_RECEIPT_SKU_RULE where WARE_ID=:w and ARTICUL=:a and PICK_CELL=:c and QC_BASE_WEIGHT_KG=:base and QC_BOX_WEIGHT_KG=.2 and QC_WEIGHT_VERSION=1 and QC_WEIGHT_BASE_UOM=:u",
+                          w=ware, a=article, c=cells[role], base=base_weight, u=base_uom)
         faces = self.s.setdefault("fixture_faces", {})
         for role, article in (("kg", kg), ("ea", ea)):
             face = faces.get(role)
@@ -497,20 +681,28 @@ class Live:
                       "expiry_date": "2030-01-01", "price": 0, "reason": "C0190 mixed tree isolated lot"}, {"revision_id": self.s["revision"]})
         from app.services.picking_service import PickingService
         from app.schemas import PickingPlanCreateRequest, PickWaveCreateRequest, PickWaveAddPlanRequest, PickWaveActionRequest
-        customer = self.one("select min(CUSTOMER_ID) from RRL_CUSTOMER")
+        customer = self.fixture_value("customer", lambda: self.one("select min(CUSTOMER_ID) from RRL_CUSTOMER"))
         picking, plans = PickingService(), []
         for role, qty, unit in (("kg", net, "KG"), ("ea", EA_QTY, self.one("select nvl(max(UNIT_CODE),'EA') from RRL_CUSTOMER_ORDER_ROW where ARTICUL=(select ARTICUL from RRL_PALLETS where UID_PALLET='DS-BASE-B1')"))):
-            order = self.one("select RRL_CUSTOMER_ORDER_SQ.nextval from dual")
-            self.meta("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID)values(:o,:n,:c,:w)", "select count(*) from RRL_CUSTOMER_ORDER where CUSTOMER_ORDER_ID=:o", o=order, n=f"{tag}.ORD.{role}", c=customer, w=ware)
+            order = self.fixture_value("order." + role, lambda: int(self.one("select RRL_CUSTOMER_ORDER_SQ.nextval from dual")))
+            self.meta("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID)values(:o,:n,:c,:w)", "select count(*) from RRL_CUSTOMER_ORDER where CUSTOMER_ORDER_ID=:o and ORDER_NO=:n and CUSTOMER_ID=:c and WARE_ID=:w", o=order, n=f"{tag}.ORD.{role}", c=customer, w=ware)
             self.meta("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,ORDER_QTY,UNIT_CODE)values(RRL_CUSTOMER_ORDER_ROW_SQ.nextval,:o,1,:a,:q,:u)",
                       "select count(*) from RRL_CUSTOMER_ORDER_ROW where CUSTOMER_ORDER_ID=:o and LINE_NO=1 and ARTICUL=:a", o=order, a=a[role], q=str(qty), u=unit)
-            plans.append(picking.create_plan(PickingPlanCreateRequest(customer_order_id=order, created_by="admin")))
-        wave = picking.create_wave(PickWaveCreateRequest(wave_code=tag + ".WAVE", ware_id=ware, created_by="admin"))
+            plans.append(self.create_fixture_document("plan." + role, {"order": order, "warehouse": ware},
+                lambda: self.read("select PICK_PLAN_ID from RRL_PICK_PLAN where CUSTOMER_ORDER_ID=:o and WARE_ID=:w", o=order, w=ware),
+                lambda: picking.create_plan(PickingPlanCreateRequest(customer_order_id=order, created_by="admin"))))
+        wave = self.create_fixture_document("wave", {"code": tag + ".WAVE", "warehouse": ware},
+            lambda: self.read("select PICK_WAVE_ID from RRL_PICK_WAVE where WAVE_CODE=:c and WARE_ID=:w", c=tag + ".WAVE", w=ware),
+            lambda: picking.create_wave(PickWaveCreateRequest(wave_code=tag + ".WAVE", ware_id=ware, created_by="admin")))
         self.s["wave"] = wave; self.save()
         for plan in plans:
-            picking.add_wave_plan(wave, PickWaveAddPlanRequest(pick_plan_id=plan, created_by="admin"))
-        picking.preview_wave(wave, PickWaveActionRequest(updated_by="admin"))
-        picking.launch_wave(wave, PickWaveActionRequest(updated_by="admin", operation_id=f"{tag}.LAUNCH"))
+            self.create_fixture_document("wave.plan." + str(plan), {"wave": wave, "plan": plan},
+                lambda: self.read("select PICK_PLAN_ID from RRL_PICK_WAVE_ORDER where PICK_WAVE_ID=:w and PICK_PLAN_ID=:p and STATUS='ACTIVE'", w=wave, p=plan),
+                lambda: (picking.add_wave_plan(wave, PickWaveAddPlanRequest(pick_plan_id=plan, created_by="admin")), plan)[1])
+        self.create_fixture_document("wave.preview", {"wave": wave},
+            lambda: self.read("select PICK_WAVE_ID from RRL_PICK_WAVE where PICK_WAVE_ID=:w and STATUS='PREVIEW'", w=wave),
+            lambda: (picking.preview_wave(wave, PickWaveActionRequest(updated_by="admin")), wave)[1])
+        self.send("wave.launch", "POST", f"/api/picking/waves/{wave}/launch", {"operation_id": f"{tag}.LAUNCH", "updated_by": "admin"})
         for task, uid, frm, to, qty in self.read("select TASK_ID,UID_PALLET,FROM_CELL,TO_CELL,QTY from RRL_WAREHOUSE_TASK where TASK_SOURCE='WAVE' and SOURCE_DOC_ID=:w and STATUS not in('DONE','CANCELLED')", w=wave):
             self.post(f"task.{task}", "TASK_COMPLETE", {"fact_qty": str(qty), "scanned_pallet": uid, "scanned_from_cell": frm, "scanned_to_cell": to}, {"task_id": int(task)})
         self.post("release", "WAVE_PICK_RELEASE", {}, {"wave_id": wave})
@@ -523,11 +715,14 @@ class Live:
         self.save()
         for role, case in self.s["cases"].items():
             current = next(r for r in self.get(f"/api/inventory/tare/warehouses/{ware}/availability") if r["pallet_type_id"] == case["pallet_type"])
-            self.send(f"tare.count.{role}", "POST", "/api/inventory/tare/count", {"operation_id": f"{tag}.TARE.COUNT.{role}", "owner_ware_id": ware,
-                      "pallet_type_id": case["pallet_type"], "condition": "GOOD", "observed_quantity": str(int(Decimal(str(current.get("available_quantity") or 0))) + 1),
-                      "expected_version": current.get("balance_version") or 0, "reason": "C0190 isolated software fixture container", "decision_reference": f"{tag}.{role}"})
+            self.send(f"tare.count.{role}", "POST", "/api/inventory/tare/count", self.fixture_value("tare.count." + role, lambda: {"operation_id": f"{tag}.TARE.COUNT.{role}", "owner_ware_id": ware,
+                      "pallet_type_id": case["pallet_type"], "condition": "GOOD", "observed_quantity": str(int(Decimal(str(current.get("physical_quantity") or 0))) + 1),
+                      "expected_version": current.get("balance_version") or 0, "reason": "C0190 isolated software fixture container", "decision_reference": f"{tag}.{role}"}))
             self.send(f"tare.book.{role}", "POST", "/api/inventory/tare/book", {"operation_id": f"{tag}.TARE.BOOK.{role}", "place_kind": "CASE", "place_id": str(case["task"])})
-            self.s.setdefault("tare_bookings", []).append(f"{tag}.TARE.BOOK.{role}"); self.save()
+            bookings = self.s.setdefault("tare_bookings", [])
+            if f"{tag}.TARE.BOOK.{role}" not in bookings:
+                bookings.append(f"{tag}.TARE.BOOK.{role}")
+                self.save()
             self.send(f"claim.{role}", "POST", f"/api/case-pick/tasks/{case['task']}/claim", {})
             self.send(f"start.{role}", "POST", f"/api/case-pick/tasks/{case['task']}/start", {})
 
@@ -540,7 +735,8 @@ class Live:
         path = MANUAL_ROUTE.format(task=case["task"], line=case["line"])
         result = self.send("pick.kg", "POST", path, manual_net_body(f"{self.s['tag']}.PICK.KG", net, case["cell"], case["carrier"]))
         self.replay_equal("pick.kg")
-        meta = json.loads(self.one("select CANONICAL_REQUEST from RRL_STOCK_OPERATION where OPERATION_ID=:op", op=f"{self.s['tag']}.PICK.KG"))["metadata"]
+        canonical = self.one("select CANONICAL_REQUEST from RRL_STOCK_OPERATION where OPERATION_ID=:op", op=f"{self.s['tag']}.PICK.KG")
+        meta = (canonical if isinstance(canonical, dict) else json.loads(canonical))["metadata"]
         if meta.get("measurement", {}).get("origin") != "MANUAL_OPERATOR_ENTRY" or "warehouse_scale_capture" in meta:
             raise RunnerStop("KG_PROVENANCE_NOT_MANUAL")
         if Decimal(str(self.one("select PICKED_QTY from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=:l", l=case["line"]))) != Decimal(net):
@@ -559,6 +755,12 @@ class Live:
     # -- TREE: one parent pallet in the carriers' cell; refusals first, then both attachments, then the composition --
     def tree(self) -> None:
         tag, ware, cases = self.s["tag"], self.s["warehouse"], self.s["cases"]
+        for role, case in cases.items():
+            body = self.fixture_value("close." + role, lambda: {
+                "operation_id": f"{tag}.CLOSE.{role}",
+                "expected_content_version": int(self.one("select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t", t=case["task"])),
+                "reason": "Completed software mixed-tree fixture picking"})
+            self.send("close." + role, "POST", f"/api/case-pick/tasks/{case['task']}/close-pallet", body)
         cell = {self.one("select CURRENT_CELL from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t", t=c["task"]) for c in cases.values()}
         if len(cell) != 1 or None in cell:
             raise RunnerStop(f"CARRIERS_NOT_IN_ONE_CELL:{cell}")  # a carrier move is not invented here
@@ -567,29 +769,46 @@ class Live:
         create = lambda uid, at: self.send("create." + uid, "POST", "/api/warehouse-hus/create", {"operation_id": uid + ".CREATE", "identifier": uid, "cell": at,
                                             "warehouse": ware, "container_type": "PALLET", "tare_weight_kg": tare, "scan_container": uid, "scan_cell": at})
         create(parent, cell)
+        root = self.composition(parent)["nodes"][0]
+        pallet_types = {case["pallet_type"] for case in cases.values()}
+        if len(pallet_types) != 1:
+            raise RunnerStop(f"ROOT_TARE_TYPE_AMBIGUOUS:{sorted(pallet_types)}")
+        root_type = pallet_types.pop()
+        balance = next((row for row in self.get(f"/api/inventory/tare/warehouses/{ware}/availability") if row["pallet_type_id"] == root_type), None)
+        if balance is None:
+            raise RunnerStop("ROOT_TARE_AVAILABILITY_MISSING")
+        self.send("root.tare.count", "POST", "/api/inventory/tare/count", self.fixture_value("root.tare.count.body", lambda: {"operation_id": f"{tag}.ROOT.TARE.COUNT", "owner_ware_id": ware, "pallet_type_id": root_type, "condition": "GOOD", "observed_quantity": str(int(Decimal(str(balance.get("physical_quantity") or 0))) + 1), "expected_version": balance.get("balance_version") or 0, "reason": "C0190 isolated software root pallet", "decision_reference": f"SYNTHETIC_FIXTURE_NOT_PHYSICAL:{tag}"}))
+        self.send("root.tare.book", "POST", "/api/inventory/tare/book", self.fixture_value("root.tare.book.body", lambda: {"operation_id": f"{tag}.ROOT.TARE.BOOK", "place_kind": "HU", "place_id": parent, "expected_warehouse_id": ware, "pallet_type_id": root_type, "expected_root_version": root["version"], "scan_place": parent, "scan_cell": root["cell"]}))
+        self.s["root_tare_booking"] = f"{tag}.ROOT.TARE.BOOK"; self.save()
         version = lambda uid: self.composition(uid)["nodes"][0]["version"]
         booking = {role: f"{tag}.TARE.BOOK.{role}" for role in cases}
         kg, ea = cases["kg"], cases["ea"]
         self.send("attach.kg", "POST", "/api/warehouse-hus/attach-case",
-                  attach_case_body(f"{tag}.ATTACH.KG", parent, kg["task"], version(parent), version("CASE:" + str(kg["task"])), kg["carrier"], booking["kg"]))
-        self.s["tree_attached"] = [kg["task"]]; self.save()
+                  self.fixture_value("attach.kg.body", lambda: attach_case_body(f"{tag}.ATTACH.KG", parent, kg["task"], version(parent), version("CASE:" + str(kg["task"])), kg["carrier"], booking["kg"])))
+        if kg["task"] not in self.s.setdefault("tree_attached", []):
+            self.s["tree_attached"].append(kg["task"]); self.save()
         self.replay_equal("attach.kg")
-        before = self.composition(parent)
-        negatives = {
+        before = self.fixture_value("tree.before_refusals", lambda: self.composition(parent))
+        negatives = self.fixture_value("tree.refusal_bodies", lambda: {
             "stale_parent_version": attach_case_body(f"{tag}.NEG.STALE", parent, ea["task"], version(parent) - 1, version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"]),
             "foreign_carrier_scan": attach_case_body(f"{tag}.NEG.SCAN", parent, ea["task"], version(parent), version("CASE:" + str(ea["task"])), kg["carrier"], booking["ea"]),
             "changed_body_same_operation": attach_case_body(f"{tag}.ATTACH.KG", parent, kg["task"], version(parent), version("CASE:" + str(kg["task"])), kg["carrier"] + ".CHANGED", booking["kg"]),
-        }
+        })
         create(other, self.s["cells"]["src"])
-        negatives["other_cell"] = attach_case_body(f"{tag}.NEG.CELL", other, ea["task"], version(other), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"])
-        refusals = {}
+        negatives = dict(negatives)
+        negatives["other_cell"] = self.fixture_value("tree.other_cell_body", lambda: attach_case_body(f"{tag}.NEG.CELL", other, ea["task"], version(other), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"]))
+        refusals = self.s.setdefault("refusals", {})
         for name, body in negatives.items():
-            refusals[name] = self.send("neg." + name, "POST", "/api/warehouse-hus/attach-case", body, expect=(409,))
-            check_refusal(name, refusals[name], before, self.composition(parent))  # per refusal: exact rule + parent unchanged
+            if name in refusals:
+                continue
+            result = self.send("neg." + name, "POST", "/api/warehouse-hus/attach-case", body, expect=(409,))
+            check_refusal(name, result, before, self.composition(parent))  # per refusal: exact rule + parent unchanged
+            refusals[name] = result; self.save()
         self.s["refusals"] = refusals; self.save()
         self.send("attach.ea", "POST", "/api/warehouse-hus/attach-case",
-                  attach_case_body(f"{tag}.ATTACH.EA", parent, ea["task"], version(parent), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"]))
-        self.s["tree_attached"].append(ea["task"]); self.save()
+                  self.fixture_value("attach.ea.body", lambda: attach_case_body(f"{tag}.ATTACH.EA", parent, ea["task"], version(parent), version("CASE:" + str(ea["task"])), ea["carrier"], booking["ea"])))
+        if ea["task"] not in self.s["tree_attached"]:
+            self.s["tree_attached"].append(ea["task"]); self.save()
         snapshot = self.composition(parent)
         findings = tree_findings(snapshot, {"case_tasks": [kg["task"], ea["task"]], "cell": cell,
                                             "quantities": {self.s["articles"]["kg"]: self.s["measurements"]["manual_net_kg"], self.s["articles"]["ea"]: EA_QTY},
@@ -599,51 +818,67 @@ class Live:
             raise RunnerStop("TREE_FINDINGS:" + ",".join(findings))
 
     def transport(self) -> None:
-        raise RunnerStop("TRANSPORT_NOT_WIRED: control/LOAD/DEPART and the store receipt need the trip/vehicle/document fixture of "
-                         "tests/tradecase/live_nested_shipping.py; stopped after the verified tree")
+        inputs = load_transport_inputs(self.s.get("transport_inputs_file"))
+        from c0191_mixed_tree_transport import run as run_transport
+        result = run_transport(self, inputs)
+        if result.get("status") != "STORE_RECEIVED":
+            raise RunnerStop(str(result.get("stopped") or "TRANSPORT_NOT_COMPLETED"))
 
     # -- CLEANUP: ordered native reversals for exactly what this run created --
     def cleanup(self) -> None:
         tag, ware = self.s["tag"], self.s["warehouse"]
+        if (self.s.get("c0192") or {}).get("warehouse_final"):
+            raise RunnerStop("C0190_CLEANUP_NOT_ALLOWED_AFTER_C0192")
         self.s["cleanup_plan"] = cleanup_plan(self.s); self.save()
         parent = tag + ".PAL"
         for task in list(reversed(self.s.get("tree_attached", []))):
             case = next(c for c in self.s["cases"].values() if c["task"] == task)
             role = next(r for r, c in self.s["cases"].items() if c["task"] == task)
-            self.send(f"detach.{role}", "POST", "/api/warehouse-hus/detach-case", {**attach_case_body(f"{tag}.DETACH.{role}", parent, task,
+            self.send(f"detach.{role}", "POST", "/api/warehouse-hus/detach-case", self.fixture_value(f"detach.{role}.body", lambda: {**attach_case_body(f"{tag}.DETACH.{role}", parent, task,
                       self.composition(parent)["nodes"][0]["version"], self.composition("CASE:" + str(task))["nodes"][0]["version"], case["carrier"], None),
-                      "reason": "C0190 mixed tree cleanup"})
+                      "reason": "C0190 mixed tree cleanup"}))
             self.s["tree_attached"].remove(task); self.save()
         for role, case in self.s.get("cases", {}).items():
             carrier_lots = [r[0] for r in self.read("select LOT_UID from RRL_CASE_CARRIER_LOT where CASE_PICK_TASK_ID=:t", t=case["task"])]
             self.s.setdefault("carrier_lots", {})[role] = sorted(set(self.s.get("carrier_lots", {}).get(role, [])) | set(carrier_lots)); self.save()
             lots = [r[0] for r in self.read("select h.LOT_UID from RRL_CASE_CARRIER_LOT h where h.CASE_PICK_TASK_ID=:t and exists(select 1 from RRL_REMAINS r where r.UID_POLETA=h.LOT_UID and r.REMAIN>0)", t=case["task"])]
             version = self.one("select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t", t=case["task"])
-            self.post(f"return.{role}", "CASE_CARRIER_RETURN", {"destinations": {uid: case["cell"] for uid in lots}, "allow_empty": not lots,
-                      "scan_container": case["carrier"], "expected_content_version": int(version), "reason": "C0190 cleanup"}, {"case_task_id": case["task"]})
+            self.post(f"return.{role}", "CASE_CARRIER_RETURN", self.fixture_value(f"return.{role}.body", lambda: {"destinations": {uid: case["cell"] for uid in lots}, "allow_empty": not lots,
+                      "scan_container": case["carrier"], "expected_content_version": int(version), "reason": "C0190 cleanup"}), {"case_task_id": case["task"]})
         if self.s.get("wave"):
             for (reservation,) in self.read("select RESERVATION_ID from RRL_STOCK_RESERVATION where SOURCE_DOC_TYPE='PICK_WAVE' and SOURCE_DOC_ID=:w and STATUS in('ACTIVE','ALLOCATED','PICKING') and BASE_QTY>0", w=self.s["wave"]):
                 self.post(f"release.{reservation}", "RESERVATION_RELEASE", {"reason": "C0190 cleanup"}, {"reservation_id": int(reservation)})
         for role, case in self.s.get("cases", {}).items():
             if f"tare.book.{role}" in self.journal.results:
                 self.send(f"tare.cancel.{role}", "POST", "/api/inventory/tare/book-cancel", {"operation_id": f"{tag}.TARE.CANCEL.{role}", "booking_operation_id": f"{tag}.TARE.BOOK.{role}"})
+        if self.s.get("root_tare_booking"):
+            self.send("root.tare.cancel", "POST", "/api/inventory/tare/book-cancel", {
+                "operation_id": f"{tag}.ROOT.TARE.CANCEL",
+                "booking_operation_id": self.s["root_tare_booking"],
+            })
         for pallet_type in {c["pallet_type"] for c in self.s.get("cases", {}).values()}:
             current = next(r for r in self.get(f"/api/inventory/tare/warehouses/{ware}/availability") if r["pallet_type_id"] == pallet_type)
-            self.send(f"tare.zero.{pallet_type}", "POST", "/api/inventory/tare/count", {"operation_id": f"{tag}.TARE.ZERO.{pallet_type}", "owner_ware_id": ware,
+            self.send(f"tare.zero.{pallet_type}", "POST", "/api/inventory/tare/count", self.fixture_value(f"tare.zero.{pallet_type}.body", lambda: {"operation_id": f"{tag}.TARE.ZERO.{pallet_type}", "owner_ware_id": ware,
                       "pallet_type_id": pallet_type, "condition": "GOOD", "observed_quantity": "0", "expected_version": current.get("balance_version") or 0,
-                      "reason": "C0190 retire isolated fixture container", "decision_reference": f"{tag}.END"})
+                      "reason": "C0190 retire isolated fixture container", "decision_reference": f"{tag}.END"}))
         if self.s.get("wave"):
             status = self.one("select STATUS from RRL_PICK_WAVE where PICK_WAVE_ID=:w", w=self.s["wave"])
             if status == "LAUNCHED":
                 self.post("wave.finish", "WAVE_EXECUTION_FINISH", {"disposition": "RETURNED_TO_PLANNING", "reason": "C0190 native return; demand remains"}, {"wave_id": self.s["wave"]})
             elif status not in ("CANCELLED", "DONE"):
                 self.post("wave.cancel", "WAVE_CANCEL", {"reason": "C0190 retire fixture"}, {"document_type": "PICK_WAVE", "document_id": self.s["wave"]})
+        if "native.count.zero" in self.journal.steps:
+            stored_count = json.loads(self.journal.steps["native.count.zero"]["wire"])
+            self.post("count.zero", "INVENTORY_COUNT", stored_count["metadata"], stored_count["source"])
         rows = self.read("select r.UID_POLETA,r.CELL,p.ARTICUL,r.BASE_UOM,r.STOCK_VERSION,r.REMAIN from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA "
                          "join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.REMAIN>0", w=ware)
         allowed = set(self.s.get("lots", {}).values()) | {uid for uids in self.s.get("carrier_lots", {}).values() for uid in uids}
         a = self.s.get("articles", {})
-        registered = {"kg": str(Decimal(self.s["measurements"]["manual_net_kg"]) * 2), "ea": str(int(EA_QTY) * 2)} if a else {}
-        expected = {a[role]: qty for role, qty in registered.items() if "native.register." + role in self.journal.results}  # only lots this run posted
+        expected_all = cleanup_expected_remainder(self.s)
+        expected = {article: expected_all[article] for role, article in a.items()
+                    if "native.register." + role in self.journal.results}  # only lots this run posted
+        if "native.count.zero" in self.journal.results:
+            expected = {}
         reservations = self.one("select count(*) from RRL_STOCK_RESERVATION r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w and r.STATUS in('ACTIVE','ALLOCATED','PICKING') and r.BASE_QTY>0", w=ware)
         own = [c["task"] for c in self.s.get("cases", {}).values()] or [-1]
         foreign_tasks = self.one("select count(*) from RRL_CASE_PICK_TASK where WARE_ID=:w and CASE_PICK_TASK_ID not in(" + ",".join(str(int(t)) for t in own) + ")", w=ware) + \
@@ -670,16 +905,21 @@ def main() -> int:
     ap.add_argument("--api-ready", help="path of the API_READY file for the target runtime")
     ap.add_argument("--parent-tare-kg", help="operator-measured empty parent pallet weight, kg")
     ap.add_argument("--manual-net-kg", help="operator-entered NET kg for the KG line (also its order quantity)")
+    ap.add_argument("--synthetic-measurements", action="store_true", help="software-only fixture values; not evidence of physical weighing")
+    ap.add_argument("--transport-inputs", help="UTF-8 JSON input for the C0191 one-recipient transport/store flow")
     ap.add_argument("--state", default=str(EVIDENCE / "mixed-tree.json"))
     args = ap.parse_args()
     if args.mode == "plan":
-        print(json.dumps({"stages": STAGES, "manual_route": MANUAL_ROUTE, "transport": "TRANSPORT_NOT_WIRED (stop after TREE)",
+        print(json.dumps({"stages": STAGES, "manual_route": MANUAL_ROUTE, "transport": "C0191 requires --transport-inputs after TREE",
                           "cleanup": cleanup_plan({"tree_attached": ["<case_kg>", "<case_ea>"], "case_tasks": ["<case_kg>", "<case_ea>"], "wave": 1,
                                                    "tare_bookings": ["<case_kg>", "<case_ea>"], "lots": 2})}, ensure_ascii=False, indent=1))
         return 0
     if not args.api:
         raise SystemExit("--api is required for preflight/run/cleanup")
     live = Live(args.api, Path(args.state))
+    if args.transport_inputs:
+        live.s["transport_inputs_file"] = str(Path(args.transport_inputs).resolve())
+        live.save()
     try:
         if args.mode == "cleanup":
             live.cleanup()

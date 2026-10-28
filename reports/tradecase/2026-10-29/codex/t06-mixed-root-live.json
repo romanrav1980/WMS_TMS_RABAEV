@@ -1,0 +1,97 @@
+{
+  "case": "T06 mixed root HU: KG CASE + EA CASE, one recipient, no split",
+  "status": "ACCEPTED_SYNTHETIC_FIXTURE",
+  "evidence_kind": "synthetic software fixture; not physical weighing or external integration",
+  "fixture": {
+    "tag": "MT289C802082F",
+    "warehouse": 235068494,
+    "root_identifier": "MT289C802082F.PAL",
+    "store_address": "QCF1.ADDR.f9734885e0"
+  },
+  "stages": [
+    "SHIPMENT",
+    "TRANSPORT_TASK",
+    "FLOOR_QC_TARE",
+    "LOAD",
+    "TARE_HANDOVER",
+    "DEPART",
+    "STORE_RECEIPT"
+  ],
+  "root": {
+    "top_places": 1,
+    "shipment_status": "SHIPPED",
+    "multi_order": true,
+    "load_operation": "MT289C802082F.LOAD"
+  },
+  "quality": {
+    "mode": "WEIGHT",
+    "origin": "MANUAL_CONFIRMED",
+    "gross_kg": "30.2",
+    "tare_kg": "20.0",
+    "net_kg": "10.2"
+  },
+  "receipt": {
+    "status": "ACCEPTED",
+    "mode": "PAPER_COUNT",
+    "root": "MT289C802082F.PAL",
+    "accepted_lines": [
+      {
+        "article": "MT289C802082FK",
+        "base_uom": "KG",
+        "shipped": "9.6",
+        "accepted": "9.6",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0"
+      },
+      {
+        "article": "MT289C802082FE",
+        "base_uom": "EA",
+        "shipped": "4",
+        "accepted": "4",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0"
+      }
+    ],
+    "warehouse_stock_consumed_again": false
+  },
+  "exact_replays": [
+    "pick.kg",
+    "pick.ea",
+    "attach.kg",
+    "t.load",
+    "t.depart",
+    "t.store.receipt"
+  ],
+  "migrations_applied": [
+    "2026-10-28-multi-order-root-hu-qc-status-fix",
+    "2026-10-28-multi-order-root-hu-qc-json-value-fix",
+    "2026-10-28-multi-order-root-hu-qc-assertion-json-fix",
+    "2026-10-29-multi-order-qc-controller",
+    "2026-10-29-multi-order-root-hu-compile-json-sql-fix",
+    "2026-10-29-multi-order-root-hu-execute-json-sql-fix"
+  ],
+  "oracle": {
+    "shipping_core_package": "VALID",
+    "shipping_core_body": "VALID",
+    "shipping_core_user_errors": 0
+  },
+  "performance": {
+    "api_calls": 38,
+    "slow_sql_rows": 2,
+    "max_slow_sql_ms": 596,
+    "decision": "Backlog PERF-T06-20261029: fulfillment owner profiles wave-launch continuation; transport owner profiles validated task edit. Each took 591?596 ms, but the slow log stores only operation labels, not attributable SQL. No index or rewrite is approved before a captured SQL statement and plan."
+  },
+  "store_receipt_concurrency": {
+    "tag": "MT289C802082F",
+    "operation_id": "MT289C802082F.STORE.RECEIPT",
+    "http_statuses": [
+      200,
+      200
+    ],
+    "responses_identical": true,
+    "receipt_fact_count": 1,
+    "result": "PASS"
+  }
+}

@@ -49,6 +49,8 @@ def validate_inputs(inputs: dict[str, Any]) -> list[str]:
             out.append(f"INPUT_REQUIRED:{key}")
     if not isinstance(inputs.get("pallet_type_id"), int) or inputs["pallet_type_id"] < 1:
         out.append("INPUT_REQUIRED:pallet_type_id")
+    if not (isinstance(inputs.get("transport_type_id"), str) and re.fullmatch(r"[0-9]{1,15}", inputs["transport_type_id"])):
+        out.append("INPUT_REQUIRED:transport_type_id")
     if not (isinstance(inputs.get("shipment_date"), str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", inputs["shipment_date"])):
         out.append("INPUT_REQUIRED:shipment_date")
     if not isinstance(inputs.get("store_policy_expected_version"), int) or inputs["store_policy_expected_version"] < 0:
@@ -60,9 +62,9 @@ def validate_inputs(inputs: dict[str, Any]) -> list[str]:
         if not (isinstance(m.get(key), str) and re.fullmatch(_NUM, m[key]) and Decimal(m[key]) > 0):
             out.append(f"INPUT_REQUIRED:root_measurements.{key}")
     qc = inputs.get("qc") or {}
-    if qc.get("mode") not in ("SCAN", "WEIGHT"):
+    if qc.get("mode") not in ("SCAN", "WEIGHT", "BOTH"):
         out.append("INPUT_REQUIRED:qc.mode")
-    if qc.get("mode") == "WEIGHT":
+    if qc.get("mode") in ("WEIGHT", "BOTH"):
         if qc.get("origin") not in ORIGINS:
             out.append("INPUT_REQUIRED:qc.origin")
         for key in ("gross_weight", "wood_weight"):
@@ -291,10 +293,10 @@ class MixedTreeTransport:
         live, i, base = self.live, self.inputs, "/api/admin/transport"
         if not live.read("select DOCK from RRL_TT_DOCK where DOCK=:d", d=i["dock"]):
             live.meta("insert into RRL_TT_DOCK(DOCK,WARE_ID,ORD,COUNT_OF_PALLETS,DOCK_IS_BLOCKED)values(:d,:w,1,10,0)", "select count(*) from RRL_TT_DOCK where DOCK=:d and WARE_ID=:w and ORD=1 and COUNT_OF_PALLETS=10 and DOCK_IS_BLOCKED=0", d=i["dock"], w=self.ware)
-        vehicle = live.send("t.vehicle", "POST", base + "/vehicles", {"num_plat": i["vehicle_number"], "transtype_id": "10", "max_weight_kg": 1000,
+        vehicle = live.send("t.vehicle", "POST", base + "/vehicles", {"num_plat": i["vehicle_number"], "transtype_id": i["transport_type_id"], "max_weight_kg": 1000,
                             "max_pallets": i["vehicle_geometry"]["max_places"], "sobstvennyy": True}, expect=(200, 201))
         driver = live.send("t.driver.v2", "POST", base + "/drivers", {"name": i["driver_name"], "license_number": f"C0191-{self.tag[-9:]}"}, expect=(200, 201))
-        task = live.send("t.task", "POST", base + "/tasks", {"transtype": "10", "shipment_date": i["shipment_date"]})
+        task = live.send("t.task", "POST", base + "/tasks", {"transtype": i["transport_type_id"], "shipment_date": i["shipment_date"]})
         self.t.update(vehicle_id=vehicle["id"], driver_id=driver["id"], transport_task_id=task["task_id"]); live.save()
         live.send("t.task.configure", "PATCH", f"{base}/tasks/{task['task_id']}", {"transport": i["vehicle_number"], "voditel_id": driver["id"], "dock": i["dock"],
                   "shipment_time": "10:00", "primechanie": evidence("SYNTHETIC_FIXTURE", self.tag, "TRIP")})
@@ -307,6 +309,24 @@ class MixedTreeTransport:
                   "floor_variants": [{"code": "QA_C0191", "limits": [{"pallet_type_id": i["pallet_type_id"], "max_places": g["max_places"]}]}],
                   "reason": "C0191 synthetic vehicle geometry", "evidence_reference": evidence("SYNTHETIC_FIXTURE", self.tag, "VEHICLE")})
 
+    def independent_qc_actor(self) -> str:
+        """Create one isolated controller only for the BOTH-control fixture; the picker remains admin."""
+        live = self.live
+        if "qc_user" not in self.t:
+            self.t["qc_user"] = "MT28Q" + uuid4().hex[:9]
+            live.save()
+        actor = self.t["qc_user"]
+        if not live.read("select ID from RUSERS where ID=:a", a=actor):
+            secret = secrets.token_hex(24)
+            self.t["qc_secret_set"] = True
+            with live.connect() as c:
+                q = c.cursor()
+                q.execute("insert into RUSERS(ID,PASS,NAME,USER_GROUP,WARE_ID,DELETED,PRAVO_ADMIN_LOGIN)values(:a,:p,'C0191 synthetic QC controller',:a,:w,0,1)", a=actor, p=secret, w=self.ware)
+                q.execute("insert into RIGHTS(USER_GROUP,RIGHT1)values(:a,'outgoing_pallet_check')", a=actor)
+                c.commit()
+            self.qc_secret = secret
+        return actor
+
     # -- FLOOR_QC_TARE: root physical floor type, outgoing quality of the ST, one held tare for the root --
     def floor_qc_tare(self) -> None:
         live, i = self.live, self.inputs
@@ -316,12 +336,23 @@ class MixedTreeTransport:
         st = self.t["st_pallet"]
         current = live.get("/api/outgoing-quality/" + st)
         qc = i["qc"]
-        if qc["mode"] == "SCAN":
-            live.send("t.qc", "POST", f"/api/outgoing-quality/{st}/scan", {"operation_id": f"{self.tag}.QC", "expected_composition_signature": current["composition_signature"],
-                      "error_count": 0, "scans": [], "item_scans": []})
-        else:
-            live.send("t.qc", "POST", f"/api/outgoing-quality/{st}/weight", {"operation_id": f"{self.tag}.QC", "expected_composition_signature": current["composition_signature"],
-                      "gross_weight": qc["gross_weight"], "wood_weight": qc["wood_weight"], "measurement_origin": "MANUAL_CONFIRMED", "note": evidence(qc["origin"], self.tag, "QC_WEIGHT")})
+        qc_actor = self.independent_qc_actor() if qc.get("independent_controller") is True else None
+        def send_qc(key: str, path: str, body: dict[str, Any]) -> Any:
+            return self.send_as(qc_actor, key, "POST", path, body) if qc_actor else live.send(key, "POST", path, body)
+        if qc["mode"] in ("SCAN", "BOTH"):
+            item_scans = [{"scan_id": f"{self.tag}.QC.ITEM.{role.upper()}", "barcode": barcode}
+                          for role, barcode in sorted((live.s.get("fixture_barcodes") or {}).items())]
+            if live.s.get("fixture_barcodes") and len(item_scans) != 2:
+                raise RunnerStop("QC_ITEM_BARCODES_REQUIRED")
+            scan_key = "t.qc.both.scan" if qc["mode"] == "BOTH" else "t.qc.independent.scan" if qc_actor else "t.qc"
+            scan_operation = f"{self.tag}.QC.BOTH.SCAN" if qc["mode"] == "BOTH" else f"{self.tag}.QC.IND.SCAN" if qc_actor else f"{self.tag}.QC"
+            send_qc(scan_key, f"/api/outgoing-quality/{st}/scan", {"operation_id": scan_operation,
+                    "expected_composition_signature": current["composition_signature"], "error_count": 0, "scans": [], "item_scans": item_scans})
+        if qc["mode"] in ("WEIGHT", "BOTH"):
+            weight_key = "t.qc.independent.weight" if qc_actor else "t.qc"
+            weight_operation = f"{self.tag}.QC.IND.WEIGHT" if qc_actor else f"{self.tag}.QC"
+            send_qc(weight_key, f"/api/outgoing-quality/{st}/weight", {"operation_id": weight_operation,
+                    "expected_composition_signature": current["composition_signature"], "quality_kind": "WEIGHT", "gross_weight": qc["gross_weight"], "wood_weight": qc["wood_weight"], "measurement_origin": "MANUAL_CONFIRMED", "note": evidence(qc["origin"], self.tag, "QC_WEIGHT")})
         booking = live.s.get("root_tare_booking")
         if booking != f"{self.tag}.ROOT.TARE.BOOK":
             raise RunnerStop("ROOT_HU_TARE_BOOKING_REQUIRED")
@@ -409,9 +440,10 @@ class MixedTreeTransport:
                                    a=receiver, p=self.receiver_secret, g=group); c.commit()
         live.send("t.receiver.group", "POST", "/api/admin/rights/groups", {"id": group, "name": "C0191 synthetic store receiver"}, expect=(200, 201))
         live.send("t.receiver.right", "POST", f"/api/admin/rights/groups/{group}/rights", {"right_name": "store_receipt_confirm", "description": "C0191 synthetic"}, expect=(200, 201))
-        live.send("t.receiver.assign", "POST", "/api/delivery/store-receipts/receivers", {"store_address": i["store_address"], "username": receiver})
+        # The recipient mapping is valid only after the store acceptance mode exists.
         live.send("t.store.policy", "PUT", "/api/delivery/store-receipts/policy", {"store_address": i["store_address"], "mode": "PAPER_COUNT",
                   "expected_version": i["store_policy_expected_version"]})
+        live.send("t.receiver.assign", "POST", "/api/delivery/store-receipts/receivers", {"store_address": i["store_address"], "username": receiver})
         import httpx
         from urllib.parse import urlencode
         secret = getattr(self, "receiver_secret", None) or live.one("select PASS from RUSERS where ID=:a", a=receiver)

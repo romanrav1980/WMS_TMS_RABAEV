@@ -1,0 +1,11 @@
+{
+  "tag": "MT289C802082F",
+  "operation_id": "MT289C802082F.STORE.RECEIPT",
+  "http_statuses": [
+    200,
+    200
+  ],
+  "responses_identical": true,
+  "receipt_fact_count": 1,
+  "result": "PASS"
+}
