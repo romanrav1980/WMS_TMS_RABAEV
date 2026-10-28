@@ -57,7 +57,8 @@ def test_incomplete_delivery_or_foreign_identifiers_stop_before_cleanup(change, 
 def test_plan_returns_tare_between_two_actors_finishes_the_wave_and_retires_only_run_users():
     assert cleanup.cleanup_plan(state()) == ["TARE_RETURN_OFFER:driver", "TARE_RETURN_ACCEPT:warehouse", "TARE_COUNT_ZERO:root", "DRIVER_BINDING_OFF",
                                              "WAVE_FINISH_EXECUTION", "VERIFY_OWN_STOCK_SCOPE", "INVENTORY_COUNT_OWN_LOTS_ZERO", "VERIFY_WAREHOUSE_EMPTY",
-                                             "STOP:RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER"]
+                                             "RIGHTS_PREFLIGHT", "RECEIVER_RIGHT_REMOVE:api", "DRIVER_RIGHTS_REMOVE:finalizer",
+                                             f"RETIRE_USER:{DRIVER}:finalizer", f"RETIRE_USER:{RECEIVER}:finalizer"]
     assert not any("DETACH" in step or "RETURN:" in step.replace("TARE_RETURN", "") for step in cleanup.cleanup_plan(state()))  # departed tree untouched
 
 
@@ -200,3 +201,137 @@ def test_resumed_cleanup_does_not_repeat_completed_steps(no_network):
     cleanup.run(live)
     keys = [k for k, *_ in live.sent]
     assert keys[:len(sent_before)] == sent_before and keys.count("c.tare.return.offer") == 1 and "c.wave.finish" in keys
+
+
+# ---------------- K-0234 finalizer: retirement through the real C0190 Live.finalizer_sql on a fake database ----------------
+
+_C0190 = importlib.util.spec_from_file_location("c0190_runner_for_c0192", Path(__file__).resolve().parents[2] / "scripts/c0190_mixed_tree_runner.py")
+c0190 = importlib.util.module_from_spec(_C0190)
+sys.modules["c0190_runner_for_c0192"] = c0190
+_C0190.loader.exec_module(c0190)  # pure import; the real finalizer_sql is exercised below without Oracle
+
+
+class FinalizerLive(c0190.Live):
+    """The real C0190 finalizer_sql/journal with an in-memory RUSERS/RIGHTS table and a recording API."""
+    def __init__(self, s, fail_after_commit=(), fail_before_commit=()):
+        self.s, self.journal, self.http = s, c0190.Journal(), "admin-client"
+        self.users = {DRIVER: 0, RECEIVER: 0, "admin": 0}
+        self.rights = {(DRIVER, r) for r in ("tare_accept", "tare_offer", "driver_return_accept")} | {(RECEIVER.upper(), "store_receipt_confirm"), ("OTHER", "tare_accept")}
+        self.api, self.sql = [], []
+        self.fail_after, self.fail_before = set(fail_after_commit), set(fail_before_commit)
+
+    def save(self):
+        pass
+
+    def send(self, key, method, path, body, expect=(200,)):
+        if key in self.journal.results:
+            return self.journal.results[key]["value"]
+        self.api.append(key)
+        group, right = path.split("/groups/")[1].split("/rights/")
+        self.rights.discard((group, right))
+        self.journal.results[key] = {"status": 200, "value": {}}
+        return {}
+
+    def read(self, sql, **b):
+        if "select RIGHT1 from RIGHTS where USER_GROUP=:g" in sql:
+            return [(r,) for g, r in sorted(self.rights) if g == b["g"]]
+        raise AssertionError(sql)
+
+    def one(self, sql, **b):
+        if "from RUSERS where ID=:a and nvl(DELETED,0)=0" in sql:
+            return int(self.users.get(b["a"], 1) == 0)
+        if "from RUSERS where ID=:a and DELETED=1" in sql:
+            return int(self.users.get(b["a"]) == 1)
+        if "RIGHT1=:r" in sql:
+            return int((b["g"], b["r"]) in self.rights)
+        if "case when count(*)=0" in sql:
+            return int(not any(g == b["g"] and r in ("tare_accept", "tare_offer", "driver_return_accept") for g, r in self.rights))
+        raise AssertionError(sql)
+
+    def connect(self):
+        live = self
+
+        class Conn:
+            def __enter__(self): return self
+            def __exit__(self, *e): return False
+            def cursor(self):
+                class Q:
+                    def execute(self, sql, binds):
+                        key = "rights" if sql.startswith("delete") else binds.get("a")
+                        if key in live.fail_before:
+                            live.fail_before.discard(key); raise RuntimeError("connection lost before commit")
+                        live.sql.append((sql.split()[0], dict(binds)))
+                        if sql.startswith("update"):
+                            live.users[binds["a"]] = 1
+                        else:
+                            live.rights = {(g, r) for g, r in live.rights if not (g == binds["g"] and r in ("tare_accept", "tare_offer", "driver_return_accept"))}
+                        live.pending = key
+                return Q()
+            def commit(self):
+                if live.pending in live.fail_after:
+                    live.fail_after.discard(live.pending); raise RuntimeError("reply lost after commit")
+        return Conn()
+
+
+def retiring_state():
+    s = state()
+    s["c0192"] = {"steps_done": ["tare_return", "tare_zero", "binding_off", "wave_finish", "own_stock_zero"]}  # safe stages already done
+    return s
+
+
+def test_finalizer_retires_exactly_the_run_users_and_rights():
+    live = FinalizerLive(retiring_state())
+    result = cleanup.run(live)
+    assert result["status"] == "CLEANED"
+    assert live.users == {DRIVER: 1, RECEIVER: 1, "admin": 0} and live.rights == {("OTHER", "tare_accept")}  # unrelated rows untouched
+    assert live.api == ["c.receiver.right.remove"] and [op for op, _ in live.sql] == ["delete", "update", "update"]
+    assert live.s["c0192"]["rights_preflight"]["driver_rights"] == ["driver_return_accept", "tare_accept", "tare_offer"]
+    assert "retire_pending" not in live.s["c0192"]
+
+
+def test_post_commit_failure_is_reconciled_without_a_second_mutation():
+    live = FinalizerLive(retiring_state(), fail_after_commit={DRIVER})
+    assert cleanup.run(live)["status"] == "CLEANED"
+    assert live.users[DRIVER] == 1 and [b.get("a") for op, b in live.sql if op == "update"] == [DRIVER, RECEIVER]
+    assert live.journal.results["finalizer.c0192.retire.driver_user"]["value"] == {"reconciled_after_error": True}
+
+
+def test_changed_finalizer_content_on_resume_is_refused():
+    live = FinalizerLive(retiring_state(), fail_before_commit={RECEIVER})
+    first = cleanup.run(live)
+    assert first["stopped"].startswith("UNKNOWN_OUTCOME")  # the receiver retirement outcome is unknown; journal blocked
+    live.s["transport"]["receiver_user"] = "MT28R0000000ff"  # a different (still synthetic-looking) identity for the same step
+    second = cleanup.run(live)
+    assert second["stopped"].startswith("STEP_CONTENT_CHANGED:finalizer.c0192.retire.receiver_user"), second
+    assert live.users[RECEIVER] == 0
+
+
+def test_foreign_user_is_refused_before_any_mutation():
+    s = retiring_state()
+    s["transport"]["receiver_user"] = "admin"
+    live = FinalizerLive(s)
+    result = cleanup.run(live)
+    assert result["stopped"].startswith("CLEANUP_REFUSED") and live.api == [] and live.sql == []
+    with pytest.raises(cleanup.CleanupStop, match="FOREIGN_USER_NOT_RETIRED"):
+        cleanup.retire_scope("admin")
+
+
+def test_unexpected_rights_stop_the_preflight_before_any_deletion():
+    live = FinalizerLive(retiring_state())
+    live.rights.add((DRIVER, "warehouse_task_execute"))
+    result = cleanup.run(live)
+    assert result["stopped"].startswith("DRIVER_RIGHTS_UNEXPECTED") and live.api == [] and live.sql == []
+
+
+def test_resume_after_completion_repeats_no_api_or_sql():
+    live = FinalizerLive(retiring_state())
+    cleanup.run(live)
+    api, sql = list(live.api), list(live.sql)
+    assert cleanup.run(live)["status"] == "CLEANED" and live.api == api and live.sql == sql
+
+
+def test_pre_existing_retired_state_is_not_taken_as_a_first_success():
+    live = FinalizerLive(retiring_state())
+    live.users[DRIVER] = 1  # already retired by someone else before this run's first execution
+    result = cleanup.run(live)
+    assert result["stopped"].startswith("SYNTHETIC_USER_NOT_ACTIVE") and live.sql == []

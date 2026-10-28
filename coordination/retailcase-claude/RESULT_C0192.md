@@ -56,3 +56,26 @@
 - **Cleanup is incomplete:** the synthetic driver/receiver and their rights remain until an owner finalizer exists.
 - **Tests: 24 passed.** New ones: after the safe steps the stop comes before any SQL (`connect` is not called, no rights API calls); a resume sends no completed command again (API, native post, replay).
 - gate, encoding and architecture PASS.
+
+## Finalizer K-0234 (final retirement within C0192)
+- **Retirement now runs** through the root-owned `Live.finalizer_sql` from C0190. The C0190/C0191 files are not changed. Without `finalizer_sql` the companion stops as before, with `RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER` and `retire_pending`.
+- **Steps** (progress saved after each one; the identifiers `MT28D|MT28R` + 9 hex are checked by `retire_scope` before every mutation):
+  1. `rights_preflight` (read only, before the first deletion; saved to the state):
+     - the driver's group has exactly `tare_accept/tare_offer/driver_return_accept`;
+     - the receiver's group has exactly `store_receipt_confirm`;
+     - both users are active.
+     - Otherwise `DRIVER_RIGHTS_UNEXPECTED` / `RECEIVER_RIGHTS_UNEXPECTED` / `SYNTHETIC_USER_NOT_ACTIVE`, before any change. A pre-existing "already retired" state is not taken as success.
+  2. `receiver_right_remove`: the journaled admin API `DELETE …/rights/store_receipt_confirm`, then a read-only check that the right is gone.
+  3. `driver_rights_remove`: `finalizer_sql` deletes exactly those three rights of the driver; verify = post-state "count=0 → 1", expected 1.
+  4. `retire_driver` and `retire_receiver`: `finalizer_sql` with `RUSERS.DELETED=1`; verify `DELETED=1 → 1`.
+- **Behaviour of `finalizer_sql`** (C0190): the exact SQL, binds and verification are saved before execution; on a first call a ready result is refused; after a post-commit failure the record is reconciled by verification; an unknown outcome blocks until the same command is repeated; changed content → `STEP_CONTENT_CHANGED`.
+- The safe delivery steps and the untouched historical tree are unchanged.
+- **Tests: 31 passed (+7)**, using the real C0190 `finalizer_sql` on an in-memory RUSERS/RIGHTS:
+  - normal retirement (unrelated rows untouched; one API call, delete + 2 updates);
+  - a post-commit failure is reconciled without a second mutation;
+  - a changed command on resume → `STEP_CONTENT_CHANGED`, and the user is not touched;
+  - a foreign user → refusal before mutations;
+  - extra rights → preflight stop before deletion;
+  - resume after completion with no API/SQL;
+  - a pre-existing retired state → stop.
+- gate, encoding and architecture PASS. No live runs.
