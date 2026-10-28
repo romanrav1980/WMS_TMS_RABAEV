@@ -57,7 +57,7 @@ def test_incomplete_delivery_or_foreign_identifiers_stop_before_cleanup(change, 
 def test_plan_returns_tare_between_two_actors_finishes_the_wave_and_retires_only_run_users():
     assert cleanup.cleanup_plan(state()) == ["TARE_RETURN_OFFER:driver", "TARE_RETURN_ACCEPT:warehouse", "TARE_COUNT_ZERO:root", "DRIVER_BINDING_OFF",
                                              "WAVE_FINISH_EXECUTION", "VERIFY_OWN_STOCK_SCOPE", "INVENTORY_COUNT_OWN_LOTS_ZERO", "VERIFY_WAREHOUSE_EMPTY",
-                                             "RECEIVER_RIGHT_REMOVE", f"RETIRE_USER:{DRIVER}", f"RETIRE_USER:{RECEIVER}"]
+                                             "STOP:RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER"]
     assert not any("DETACH" in step or "RETURN:" in step.replace("TARE_RETURN", "") for step in cleanup.cleanup_plan(state()))  # departed tree untouched
 
 
@@ -143,17 +143,30 @@ def no_network(monkeypatch):
     monkeypatch.setitem(sys.modules, "httpx", types.SimpleNamespace(Client=lambda auth, timeout: f"client:{auth[0]}"))
 
 
-def test_full_cleanup_sends_exact_journaled_commands_in_order(no_network):
+SAFE = ["tare_return", "tare_zero", "binding_off", "wave_finish", "own_stock_zero"]
+
+
+def test_safe_stages_complete_then_cleanup_stops_before_any_user_or_right_mutation(no_network):
     live = FakeLive(state())
     result = cleanup.run(live)
-    assert result["status"] == "CLEANED"
-    assert [k for k, *_ in live.sent] == ["c.tare.return.offer", "c.tare.return.accept", "c.tare.zero", "c.driver.binding.off", "c.wave.finish", "c.receiver.right.remove"]
+    assert result["stopped"].startswith("RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER") and result["steps"] == SAFE
+    assert "retire" not in live.s["c0192"]["steps_done"] and live.s["c0192"]["retire_pending"]["users"] == [DRIVER, RECEIVER]
+    assert live.sql == []  # no RUSERS/RIGHTS DML (and no connect at all)
+    assert [k for k, *_ in live.sent] == ["c.tare.return.offer", "c.tare.return.accept", "c.tare.zero", "c.driver.binding.off", "c.wave.finish"]  # no rights API either
     assert live.sent[0][4] == f"client:{DRIVER}" and live.sent[1][4] == "admin-client"  # two distinct actors
     assert live.sent[0][3]["from_kind"] == "VEHICLE" and live.sent[0][3]["to_kind"] == "WAREHOUSE"
     assert live.sent[2][3]["expected_version"] == 5 and live.sent[3][3] == {"user_id": DRIVER, "active": False, "expected_version": 1}
     assert live.sent[4][3] == {"operation_id": "MT28X.C.WAVE.FINISH"} and live.replays == ["c.wave.finish"]
     assert live.posts[0][1] == "INVENTORY_COUNT" and [c["uid"] for c in live.posts[0][2]["counts"]] == ["MT28X.LOT.K", "MT28X.LOT.E"]
-    assert [b["a"] for op, b in live.sql if op == "update"] == [DRIVER, RECEIVER]
+
+
+def test_resume_after_the_retire_stop_repeats_no_completed_command_and_stops_again(no_network):
+    live = FakeLive(state())
+    cleanup.run(live)
+    sent, posts, replays = list(live.sent), list(live.posts), list(live.replays)
+    result = cleanup.run(live)
+    assert result["stopped"].startswith("RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER")
+    assert live.sent == sent and live.posts == posts and live.replays == replays and live.sql == []
 
 
 def test_foreign_stock_stops_before_any_count_and_before_users_are_retired(no_network):

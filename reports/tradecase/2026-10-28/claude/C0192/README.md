@@ -2,7 +2,7 @@
 
 ## Files
 - `scripts/c0192_mixed_tree_cleanup.py`: `run(live)` on the C0190+C0191 Live state; no live work on import; C0190/C0191 not changed.
-- `tests/tradecase/test_c0192_mixed_tree_cleanup.py`: 23 offline tests.
+- `tests/tradecase/test_c0192_mixed_tree_cleanup.py`: 24 offline tests.
 
 ## When it starts (`delivery_findings`, otherwise a stop with nothing sent)
 - C0191 `STORE_RECEIPT` completed, and C0191 has no `stopped`;
@@ -24,7 +24,7 @@
 - The departed historical tree is not detached or returned (no such steps in the plan or the code).
 
 ## Checks (commands)
-- `python -m pytest -q -p no:cacheprovider tests/tradecase/test_c0192_mixed_tree_cleanup.py` → 23 passed:
+- `python -m pytest -q -p no:cacheprovider tests/tradecase/test_c0192_mixed_tree_cleanup.py` → 24 passed (after rework):
   - start conditions and 9 kinds of stops before cleanup;
   - plan order, with no detach;
   - no double tare zeroing;
@@ -48,3 +48,11 @@
   - for C0190's CASE pallet types, the tare is zeroed by C0190 cleanup when it matches the root type;
   - the two mistaken pre-integration ST bindings (ST 643008/643009) are Codex's work; the companion does not create or repair STs.
 - **Task encoding:** the first version of `TASK_C0192` arrived with Cyrillic replaced by `?`; the work was done against the English version of the file (28.10 08:21).
+
+## Rework K-0225 (same C0192)
+- **What changed:** `retire()` no longer performs direct `RUSERS`/`RIGHTS` DML or the rights API. Before retirement there is a stop **`RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER`**: there is no durable journaled finalizer with read-only reconciliation, and C0190 does not provide one.
+- **The `retire` step is not marked done.** What is left is recorded in the state as `c0192.retire_pending`: the users, the receiver group and the `store_receipt_confirm` right.
+- **Kept safe steps:** tare return, tare zero, binding off, wave finish, own stock zero. A resume does not repeat them and stops at the same place again.
+- **Cleanup is incomplete:** the synthetic driver/receiver and their rights remain until an owner finalizer exists.
+- **Tests: 24 passed.** New ones: after the safe steps the stop comes before any SQL (`connect` is not called, no rights API calls); a resume sends no completed command again (API, native post, replay).
+- gate, encoding and architecture PASS.

@@ -7,8 +7,8 @@ Runs only after complete delivery (C0191 STORE_RECEIPT done) on the C0190+C0191 
 3. the wave is finished through /api/picking/waves/{wave}/finish-execution (preview must be ready or completed);
 4. only this run's own lots remain (registered lots with the exact unpicked remainder, no active reservations, no foreign rows);
    they are counted to zero through the native INVENTORY_COUNT and the warehouse is verified empty;
-5. only this run's synthetic driver/receiver are retired: the receiver right through the supported admin API, the users and the
-   driver rights in the fixture tables (NS23 finish pattern).
+5. retirement of this run's synthetic driver/receiver/rights STOPS with RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER (K-0225): there is no
+   durable journaled finalizer for RUSERS/RIGHTS yet, so no user or right is changed and cleanup is reported incomplete.
 A departed historical tree is never detached or returned. Every mutation goes through the C0190 journal (stored before sending,
 the exact body and operation id repeated on resume, an unknown outcome blocks the rest). Importing this module does no live work.
 """
@@ -81,7 +81,7 @@ def cleanup_plan(state: dict[str, Any]) -> list[str]:
     t, plan = state["transport"], ["TARE_RETURN_OFFER:driver", "TARE_RETURN_ACCEPT:warehouse"]
     plan.append("TARE_COUNT_ZERO:root" if zero_root_tare_here(t, state.get("cases")) else "TARE_COUNT_ZERO:by_C0190_cleanup")
     plan += ["DRIVER_BINDING_OFF", "WAVE_FINISH_EXECUTION", "VERIFY_OWN_STOCK_SCOPE", "INVENTORY_COUNT_OWN_LOTS_ZERO", "VERIFY_WAREHOUSE_EMPTY",
-             "RECEIVER_RIGHT_REMOVE", f"RETIRE_USER:{t['driver_user']}", f"RETIRE_USER:{t['receiver_user']}"]
+             "STOP:RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER"]
     return plan
 
 
@@ -168,19 +168,12 @@ class MixedTreeCleanup:
         self.c["warehouse_final"] = {"remain": "0", "hard": "0"}; self.live.save()
 
     def retire(self) -> None:
-        driver, receiver = self.t["driver_user"], self.t["receiver_user"]
-        for actor in (driver, receiver):
-            if not SYNTHETIC_USER.fullmatch(actor):
-                raise CleanupStop(f"FOREIGN_USER_NOT_RETIRED:{actor}")
-        group = receiver.upper()
-        self.live.send("c.receiver.right.remove", "DELETE", f"/api/admin/rights/groups/{group}/rights/store_receipt_confirm", None, expect=(200, 204))
-        with self.live.connect() as c:
-            q = c.cursor()
-            for actor in (driver, receiver):
-                q.execute("update RUSERS set DELETED=1 where ID=:a", a=actor)
-            q.execute("delete from RIGHTS where USER_GROUP=:a", a=driver)  # the driver group is the driver id (NS23 pattern)
-            c.commit()
-        self.c["retired"] = {"users": [driver, receiver], "receiver_group_kept_empty": group}; self.live.save()
+        """K-0225: users, groups and rights are retired only through a durable, journaled owner finalizer with read-only reconciliation.
+        C0190 does not expose one, so the companion stops here before any user/right mutation; the safe stages stay completed."""
+        self.c["retire_pending"] = {"users": [self.t.get("driver_user"), self.t.get("receiver_user")], "receiver_group": (self.t.get("receiver_user") or "").upper(),
+                                    "right": "store_receipt_confirm", "reason": "no durable journaled finalizer for RUSERS/RIGHTS"}
+        self.live.save()
+        raise CleanupStop("RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER: cleanup incomplete; synthetic users/rights remain until the owner finalizer exists")
 
     def run(self) -> dict[str, Any]:
         findings = delivery_findings(self.s)
@@ -189,7 +182,7 @@ class MixedTreeCleanup:
         for name, fn in (("tare_return", self.tare_return), ("tare_zero", self.tare_zero), ("binding_off", self.binding_off),
                          ("wave_finish", self.wave_finish), ("own_stock_zero", self.own_stock_zero), ("retire", self.retire)):
             self.step(name, fn)
-        return {"status": "CLEANED", "warehouse": self.s["warehouse"], "steps": list(self.c["steps_done"])}
+        return {"status": "CLEANED", "warehouse": self.s["warehouse"], "steps": list(self.c["steps_done"])}  # not reached while retire() stops
 
 
 def run(live: Any) -> dict[str, Any]:
