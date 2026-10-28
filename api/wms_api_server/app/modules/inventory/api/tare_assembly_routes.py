@@ -22,6 +22,9 @@ class Book(BaseModel):
     load_recovery: LoadRecovery|None=None
     expected_warehouse_id: int|None=Field(default=None,strict=True,ge=1)
     pallet_type_id: int|None=Field(default=None,strict=True,ge=1)
+    expected_root_version: int|None=Field(default=None,strict=True,ge=0)
+    scan_place: str|None=Field(default=None,strict=True,min_length=1,max_length=200)
+    scan_cell: str|None=Field(default=None,strict=True,min_length=1,max_length=60)
 
     @model_validator(mode="after")
     def place_required(self) -> "Book":
@@ -29,6 +32,8 @@ class Book(BaseModel):
         if self.place_kind=="HU" and self.pallet_type_id is None:raise ValueError("Container requires actual pallet type")
         if self.place_kind=="CASE" and(not self.place_id.isascii() or not self.place_id.isdecimal() or int(self.place_id)<1):
             raise ValueError("CASE requires existing task number")
+        if self.place_kind=="CASE" and any(value is not None for value in (self.expected_root_version, self.scan_place, self.scan_cell)):
+            raise ValueError("Root scan fields apply only to HU")
         return self
 
 class Cancel(BaseModel):
@@ -44,6 +49,9 @@ def command(service: TarePort,kind: str,operation_id: str,source: dict[str,Any],
 def book(body: Book,user: AdminUser=Depends(require_permission("tare_plan")),service: TarePort=Depends(tare_service)) -> dict[str,Any]:
     metadata={"pallet_type_id":body.pallet_type_id}
     if body.expected_warehouse_id is not None:metadata["expected_warehouse_id"]=body.expected_warehouse_id
+    if body.expected_root_version is not None:metadata["expected_root_version"]=body.expected_root_version
+    if body.scan_place is not None:metadata["scan_place"]=body.scan_place
+    if body.scan_cell is not None:metadata["scan_cell"]=body.scan_cell
     if body.load_recovery is not None:metadata["load_recovery"]=body.load_recovery.model_dump()
     return command(service,"TARE_BOOK",body.operation_id,{"place_kind":body.place_kind,"place_id":body.place_id},metadata,user)
 

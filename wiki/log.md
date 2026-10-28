@@ -5626,3 +5626,8 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 - Принят commit `94655f28`: raw UI допускает привязку только верхнего `CONTAINER` с CASE, сохраняет точный запрос до POST и повторяет исходный `operation_id` при неопределённом результате.
 - Codex проверил `node --check wiki-raw/wms_admin_ui_reference/warehouse-hus.js` и `tests/retailcase/test_root_hu_shipment_bind.py`: 26 passed. UI обращается только к `/api/warehouse-hus/bind-shipment`; операций с отдельными CASE в нём нет.
 - Миграция multi-order root-HU не применена; отгрузка и подтверждение в магазине этим экраном не выполняются.
+
+## 2026-10-28 — Root-HU tare booking candidate
+
+- Added the live `RRL_STOCK_TARE_BOOK_CMD` baseline, preflight, rollback and verification scripts to `db/migrations/2026-10-28_root_hu_tare_scans/`; status is `NOT_APPLIED`.
+- Read-only Oracle preflight completed with zero errors. `tests/retailcase/test_root_hu_tare_book_scans.py`: 3 passed. No Oracle DDL or inventory write was made.

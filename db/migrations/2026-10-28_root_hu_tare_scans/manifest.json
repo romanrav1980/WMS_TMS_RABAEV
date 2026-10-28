@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-28-root-hu-tare-scans",
+  "status": "NOT_APPLIED",
+  "scope": "Bind an HU tare booking to the read root version, physical root scan and current cell scan",
+  "objects": [
+    "RRL_STOCK_TARE_BOOK_CMD"
+  ],
+  "live_gate": [
+    "commit migration source",
+    "explicit owner approval for Oracle DDL",
+    "isolated root HU booking, exact replay and rollback proof"
+  ]
+}

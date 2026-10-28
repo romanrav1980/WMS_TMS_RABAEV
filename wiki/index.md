@@ -127,3 +127,5 @@
 - 28.10 correction: Claude C0191 RELEASE K-0221 received; commit restored, root integrating. C0192 cleanup companion handed off; ACK pending. See [coordination prompt](../coordination/retailcase-claude/CODEX_WORK_PROMPT.md).
 
 - Current performance evidence: [[roadmap/tradecase_execution_20261019]] records the T10 timeline transport-window rewrite, its Oracle/API timing, and remaining concurrency work.
+
+- 2026-10-28: A second local, unapplied migration makes a root-HU tare booking bind to the scanned root, its current cell and composition version. Its read-only Oracle preflight passed; live DDL and replay/rollback evidence are still required.
