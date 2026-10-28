@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 38,
-  "used": 38,
+  "limit": 40,
+  "used": 52,
   "requests": [
     {
       "id": "C-0130",
@@ -291,6 +291,115 @@
       "status": "REGISTERED_BEFORE_DELIVERY",
       "delivery": "existing file channel",
       "authorization": "Owner latest instruction: jointly continue all sprints; one next large independent task"
+    },
+    {
+      "id": "C-0177",
+      "date": "2026-10-27",
+      "task": "T10: prevent overlapping operator/resource/equipment active sessions and verify bounded replay",
+      "authorization": "Owner: Claude is waiting; continue and finish all sprints jointly (2026-10-27)",
+      "status": "K0184 RELEASE f89236ba; Codex reviewed live evidence and reran 8/8 focused tests; T10 remains partial",
+      "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0178",
+      "date": "2026-10-27",
+      "task": "T08: fail closed on unknown pallet-place/stacking data; use confirmed vehicle profile limits only",
+      "authorization": "Owner: Claude is waiting; continue and finish all sprints jointly; prior explicit authorization to use Claude Code further",
+      "status": "K-0188 RELEASE; Codex reviewed code, Oracle evidence and 91 focused tests; accepted partial",
+      "delivery": "existing file channel"
+    },
+    {
+      "id": "C-0179",
+      "task": "T08: explain fail-closed pallet-place/stacking capacity result in the operator screen",
+      "registered_at": "2026-10-27T00:00:00+03:00",
+      "status": "K-0190 RELEASE; Codex quality gate and UI/code review passed; accepted partial",
+      "delivery": "existing file channel",
+      "authorization": "Owner 2026-10-27: Claude is waiting; continue and finish all sprints jointly"
+    },
+    {
+      "id": "C-0180",
+      "task": "T10: implement yard dock blocked-status UI against agreed native API contract",
+      "registered_at": "2026-10-27T00:00:00+03:00",
+      "status": "K-0195 RELEASE; live UI/API check passed at 1440/390; one negative-rights case remains untested",
+      "delivery": "existing file channel",
+      "authorization": "Owner 2026-10-27: Claude is waiting; continue all sprints jointly"
+    },
+    {
+      "id": "C-0181",
+      "task": "T10: verify and close resource Gantt UI coverage for pickers, docks, vehicles and reach trucks against live read-only data",
+      "registered_at": "2026-10-27T17:20:00+03:00",
+      "status": "REGISTERED_BEFORE_DELIVERY; ACK pending",
+      "delivery": "existing file channel",
+      "authorization": "Owner 2026-10-27: keep Claude loaded with parallel tasks and finish all sprints early"
+    },
+    {
+      "id": "C-0184",
+      "task": "T10 read-only resource Gantt API load and SQL latency profile",
+      "registered_at": "2026-10-27T22:17:00+03:00",
+      "status": "RESULT + RELEASE K-0204 reviewed and accepted; no code change, bounded backlog recorded",
+      "delivery": "existing file channel",
+      "deadline": "2026-10-28T00:00:00+03:00"
+    },
+    {
+      "id": "C-0185",
+      "task": "T10 live UI proof that a blocked dock refuses a plan, using an owned temporary visit with cleanup",
+      "registered_at": "2026-10-27T22:25:00+03:00",
+      "status": "REGISTERED ? awaiting ACK",
+      "delivery": "existing file channel",
+      "deadline": "2026-10-28T00:00:00+03:00"
+    },
+    {
+      "id": "C-0186",
+      "task": "T10: fix the reproduced 390px clipped shared help tooltip and add responsive regression coverage",
+      "registered_at": "2026-10-27T22:39:00+03:00",
+      "status": "REGISTERED; awaiting ACK",
+      "delivery": "existing file channel",
+      "deadline": "2026-10-27T24:00:00+03:00"
+    },
+    {
+      "id": "C-0187",
+      "task": "T06: test weighted CASE stock posting and review mixed HU-tree support",
+      "registered_at": "2026-10-27T23:15:00+03:00",
+      "status": "REGISTERED; awaiting ACK",
+      "delivery": "existing file channel",
+      "deadline": "2026-10-27T24:00:00+03:00"
+    },
+    {
+      "id": "C-0188",
+      "task": "T06: assess and, only if an existing authoritative native path permits it, implement manual NET entry for weighted CASE lines",
+      "registered_at": "2026-10-28T00:12:00+03:00",
+      "status": "RESULT + RELEASE K-0212; root independently ran 57 focused tests and RETAILCASE quality gate; live API/Oracle acceptance remains open",
+      "delivery": "existing file channel",
+      "deadline": "until review or project stop"
+    },
+    {
+      "id": "C-0189",
+      "task": "T06: integrate manual NET KG entry into the existing CASE picker static UI and operator help",
+      "registered_at": "2026-10-28T00:38:00+03:00",
+      "status": "ACK K-0213 received; review delivered; new writes observed in owned UI files; RESULT pending",
+      "delivery": "existing file channel",
+      "deadline": "until review or project stop"
+    },
+    {
+      "id": "C-0191",
+      "date": "2026-10-28",
+      "status": "REGISTERED_BEFORE_DELIVERY",
+      "task": "T06/T07 mixed CASE transport and single-recipient store receipt adapter",
+      "authorization": "Current owner goal: coordinate two Claude requests"
+    },
+    {
+      "id": "C-0192",
+      "date": "2026-10-28",
+      "status": "REGISTERED_BEFORE_DELIVERY",
+      "task": "C0191 independent cleanup companion; no live writes"
+    },
+    {
+      "id": "C-0197",
+      "task": "Raw WMS UI for binding one intact root HU to one prepared ST",
+      "registered_at": "2026-10-28T21:50:00+03:00",
+      "status": "ASSIGNED; ACK pending",
+      "delivery": "existing file channel",
+      "scope": "UI/help only; no tests, backend, Oracle, API calls or GitHub"
     }
   ],
   "additional_grants": [
@@ -593,6 +702,152 @@
       "used": 1,
       "request_ids": [
         "C-0175"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: Claude is waiting; continue and finish all sprints jointly",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0177"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: Claude is waiting; continue all sprints jointly; prior explicit authorization to use Claude Code further",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0178"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: подключай Claude, он простаивает; continue jointly and finish all sprints",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0179"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: подключай Claude, он простаивает; continue and complete sprint work",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0180"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: Claude простаивает; загружай его задачами, чтобы завершить спринты досрочно",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0181"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: выполняй спринты до завершения; прежние поручения прямо разрешили загружать ожидающего Claude Code дополнительными независимыми задачами",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0182"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: continue implementing until the sprints are complete; earlier direct instruction asks Codex to keep Claude Code loaded with useful independent sprint work",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0183"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner explicitly allowed further Claude Code work while completing all sprints.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0184"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner: complete all sprints; explicit authorization to use Claude Code for additional independent work.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0185"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner explicitly asked to keep Claude Code loaded with additional work while finishing all sprints.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0186"
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "authorization": "Owner explicitly asked to keep Claude Code loaded with additional sprint work.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0187"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "authorization": "Owner: close all sprints; prior explicit authorization permits parallel Claude Code work.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0188"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "authorization": "Owner: close all sprints; current instruction continues Claude delegation; one UI completion block follows accepted C0188 backend.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0189"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "authorization": "Owner: close all sprints; prior explicit authorization permits assigning Claude independent sprint work.",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0190"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "authorization": "Current owner goal explicitly allocates two Claude requests",
+      "limit": 2,
+      "used": 2,
+      "request_ids": [
+        "C-0191",
+        "C-0192"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "authorization": "Owner: work with Claude through the existing file channel; deliver independent large blocks while Codex works separately",
+      "allocation_basis": "C0193 native root-HU binding was discovered as the required supported replacement for the rejected aggregate shipment bind",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0193"
       ]
     }
   ]

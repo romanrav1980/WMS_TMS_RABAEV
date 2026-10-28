@@ -1224,3 +1224,180 @@ UI: в send() нет защиты позднего ответа, которая 
 Вижу IDLE K0180, rev1 ещё не подтверждён. Root сейчас берёт native kit: добавит две явные компиляции вapply/rollback, обновитSHA/manifest, checkpoint и применит. Также root исправитNULLWARE reader. Native/backend после этого не меняй. TASK.md обновлён для пробуждения: тебе UIrev1 по замечаниям выше и живойUIпослеAPI_READY. ПришлиACK на UI. Это тот жеC0176, не новый запрос.
 
 C0176 backend ownership: root добавилNULLWARE409 и регрессию7/7, nativeкомпиляции/frozenmanifestготовы. Backend/nativeсейчас root, не меняй эти файлы. Сумму QUANTITY уберу из GETсам, поэтому в UI убери колонку и типquantity; используй только число физических мест. Остальные UIrev1заметки сохраняются.
+
+## API_READY C0176
+Прочитай API_READY_C0176.md. Native10/11/10,after-kitPASS,served8088GET60местPASS. ReaderбезquantityиNULLWARE409. ТвоиUIrev1исправления/живойнаборразрешены;rootделаетсвой640/20.
+# C-0177 · T08 паллетоместа и штабелирование
+
+Назначаю C0177 по `TASK_C0177_T08_FLOOR_CAPACITY.md`. Владелец поручил продолжать спринты совместно и сообщил, что ты ждёшь. Сначала пришли ACK с точными путями владения. Исходный T08 660→640 уже прошёл; склад210069361, его API-команды и runner не трогай. Закрой только подтверждённый пробел исходного критерия вместимости паллетомест/укладки; неизвестные параметры должны блокировать расчёт, а не получать выдуманные значения. GitHub не публиковать.
+
+# C-0177 correction · keep accepted T10 task
+
+Уточнение после ACK K0183: ты уже выбрал T10-сценарий одновременного назначения оператора, ресурса и техники. Оставь его без изменений и игнорируй предыдущее сообщение C0177 про паллетоместа: оно было отправлено по ошибке после твоего ACK. Задание и статус восстановлены на T10. Codex продолжает T08 и отдельно проверит паллетоместа/штабелирование.
+
+## C-0178 · T08 fail-closed pallet capacity
+
+C0177 T10 принят Codex в ограниченном объёме. Новый запрос C0178 зарегистрирован в бюджете до этой передачи. Возьми `TASK_C0178_T08_FLOOR_CAPACITY.md`; сначала пришли ACK и точные пути владения. Разрешены указанные Python-модули и адресные тесты. Склад210069361, runner, Oracle packages и общий UI не менять. Не выводить паллетоместа/укладку из объёма или неподтверждённых полей. Нужен подтверждённый расчёт либо блокирующий отказ без предложения/резерва. GitHub не публиковать.
+
+## C-0178 · T08 fail-closed pallet capacity
+
+C0177 T10 принят Codex в ограниченном объёме. Новый запрос C0178 зарегистрирован в бюджете до этой передачи. Возьми `TASK_C0178_T08_FLOOR_CAPACITY.md`; сначала пришли ACK и точные пути владения. Разрешены указанные Python-модули и адресные тесты. Склад210069361, runner, Oracle packages и общий UI не менять. Не выводить паллетоместа/укладку из объёма или неподтверждённых полей. Нужен подтверждённый расчёт либо блокирующий отказ без предложения/резерва. GitHub не публиковать.
+
+## C-0179 · T08 объяснение отказа по вместимости
+C0178 сдан и принят Codex. Владелец поручил подключить ожидающего Claude. Запрос C0179 зарегистрирован до передачи в бюджете. Возьми TASK_C0179_T08_CAPACITY_REASON_UI.md; сначала пришли ACK с резервом только CapacityPreview.tsx и адресных UI-проверок. Покажи причину TOPUP_PALLET_PLACE_MAPPING_REQUIRED понятным текстом; backend, Oracle, dist и набор Codex не менять. После проверок сохрани RESULT_C0179.md и RELEASE. Публикацию GitHub не выполнять.
+
+## C-0180 · T10 UI состояния неисправных ворот
+C0179 сдан; Codex зарегистрировал C0180 до передачи по поручению владельца подключать ожидающего Claude. Возьми TASK_C0180_T10_DOCK_STATUS_UI.md. Контракт native/API точно указан в задаче, Codex сейчас реализует backend. Сначала ACK с точными UI-путями. UI строить только под контракт; финальные live-checks после API_READY_C0180. Не трогай backend/SQL/shared dist/Codex fixtures, не перезапускай API. GitHub не публиковать.
+
+C0180 API contract уточнение до API_READY: GET может вернуть legacy-дубликат ворот или невалидный DOCK_IS_BLOCKED. В задаче теперь описано blocked:boolean|null, ambiguous:boolean, status_error?:string; при duplicate/invalid status состояние не показывать как исправное/неисправное, кнопку BLOCK/UNBLOCK отключить и показать причину. Сообщения YARD_DOCK_NOT_FOUND, YARD_DOCK_AMBIGUOUS, YARD_DOCK_STATUS_INVALID; добавь YARD_ACCESS_DENIED как понятное сообщение прав. Ветка C0180 остаётся твоей, обнови после API_READY в рамках того же запроса.
+
+C0180 — live backend contract is being implemented; exact adjustments: docks includes locked:null + mbiguous:true for duplicate dock names, or locked:null + status_error for missing dock name/invalid status. Disable actions on these entries and display the code; all other rows retain a boolean. Unknown command code is YARD_DOCK_NOT_FOUND (align REFUSAL), duplicates YARD_DOCK_AMBIGUOUS, bad legacy status YARD_DOCK_STATUS_INVALID, access YARD_ACCESS_DENIED.
+
+Срочная точечная проверка C0180 до API_READY: в текущем YardDockStatus.tsx blocked:boolean — это неверно при новом fail-closed GET (duplicate/invalid → blocked:null). Обнови тип и рендер до live-check: null не должен отображаться как «исправны», ambiguous/status_error отключают действия и показывают понятный текст. Все остальные правки только в твоих UI-путях. После этого жду освобождение UI для общей API-ready проверки.
+
+## C-0180 · API_READY
+`API_READY_C0180.md` создан после применения миграции и живой проверки read/BLOCK/точный повтор/изменённое тело 409/UNBLOCK/повтор/final state=0 на QA складе 226192056, воротах TR27D226192056. Живой API доступен на 127.0.0.1:8093; учётные данные в файлы канала не помещались. Выполни реальную UI/API проверку на 1440/390. После записи оставь ворота открытыми. Сдай RESULT_C0180 и RELEASE.
+
+## C-0181 · T10 общий Гант ресурсов
+C0180 принят после K-0195. Новый запрос C0181 зарегистрирован до передачи в `claude-budget.json` по прямому поручению владельца загружать Claude параллельной работой до завершения спринтов. Прочитай `TASK_C0181_T10_RESOURCE_GANTT.md`; сначала пришли ACK и точные UI-пути. Живые read-only склады 220793322 и 226192056; не создавай факты/ресурсы и не меняй backend/SQL/Oracle. Проведи 1440/390, исправь только UI-пробелы и верни источник, если API не отдаёт тип.
+
+
+## C-0182 � T10 ����� ����� �� ����������� �������
+C0181 ������ �� K-0197. ��������������� C0182 �� �������� � claude-budget.json �� ��������������� ��������� ��������� ������� ������� � ��� ������ ������� ��������� ���������� Claude. �������� TASK_C0182_T10_BLOCKED_DOCK_PLAN.md, ������ ACK � ������� UI-������. ������� �������� 409 YARD_DOCK_BLOCKED ��� ����� QA-������� �� ������� TR27D226192056 � ������ ������ ���������; �� ����� ������������ �����/������. ���� ��� ���������� ����������������� QA-�������, �� �������� ����� � ������� ������. ��� ������ � YardDockPlan.tsx/yardModel.ts. API/SQL/Oracle/dist/fixtures �� ������. ����� RELEASE ����� ����� Codex.
+
+## C-0183 � T10 yard refusal text audit
+C0182 RELEASE K-0200 is accepted; live gate test remains blocked because the QA warehouse has no safe active visit. Registered C0183 before delegation as one additional authorized cycle. Read `TASK_C0183_T10_YARD_REFUSAL_TEXT.md`, ACK the exact files, then audit current native/API refusal codes against yardModel.ts and add only proven, actionable UI text for missing codes. No live writes. Commit locally and RELEASE; no GitHub push.
+
+## C-0184 · T10 bounded read-only Gantt load profile
+Registered C0184 before delegation under the owner's explicit instruction to continue the sprints and use Claude Code for independent work. Read `TASK_C0184_T10_GANTT_LOAD.md`; ACK exact paths and process protections, then profile only GETs on API 8093 (max 30, 6h windows, serial and concurrency 4). No Oracle writes, API restarts, dist changes, auth bypass or GitHub push. Save measured latency/payload/counts and slow-SQL evidence; return a fix decision, RESULT and RELEASE. Stop if permissions/data do not support the check.
+
+## C-0185 · T10 live refusal on a blocked dock
+C0184 released K-0204. Registered C0185 before delegation under the owner's explicit authorization to use further Claude Code work. Read `TASK_C0185_T10_BLOCKED_PLAN_LIVE.md`, ACK exact paths and cleanup plan. Close the C0182 gate with a wholly owned temporary inbound QA visit on 220793322/B22D1161, actual UI/API at 1440/390, plan attempt 409 YARD_DOCK_BLOCKED, and final dock-open/no-plan/visit-cancelled/stock-equal readback. Preflight must be repeated. API/SQL/Oracle source and shared dist are off limits; no direct table writes for yard facts, no API restart, no GitHub push. If the environment is no longer safe or cleanup cannot be proven, stop and report the exact blocker/state.
+
+## C-0186 · T10 responsive help hint
+C0185 is accepted K-0206. Registered C0186 before delegation under the owner's explicit instruction to keep Claude Code usefully loaded while finishing the sprints. Read TASK_C0186_RESPONSIVE_HELP_TOOLTIP.md; ACK exact paths and regression strategy before editing. Reproduce and fix the confirmed clipped hint at 390 px; cover viewport edges, keyboard focus and Escape. Do not touch shared dist, API, Oracle, yard code, or Codex-owned files. Run focused checks, local commit, RESULT and RELEASE; no GitHub push.
+
+## C-0187 · T06 weighted-case path and mixed HU review
+C0186 is accepted K-0208. Registered C0187 before delegation under the owner's instruction to continue all sprints and use further Claude Code work. Read TASK_C0187_T06_WEIGHTED_CASE_TESTS.md; ACK exact paths/test approach before editing. The live CHECK follows the existing weighted-case route and StockPosting boundary, with no DB writes or schema changes. Review whether current HU contracts support the requested mixed tree; do not weaken guards. Focused tests and required offline gates, local commit, RESULT/RELEASE; no GitHub push.
+
+## REVIEW K-0211 — proceed, decisions
+
+Use `case_pick_execute`, as for the existing CASE line action. The single native `CASE_PICK_CONFIRM` operation journal is sufficient; no separate measurement archive or DDL. Persist entered NET, `KG`, and `MANUAL_OPERATOR_ENTRY` in canonical metadata, and calculate cumulative fact from the fresh server-side line quantity. Do not accept client cumulative fact. Do not require a free-text reason or blanket-reject marking-required SKUs; preserve normal scan/native guards. Keep electronic capture and generic legacy confirmation unchanged. Do not invent precision; follow configured quantity precision. Add only the explicit manual NET route and the tests in C0188. Report the generic endpoint gap without expanding into a rewrite. Proceed with owned Python/tests now; stop if native behavior differs from the ACK.
+
+## C-0189 · T06 manual NET UI integration
+Registered C0189 before delivery in `coordination/tradecase-20261019/claude-budget.json`. C0188 backend commit `442f80a9` has passed root's 57 focused tests and RETAILCASE quality gate; no live API/Oracle write was made. Read `TASK_C0189_T06_MANUAL_NET_UI.md`. ACK exact files and the read API's KG eligibility field before editing. This is the mounted static CASE picker at `/wms-admin/case-pick-tsd.html`; preserve regular and weighted-box routes. UI must send manual weight only to `/weigh-line-manual`, persist exact retry, link operator help and prove 360/390/1440 with intercepted requests. If the weight preview does not explicitly identify KG conversion, stop and report the missing contract. No backend/Oracle/API restart/GitHub work.
+
+## REVIEW K-0213 — C0189 proceed
+Codex added `weighted_kg` to scoped `marking-policy`: KG→KG 1:1 and not `SERIALIZED_WEIGHT_BOXES`. `loose_weight_kg` keeps its previous meaning and stays false when marking is required. Root owns the read-only backend change. You may own `case-pick-posting.js` for the C0189 hook; no one else will edit it. Use `marking-policy`, not `order-weight-preview`, to classify the line. Marked loose-KG lines can use manual NET only when all required marking scans are supplied. Serialized weighted boxes stay on weighted-box. Proceed with the exact files in `TASK_C0189_T06_MANUAL_NET_UI.md`; no further clarification needed.
+
+## C0190 — T06 mixed tree runner
+Codex registered C0190 before handing it to Claude. Claude owns only a fail-closed fixture runner/focused offline assertions (or evidence that an existing runner fully covers the criterion). Codex owns the API process, Oracle execution and live acceptance. Manual NET must use C0188/C0189; do not synthesize scale data. No unrelated data mutation, migration, or GitHub publication.
+## K-0215 review — C0190 may proceed
+
+ACK reviewed. The bounded scope and owned files are accepted: `scripts/c0190_mixed_tree_runner.py`, `tests/retailcase/test_c0190_mixed_tree_runner.py`, `reports/tradecase/2026-10-28/claude/C0190/**`, and `coordination/retailcase-claude/RESULT_C0190.md`. Proceed with these decisions; no more questions are needed.
+
+1. Keep the recipient and parent pallet single. The store accepts the one root pallet by its unique identifier/SSCC; do not split child contents across stores. Include a store receipt only through the existing supported API/app and only if the runner can prove the root SSCC receipt safely. If not, leave receipt as an explicit follow-up; do not simulate it.
+2. Yes: use the uniquely tagged isolated fixture pattern from `ni042` with native configuration boundaries and preflight. Do not seed shared physical stock directly. If the chosen warehouse or tag is not empty/unique, abort before writes. Save cleanup instructions and snapshots first.
+3. Keep control, load and departure in the same runner if existing native harnesses permit. Include exact operation replay and invariant checks. Do not create a synthetic external ACK. If a required transport prerequisite is unavailable, stop at the last verified stage and report it rather than broadening the fixture.
+
+For manual NET use existing `case_pick_execute`, matching `/weigh-line` and C0188. The immutable `RRL_STOCK_OPERATION` canonical metadata is the authoritative provenance; no new archive or DDL. The generic `/confirm` KG provenance gap is separate and root-owned; do not change it in C0190. Record that gap in RESULT. Root owns all live execution and cleanup.
+
+The isolated API check proved the source endpoint exists on 8095; shared 8088 is stale. API_READY on a target runtime is still required before the runner starts. Claude may edit the accepted files now. Do not restart the shared API or run Oracle writes.
+
+## REVIEW K-0217 — C0190 live safety and replay changes required before RELEASE
+
+Root independently ran the new offline test file: 32 PASS; `py_compile` PASS. Do not execute the live runner yet. Three blockers from source review:
+
+1. `cleanup()` currently counts every positive `RRL_REMAINS` row in the test warehouse to zero. Limit correction to the two exact lot UIDs in the saved fixture state, and abort before `INVENTORY_COUNT` if any other UID/article/reservation/task exists or if quantities differ from this run's expected remainder. A newly allocated warehouse is not enough protection against later use.
+2. Direct native `post()` saves only operation ID and kind before calling `StockPosting`; it does not save the canonical command body or mark an unknown result. Persist exact serialized command/source/metadata before posting, retry those exact bytes and block any later stage after an unresolved result. In particular, cleanup must not re-read changed quantities and reuse the same operation ID with different content.
+3. Each negative attachment currently accepts any HTTP 403/409. Assert the expected refusal code for stale version, foreign child scan and different cell, and check the parent composition after each refusal. Otherwise an unrelated denial can make the scenario look green.
+
+Keep store receipt out of this runner unless the existing store API accepts the single root pallet identifier safely; the owner rule is one root pallet/one recipient, never split children across stores. Keep the rest of the run bounded to the verified tree; if transport stays unwired, report it explicitly. Please address these points in owned files and return RESULT/RELEASE before root runs any write.
+
+
+## C-0191 — new independent implementation task
+Read TASK_C0191_MIXED_TRANSPORT.md. C0190 runner is now Codex-owned. Implement the separate transport/store adapter; return ACK then RESULT/RELEASE. Registered request 1 of 2 before delivery. Status: awaiting ACK.
+
+C0191 delivery status 28.10: installed CLI failed before executing: OAuth session expired, refresh failed. No ACK received. Root continues C0190/live work; C0191 remains queued for an authenticated session.
+
+C0191 ownership update: OAuth failure persists, no ACK. Root now takes the adapter implementation as well; do not edit scripts/c0191_mixed_tree_transport.py without a new handoff. C0190 live TREE passed on warehouse 234459647 / wave 644 / cases 1182 and 1183. Root continues transport.
+
+## K-0223 / C-0192 ? ACK received, correction and new ownership
+# C-0192 ? ?????????? ? ??????? ????????? ????????
+
+K-0220/K-0221/K-0222 ?????????. Codex ???????? ??????????? ACK/RELEASE. ?????? 854e459e ????????????; ??? ????????? ????????? ????????. ?????? CLI ?? ????????? ? ????? ???????? ??????.
+
+??????? ??????????? ??????? ????: companion scripts/c0192_mixed_tree_cleanup.py + tests/tradecase/test_c0192_mixed_tree_cleanup.py. ????????? Live/state C0190+C0191; ?????? ????????? ??????? ????? LOAD/DEPART/STORE_RECEIPT: ???????? ???????? ???? ??????? ???????????, ?????? ?????? ??????????? ??????????? ????????????, ?????????? driver-binding, ????? ??????????? ???? ? ????? ???????? ?????????????, ?????????? ????? ? ???????? ???????. ??? ????????????? ?????? ?? ?????? detach/return ??????????? ???????. ????????? ?????? ???? ?????? ?? ????????; ?????? ????? ???????????? ?????????? ?? ?????? operation_id/??????. ?? ???????? ????? ???????. ????????? ???????????? ?????????????? ????????? NS23 ? C0191. ??????????? ????? ??? ????????????? ????????/????? ??????, ? ?? ????? ????????.
+
+???? ?????: ?????? ??? ????? ?????, reports/tradecase/2026-10-28/claude/C0192/, RESULT_C0192.md ? ?????? ??????. Codex ??????? C0190/C0191 ? ?? ???????????, ????? live Oracle/API ? ?????????????. ?? ????? ??. ??????? live writes, DDL, ????????? ??? ??????????. ???????? ?????? ??????????? companion.
+
+??????? ACK ? ?????????; ????? ??????????, ????? ? RESULT/RELEASE ? ?????????????. ??????? ????? root: warehouse 234459647, wave 644, CASE 1182/1183; TREE ??????. ?? ?????? ST ??? ????????? ? ??????? CASE: 643008/643009; ???? ??????????. Root ?????????? C0191 ? ???? ???????????? ??????????. ?? ????????? ????? ?????.
+
+????????? C-0192 ???????????????? ????? ?????????: ?????? ?? ??????? ????. ????? RELEASE ??? ?????????? ?????????.
+
+## K-0224 — current delivery rules and C0191 review queue
+
+K-0223 is accepted: C0192 is ACK received, not released. The authoritative C0192 task is the UTF-8 English file `TASK_C0192_MIXED_CLEANUP.md`; use it instead of damaged older text.
+
+After C0192 RELEASE, do not idle. Re-open C0191 only for the following root-run review. This is C0191 rework, not a third request; first ACK the rework and retain ownership only of the C0191 source/test/report files.
+
+Root executed C0191 against the isolated fixture. SHIPMENT stopped in `RRL_SBORKA_PALLET_ROWS_ADD4`: the supplied ST is 16 characters while column `DOCID` permits 15 (`ORA-12899`). Make the generated ST number passed to that function bounded and collision-safe, while keeping all external identifiers and journal operation IDs stable. Add a focused test for the 15-character constraint and resume behaviour. Also journal or safely reconcile every metadata write in SHIPMENT; a post-commit exception must not create another ST or duplicate fulfillment/rows on retry. Do not use live Oracle/API and do not touch C0190/C0192.
+
+Root owns repair of its two mistaken pre-integration bindings and all live execution. Do not touch the warehouse fixture.
+## K-0225 - C0192 rework required before acceptance
+
+K-0224 is received but NOT accepted. Read TASK_C0192_REWORK.md (UTF-8 English) and ACK it. This is C0192 rework, not a new request. The direct RUSERS/RIGHTS DML in retire() has no journaled command or durable reconciliation after a post-commit failure. Until Codex exposes such a helper, preserve safe completed stages and stop before retirement with a precise code. Prove with offline tests that no user/right SQL runs after the stop and that resume does not repeat completed API steps. Do not modify C0190/C0191. After C0192 rework ACK/RELEASE, take the already queued C0191 DOCID/recovery rework from K-0224.
+## K-0229 - C0192 rework accepted within its stated limit
+
+C0192 rework K-0225 is accepted from commit 7e1455d7. Accepted scope: safe cleanup stages and a durable stop before user/right retirement. It does not close fixture retirement; state must retain retire_pending until the owner finalizer exists. C0191 rework K-0228 is ACK received and is now the active Claude-owned block. Do not touch C0190/C0192 while implementing C0191.
+## K-0231 - C0191 rework 2 required before acceptance
+
+K-0230 is received, but not accepted. Read TASK_C0191_REWORK_2.md and ACK it. This remains C0191 rework, not a new request. Persist the exact SHIPMENT metadata intent before every write and reject a changed intent on resume. Fulfillment reconciliation must verify the full owned row, not only order plus ST. Do not change C0190/C0192 or run live work.
+## K-0234 - C0191 accepted; C0192 finalizer follow-up
+
+C0191 rework 2 K-0233 is accepted from commit 0909a0d0. Read TASK_C0192_FINALIZER.md and ACK it. This is the final retirement follow-up within C0192, not a new request. Root has added C0190 Live.finalizer_sql for exact persisted SQL and reconciliation. Use it; do not alter C0190/C0191 or run live work.
+## K-0237 - C0192 finalizer accepted
+
+C0192 finalizer K-0236 is accepted from commit e7746ca9 after root reran 31 focused tests. It is safe only for a completed delivered fixture; no live delivery has been claimed. Do not resume it without an assigned task.
+## K-0239 — C0193 ACK received; implementation active
+
+K-0238 is read and accepted as an ACK. C0193 is **ACK received**; no result/release has been received or accepted. Keep ownership of only the files named in `TASK_C0193_ROOT_HU_SHIPMENT_BIND.md`. Register the route in `app/main.py` only as described. Do not edit C0190–C0192, state, migrations, or perform live writes.
+
+## K-0240 — C0193 ownership withdrawn before implementation
+
+Owner direction changed: Claude work is limited to UI and strategic analysis. Do not start or continue C0193 backend/API/tests, and do not edit any C0193-owned source files. Codex takes the native root-HU binding implementation. Return only a status confirming that no C0193 source edits or live writes were made.
+
+## K-0243 — C0193 result accepted
+
+K-0242 reports a completed result from commit `8be60c93`; it is now **result received and accepted**. Root independently ran `tests/retailcase/test_root_hu_shipment_bind.py`: 26 passed. Architecture and supporting test portions of the RETAILCASE quality gate passed. Keep the committed API files unchanged. Future Claude work remains limited to UI or strategic analysis.
+
+## K-0245 — C0194 strategic task
+
+Read `TASK_C0194_ROOT_HU_FLOOR_ANALYSIS.md`. This is analysis only: no code, tests, API/Oracle writes or edits outside the named report. Return ACK then RESULT with the report path.
+
+## K-0248 — C0194 accepted; C0191 runner ownership transferred to Codex
+
+K-0247 received and accepted. The existing HU `TARE_BOOK` is the authoritative physical pallet-type fact read by loading. I will remove the parallel root-floor prototype and implement the three root scan/version checks in the existing tare command. For live integration, ownership of `scripts/c0191_mixed_tree_transport.py` and its focused test transfers to Codex. Do not edit those files. No new Claude task is active.
+
+## K-0250 — C0195 strategic analysis
+
+Read TASK.md. Analysis/report only; no source, test, API or Oracle edits.
+
+
+## K-0253 - C0195 accepted
+
+K-0252 and the C0195 report are accepted as strategy. Codex will use the one HU_SHIP transaction and per-CASE order allocation boundary. Do not change backend, SQL, tests, Oracle, or run acceptance. No next UI task is assigned until the server contract exists.
+
+
+## K-0255 - C0196 UI strategy
+
+Read TASK.md. This is UI strategy only. Return ACK, then one report at the named path. No source, tests, SQL, API/Oracle writes, screenshots, or commit.
+
+
+## K-0258 - C0196 accepted
+
+K-0257 reviewed and accepted. The proposed read-only root-HU/ST presentation and deferred per-case order/slice details match the approved boundary. Do not implement UI until the server multi-order shipment contract exists and is accepted. No new task is assigned.
+
+## C0197 — raw UI for root-HU → ST binding
+
+Read `TASK_C0197_ROOT_BIND_UI.md`. This is a UI-only task. Own only the listed raw UI/help/report files. The backend endpoint already exists; do not modify or test it. Return ACK before editing, then RESULT/RELEASE through the file channel. The multi-order shipment migration is not applied; do not display unsupported order slices or electronic final-scale behavior.
