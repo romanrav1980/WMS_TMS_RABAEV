@@ -72,6 +72,8 @@ class WeightedCasePick:
                         "scan_cell": request.scan_cell, "scan_container": request.scan_container,
                         "scan_product": product, "offline_event_id": None,
                         "warehouse_scale_capture": request.warehouse_scale_capture,
+                        "measurement": {"basis": "NET", "uom": "KG", "net_weight_kg": format(Decimal(str(weight)), "f"),
+                                        "origin": "ELECTRONIC_SCALE_CAPTURE", "capture_id": request.warehouse_scale_capture},
                         "weighed_confirmation": submitted}
             except oracledb.DatabaseError as exc:
                 code = exc.args[0].code

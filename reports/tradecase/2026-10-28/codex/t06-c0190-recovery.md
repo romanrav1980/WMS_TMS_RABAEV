@@ -9,3 +9,6 @@
 - read-only `preflight` против `http://127.0.0.1:8088`: API route есть, tagged warehouse `234887495` отсутствует, строк товара/остатка/волны нет, findings пусты. Состояние: `t06-c0190-recovery-preflight-state.json`.
 
 Запись в Oracle не выполнялась. Полный C0190 всё ещё требует введённых оператором значений NET KG и тары родительской паллеты. После TREE runner останавливается до LOAD/DEPART/приёмки магазина: транспортная fixture ещё не реализована.
+## Electronic measurement provenance
+
+The electronic CASE route now writes `measurement` to the canonical operation: NET, KG, capture identifier and `ELECTRONIC_SCALE_CAPTURE`. The manual route retains `MANUAL_OPERATOR_ENTRY`. The two request models remain mutually exclusive. Focused tests: 71 passed; architecture and encoding checks passed. This is local contract evidence, not a live scale run.

@@ -107,6 +107,7 @@ def test_net_capture_of_this_line_posts_cumulative_quantity_once(posted):
     command = posted[0]
     assert command.command_type == "CASE_PICK_CONFIRM" and command.source == {"case_task_id": 11, "case_line_id": 22}
     assert command.metadata["fact_qty"] == "3.75" and command.metadata["warehouse_scale_capture"] == CAPTURE
+    assert command.metadata["measurement"] == {"basis": "NET", "uom": "KG", "net_weight_kg": "2.5", "origin": "ELECTRONIC_SCALE_CAPTURE", "capture_id": CAPTURE}
     assert ("callproc", "RRL_CASE_TASK_ACCESS.assert_scope", [11, "picker", "case_pick_execute"]) in cur.calls
     binds = next(c[2] for c in cur.calls if c[0] == "execute" and c[2].get("p_key"))
     assert binds == {"p_key": CAPTURE, "p_task": 11, "p_line": 22}  # the read is bound to this line and NET basis in SQL
