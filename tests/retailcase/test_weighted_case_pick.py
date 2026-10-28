@@ -148,6 +148,7 @@ def test_exact_replay_reuses_stored_metadata_without_reading_the_source(posted):
     cur = Cursor()
     module.WeightedCasePick(Gateway(cur, saved=saved_line())).weigh_line(11, 22, line_request(), "picker")
     assert cur.calls == [] and len(posted) == 1 and posted[0].metadata["fact_qty"] == "3.75"
+    assert "measurement" not in posted[0].metadata  # exact historical replay stays byte-for-byte compatible
 
 
 @pytest.mark.parametrize("task,line,actor,body", [
