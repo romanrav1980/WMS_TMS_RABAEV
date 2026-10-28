@@ -1,0 +1,21 @@
+﻿{
+  "case": "T07 exact replay after a completed departure",
+  "fixture": "runtime/test-evidence/tradecase/2026-10-19/T07/fixture-1155.json",
+  "provider": "LOCAL_SYNTHETIC_ONLY",
+  "external_connections": false,
+  "checks": {
+    "load_replay": "PASS",
+    "depart_without_physical_load": {"status": 409, "code": "STOCK_RULE_REJECTED", "reason": "DEPART_PHYSICAL_LOAD_REQUIRED"},
+    "depart_replay": "PASS",
+    "load_fact_status": "DEPARTED",
+    "fulfillment": {"status": "SHIPPED", "fact_qty": 100},
+    "departure_operation_count": 1,
+    "stock_consumed_again": false
+  },
+  "verification": {
+    "focused_tests": "52 passed",
+    "slow_sql_30m_transport_paths": [],
+    "slow_sql_decision": "No slow SQL row is attributable to this exact replay; no index or query rewrite is proposed."
+  },
+  "scope": "The fixture is shared at warehouse level. The regression asserts its own load fact, fulfillment and operation instead of a mutable warehouse total."
+}

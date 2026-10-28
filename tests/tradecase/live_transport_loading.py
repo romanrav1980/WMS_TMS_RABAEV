@@ -19,7 +19,14 @@ try:
  assert expect(200,http('POST','/api/transport/loading/confirm-single',s['load_body']))==s['loaded']
  s['departure_without_document']=expect(409,http('POST',f"/api/transport/loading/{s['transport_task_id']}/depart",dict(operation_id='T7.DEPART.MISSING.'+str(s['case_id']))));save()
  with oracle_connection()as c:
-  q=c.cursor();q.execute('select STATUS from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s['load_body']['operation_id']);assert q.fetchone()[0]=='LOADED'
-  q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=s['warehouse_id']);s['after_load_stock']=list(q.fetchone());assert s['after_load_stock']==[s.get('expected_remaining',150),0]
+  q=c.cursor();q.execute('select STATUS from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s['load_body']['operation_id']);load_status=q.fetchone()[0]
+  # This fixture may be rerun after the separate departure stage. The shared
+  # warehouse total is not its invariant; its own fulfillment is.
+  assert load_status in ('LOADED','DEPARTED'),load_status
+  q.execute("select STATUS,FACT_QTY from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=:p",p=s['legacy_pallet_id'])
+  fulfillment=q.fetchone();assert fulfillment and fulfillment[0] in ('PICKED','SHIPPED'),fulfillment
+  if load_status=='LOADED':
+   q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=s['warehouse_id']);s['after_load_stock']=list(q.fetchone())
+  s['load_fact_status']=load_status;s['fulfillment_after_load']=list(fulfillment);save()
  s['load_stage']='PASS';print(json.dumps(dict(stage=s['load_stage'],trip=s['transport_task_id'],warehouse_remaining=s['after_load_stock'],departure_without_document=s['departure_without_document'])))
 finally:s['http']+=CALLS;save()

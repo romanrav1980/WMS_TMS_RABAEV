@@ -37,6 +37,11 @@ try:
  assert expect(200,http('POST',f"/api/transport/loading/{s['transport_task_id']}/depart",s['depart_body']))==s['departed']
  with oracle_connection()as c:
   q=c.cursor();q.execute('select STATUS,DEPARTURE_OPERATION_ID,DEPARTED_AT from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s.get('reload_body',s['load_body'])['operation_id']);status,operation,at=q.fetchone();assert status=='DEPARTED'and operation==s['depart_body']['operation_id'];s['departed_at']=str(at)
-  q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w);assert list(q.fetchone())==[s.get('expected_remaining',150),s.get('expected_hard',0)]
+  # Other isolated fixtures share this warehouse. Verify this shipment's own
+  # fulfillment and facts instead of treating the warehouse aggregate as stable.
+  q.execute('select STATUS,FACT_QTY from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=:p',p=s['legacy_pallet_id'])
+  fulfillment=q.fetchone();assert fulfillment==('SHIPPED',s.get('quantity',100)),fulfillment
+  q.execute("select count(*) from RRL_STOCK_OPERATION where OPERATION_ID=:o and COMMAND_TYPE='TRIP_DEPART' and STATE='APPLIED'",o=s['depart_body']['operation_id']);assert q.fetchone()[0]==1
+  s['departure_fulfillment']=list(fulfillment);save()
  s['transport_stage']='PASS';s['provider']='LOCAL_SYNTHETIC_ONLY';print(json.dumps(dict(status=s['transport_stage'],trip=s['transport_task_id'],departure=s['departed'],provider=s['provider'])))
 finally:s['http']+=CALLS;save()
