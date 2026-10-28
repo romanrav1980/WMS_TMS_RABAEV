@@ -1,13 +1,30 @@
 ﻿{
-  "date": "2026-10-28",
-  "scope": "T10 resource timeline transport source query",
-  "warehouse_id": 1,
-  "window": "2026-10-27T18:04:37.609170+00:00/2026-10-29T18:04:37.609170+00:00",
-  "before_api_ms": [12893, 9539, 11801, 11798],
-  "before_transport_rows_ms": 11286.71,
-  "after_direct_oracle_gateway_ms": [277.31, 100.84, 80.85],
-  "after_events": 3,
-  "after_assignments": 0,
-  "decision": "Rewrite transport source to materialize the bounded operation window before pallet and ACL correlation. No index: the bounded source query is already below 140 ms after warm-up and returned the same empty transport row set.",
-  "limitation": "The long-running API on port 8088 was not restarted because its owning process could not be safely identified. The after measurement exercises the current code directly through the same local Oracle gateway, not the HTTP process."
+    "date":  "2026-10-28",
+    "scope":  "T10 resource timeline transport source query",
+    "warehouse_id":  1,
+    "window":  "2026-10-27T18:04:37.609170+00:00/2026-10-29T18:04:37.609170+00:00",
+    "before_api_ms":  [
+                          12893,
+                          9539,
+                          11801,
+                          11798
+                      ],
+    "before_transport_rows_ms":  11286.71,
+    "after_direct_oracle_gateway_ms":  [
+                                           277.31,
+                                           100.84,
+                                           80.85
+                                       ],
+    "after_events":  3,
+    "after_assignments":  0,
+    "decision":  "Rewrite transport source to materialize the bounded operation window before pallet and ACL correlation. No index: the bounded source query is already below 140 ms after warm-up and returned the same empty transport row set.",
+    "after_http_ms":  [
+                          462.02,
+                          155.33,
+                          172.99
+                      ],
+    "after_http_status":  200,
+    "temporary_api_port":  8096,
+    "temporary_api_stopped":  true,
+    "limitation":  "The existing HTTP process on port 8088 was not restarted because its owner could not be safely identified. The current code was proven through a separately started and stopped local API on port 8096."
 }

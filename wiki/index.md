@@ -124,3 +124,5 @@
 - 28.10: C0191 was restored from its file-channel release and passed 25 focused tests. Live integration exposed the bounded legacy `DOCID` requirement before any load; C0192 cleanup is ACKed and C0191 recovery rework is queued. See [execution plan](roadmap/tradecase_execution_20261019.md).
 
 - 28.10 correction: Claude C0191 RELEASE K-0221 received; commit restored, root integrating. C0192 cleanup companion handed off; ACK pending. See [coordination prompt](../coordination/retailcase-claude/CODEX_WORK_PROMPT.md).
+
+- Current performance evidence: [[roadmap/tradecase_execution_20261019]] records the T10 timeline transport-window rewrite, its Oracle/API timing, and remaining concurrency work.
