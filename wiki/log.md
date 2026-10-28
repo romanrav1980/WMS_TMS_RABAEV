@@ -5607,3 +5607,5 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 - 2026-10-28: Multi-order candidate static source checks, UTF-8 validation and the RETAILCASE architecture/tooling gate passed (24 tests). This does not validate Oracle compilation or the business flow.
 
 - 2026-10-28: Verified live Oracle source baseline for the unapplied multi-order root-HU shipment migration. Moved its branch inside RRL_STOCK_SHIPPING_CORE because protected stock, CASE, fulfillment and placement APIs only allow that caller; added three focused structural checks. See [[roadmap/tradecase_execution_20261019]].
+
+- 2026-10-28: Added the root-binding-to-multi-order-shipping contract check: one ST retains two fulfillment slices and the root remains indivisible. Focused migration checks: 4 passed.

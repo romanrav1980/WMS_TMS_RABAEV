@@ -1,4 +1,4 @@
-# TRADECASE СНС/BLC: анализ и выполнение19.10.2026
+﻿# TRADECASE СНС/BLC: анализ и выполнение19.10.2026
 
 Состояние28.10: T01 завершён; T02–T12 приняты частично. Владелец уточнил [добивку по прогнозу перемещений и настройкам получателя](../requirements/tradecase_topup_forecast_20261027.md); прежние проверки не подтверждают новое правило автоматически. Основной многозаказный сценарий T08 660→640 прошёл локальную Oracle/API-приёмку; внешние SAP/СКМ остаются неподтверждёнными. C0177 по гонкам сессий и C0180–C0185 по воротам и Ганту приняты только в указанном ниже объёме; Codex продолжает T02–T12 по очереди. Пул, планы ворот, обмен составами, вложенная отгрузка, восстановление разделения, инвентаризация, смена машины и заводская приёмка проверены в указанном ниже объёме. Все спринты не завершены. Историческая остановка19.10 сохранена в [STOPPED.json](../../coordination/tradecase-20261019/STOPPED.json); последующие поручения владельца возобновили работу. [Исходное поручение](../../coordination/tradecase-20261019/REQUEST.md) и история ниже сохраняют первоначальный объём.
 
@@ -392,4 +392,5 @@ Static source checks, UTF-8 validation and the RETAILCASE architecture/tooling g
 
 `USER_SOURCE` from local `RABAEV/orcl` was compared with the rollback snapshots for `RRL_STOCK_SHIPPING_CORE`, `RRL_STOCK_QC_CASE`, `RRL_QC_SCOPE_READ`, `RRL_STOCK_QC_POLICY`, and `RRL_STOCK_QC_GATE`. The bodies match after removing the Oracle export formatting and SQL*Plus terminator. The candidate does not use a new public helper package: protected stock-effect, CASE-carrier, fulfillment and placement APIs permit `RRL_STOCK_SHIPPING_CORE`, not an extra package. The multi-order compiler and executor are now private procedures in that existing package.
 
-Local checks: `tests/retailcase/test_multi_order_root_hu_shipping_migration.py` 3 passed; encoding passed; `scripts/retailcase_quality_gate.py --skip-typecheck` architecture phase passed. The migration remains unapplied. Required next proof is Oracle compilation, then a new isolated root-HU mixed KG/EA fixture with QC/final-scale, one root shipment, exact replay and competing-shipment refusal.
+Local checks: `tests/retailcase/test_multi_order_root_hu_shipping_migration.py` 4 passed; encoding passed; `scripts/retailcase_quality_gate.py --skip-typecheck` architecture phase passed. The migration remains unapplied. Required next proof is Oracle compilation, then a new isolated root-HU mixed KG/EA fixture with QC/final-scale, one root shipment, exact replay and competing-shipment refusal.
+
