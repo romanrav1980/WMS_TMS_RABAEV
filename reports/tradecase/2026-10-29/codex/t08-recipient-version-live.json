@@ -17,6 +17,7 @@
     "focused_pytest": "38 passed",
     "live_runner": "PASS"
   },
+  "oracle_verify": {"verify_sql": "PASS", "mode": "READ ONLY", "checked": ["RRL_TRADE_RECIPIENT_VERSION", "RRL_TRADE_PICK_CONTEXT PACKAGE BODY", "RRL_TRADE_TRANSPORT_CORE PACKAGE BODY"]},
   "performance": {"slow_marker": 7966, "slow_rows": 7, "attributable_to_t08": false, "decision": "No index or rewrite: all rows belong to warehouse-task or available-ST reads, not the recipient-version path."},
   "source_evidence": "runtime/test-evidence/tradecase/2026-10-27/C0173/recipient-version.json"
 }
