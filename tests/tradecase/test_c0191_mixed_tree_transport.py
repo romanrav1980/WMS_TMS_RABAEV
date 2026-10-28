@@ -158,3 +158,130 @@ def test_run_reports_the_last_verified_stage_on_a_stop():
 
 def test_stage_order_covers_control_load_departure_and_receipt():
     assert adapter.STAGES == ("SHIPMENT", "TRANSPORT_TASK", "FLOOR_QC_TARE", "LOAD", "TARE_HANDOVER", "DEPART", "STORE_RECEIPT")
+
+
+# ---------------- K-0224 rework: DOCID <= 15 and reconciled SHIPMENT metadata ----------------
+
+def test_st_number_fits_docid_and_is_stable_per_run():
+    st = adapter.st_number_for("MT28ABCDEF123")
+    assert len(st) <= adapter.DOCID_MAX == 15 and st.startswith("ST") and st.isalnum() and st == st.upper()
+    assert adapter.st_number_for("MT28ABCDEF123") == st  # resume gets the same number
+    assert adapter.st_number_for("MT28ABCDEF124") != st and len(adapter.st_number_for("ANY.OTHER.TAG.FORMAT.LONGER")) == 15
+    with pytest.raises(adapter.RunnerStop):
+        adapter.st_number_for("")
+
+
+class MetaLive:
+    """In-memory legacy shipment tables; metadata writes can commit and then raise (post-commit failure)."""
+    def __init__(self):
+        self.s = {"tag": "MT28X", "warehouse": 231000001, "stages_done": ["TREE"], "articles": {"kg": "MT28XK", "ea": "MT28XE"},
+                  "measurements": {"manual_net_kg": "9.6"}}
+        self.pallets, self.rows, self.fulfillments, self.saves = [], [], [], 0
+
+    def save(self):
+        self.saves += 1
+
+    def read(self, sql, **b):
+        if "from RRL_SBORKA_PALLETS where PALLET_UID" in sql:
+            return [(p["id"], p["st"], p["ware"]) for p in self.pallets if p["uid"] == b["u"]]
+        if "from RRL_SBORKA_PALLET_ROWS where PALLET_UID" in sql:
+            return [(r["id"], r["qty"], r["docid"]) for r in self.rows if r["uid"] == b["u"] and r["article"] == b["a"]]
+        if "from RRL_CUSTOMER_ORDER_FULFILLMENT" in sql:
+            return [(f["id"],) for f in self.fulfillments if f["order"] == b["o"] and f["pallet"] == b["s"]]
+        raise AssertionError(sql)
+
+    def one(self, sql, **b):
+        if "trunc(sysdate)" in sql:
+            return "2026-10-29"
+        if "ST_NUMBER=:st" in sql:
+            return sum(1 for p in self.pallets if p["st"] == b["st"] and p["uid"] != b["u"]) + sum(1 for r in self.rows if r["docid"] == b["st"] and r["uid"] != b["u"])
+        if "CONDITION=0" in sql:
+            return sum(1 for p in self.pallets if p["id"] == b["s"] and p.get("condition") == 0)
+        if "RRL_CUSTOMER_ORDER where ORDER_NO" in sql:
+            return {"MT28X.ORD.kg": 501, "MT28X.ORD.ea": 502}[b["n"]]
+        raise AssertionError(sql)
+
+
+def flow_with(live, fail_after_commit=()):
+    flow = object.__new__(adapter.MixedTreeTransport)
+    flow.live, flow.inputs, flow.tag, flow.ware = live, INPUTS, "MT28X", 231000001
+    flow.t = live.s.setdefault("transport", {"inputs": INPUTS, "stages_done": []})
+    flow.writes = []
+    failing = set(fail_after_commit)
+
+    def call(function, args):
+        flow.writes.append(function)
+        if function == "RRL_SBORKA_PALLETS_ADD2":
+            live.pallets.append({"id": 900 + len(live.pallets), "st": args[0], "uid": args[3], "ware": args[8]}); result = live.pallets[-1]["id"]
+        else:
+            live.rows.append({"id": 700 + len(live.rows), "uid": args[0], "article": args[1], "qty": args[9], "docid": args[12]}); result = live.rows[-1]["id"]
+            assert len(args[12]) <= 15  # the DOCID constraint that failed live (ORA-12899)
+        if function in failing:
+            failing.discard(function); raise RuntimeError("post-commit failure")
+        return result
+
+    def execute(sql, **b):
+        flow.writes.append(sql.split()[0])
+        if sql.startswith("update"):
+            next(p for p in live.pallets if p["id"] == b["s"])["condition"] = 0
+        else:
+            live.fulfillments.append({"id": 300 + len(live.fulfillments), "order": b["o"], "pallet": b["s"]})
+    flow.metadata_call, flow.metadata_exec = call, execute
+    return flow
+
+
+def test_shipment_metadata_is_written_once_with_a_bounded_docid():
+    live = MetaLive()
+    flow = flow_with(live)
+    st = adapter.st_number_for("MT28X")
+    flow.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert len(live.pallets) == 1 and len(live.rows) == 2 and len(live.fulfillments) == 2
+    assert all(r["docid"] == st and len(st) <= 15 for r in live.rows)
+    assert all(v["state"] == "DONE" for v in flow.t["shipment_writes"].values())
+
+
+@pytest.mark.parametrize("failing", ["RRL_SBORKA_PALLETS_ADD2", "RRL_SBORKA_PALLET_ROWS_ADD4"])
+def test_post_commit_failure_then_resume_creates_no_duplicate(failing):
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    flow = flow_with(live, fail_after_commit={failing})
+    with pytest.raises(RuntimeError, match="post-commit"):
+        flow.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert any(v["state"] == "SENT" for v in flow.t["shipment_writes"].values())  # the unknown write is visible in the state
+    flow2 = flow_with(live)
+    flow2.t = flow.t
+    flow2.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert len(live.pallets) == 1 and len(live.rows) == 2 and len(live.fulfillments) == 2  # reconciled, nothing duplicated
+
+
+def test_resume_after_completion_writes_nothing():
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    flow_with(live).ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    again = flow_with(live)
+    again.ensure_shipment_metadata(st, "MT28X.ST.PAL")
+    assert again.writes == []
+
+
+def test_failed_pre_rework_st_with_a_long_number_stops_for_root_repair():
+    live = MetaLive()
+    live.pallets.append({"id": 1, "st": "MT28X00000001.ST", "uid": "MT28X.ST.PAL", "ware": 231000001})
+    with pytest.raises(adapter.RunnerStop, match="EXISTING_ST_NUMBER_EXCEEDS_DOCID_15"):
+        flow_with(live).ensure_shipment_metadata(adapter.st_number_for("MT28X"), "MT28X.ST.PAL")
+
+
+def test_foreign_use_of_the_st_number_is_a_collision_stop():
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    live.rows.append({"id": 5, "uid": "OTHER.PAL", "article": "Z", "qty": 1, "docid": st})
+    with pytest.raises(adapter.RunnerStop, match="ST_NUMBER_COLLISION"):
+        flow_with(live).ensure_shipment_metadata(st, "MT28X.ST.PAL")
+
+
+def test_mismatching_existing_row_is_not_reused():
+    live = MetaLive()
+    st = adapter.st_number_for("MT28X")
+    live.pallets.append({"id": 9, "st": st, "uid": "MT28X.ST.PAL", "ware": 231000001, "condition": 0})
+    live.rows.append({"id": 7, "uid": "MT28X.ST.PAL", "article": "MT28XK", "qty": "1", "docid": st})
+    with pytest.raises(adapter.RunnerStop, match="ST_ROW_MISMATCH"):
+        flow_with(live).ensure_shipment_metadata(st, "MT28X.ST.PAL")

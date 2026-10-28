@@ -14,6 +14,7 @@ Importing this module performs no live work; root executes it through C0190 (or 
 """
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import re
 import secrets
@@ -71,6 +72,19 @@ def validate_inputs(inputs: dict[str, Any]) -> list[str]:
         if not isinstance(g.get(key), int) or g[key] < 1:
             out.append(f"INPUT_REQUIRED:vehicle_geometry.{key}")
     return out
+
+
+DOCID_MAX = 15  # RRL_SBORKA_PALLET_ROWS.DOCID VARCHAR2(15); ST_NUMBER itself allows 50
+
+
+def st_number_for(tag: str) -> str:
+    """K-0224: the ST number goes into DOCID (<=15). Deterministic from the unique run tag (same value on resume, any tag format);
+    a collision is refused by the read-only check before the first write."""
+    if not isinstance(tag, str) or not tag:
+        raise RunnerStop("RUN_TAG_MISSING")
+    st = "ST" + hashlib.sha256(tag.encode("utf-8")).hexdigest()[:DOCID_MAX - 2].upper()
+    assert len(st) == DOCID_MAX
+    return st
 
 
 def evidence(origin: str, tag: str, what: str) -> str:
@@ -149,27 +163,77 @@ class MixedTreeTransport:
     def metadata_exec(self, sql: str, **binds: Any) -> None:
         self._metadata(lambda q: q.execute(sql, binds))
 
+    def metadata_step(self, key: str, check, write) -> Any:
+        """K-0224: every SHIPMENT metadata write records its intent before the write and is reconciled read-only first. A write that
+        committed but raised afterwards is found by the check on retry, so no second ST, row or fulfillment is created."""
+        writes = self.t.setdefault("shipment_writes", {})
+        found = check()
+        if found is not None:
+            writes[key] = {"state": "DONE", "reconciled": found}; self.live.save()
+            return found
+        writes[key] = {"state": "SENT"}; self.live.save()  # unknown until the next check if the write raises
+        result = write()
+        found = check()
+        if found is None:
+            raise RunnerStop(f"METADATA_WRITE_NOT_VISIBLE:{key}")
+        writes[key] = {"state": "DONE", "result": found}; self.live.save()
+        return found
+
+    def ensure_shipment_metadata(self, st: str, uid: str) -> None:
+        live, a = self.live, self.live.s["articles"]
+        old = live.read("select ID,ST_NUMBER,WARE_ID from RRL_SBORKA_PALLETS where PALLET_UID=:u", u=uid)
+        if old and len(str(old[0][1])) > DOCID_MAX:
+            raise RunnerStop(f"EXISTING_ST_NUMBER_EXCEEDS_DOCID_{DOCID_MAX}:{old[0][1]}: root repairs the failed pre-rework ST before resuming")
+        foreign = live.one("select (select count(*) from RRL_SBORKA_PALLETS where ST_NUMBER=:st and PALLET_UID<>:u)"
+                           "+(select count(*) from RRL_SBORKA_PALLET_ROWS where DOCID=:st and PALLET_UID<>:u) from dual", st=st, u=uid)
+        if foreign:
+            raise RunnerStop(f"ST_NUMBER_COLLISION:{st}")
+
+        def pallet():
+            rows = live.read("select ID,ST_NUMBER,WARE_ID from RRL_SBORKA_PALLETS where PALLET_UID=:u", u=uid)
+            if not rows:
+                return None
+            if len(rows) != 1 or rows[0][1] != st or int(rows[0][2]) != self.ware:
+                raise RunnerStop(f"ST_PALLET_MISMATCH:{rows}")
+            return int(rows[0][0])
+        day = live.one("select trunc(sysdate)+1 from dual")
+        sid = self.metadata_step("st.pallet", pallet, lambda: self.metadata_call("RRL_SBORKA_PALLETS_ADD2",
+                                 [st, self.inputs["store_address"], 1, uid, "1", day, "", "admin", self.ware]))
+        self.t["st_id"] = sid; live.save()
+        self.metadata_step("st.condition", lambda: True if live.one("select count(*) from RRL_SBORKA_PALLETS where ID=:s and CONDITION=0", s=sid) == 1 else None,
+                           lambda: self.metadata_exec("update RRL_SBORKA_PALLETS set CONDITION=0 where ID=:s", s=sid))
+        for role, unit in (("kg", "KG"), ("ea", "EA")):
+            qty = Decimal(live.s["measurements"]["manual_net_kg"] if role == "kg" else c0190.EA_QTY)
+
+            def row(article=a[role], qty=qty):
+                rows = live.read("select ID,QUANTITY,DOCID from RRL_SBORKA_PALLET_ROWS where PALLET_UID=:u and ARTICUL=:a", u=uid, a=article)
+                if not rows:
+                    return None
+                if len(rows) != 1 or Decimal(str(rows[0][1])) != qty or rows[0][2] != st:
+                    raise RunnerStop(f"ST_ROW_MISMATCH:{article}:{rows}")
+                return int(rows[0][0])
+            self.metadata_step(f"st.row.{role}", row, lambda role=role, unit=unit, qty=qty: self.metadata_call("RRL_SBORKA_PALLET_ROWS_ADD4",
+                               [uid, a[role], "C0191 mixed tree " + role, "", unit, 0, "", qty, "", qty, 0, None, st, self.ware, 1]))
+        for role in ("kg", "ea"):
+            order = live.one("select CUSTOMER_ORDER_ID from RRL_CUSTOMER_ORDER where ORDER_NO=:n", n=f"{self.tag}.ORD.{role}")
+
+            def fulfillment(order=order):
+                rows = live.read("select FULFILLMENT_ID from RRL_CUSTOMER_ORDER_FULFILLMENT where CUSTOMER_ORDER_ID=:o and LEGACY_SBORKA_PALLET_ID=:s", o=order, s=sid)
+                if len(rows) > 1:
+                    raise RunnerStop(f"FULFILLMENT_DUPLICATE:{order}")
+                return int(rows[0][0]) if rows else None
+            self.metadata_step(f"st.fulfillment.{role}", fulfillment, lambda order=order: self.metadata_exec(
+                "insert into RRL_CUSTOMER_ORDER_FULFILLMENT(FULFILLMENT_ID,CUSTOMER_ORDER_ID,LEGACY_SBORKA_PALLET_ID,PALLET_UID,ADDRESS_TEXT,STATUS,FACT_QTY,FACT_WEIGHT,"
+                "SOURCE_SYSTEM,CREATED_AT,CREATED_BY)values(RRL_CUSTOMER_ORDER_FULF_SQ.nextval,:o,:s,:u,:a,'PLANNED',0,0,'QA_C0191_ONLY',systimestamp,'admin')",
+                o=order, s=sid, u=uid, a=self.inputs["store_address"]))
+
     # -- SHIPMENT: one ST for the single recipient, both CASE children bound to it (detach/bind/re-attach) --
     def shipment(self) -> None:
         live, a, cases = self.live, self.live.s["articles"], self.live.s["cases"]
-        st, uid = f"{self.tag}.ST", f"{self.tag}.ST.PAL"
+        uid = f"{self.tag}.ST.PAL"  # the external shipment identifier stays as before
+        st = self.t.get("st_number") if len(str(self.t.get("st_number") or "")) <= DOCID_MAX and self.t.get("st_number") else st_number_for(self.tag)
         self.t.update(st_number=st, st_pallet=uid); live.save()
-        if not live.read("select ID from RRL_SBORKA_PALLETS where PALLET_UID=:u", u=uid):
-            day = live.one("select trunc(sysdate)+1 from dual")
-            sid = self.metadata_call("RRL_SBORKA_PALLETS_ADD2", [st, self.inputs["store_address"], 1, uid, "1", day, "", "admin", self.ware])
-            if not sid or sid < 1:
-                raise RunnerStop("ST_CREATE_FAILED")
-            self.metadata_exec("update RRL_SBORKA_PALLETS set CONDITION=0 where ID=:s", s=sid)
-            for role, unit in (("kg", "KG"), ("ea", "EA")):
-                qty = live.s["measurements"]["manual_net_kg"] if role == "kg" else c0190.EA_QTY
-                self.metadata_call("RRL_SBORKA_PALLET_ROWS_ADD4",
-                                   [uid, a[role], "C0191 mixed tree " + role, "", unit, 0, "", Decimal(qty), "", Decimal(qty), 0, None, st, self.ware, 1])
-            for role in ("kg", "ea"):
-                order = live.one("select CUSTOMER_ORDER_ID from RRL_CUSTOMER_ORDER where ORDER_NO=:n", n=f"{self.tag}.ORD.{role}")
-                self.metadata_exec("insert into RRL_CUSTOMER_ORDER_FULFILLMENT(FULFILLMENT_ID,CUSTOMER_ORDER_ID,LEGACY_SBORKA_PALLET_ID,PALLET_UID,ADDRESS_TEXT,STATUS,FACT_QTY,FACT_WEIGHT,"
-                                 "SOURCE_SYSTEM,CREATED_AT,CREATED_BY)values(RRL_CUSTOMER_ORDER_FULF_SQ.nextval,:o,:s,:u,:a,'PLANNED',0,0,'QA_C0191_ONLY',systimestamp,'admin')",
-                                 o=order, s=sid, u=uid, a=self.inputs["store_address"])
-            self.t["st_id"] = int(sid); live.save()
+        self.ensure_shipment_metadata(st, uid)
         booking = {role: f"{self.tag}.TARE.BOOK.{role}" for role in cases}
         for role, case in cases.items():  # a bound CASE is required for loading; binding happens on a free carrier, then the tree is rebuilt
             version = lambda uid_: live.composition(uid_)["nodes"][0]["version"]

@@ -68,3 +68,25 @@ A resumed run with different inputs → `TRANSPORT_INPUTS_CHANGED_AFTER_START`. 
   - after LOAD the warehouse keeps only the unpicked halves: `transport.expected_remainder_after_load`. C0190 `cleanup()` currently expects the full registered quantity and will refuse; it needs to take that remainder;
   - after DEPART detaching the CASEs is no longer possible (the tree is historical).
 - **Adapter cleanup is not implemented:** return the tare from the vehicle (offer/accept), zero the tare, `driver-bindings active=false`, retire the synthetic driver/receiver/group. NS23 `finish()` does it; it is a separate step for Codex.
+
+## Rework K-0224 (the same C0191, after root's live run)
+- **Cause:** SHIPMENT stopped in `RRL_SBORKA_PALLET_ROWS_ADD4`. The ST number `<tag>.ST` (16 characters) went into `DOCID VARCHAR2(15)`, giving `ORA-12899`. `ST_NUMBER` in `RRL_SBORKA_PALLETS` allows 50, which is why ADD2 had passed.
+- **ST number:** `st_number_for(tag)` = `ST` + 13 characters of the tag's SHA-256 (exactly 15, upper case). Deterministic, so a resume gets the same value, and it works with any tag format.
+  - Saved in the state once; a stored valid value (≤15) is kept.
+  - Before the first write, a read-only check for foreign use: `ST_NUMBER` in pallets or `DOCID` in rows on another `PALLET_UID` → `ST_NUMBER_COLLISION`.
+- **Identifiers unchanged:** the external identifier `<tag>.ST.PAL` and all journal operation_ids.
+- **Metadata reconciliation:** every SHIPMENT write (ADD2, CONDITION=0, two ADD4, two fulfillments) goes through `metadata_step`:
+  - a read-only check first; a found matching record is reused (`DONE/reconciled`);
+  - otherwise the intent `SENT` is saved to the state, then the write, then the check must see the record;
+  - after a post-commit failure the retry finds the record, so there is no second ST, row or fulfillment;
+  - mismatching existing records → `ST_PALLET_MISMATCH` / `ST_ROW_MISMATCH` / `FULFILLMENT_DUPLICATE`.
+- **The failed ST from before the rework** (number >15) → `EXISTING_ST_NUMBER_EXCEEDS_DOCID_15`, a stop for root's repair. The adapter does not repair the fixture.
+- **Tests: 33 passed (+8):**
+  - the ST number ≤15, stable, different for different tags, any format;
+  - a single write with a bounded DOCID;
+  - a post-commit failure of ADD2 or of ADD4, then a resume without duplicates;
+  - a resume after completion writes nothing;
+  - a long ST from before the rework → stop;
+  - a foreign DOCID → collision;
+  - a mismatching row is not reused.
+- gate, encoding and architecture PASS. No live Oracle/API runs. C0190/C0192 not changed.
