@@ -1,0 +1,17 @@
+{
+  "migration_id": "2026-10-28-multi-order-root-hu-shipping",
+  "status": "NOT_APPLIED",
+  "scope": "Atomic HU_SHIP execution for several CASE orders of one recipient inside RRL_STOCK_SHIPPING_CORE",
+  "objects": [
+    "RRL_STOCK_SHIPPING_CORE",
+    "RRL_STOCK_QC_CASE",
+    "RRL_QC_SCOPE_READ",
+    "RRL_STOCK_QC_POLICY",
+    "RRL_STOCK_QC_GATE"
+  ],
+  "live_gate": [
+    "commit migration source",
+    "explicit owner approval for Oracle DDL",
+    "isolated fixture and exact replay proof"
+  ]
+}

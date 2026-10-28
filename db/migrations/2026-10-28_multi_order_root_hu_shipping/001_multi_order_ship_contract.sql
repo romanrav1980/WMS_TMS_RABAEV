@@ -1,0 +1,2 @@
+-- The multi-order root-HU implementation is private to RRL_STOCK_SHIPPING_CORE.
+-- Keeping it there preserves existing ACCESSIBLE BY boundaries for stock effects, CASE carriers and fulfillment facts.
