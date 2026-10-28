@@ -5631,3 +5631,7 @@ Applied root-HU tare scan migration. The root container is booked before CASE at
 
 - Added the live `RRL_STOCK_TARE_BOOK_CMD` baseline, preflight, rollback and verification scripts to `db/migrations/2026-10-28_root_hu_tare_scans/`; status is `NOT_APPLIED`.
 - Read-only Oracle preflight completed with zero errors. `tests/retailcase/test_root_hu_tare_book_scans.py`: 3 passed. No Oracle DDL or inventory write was made.
+
+## 2026-10-28 — уточнение границы поставки
+
+Владелец исключил подключение SAP, СКМ и оборудования. Контрактные API и ручной ввод остаются частью WMS. Реальные адаптеры, DESADV, аппаратные весы, промышленная очередь и пилот интеграций больше не блокируют закрытие внутренних спринтов. План и индекс обновлены.
