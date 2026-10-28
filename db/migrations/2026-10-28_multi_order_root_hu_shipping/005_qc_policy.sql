@@ -6,12 +6,13 @@ create or replace package body RRL_STOCK_QC_POLICY as
    left join RRL_RECEIPT_WARE_SETTINGS s on s.WARE_ID=w.ID where w.ID=p_warehouse;
  end;
  procedure settings_for_plan(p_domain clob,p_mode out varchar2,p_independent out number)is
-  d json_object_t:=json_object_t.parse(p_domain);case_id number:=d.get_number('case_task');required number;policy json_object_t;
+  d json_object_t:=json_object_t.parse(p_domain);case_id number:=d.get_number('case_task');required number;policy json_object_t;slices_wire clob;
  begin
   policy:=json_object_t.parse(RRL_QC_SCOPE_READ.policy_json(p_domain));p_mode:=policy.get_string('mode');p_independent:=policy.get_number('independent');
   if d.has('multi_order') then
+   slices_wire:=d.get_array('slices').to_clob;
    select nvl(max(t.FINAL_WEIGHT_REQUIRED),0) into required from RRL_CASE_PICK_TASK c join RRL_PALLET_TYPE t on t.PALLET_TYPE_ID=c.PALLET_TYPE_ID
-    where c.CASE_PICK_TASK_ID in(select CASE_ID from json_table(d.get_array('slices').to_clob,'$[*]' columns(CASE_ID number path '$.case_task')));
+    where c.CASE_PICK_TASK_ID in(select CASE_ID from json_table(slices_wire,'$[*]' columns(CASE_ID number path '$.case_task')));
   elsif case_id is not null then
    select t.FINAL_WEIGHT_REQUIRED into required from RRL_CASE_PICK_TASK c join RRL_PALLET_TYPE t on t.PALLET_TYPE_ID=c.PALLET_TYPE_ID
     where c.CASE_PICK_TASK_ID=case_id;

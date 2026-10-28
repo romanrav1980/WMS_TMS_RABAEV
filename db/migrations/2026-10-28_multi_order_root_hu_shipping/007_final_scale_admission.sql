@@ -1,12 +1,13 @@
 create or replace package body RRL_WH_FINAL_SCALE_ADMISSION as
 
  function required(p_domain clob)return number is
-  d json_object_t:=json_object_t.parse(p_domain);task_no number:=d.get_number('case_task');n number;
+  d json_object_t:=json_object_t.parse(p_domain);task_no number:=d.get_number('case_task');n number;slices_wire clob;
  begin
   if d.has('multi_order') then
+   slices_wire:=d.get_array('slices').to_clob;
    select nvl(max(case when p.FINAL_WEIGHT_REQUIRED=1 and upper(p.LOAD_UNIT_CLASS)='CONTAINER'then 1 else 0 end),0) into n
     from RRL_CASE_PICK_TASK c join RRL_PALLET_TYPE p on p.PALLET_TYPE_ID=c.PALLET_TYPE_ID
-    where c.CASE_PICK_TASK_ID in(select CASE_ID from json_table(d.get_array('slices').to_clob,'$[*]' columns(CASE_ID number path '$.case_task')));
+    where c.CASE_PICK_TASK_ID in(select CASE_ID from json_table(slices_wire,'$[*]' columns(CASE_ID number path '$.case_task')));
    return n;
   end if;
   if task_no is null then return 0;end if;

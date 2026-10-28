@@ -29,8 +29,9 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
   if d.get_string('command_type')!='SHIP_PALLET' then raise_application_error(-20871,'SHIPMENT_MULTI_ORDER_PALLET_REQUIRED');end if;
   select ID,WARE_ID,RETURN_SUPPLIER_ID into v_id,v_ware,v_return from RRL_SBORKA_PALLETS where PALLET_UID=v_uid;
   if v_return is not null then raise_application_error(-20887,'SUPPLIER_RETURN_CUSTOMER_SOURCE_CONFLICT');end if;
-  select count(distinct CUSTOMER_ORDER_ID),min(CUSTOMER_ID),min(trim(ADDRESS_TEXT)) into v_orders,v_customer,v_address
-   from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=v_id and PALLET_UID=v_uid;
+  select count(distinct f.CUSTOMER_ORDER_ID),min(o.CUSTOMER_ID),min(trim(f.ADDRESS_TEXT)) into v_orders,v_customer,v_address
+   from RRL_CUSTOMER_ORDER_FULFILLMENT f join RRL_CUSTOMER_ORDER o on o.CUSTOMER_ORDER_ID=f.CUSTOMER_ORDER_ID
+   where f.LEGACY_SBORKA_PALLET_ID=v_id and f.PALLET_UID=v_uid;
   if v_orders<2 then raise_application_error(-20871,'SHIPMENT_MULTI_ORDER_REQUIRED');end if;
   if v_customer is null or v_address is null then raise_application_error(-20886,'SHIPMENT_MULTI_ORDER_RECIPIENT_CONFLICT');end if;
   select count(*) into found from RRL_CUSTOMER_ORDER_FULFILLMENT f join RRL_CUSTOMER_ORDER o on o.CUSTOMER_ORDER_ID=f.CUSTOMER_ORDER_ID

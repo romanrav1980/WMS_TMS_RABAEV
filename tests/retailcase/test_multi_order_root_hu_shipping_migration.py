@@ -50,6 +50,8 @@ def test_multi_order_final_weight_is_explicit_manual_until_per_case_scale_captur
     assert "if d.has('multi_order') then" in admission
     assert "MULTI_ORDER_FINAL_SCALE_PER_CASE_CAPTURE_REQUIRED" in admission
     assert "MULTI_ORDER_MANUAL_WEIGHT_REQUIRED" in admission
-    assert "required_flag:=RRL_WH_FINAL_SCALE_ADMISSION.required(domain);" in gate
+    assert "if dom.has('multi_order') then" in gate
+    assert "CASE_PICK_TASK_ID in(" in gate
+    assert "FINAL_WEIGHT_REQUIRED=1" in gate
     assert "@@007_final_scale_admission.sql" in read("apply.sql")
     assert "@@905_before_final_scale_admission.sql" in read("rollback.sql")

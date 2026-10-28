@@ -1,5 +1,5 @@
 -- Projection onto the existing CASE lifecycle; no stock quantities or composition version are changed.
-create or replace package RRL_STOCK_QC_CASE authid definer accessible by(package RRL_STOCK_PALLET_QC_CMD) as
+create or replace package RRL_STOCK_QC_CASE authid definer accessible by(package RRL_STOCK_PALLET_QC_CMD,package RRL_STOCK_SHIPPING_CORE) as
  procedure project(p_domain clob,p_ready number,p_failed number,p_is_plan number,p_actor varchar2,p_operation varchar2,p_reason varchar2);
  function nested(p_domain clob) return number;
 end;
