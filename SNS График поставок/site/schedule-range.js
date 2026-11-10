@@ -1,5 +1,5 @@
 function setupScheduleRangeSelection(dialog,apply){
- const body=dialog.querySelector('#schedule-body'),menu=document.createElement('div');menu.className='schedule-range-menu';menu.hidden=true;menu.innerHTML='<button type="button" data-action="on">Включить все ячейки</button><button type="button" data-action="off">Выключить все ячейки</button>';dialog.append(menu);
+ const body=dialog.querySelector('#schedule-body'),menu=document.createElement('div');menu.className='schedule-range-menu';menu.hidden=true;menu.innerHTML='<button type="button" data-action="on">Включить все ячейки</button><button type="button" data-action="off">Выключить все ячейки</button><button type="button" data-action="fact">Как в факте выбранной недели</button>';dialog.append(menu);
  let selected=new Set(),start=null,dragging=false,suppress=false,additive=false,initial=new Set();
  const cellOf=el=>el?.closest?.('td.schedule-day');
  const coordinates=cell=>{const input=cell?.querySelector('input[data-day]');if(!input)return null;const [row,day]=input.dataset.day.split(':').map(Number);return {row,day,key:input.dataset.day}};
@@ -11,6 +11,6 @@ function setupScheduleRangeSelection(dialog,apply){
  document.addEventListener('mouseup',e=>{if(!start||e.button!==0)return;if(dragging)suppress=true;else if(additive){selected=initial;if(selected.has(start.key))selected.delete(start.key);else selected.add(start.key);paint();suppress=true}else{selected.clear();paint()}start=null;dragging=false;if(suppress)setTimeout(()=>{suppress=false},0)});
  body.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopImmediatePropagation();suppress=false}},true);
  body.addEventListener('contextmenu',e=>{const cell=cellOf(e.target),c=coordinates(cell);if(!c)return;e.preventDefault();if(!selected.has(c.key)){selected=new Set([c.key]);paint()}menu.hidden=false;const bounds=dialog.getBoundingClientRect();menu.style.left=Math.max(5,Math.min(e.clientX-bounds.left,bounds.width-menu.offsetWidth-12))+'px';menu.style.top=Math.max(5,Math.min(e.clientY-bounds.top,bounds.height-menu.offsetHeight-12))+'px';menu.querySelector('button').focus()});
- menu.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(!action)return;const cells=[...selected].map(key=>key.split(':').map(Number));clear();apply(cells,action==='on')});
+ menu.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(!action)return;const cells=[...selected].map(key=>key.split(':').map(Number));clear();apply(cells,action)});
  dialog.addEventListener('click',e=>{if(!menu.hidden&&!menu.contains(e.target))menu.hidden=true});dialog.addEventListener('keydown',e=>{if(e.key==='Escape'&&(!menu.hidden||selected.size)){e.preventDefault();e.stopPropagation();clear()}});dialog.addEventListener('close',clear);return {clear};
 }
