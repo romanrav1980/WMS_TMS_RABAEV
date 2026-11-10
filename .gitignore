@@ -132,7 +132,11 @@ WindowsApplication2/**/app.config
 /SNS График поставок/installer/**/*.003
 /SNS График поставок/installer/handoff-*/
 /SNS График поставок/installer/release-*/
+/SNS График поставок/installer/*.sha256.txt
+/SNS График поставок/*_profile.json
 /SNS График поставок/tools/sap_export_*.vbs
+/reports/**/*.tmp
+/reports/**/probe.cjs
 /SNS График поставок/*.XLSX
 /SNS График поставок/*.xlsx
 /SNS График поставок/*SAP*.*
