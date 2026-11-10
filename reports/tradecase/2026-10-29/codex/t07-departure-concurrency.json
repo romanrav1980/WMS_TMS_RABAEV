@@ -1,0 +1,18 @@
+{
+  "case": "T07 concurrent exact departure replay",
+  "status": "PASS",
+  "fixture": "runtime/test-evidence/tradecase/2026-10-19/T07/fixture-1155.json",
+  "operation_id": "T7.DEPART.1155",
+  "http_statuses": [
+    200,
+    200
+  ],
+  "responses_identical": true,
+  "applied_departure_operations": 1,
+  "load_fact": {
+    "status": "DEPARTED",
+    "departure_operation_id": "T7.DEPART.1155"
+  },
+  "slow_sql_rows_for_path": 0,
+  "scope": "Existing departed synthetic fixture; no new load, departure, warehouse stock or external connector."
+}

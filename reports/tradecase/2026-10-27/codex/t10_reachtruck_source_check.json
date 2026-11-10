@@ -1,0 +1,95 @@
+{
+  "kind": "READ_ONLY_LIVE_TIMELINE",
+  "started": "2026-10-27T19:47:41.602979+00:00",
+  "window": [
+    "2026-10-27T12:00:00+00:00",
+    "2026-10-27T18:00:00+00:00"
+  ],
+  "warehouses": {
+    "51365792": {
+      "http": 200,
+      "resources": 4,
+      "resource_kinds": [
+        "DOCK",
+        "REACHTRUCK"
+      ],
+      "reachtruck_lanes": 1,
+      "events": 0,
+      "unscheduled": 0,
+      "assignments": 0,
+      "sources": {
+        "registry": "READY",
+        "attendance": "READY",
+        "warehouse_tasks": "READY",
+        "case_tasks": "READY",
+        "transport": "READY",
+        "sessions": "READY",
+        "yard": "READY"
+      }
+    },
+    "213059748": {
+      "http": 200,
+      "resources": 2,
+      "resource_kinds": [
+        "DOCK",
+        "REACHTRUCK"
+      ],
+      "reachtruck_lanes": 1,
+      "events": 0,
+      "unscheduled": 0,
+      "assignments": 0,
+      "sources": {
+        "registry": "READY",
+        "attendance": "READY",
+        "warehouse_tasks": "READY",
+        "case_tasks": "READY",
+        "transport": "READY",
+        "sessions": "READY",
+        "yard": "READY"
+      }
+    },
+    "220639789": {
+      "http": 200,
+      "resources": 2,
+      "resource_kinds": [
+        "DOCK",
+        "REACHTRUCK"
+      ],
+      "reachtruck_lanes": 1,
+      "events": 0,
+      "unscheduled": 0,
+      "assignments": 0,
+      "sources": {
+        "registry": "READY",
+        "attendance": "READY",
+        "warehouse_tasks": "READY",
+        "case_tasks": "READY",
+        "transport": "READY",
+        "sessions": "READY",
+        "yard": "READY"
+      }
+    },
+    "222385707": {
+      "http": 200,
+      "resources": 2,
+      "resource_kinds": [
+        "DOCK",
+        "REACHTRUCK"
+      ],
+      "reachtruck_lanes": 1,
+      "events": 0,
+      "unscheduled": 0,
+      "assignments": 0,
+      "sources": {
+        "registry": "READY",
+        "attendance": "READY",
+        "warehouse_tasks": "READY",
+        "case_tasks": "READY",
+        "transport": "READY",
+        "sessions": "READY",
+        "yard": "READY"
+      }
+    }
+  },
+  "finished": "2026-10-27T19:47:42.363358+00:00"
+}

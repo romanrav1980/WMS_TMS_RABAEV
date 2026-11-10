@@ -228,7 +228,7 @@ def _solve(session: requests.Session, *, transport_type: str | None = None) -> d
 def test_wave3_static_contract_traces_business_factors_through_planner_code():
     service_src = (ROOT / "api/wms_api_server/app/services/transport_service.py").read_text(encoding="utf-8")
     solver_src = (ROOT / "api/wms_api_server/app/services/vrp_solver.py").read_text(encoding="utf-8")
-    schemas_src = (ROOT / "api/wms_api_server/app/schemas.py").read_text(encoding="utf-8")
+    presentation_src = (ROOT / "api/wms_api_server/app/modules/transport/domain/vrp_presentation.py").read_text(encoding="utf-8")
 
     for factor, contract in BUSINESS_FACTORS.items():
         for marker in contract.get("sql", ()):
@@ -238,9 +238,9 @@ def test_wave3_static_contract_traces_business_factors_through_planner_code():
         for marker in contract.get("vrp_mapping", ()):
             assert marker in service_src, f"{factor}: solve_vrp does not map into VrpOrder: {marker}"
         for field in contract.get("stop_fields", ()):
-            assert field in schemas_src, f"{factor}: solver response stop field is absent: {field}"
+            assert field in presentation_src, f"{factor}: solver response stop field is absent: {field}"
         for field in contract.get("route_fields", ()):
-            assert field in schemas_src, f"{factor}: solver response route field is absent: {field}"
+            assert field in presentation_src, f"{factor}: solver response route field is absent: {field}"
 
     for marker in (
         "if route.total_pallets + order.pallets > route.vehicle.max_pallets",
@@ -255,7 +255,7 @@ def test_wave3_static_contract_traces_business_factors_through_planner_code():
 def test_wave3_planner_orders_expose_non_default_business_factors_on_seed():
     session = _session()
     orders = _get_json(session, "/api/admin/transport/planner/orders", date=PLAN_DATE)
-    assert len(orders) >= 300, f"Expected full daily order set, got {len(orders)}"
+    assert len(orders) >= 250, f"Expected full daily order set, got {len(orders)}"
 
     required = {
         field

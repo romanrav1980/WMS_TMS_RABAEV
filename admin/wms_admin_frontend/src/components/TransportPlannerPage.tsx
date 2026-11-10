@@ -10,6 +10,7 @@ import {
 import { EditControl } from "react-leaflet-draw";
 import type { LatLngExpression } from "leaflet";
 import { PlannerAnalyticsTab } from "./PlannerAnalyticsTab";
+import { applyPlan, readApplyPending, resolveApplyPending, startSolveAsync, cancelSolve, getJobResult, streamJob } from "../features/transport";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -366,9 +367,7 @@ function TransportPlannerExplainDrawer({
         <div className="planner-explain-alert error">
           <b>Расчет остановлен</b>
           <span>{solveError}</span>
-          {solveError.includes("Failed to fetch") && (
-            <small>Браузер мог скрыть backend 500 как Failed to fetch. Проверьте API 8088 и CORS.</small>
-          )}
+          <small>Проверьте параметры расчёта и повторите. Если ошибка повторяется — обратитесь к администратору.</small>
         </div>
       )}
 
@@ -504,6 +503,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
 
   // VRP plan state
   const [plan, setPlan] = useState<VrpPlan | null>(null);
+  const [planShipmentDate, setPlanShipmentDate] = useState<string | null>(null);
   const [solving, setSolving] = useState(false);
   const [solveError, setSolveError] = useState<string | null>(null);
   const [solveElapsed, setSolveElapsed] = useState(0);
@@ -515,6 +515,8 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // Apply plan state
   const [applying, setApplying] = useState(false);
   const [applyDone, setApplyDone] = useState<{ tasks_created: number } | null>(null);
+  const [applyPending, setApplyPending] = useState<{ plan_id: number; shipment_date: string } | null>(null);
+  useEffect(() => { setApplyPending(readApplyPending()); }, []);
 
   // Templates
   const [templates, setTemplates] = useState<PlanTemplate[]>([]);
@@ -625,116 +627,101 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // VRP solve
   // ---------------------------------------------------------------------------
 
-  // Sprint 101 — active job id for cancel
+  // Guard against a stale solve overwriting a newer one (defensive; the button
+  // is already disabled while solving, so this is a second line of defense).
+  const solveGenRef = useRef(0);
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
+  const jobAbortRef = useRef<AbortController | null>(null);
 
   const handleCancelSolve = useCallback(async () => {
-    if (!activeJobId) return;
-    try {
-      await apiFetch(`/api/admin/transport/planner/solve/${activeJobId}`, { method: "DELETE" });
-    } catch { /* ignore */ }
+    const jobId = activeJobId;
+    if (!jobId) return;
+    jobAbortRef.current?.abort();
     setActiveJobId(null);
     setSolving(false);
     if (solveTimerRef.current) clearInterval(solveTimerRef.current);
+    try { await cancelSolve(jobId); } catch { /* already cancelled/absent */ }
   }, [activeJobId]);
 
   const handleSolve = useCallback(async () => {
-    setSolving(true); setSolveError(null); setPlan(null); setApplyDone(null);
+    const gen = ++solveGenRef.current;
+    setSolving(true); setSolveError(null); setPlan(null); setPlanShipmentDate(null); setApplyDone(null);
     setMatrixMessage(null);
     setExplainOpen(true);
     setSolveElapsed(0);
+    if (solveTimerRef.current) clearInterval(solveTimerRef.current);
     solveTimerRef.current = setInterval(() => setSolveElapsed(s => s + 1), 1000);
+    const request = {
+      plan_date: filterDate,
+      transport_type: trTypeFilter || null,
+      time_limit_s: 60,
+      source: "auto",
+      solver: solverMode,
+    };
+    const controller = new AbortController();
+    jobAbortRef.current = controller;
     try {
-      const body = {
-        plan_date: filterDate,
-        transport_type: trTypeFilter || null,
-        time_limit_s: 60,
-        source: "auto",
-        solver: solverMode,
-      };
-      // Sprint 101: new API returns {job_id, stream_url}
-      const jobResp = await apiFetch<{ job_id?: string; routes?: unknown[] }>(
-        "/api/admin/transport/planner/solve",
-        { method: "POST", body: JSON.stringify(body) },
-      );
-      // Support both old (direct VrpPlan) and new (job_id) response shapes
-      if (jobResp.job_id) {
-        setActiveJobId(jobResp.job_id);
-        // Poll via SSE
-        const es = new EventSource(`/api/admin/transport/planner/solve/${jobResp.job_id}/stream`);
-        await new Promise<void>((resolve, reject) => {
-          es.onmessage = (e) => {
-            const msg = JSON.parse(e.data);
-            if (msg.type === "done") {
-              es.close();
-              // Fetch the actual plan result
-              apiFetch<{ routes?: unknown[] }>(`/api/admin/transport/planner/metrics?plan_id=${msg.plan_id || ""}`)
-                .then(() => {})
-                .catch(() => {});
-              resolve();
-            } else if (msg.type === "error") {
-              es.close();
-              reject(new Error(msg.detail || "VRP error"));
-            } else if (msg.type === "cancelled") {
-              es.close();
-              resolve();
-            }
-          };
-          es.onerror = () => { es.close(); reject(new Error("SSE connection error")); };
-        });
-        setActiveJobId(null);
-        // Re-fetch latest plan after solve
-        try {
-          const history = await apiFetch<{ plan_id: number; routes?: unknown[] }[]>(
-            `/api/admin/transport/planner/history?date_from=${filterDate}&date_to=${filterDate}`
-          );
-          if (history.length > 0) {
-            const latest = await apiFetch<typeof history[0]>(
-              `/api/admin/transport/planner/metrics?plan_id=${history[0].plan_id}`
-            );
-            if (latest && (latest as unknown as { routes?: unknown[] }).routes) {
-              setPlan(latest as unknown as VrpPlan);
-              setLocalRoutes(JSON.parse(JSON.stringify((latest as unknown as VrpPlan).routes)));
-              setExpandedRouteIdx(null);
-              setExplainOpen(true);
-            }
-          }
-        } catch { /* best effort */ }
-      } else if ((jobResp as unknown as VrpPlan).routes) {
-        // Legacy direct response
-        const result = jobResp as unknown as VrpPlan;
-        setPlan(result);
-        setLocalRoutes(JSON.parse(JSON.stringify(result.routes)));
-        setExpandedRouteIdx(null);
-        setExplainOpen(true);
+      const job = await startSolveAsync(request);
+      if (gen !== solveGenRef.current) return;
+      setActiveJobId(job.job_id);
+      const outcome: { kind: "done" | "cancelled" | "error" } = { kind: "done" };
+      let errorDetail = "";
+      await streamJob(job.job_id, ev => {
+        if (ev.type === "error") { outcome.kind = "error"; errorDetail = String(ev.detail ?? "VRP error"); }
+        else if (ev.type === "cancelled") { outcome.kind = "cancelled"; }
+      }, controller.signal);
+      if (gen !== solveGenRef.current) return;
+      if (outcome.kind === "cancelled") {
+        setExplainOpen(true); // отмена не загружает другой план и не показывает успех
+        return;
       }
+      if (outcome.kind === "error") throw new Error(errorDetail);
+      const jobRes = await getJobResult<VrpPlan>(job.job_id);
+      if (jobRes.error) throw new Error(jobRes.error);
+      if (!jobRes.result || !Array.isArray(jobRes.result.routes)) {
+        throw new Error("Сервер не вернул маршруты расчёта по задаче. Повторите расчёт.");
+      }
+      setPlan(jobRes.result);
+      setPlanShipmentDate(request.plan_date);
+      setLocalRoutes(JSON.parse(JSON.stringify(jobRes.result.routes)));
+      setExpandedRouteIdx(null);
+      setExplainOpen(true);
     } catch (e) {
+      if (gen !== solveGenRef.current) return;
+      if (e instanceof DOMException && e.name === "AbortError") return; // отмена пользователем
       setSolveError(String(e));
       setExplainOpen(true);
     } finally {
-      setSolving(false);
-      setActiveJobId(null);
-      if (solveTimerRef.current) clearInterval(solveTimerRef.current);
+      if (gen === solveGenRef.current) {
+        setSolving(false);
+        setActiveJobId(null);
+        jobAbortRef.current = null;
+        if (solveTimerRef.current) clearInterval(solveTimerRef.current);
+      }
     }
   }, [filterDate, trTypeFilter, solverMode]);
 
+  // Снять таймер решения и прервать поток при размонтировании страницы.
+  useEffect(() => () => {
+    if (solveTimerRef.current) clearInterval(solveTimerRef.current);
+    jobAbortRef.current?.abort();
+  }, []);
+
   const handleApplyPlan = useCallback(async () => {
-    if (!plan?.plan_id) return;
-    if (!window.confirm(`Создать ${plan.routes.length} рейсов? Это действие нельзя отменить.`)) return;
+    if (!plan?.plan_id || plan.routes.length === 0 || applying) return;
+    const shipmentDate = planShipmentDate ?? filterDate;
+    if (!window.confirm(`Создать ${plan.routes.length} рейсов на ${shipmentDate}? Это действие нельзя отменить.`)) return;
     setApplying(true);
     try {
-      const body = { plan_id: plan.plan_id, shipment_date: filterDate };
-      const result = await apiFetch<{ tasks_created: number }>("/api/admin/transport/planner/apply", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      const result = await applyPlan<{ tasks_created: number }>(plan.plan_id, shipmentDate);
       setApplyDone(result);
     } catch (e) {
       setSolveError(String(e));
     } finally {
       setApplying(false);
+      setApplyPending(readApplyPending());
     }
-  }, [plan, filterDate]);
+  }, [plan, planShipmentDate, filterDate, applying]);
 
   const handleRebuildMatrix = useCallback(async () => {
     try {
@@ -765,19 +752,19 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   }, []);
 
   const handleApplyTemplate = useCallback(async (tmpl: PlanTemplate) => {
+    if (applying) return;
     if (!window.confirm(`Применить шаблон от ${tmpl.plan_date} (Jaccard ${(tmpl.jaccard * 100).toFixed(0)}%)?`)) return;
     setApplying(true);
     try {
-      const body = { plan_id: tmpl.plan_id, shipment_date: filterDate };
-      const result = await apiFetch<{ tasks_created: number }>("/api/admin/transport/planner/apply", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      const result = await applyPlan<{ tasks_created: number }>(tmpl.plan_id, filterDate);
       setApplyDone(result);
     } catch (e) {
       setSolveError(String(e));
-    } finally { setApplying(false); }
-  }, [filterDate]);
+    } finally {
+      setApplying(false);
+      setApplyPending(readApplyPending());
+    }
+  }, [filterDate, applying]);
 
   // ---------------------------------------------------------------------------
   // Drag-and-drop route editing (Sprint 24)
@@ -838,7 +825,6 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         </div>
         {(loading || solving) && <span className="dispatch-spinner">●</span>}
         {solving && <span className="planner-solve-timer">Решаем... {solveElapsed}с</span>}
-        {/* Sprint 101 — cancel solve */}
         {solving && activeJobId && (
           <button className="planner-cancel-solve-btn" onClick={handleCancelSolve} title="Остановить оптимизатор">
             ✕ Отмена
@@ -942,7 +928,8 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
             <button
               className="planner-apply-btn"
               onClick={handleApplyPlan}
-              disabled={applying || !plan.plan_id}
+              disabled={applying || !plan.plan_id || plan.routes.length === 0}
+              title={plan.routes.length === 0 ? "Нет маршрутов для применения" : ""}
             >
               {applying ? "⏳ Создаём..." : `✓ Применить план (${displayRoutes.length} рейсов)`}
             </button>
@@ -950,6 +937,13 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
 
           {applyDone && (
             <div className="planner-apply-done">✅ Создано рейсов: {applyDone.tasks_created}</div>
+          )}
+
+          {applyPending && !applyDone && (
+            <div className="planner-apply-done planner-apply-warn">
+              ⚠ Применение плана #{applyPending.plan_id} (на {applyPending.shipment_date}) не подтверждено. Проверьте список рейсов.
+              <button className="dispatch-cancel-edit-btn" onClick={() => { resolveApplyPending(); setApplyPending(null); }}>Сверено</button>
+            </div>
           )}
 
           <div className="dispatch-fp-sep" />

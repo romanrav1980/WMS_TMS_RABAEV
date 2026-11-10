@@ -644,6 +644,10 @@ class Live:
         self.meta("insert into RRL_WARES(ID,NAME,PREFIX,SPIS_OTBOR_ON_SCAN_OPALL)values(:w,:n,'Q9',1)",
                   "select count(*) from RRL_WARES where ID=:w and NAME=:n and PREFIX='Q9' and SPIS_OTBOR_ON_SCAN_OPALL=1", w=ware, n="C0190 mixed tree " + tag)
         transport_inputs = load_transport_inputs(self.s.get("transport_inputs_file")) if self.s.get("transport_inputs_file") else {}
+        store_address = transport_inputs.get("store_address")
+        if store_address:
+            self.meta("insert into RRL_ADDR(ADDR,ORD,TRANSPORT_TYPE,STOL,LEAD_TIME,SHIPPING_TIME,RESERVATION_ORDER,DELETED3,MAX_VEHICLE_TONS,UNLOAD_NORM_MIN,TW_STRICT,GEO_FENCE_RADIUS_M)values(:a,0,'15',0,0,'00:00',0,0,20,30,0,200)",
+                      "select count(*) from RRL_ADDR where ADDR=:a", a=store_address)
         qc_mode = (transport_inputs.get("qc") or {}).get("mode", "BOTH")
         if qc_mode not in ("SCAN", "WEIGHT", "BOTH"):
             raise RunnerStop("FIXTURE_QC_MODE_INVALID")
@@ -820,7 +824,11 @@ class Live:
     def transport(self) -> None:
         inputs = load_transport_inputs(self.s.get("transport_inputs_file"))
         from c0191_mixed_tree_transport import run as run_transport
-        result = run_transport(self, inputs)
+        checkpoint = self.s.get("transport_stop_after")
+        result = run_transport(self, inputs, stop_after=checkpoint)
+        if checkpoint and result.get("status") == f"CHECKPOINT_{checkpoint}":
+            self.s["transport_checkpoint"] = checkpoint; self.save()
+            return
         if result.get("status") != "STORE_RECEIVED":
             raise RunnerStop(str(result.get("stopped") or "TRANSPORT_NOT_COMPLETED"))
 
@@ -907,6 +915,8 @@ def main() -> int:
     ap.add_argument("--manual-net-kg", help="operator-entered NET kg for the KG line (also its order quantity)")
     ap.add_argument("--synthetic-measurements", action="store_true", help="software-only fixture values; not evidence of physical weighing")
     ap.add_argument("--transport-inputs", help="UTF-8 JSON input for the C0191 one-recipient transport/store flow")
+    ap.add_argument("--transport-stop-after", choices=["SHIPMENT", "TRANSPORT_TASK", "FLOOR_QC_TARE", "LOAD", "TARE_HANDOVER"],
+                    help="stop a new isolated transport after this verified stage; used only before a separate command-race probe")
     ap.add_argument("--state", default=str(EVIDENCE / "mixed-tree.json"))
     args = ap.parse_args()
     if args.mode == "plan":
@@ -919,6 +929,12 @@ def main() -> int:
     live = Live(args.api, Path(args.state))
     if args.transport_inputs:
         live.s["transport_inputs_file"] = str(Path(args.transport_inputs).resolve())
+        live.save()
+    if args.transport_stop_after:
+        saved = live.s.get("transport_stop_after")
+        if saved is not None and saved != args.transport_stop_after:
+            raise SystemExit("--transport-stop-after differs from the persisted run")
+        live.s["transport_stop_after"] = args.transport_stop_after
         live.save()
     try:
         if args.mode == "cleanup":

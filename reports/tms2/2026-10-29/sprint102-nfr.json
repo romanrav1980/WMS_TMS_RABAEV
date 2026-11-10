@@ -1,0 +1,15 @@
+﻿{
+  "sprint": 102,
+  "scenario": "virtualized available ST table",
+  "rows": 2000,
+  "first_render_ms": 157.5308,
+  "rendered_rows": {
+    "initial": 31,
+    "after_scroll": 42,
+    "at_bottom": 31
+  },
+  "limit_ms": 300,
+  "result": "PASS",
+  "command": "node tests\\ui\\transport_table_2000_nfr_smoke.cjs",
+  "measured_at": "2026-10-29T08:18:00+03:00"
+}

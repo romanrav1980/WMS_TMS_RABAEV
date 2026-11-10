@@ -16,13 +16,16 @@ PACKAGE = dict(sku_id="A", sku_version=1, units_per_box=10, weight=Decimal("10")
 
 
 class Cursor:
-    def __init__(self, status="TARE_TYPE_UNCONFIRMED"):
-        self.status, self.calls = status, []
+    def __init__(self, status="TARE_TYPE_UNCONFIRMED", mapping=None):
+        self.status, self.mapping, self.calls, self.last_sql = status, mapping, [], ""
 
     def execute(self, sql, *args, **binds):
+        self.last_sql = sql
         self.calls.append(("execute", sql))
 
     def fetchone(self):
+        if "RRL_TRADE_TOPUP_PALLETIZATION" in self.last_sql:
+            return self.mapping
         return (1,)
 
     def callfunc(self, name, kind, args):
@@ -55,6 +58,20 @@ class Gateway:
         return Scope()
 
 
+class PackageCursor:
+    def __init__(self, mapping):
+        self.mapping = mapping
+        self.last_sql = ""
+
+    def execute(self, sql, *args, **binds):
+        self.last_sql = sql
+
+    def fetchone(self):
+        if "RRL_TRADE_TOPUP_PALLETIZATION" in self.last_sql:
+            return self.mapping
+        return (10, 10, Decimal(".4"), Decimal(".5"), Decimal(".5"))
+
+
 def context(max_weight="1000", max_volume="10", planned=()):
     return dict(trip=dict(planned_departure_at="2099-01-01T08:00:00+00:00"), version=3, planned=list(planned), orders=[], packages={"A": PACKAGE},
                 profile=dict(version=1, base_hash="H"), dimensions=(Decimal("2.4"), Decimal("1.6"), Decimal("2.4")), started=False, loaded=None,
@@ -64,8 +81,8 @@ def context(max_weight="1000", max_volume="10", planned=()):
 @pytest.mark.parametrize("status", ["TARE_TYPE_UNCONFIRMED", "NOT_CONFIGURED"])
 def test_existing_profile_check_is_asked_with_type_unconfirmed_places_and_refuses(status):
     cursor = Cursor(status)
-    floor = trade_capacity.floor_admission(cursor, 10059)
-    assert ("callfunc", "RRL_VEHICLE_PROFILE_API.check_floor_capacity", [10059, "[]", 1]) in cursor.calls
+    floor = trade_capacity.floor_admission(cursor, 10059, [])
+    assert ("callfunc", "RRL_VEHICLE_PROFILE_API.check_floor_capacity", [10059, "[]", 0]) in cursor.calls
     assert floor == dict(floor_places_checked=False, stacking_rules_checked=False, floor_profile_status=status,
                          blocking_reason="TOPUP_PALLET_PLACE_MAPPING_REQUIRED")
 
@@ -111,3 +128,10 @@ def test_blocked_calculation_is_never_saved_and_holds_nothing(monkeypatch):
     assert refused.value.code == "TOPUP_PALLET_PLACE_MAPPING_REQUIRED"
     called = [c[1] for c in cursor.calls if c[0] in ("callproc", "callfunc")]
     assert "RRL_TRADE_TOPUP_API.save" not in called and not any("HOLD" in str(c) or "insert" in str(c).lower() for c in cursor.calls)
+
+
+def test_multiple_stacking_layers_are_refused_before_capacity_calculation(monkeypatch):
+    monkeypatch.setattr(trade_capacity, "_document", lambda *args: (dict(wms_article_id="A", units_per_box=10), 1))
+    with pytest.raises(TradeTransportError) as refused:
+        trade_capacity._box(PackageCursor((1, 20, 2, 1)), 1, "A")
+    assert (refused.value.code, refused.value.status) == ("TOPUP_PALLET_PLACE_MAPPING_REQUIRED", 409)

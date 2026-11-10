@@ -1,0 +1,11 @@
+﻿{
+  "checked_at": "2026-10-28T00:00:00+03:00",
+  "base_url": "http://127.0.0.1:8088",
+  "source_commit": "c691b104",
+  "routes": [
+    "/api/case-pick/tasks/{task_id}/lines/{line_id}/weigh-line-manual",
+    "/api/inventory/tare/book",
+    "/api/warehouse-hus/bind-shipment"
+  ],
+  "purpose": "T06 isolated synthetic fixture readiness; no physical scale or external transport integration"
+}

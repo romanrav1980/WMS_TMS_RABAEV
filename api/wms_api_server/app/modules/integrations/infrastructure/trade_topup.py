@@ -145,7 +145,7 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
         selected.append(item)
         if item['proposed_boxes']:
             planned.append(dict(packages[need['sku_id']], boxes=Decimal(item['proposed_boxes']), recipient_id=need['recipient_id']))
-    floor = floor_admission(cur, context['vehicle'])  # C-0178: no confirmed pallet places/stacking -> no preview to save, confirm or hold
+    floor = floor_admission(cur, context['vehicle'], planned)
     if floor['blocking_reason']:
         raise TradeTransportError(floor['blocking_reason'], 409)
     result = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],

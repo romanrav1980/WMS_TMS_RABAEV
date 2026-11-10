@@ -616,6 +616,23 @@ async def stream_vrp_job(
     )
 
 
+@router.get("/planner/solve/{job_id}")
+def get_vrp_job(
+    job_id: str,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Полный результат конкретной VRP-задачи (routes включены)."""
+    job = vrp_job_store.get(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+    return {
+        "job_id": job.job_id,
+        "done": job.done,
+        "error": job.error,
+        "result": job.result,
+    }
+
+
 @router.delete("/planner/solve/{job_id}", status_code=204)
 def cancel_vrp_job(
     job_id: str,

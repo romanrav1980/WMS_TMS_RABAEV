@@ -38,6 +38,12 @@ def test_complete_delivery_of_this_fixture_may_be_cleaned():
     assert cleanup.delivery_findings(state()) == []
 
 
+def test_current_driver_journal_key_is_accepted():
+    current = state()
+    current["journal"]["results"]["t.driver.v2"] = current["journal"]["results"].pop("t.driver")
+    assert cleanup.delivery_findings(current) == []
+
+
 @pytest.mark.parametrize("change,code", [
     ({"transport__stages_done": ALL[:6]}, "DELIVERY_INCOMPLETE"),
     ({"transport__stopped": "EXTERNAL_TRANSPORT_DOCUMENT_REQUIRED"}, "DELIVERY_STOPPED"),

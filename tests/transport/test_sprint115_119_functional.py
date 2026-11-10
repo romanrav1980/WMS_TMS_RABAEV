@@ -180,45 +180,18 @@ def test_geofence_endpoints_in_gps_router():
 
 
 # ---------------------------------------------------------------------------
-# Sprint 119 — Auto-mark UNLOAD
+# Sprint 119 — события геозоны
 # ---------------------------------------------------------------------------
 
-def test_auto_mark_functions_exist():
-    from api.wms_api_server.app.services.geofencing import (
-        _auto_mark_unload_start,
-        _auto_mark_unload_done,
-    )
-    assert callable(_auto_mark_unload_start)
-    assert callable(_auto_mark_unload_done)
-
-
-def test_auto_mark_called_on_enter_exit():
-    """check_geofences вызывает auto-mark при enter/exit."""
+def test_geofence_does_not_create_unbound_operation_fact():
+    """Координата создаёт событие, но не подтверждает разгрузку без операции."""
     import inspect
     from api.wms_api_server.app.services import geofencing
     src = inspect.getsource(geofencing)
-    assert "_auto_mark_unload_start" in src
-    assert "_auto_mark_unload_done" in src
     assert '"enter"' in src
     assert '"exit"' in src
-
-
-def test_auto_mark_uses_sysdate():
-    """Oracle UPDATE использует SYSDATE для fact_start/fact_end."""
-    import inspect
-    from api.wms_api_server.app.services import geofencing
-    src = inspect.getsource(geofencing)
-    assert "SYSDATE" in src
-    assert "FACT_START" in src
-    assert "FACT_END" in src
-
-
-def test_auto_mark_tags_gps_audit():
-    """Авто-отмеченные операции помечаются [GPS-auto] в NOTE."""
-    import inspect
-    from api.wms_api_server.app.services import geofencing
-    src = inspect.getsource(geofencing)
-    assert "GPS-auto" in src
+    assert "operational_fact_applied=False" in src
+    assert "unambiguous_binding_required" in src
 
 
 def test_geo_event_returned_in_gps_track():

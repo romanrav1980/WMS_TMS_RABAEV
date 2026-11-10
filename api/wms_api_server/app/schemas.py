@@ -1239,6 +1239,7 @@ class WarehouseMapCameraLinksPatchRequest(BaseModel):
 class TransportTaskCreateRequest(BaseModel):
     transtype: str = Field(..., description="Тип транспорта (TRANSTYPE), например '10', '15', '20реф'")
     shipment_date: date = Field(..., description="Дата отгрузки")
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$", description="Идемпотентный идентификатор создания; повтор с тем же id возвращает тот же task_id")
 
 
 class TransportTaskUpdateRequest(BaseModel):

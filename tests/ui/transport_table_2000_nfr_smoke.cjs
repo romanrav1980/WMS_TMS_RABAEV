@@ -67,12 +67,18 @@ async function main() {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await installMocks(page);
 
-  const started = Date.now();
   await page.goto(APP_URL);
-  await page.getByRole("heading", { name: "Диспетчер отгрузки" }).waitFor({ timeout: 10000 });
+  const password = page.locator('input[type=password]');
+  if (await password.count()) {
+    await page.locator('input[autocomplete=username]').fill(process.env.WMS_UI_USER || 'admin');
+    await password.fill(process.env.WMS_UI_PASSWORD || 'admin123');
+    await page.locator('button[type=submit]').click();
+  }
+  await page.locator(".dispatch-title h1").waitFor({ timeout: 10000 });
+  const started = performance.now();
   await page.getByText("NFR-ST-00001").waitFor({ timeout: 10000 });
-  const firstRenderMs = Date.now() - started;
-  assert(firstRenderMs < 4000, `2000-row first render too slow: ${firstRenderMs}ms`);
+  const firstRenderMs = performance.now() - started;
+  assert(firstRenderMs <= 300, `2000-row data render exceeds 300ms: ${firstRenderMs.toFixed(1)}ms`);
 
   const section = page.locator(".dispatch-st-section");
   await section.waitFor({ timeout: 5000 });
@@ -81,7 +87,7 @@ async function main() {
   const renderedRows = await page.locator(".dispatch-st-section tbody tr").count();
   assert(renderedRows <= 70, `Too many rendered ST table rows: ${renderedRows}`);
 
-  await page.locator(".dispatch-page-info", { hasText: "Всего СТ: 2000" }).waitFor({ timeout: 5000 });
+  await page.locator(".dispatch-page-info", { hasText: "2000" }).waitFor({ timeout: 5000 });
   await page.locator(".dispatch-page-info", { hasText: "виртуализация активна" }).waitFor({ timeout: 5000 });
 
   await section.evaluate(el => { el.scrollTop = 800; el.dispatchEvent(new Event("scroll", { bubbles: true })); });

@@ -45,9 +45,10 @@ def delivery_findings(state: dict[str, Any]) -> list[str]:
         if not (isinstance(t.get(key), str) and SYNTHETIC_USER.fullmatch(t[key])):
             out.append(f"FOREIGN_OR_MISSING_USER:{key}")
     results = (state.get("journal") or {}).get("results", {})
-    for key, field, journal_key, value_key in (("vehicle_id", "id", "t.vehicle", "id"), ("driver_id", "id", "t.driver", "id"),
-                                               ("transport_task_id", "task_id", "t.task", "task_id")):
-        recorded = (results.get(journal_key) or {}).get("value") or {}
+    for key, field, journal_keys, value_key in (("vehicle_id", "id", ("t.vehicle",), "id"), ("driver_id", "id", ("t.driver.v2", "t.driver"), "id"),
+                                                ("transport_task_id", "task_id", ("t.task",), "task_id")):
+        recorded = next((((results.get(journal_key) or {}).get("value") or {}) for journal_key in journal_keys
+                         if (results.get(journal_key) or {}).get("value") is not None), {})
         if t.get(key) is None or recorded.get(value_key) != t.get(key):
             out.append(f"TRANSPORT_ID_NOT_FROM_THIS_RUN:{key}")
     if not t.get("expected_remainder_after_load"):
@@ -181,8 +182,8 @@ class MixedTreeCleanup:
     def rights_preflight(self) -> None:
         """K-0234: the expected rights state is fixed read-only before the first deletion; anything else on these groups stops."""
         driver, receiver = retire_scope(self.t.get("driver_user")), retire_scope(self.t.get("receiver_user"))
-        driver_rights = sorted(r[0] for r in self.live.read("select RIGHT1 from RIGHTS where USER_GROUP=:g", g=driver))
-        receiver_rights = sorted(r[0] for r in self.live.read("select RIGHT1 from RIGHTS where USER_GROUP=:g", g=receiver.upper()))
+        driver_rights = sorted(str(r[0]).lower() for r in self.live.read("select RIGHT1 from RIGHTS where USER_GROUP=:g", g=driver))
+        receiver_rights = sorted(str(r[0]).lower() for r in self.live.read("select RIGHT1 from RIGHTS where USER_GROUP=:g", g=receiver.upper()))
         if driver_rights != sorted(DRIVER_RIGHTS):
             raise CleanupStop(f"DRIVER_RIGHTS_UNEXPECTED:{driver_rights}")
         if receiver_rights != [RECEIVER_RIGHT]:
@@ -202,8 +203,9 @@ class MixedTreeCleanup:
     def driver_rights_remove(self) -> None:
         driver = retire_scope(self.t["driver_user"])
         rights = ",".join(f"'{r}'" for r in DRIVER_RIGHTS)  # constants, not input
-        self.live.finalizer_sql("c0192.driver.rights", f"delete from RIGHTS where USER_GROUP=:g and RIGHT1 in({rights})", {"g": driver},
-                                f"select case when count(*)=0 then 1 else 0 end from RIGHTS where USER_GROUP=:g and RIGHT1 in({rights})", {"g": driver}, 1)
+        upper_rights = ",".join(f"'{r.upper()}'" for r in DRIVER_RIGHTS)
+        self.live.finalizer_sql("c0192.driver.rights", f"delete from RIGHTS where USER_GROUP=:g and upper(RIGHT1) in({upper_rights})", {"g": driver},
+                                f"select case when count(*)=0 then 1 else 0 end from RIGHTS where USER_GROUP=:g and upper(RIGHT1) in({upper_rights})", {"g": driver}, 1)
 
     def user_retire(self, field: str) -> None:
         user = retire_scope(self.t[field])
@@ -230,6 +232,8 @@ class MixedTreeCleanup:
         for name, fn in (("tare_return", self.tare_return), ("tare_zero", self.tare_zero), ("binding_off", self.binding_off),
                          ("wave_finish", self.wave_finish), ("own_stock_zero", self.own_stock_zero), ("retire", self.retire)):
             self.step(name, fn)
+        self.c.pop("stopped", None)
+        self.live.save()
         return {"status": "CLEANED", "warehouse": self.s["warehouse"], "steps": list(self.c["steps_done"])}
 
 

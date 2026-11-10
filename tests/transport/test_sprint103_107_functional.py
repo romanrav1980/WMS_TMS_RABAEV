@@ -62,36 +62,35 @@ def test_driver_mobile_no_admin_auth():
     assert "require_permission" not in src or "TRANSPORT" not in src
 
 
-def test_verify_op_driver_helper():
-    """_verify_op_driver существует и проверяет принадлежность операции водителю."""
-    from api.wms_api_server.app.routers.driver_mobile import _verify_op_driver
+def test_driver_operation_owner_is_scoped_by_driver():
+    """The driver workspace command receives both operation and driver identity."""
+    from api.wms_api_server.app.modules.transport.infrastructure.driver_workspace import DriverWorkspace
     import inspect
-    sig = inspect.signature(_verify_op_driver)
-    params = list(sig.parameters.keys())
-    assert "op_id" in params
-    assert "driver_id" in params
+    params = list(inspect.signature(DriverWorkspace.mark).parameters)
+    assert "operation" in params
+    assert "driver" in params
 
 
 def test_driver_trips_response_fields():
     """list_trips возвращает объекты с нужными полями."""
     import inspect
-    from api.wms_api_server.app.routers import driver_mobile
-    src = inspect.getsource(driver_mobile)
-    assert "task_id" in src
-    assert "shipment_date" in src
-    assert "num_plat" in src
-    assert "condition" in src
-    assert "st_count" in src
+    from api.wms_api_server.app.modules.transport.infrastructure import driver_workspace
+    src = inspect.getsource(driver_workspace)
+    assert "TASK_ID" in src
+    assert "SHIPMENT_DATE" in src
+    assert "NUM_PLAT" in src
+    assert "CONDITION" in src
+    assert "ST_COUNT" in src
 
 
 def test_driver_ops_status_logic():
     """Статус операции вычисляется из fact_start/fact_end."""
     import inspect
-    from api.wms_api_server.app.routers import driver_mobile
-    src = inspect.getsource(driver_mobile)
-    assert '"done"' in src
-    assert '"in_progress"' in src
-    assert '"pending"' in src
+    from api.wms_api_server.app.modules.transport.infrastructure import driver_workspace
+    src = inspect.getsource(driver_workspace)
+    assert "'done'" in src
+    assert "'in_progress'" in src
+    assert "'pending'" in src
 
 
 # ---------------------------------------------------------------------------
@@ -99,21 +98,21 @@ def test_driver_ops_status_logic():
 # ---------------------------------------------------------------------------
 
 def test_service_worker_file_exists():
-    assert os.path.exists("admin/wms_admin_frontend/driver-sw.js"), "driver-sw.js not found"
+    assert os.path.exists("admin/wms_admin_frontend/public/driver-sw.js"), "driver-sw.js not found"
 
 
 def test_service_worker_has_install_handler():
-    with open("admin/wms_admin_frontend/driver-sw.js", encoding="utf-8") as f:
+    with open("admin/wms_admin_frontend/public/driver-sw.js", encoding="utf-8") as f:
         content = f.read()
     assert "install" in content
     assert "activate" in content
     assert "fetch" in content
 
 
-def test_service_worker_has_background_sync():
-    with open("admin/wms_admin_frontend/driver-sw.js", encoding="utf-8") as f:
+def test_service_worker_does_not_replay_driver_operations_offline():
+    with open("admin/wms_admin_frontend/public/driver-sw.js", encoding="utf-8") as f:
         content = f.read()
-    assert "sync-driver-ops" in content
+    assert "sync-driver-ops" not in content
     assert "IndexedDB" in content or "indexedDB" in content
 
 

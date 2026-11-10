@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-27",
+  "timezone": "Europe/Moscow",
+  "status": "partial",
+  "reason": "Owner-authorized work window ends at 24:00; remaining sprints are not complete.",
+  "complete_sprints": ["T01"],
+  "partial_sprints": ["T02", "T03", "T04", "T05", "T06", "T07", "T08", "T09", "T10", "T11", "T12"],
+  "accepted_this_turn": {
+    "claude_task": "C0187",
+    "release": "K-0209",
+    "local_commit": "351040ee",
+    "scope": "36 offline weighed-line/weighted-box CASE tests; no production code changed",
+    "codex_review": "36 focused tests PASS; combined tests/tradecase plus weighted CASE tests 430 PASS; HU tree model 17 PASS; RETAILCASE quality gate, architecture, encoding PASS"
+  },
+  "mixed_hu_tree": {
+    "source_review": "CASE and HU child attachment and multi-CASE HU_SHIP composition are present in source.",
+    "existing_live_evidence": "T07 bulk-packing fixture contains one pallet, two BOX, two CASE and four EA of one SKU.",
+    "not_verified": "No live end-to-end tree combines weighed CASE assembly with shelf-picked BOX/EA, mixed assortment, loading, departure and store receipt."
+  },
+  "known_gap": "The current weighed CASE /weigh-line contract requires warehouse_scale_capture; no operator-entered NET quantity path was verified. Existing manual warehouse routes cover tare or final QC, not CASE quantity confirmation.",
+  "claude": {
+    "status": "idle",
+    "last_result": "C0187 K-0209",
+    "last_message": "K-0210; no active task; old assignments remain historical",
+    "registered_request_count": 47
+  },
+  "runtime": {
+    "api_8088_pid": 87992,
+    "api_8093_pid": 24236,
+    "restarted": false,
+    "oracle_writes_this_turn": 0,
+    "equipment_connected": false
+  },
+  "github_published": false,
+  "wiki_updated": [
+    "wiki/roadmap/tradecase_execution_20261019.md",
+    "wiki/database/tradecase_nested_shipping_20261023.md",
+    "wiki/index.md",
+    "wiki/log.md"
+  ],
+  "next_work": [
+    "Run the documented mixed-tree acceptance with a weighted CASE and a shelf-picked CASE for the same recipient; verify composition, control, parent shipment, exact replay, and store receipt.",
+    "Resolve whether operator-entered NET applies to weighed CASE assembly; implement only with an immutable, actor/task-bound manual measurement record while retaining the electronic capture path.",
+    "Continue T02-T12 acceptance; do not report external SAP/SCM acknowledgments, equipment commissioning or pilot as complete without evidence."
+  ]
+}

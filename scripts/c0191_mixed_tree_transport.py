@@ -167,12 +167,13 @@ class MixedTreeTransport:
             raise RunnerStop("TRANSPORT_INPUTS_CHANGED_AFTER_START")  # a resumed run keeps the original fixture values
         self.tag, self.ware, self.root = live.s["tag"], live.s["warehouse"], live.s["tag"] + ".PAL"
 
-    def stage(self, name: str, fn) -> None:
+    def stage(self, name: str, fn) -> bool:
         if name in self.t["stages_done"]:
-            return
+            return False
         self.t["stage"] = name; self.live.save()
         fn()
         self.t["stages_done"].append(name); self.t["last_verified_stage"] = name; self.live.save()
+        return True
 
     def _metadata(self, action) -> Any:
         """Legacy shipment metadata inside the native metadata boundary (full_pallet_fixture pattern)."""
@@ -410,6 +411,18 @@ class MixedTreeTransport:
     # -- DEPART: exact replay; a missing real transport document is an explicit stop, never a synthetic ACK --
     def depart(self) -> None:
         live, task = self.live, self.t["transport_task_id"]
+        race = self.t.get("departure_race")
+        if race:
+            winner = race.get("winner_operation_id")
+            facts = live.read("select STATUS,DEPARTURE_OPERATION_ID from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o", o=self.t["load_operation_id"])
+            operations = live.read("select STATE,COMMAND_TYPE from RRL_STOCK_OPERATION where OPERATION_ID=:o", o=winner)
+            if facts != [("DEPARTED", winner)] or operations != [("APPLIED", "TRIP_DEPART")]:
+                raise RunnerStop("DEPART_RACE_RECONCILIATION_MISMATCH")
+            historical = live.composition(self.root)
+            if not historical.get("historical_composition") or historical.get("top_place_count") != 1:
+                raise RunnerStop("HISTORICAL_TREE_MISSING")
+            self.t["historical_tree"] = historical; live.save()
+            return
         result = live.send("t.depart", "POST", f"/api/transport/loading/{task}/depart", {"operation_id": f"{self.tag}.DEPART"}, expect=(200, 409))
         if isinstance(result, dict) and "DOCUMENT_NOT_READY" in str(result.get("detail", "")):
             raise RunnerStop("EXTERNAL_TRANSPORT_DOCUMENT_REQUIRED: a real ERP transport document must be READY before departure")
@@ -470,13 +483,20 @@ class MixedTreeTransport:
             self.live.http = saved
 
 
-def run(live: Any, inputs: dict[str, Any]) -> dict[str, Any]:
-    """Root entry point after C0190 TREE; stops at the first unmet prerequisite with its exact reason."""
+def run(live: Any, inputs: dict[str, Any], stop_after: str | None = None) -> dict[str, Any]:
+    """Root entry point after C0190 TREE; an explicit checkpoint never performs a later business command."""
+    if stop_after is not None and stop_after not in STAGES:
+        raise RunnerStop(f"UNKNOWN_TRANSPORT_CHECKPOINT:{stop_after}")
     flow = MixedTreeTransport(live, inputs)
     try:
         for name, fn in zip(STAGES, (flow.shipment, flow.transport_task, flow.floor_qc_tare, flow.load, flow.tare_handover, flow.depart, flow.store_receipt)):
-            flow.stage(name, fn)
+            completed_now = flow.stage(name, fn)
+            if completed_now and name == stop_after:
+                flow.t["checkpoint"] = name; live.save()
+                return {"status": f"CHECKPOINT_{name}", "last_verified_stage": flow.t.get("last_verified_stage")}
     except RunnerStop as stop:
         flow.t["stopped"] = str(stop); live.save()
         return {"stopped": str(stop), "last_verified_stage": flow.t.get("last_verified_stage")}
+    flow.t.pop("stopped", None)
+    live.save()
     return {"status": "STORE_RECEIVED", "last_verified_stage": flow.t.get("last_verified_stage")}

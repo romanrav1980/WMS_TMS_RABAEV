@@ -122,11 +122,20 @@ def _tcp_url_available(url: str) -> bool:
         return False
 
 
+def _osrm_route_available() -> bool:
+    route = f"{OSRM_URL}/route/v1/driving/60.5975,56.8389;60.6122,56.8519?overview=false"
+    try:
+        response = _HTTP_CLIENT.get(route, timeout=min(_OSRM_TIMEOUT, 2.0))
+        return response.status_code == 200 and response.json().get("code") == "Ok"
+    except (httpx.HTTPError, ValueError):
+        return False
+
+
 class OsrmProvider(RoutingProvider):
     name = "osrm"
 
     def is_available(self) -> bool:
-        return _cached_availability(self.name, lambda: _tcp_url_available(OSRM_URL))
+        return _cached_availability(self.name, _osrm_route_available)
 
     def build_matrix(self,points: list[tuple[float,float]]) -> list[list[float]]:
         return self.build_cost_matrix(points)[0]

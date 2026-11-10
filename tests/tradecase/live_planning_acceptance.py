@@ -1,4 +1,4 @@
-"""Real native planning on a new received stock fixture; customer-demand metadata is seeded, not SAP integration."""
+"""Native planning on an explicitly supplied internal stock fixture; no SAP adapter is invoked."""
 import sys,json
 from pathlib import Path
 from uuid import uuid4
@@ -67,8 +67,11 @@ def run(f):
 if __name__=='__main__':
     f=None;report={};OUT.mkdir(parents=True,exist_ok=True)
     try:
-        f=json.loads(Path(sys.argv[1]).read_text())["fixture"]if len(sys.argv)>1 else setup()
-        report=run(f)
+        if len(sys.argv) != 2:
+            report=dict(status='SKIPPED_INTERNAL_FIXTURE_REQUIRED', reason='Pass a JSON fixture created without SAP integration')
+        else:
+            f=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))['fixture']
+            report=run(f)
     except Exception as e:report=dict(status='FAIL',error=str(e));raise
     finally:
         if f:
@@ -76,4 +79,4 @@ if __name__=='__main__':
                 q=c.cursor();q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'",a=f['actor']);q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:r',r=f['role']);c.commit()
             f.pop('password',None);report['fixture']=f
         report['http']=CALLS;p=OUT/('planning-'+uuid4().hex[:8]+'.json');p.write_text(json.dumps(report,indent=2,default=str),encoding='utf-8')
-    print(json.dumps(dict(status=report['status'],file=str(p),warehouse_id=f['warehouse_id'],http_calls=len(CALLS))))
+    print(json.dumps(dict(status=report['status'],file=str(p),warehouse_id=f['warehouse_id'] if f else None,http_calls=len(CALLS))))

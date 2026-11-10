@@ -1,0 +1,17 @@
+{
+  "case": "T06 composite root pallet, no store split",
+  "checked_at": "2026-10-29T02:41:41.3765700+03:00",
+  "fixture_tag": "MT289C802082F",
+  "root_identifier": "MT289C802082F.PAL",
+  "migration_verify_scripts": 5,
+  "migration_verify_result": "PASS",
+  "resume_runner_result": "PASS; completed journal resumed without new business commands",
+  "load_operation_id": "MT289C802082F.LOAD",
+  "store_receipt_operation_id": "MT289C802082F.STORE.RECEIPT",
+  "active_shipment_pallets": 1,
+  "distinct_recipients": 1,
+  "store_receipt_facts": 1,
+  "receipt_state": "ACCEPTED",
+  "root_key": "MT289C802082F.PAL",
+  "scope": "Synthetic WMS fixture with manual measurement inputs. SAP, SCM and equipment are excluded."
+}

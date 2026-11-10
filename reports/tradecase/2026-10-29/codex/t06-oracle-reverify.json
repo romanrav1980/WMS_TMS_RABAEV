@@ -1,0 +1,28 @@
+{
+    "scope":  "Synthetic internal API fixture and manual measurement input. SAP, SCM and equipment are excluded.",
+    "regression":  {
+                       "result":  "47 passed",
+                       "test":  "tests/tradecase/test_c0191_mixed_tree_transport.py"
+                   },
+    "case":  "T06 re-verification: multi-order root HU and one-recipient composite pallet",
+    "oracle":  {
+                   "result":  "PASS",
+                   "verify_scripts":  [
+                                          "2026-10-28_multi_order_root_hu_shipping/verify.sql",
+                                          "2026-10-29_multi_order_qc_controller/verify.sql",
+                                          "2026-10-29_multi_order_root_hu_compile_json_sql_fix/verify.sql",
+                                          "2026-10-29_multi_order_root_hu_execute_json_sql_fix/verify.sql",
+                                          "2026-10-29_root_hu_shipment_bind/verify.sql"
+                                      ],
+                   "shipping_core":  [
+                                         "PACKAGE VALID",
+                                         "PACKAGE BODY VALID"
+                                     ]
+               },
+    "checked_at":  "2026-10-29T02:09:27.7005966+03:00",
+    "prior_live_fixture":  {
+                               "evidence":  "t06-mixed-root-live.json",
+                               "result":  "one root, one ST, one recipient; exact LOAD, DEPART and STORE_RECEIPT replays; receipt fact count=1",
+                               "tag":  "MT289C802082F"
+                           }
+}

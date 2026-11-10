@@ -201,7 +201,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx:TransportDispatchPage": {
-      "maximum": 2509,
+      "maximum": 2508,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"

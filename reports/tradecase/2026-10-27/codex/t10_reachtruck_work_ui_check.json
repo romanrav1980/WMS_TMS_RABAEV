@@ -1,0 +1,31 @@
+{
+  "kind": "LIVE_READ_ONLY_SHIFT_UI_7D",
+  "window": [
+    "2026-10-20T18:00:00Z",
+    "2026-10-27T18:00:00Z"
+  ],
+  "runs": [
+    {
+      "warehouse": 213059748,
+      "width": 390,
+      "status": "PASS",
+      "reachtruck_lane": "Synthetic reach truck QA\nРичтрак",
+      "visible_bars": 1,
+      "selected_event": "PICKING_MOVE · 1248",
+      "detail_card": true,
+      "page_width": 390,
+      "posts": 0
+    },
+    {
+      "warehouse": 213059748,
+      "width": 1440,
+      "status": "PASS",
+      "reachtruck_lane": "Synthetic reach truck QA\nРичтрак\nНеизвестно",
+      "visible_bars": 1,
+      "selected_event": "PICKING_MOVE · 1248",
+      "detail_card": true,
+      "page_width": 1440,
+      "posts": 0
+    }
+  ]
+}

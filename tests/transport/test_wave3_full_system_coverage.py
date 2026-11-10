@@ -255,7 +255,7 @@ PROCESSES: tuple[BusinessProcess, ...] = (
         route_patterns=(
             "POST /api/gps/track",
             "GET /api/admin/transport/geofences",
-            "PATCH /api/admin/transport/geofences/{addr_id}",
+            "PATCH /api/admin/transport/geofences/{addr_id:path}",
             "GET /api/admin/transport/vehicles/positions",
             "GET /api/admin/transport/vehicles/{vehicle_id}/track",
         ),
@@ -298,6 +298,7 @@ PROCESSES: tuple[BusinessProcess, ...] = (
 
 def _router_routes() -> set[str]:
     from api.wms_api_server.app.routers import admin_rights, driver_mobile, gps, transport, transport_kpi, transport_tariffs, users
+    from api.wms_api_server.app.modules.transport.public import operation_fact_router
 
     routers = (
         transport.router,
@@ -307,6 +308,7 @@ def _router_routes() -> set[str]:
         gps.router,
         users.router,
         admin_rights.router,
+        operation_fact_router,
     )
     routes: set[str] = set()
     for router in routers:

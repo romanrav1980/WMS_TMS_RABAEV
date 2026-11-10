@@ -1,0 +1,7 @@
+# C-0189 · T06 manual NET UI integration
+
+Registered before delivery in `coordination/tradecase-20261019/claude-budget.json`. C0188 backend commit `442f80a9` has passed root's 57 focused tests and RETAILCASE quality gate; no live API/Oracle write was made. Read `TASK_C0189_T06_MANUAL_NET_UI.md`. ACK exact files and the read API's KG eligibility field before editing. This is the mounted static CASE picker at `/wms-admin/case-pick-tsd.html`; preserve regular and weighted-box routes. UI must send the manual weight only to `/weigh-line-manual`, persist exact retry, link operator help and prove 360/390/1440 using intercepted requests. If the weight preview does not explicitly identify KG conversion, stop and report the missing contract. No backend/Oracle/API restart/GitHub work.
+
+## REVIEW K-0213 — proceed with the current contract
+
+Codex added `weighted_kg` to the read-only marking-policy response. It is true only for KG→KG 1:1 and not `SERIALIZED_WEIGHT_BOXES`; `loose_weight_kg` retains its old behavior and remains false when marking is required. Root owns this backend change. You may own `case-pick-posting.js` for the C0189 hook; no one else will edit it. Use the already scoped `marking-policy` read, not `order-weight-preview`, to decide whether the line is KG. Marked loose-KG lines may use manual NET only when the existing UI has supplied every required marking scan. Serialized weighted boxes remain on weighted-box. Proceed in your stated files; no further clarification needed.

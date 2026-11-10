@@ -1,0 +1,143 @@
+{
+  "data/district_reviewed_rules.json": {
+    "bytes": 10310,
+    "sha256": "c781aafce085efc1c6dca3d4baf127eed392f7ca8e3b79f6ebc2aa8bc2d5cd34"
+  },
+  "data/october.json": {
+    "bytes": 6529154,
+    "sha256": "4f314412fd9230369331d512ac3cbe990e8ddac71215529c0af82baee7cc5917"
+  },
+  "data/office_district_candidates.json": {
+    "bytes": 79645,
+    "sha256": "d54c651b074538bd799b74bbd0c21cd4c3aea0ed3d51db3d5a9606a98e4b305e"
+  },
+  "data/planned_delivery.json": {
+    "bytes": 429181,
+    "sha256": "a8b11ecda3e6c9131c377ef2840bf0a048dea17845a7f43e882ebbf359ae7c04"
+  },
+  "data/rc_districts.json": {
+    "bytes": 204488,
+    "sha256": "282a2f5a07edc302e90a69a0dcbe15626430db0a11adb740976fc4f606e94493"
+  },
+  "data/trip_details.json": {
+    "bytes": 42031202,
+    "sha256": "dab141bc7f5b6fa49eaf031f210989b2922831ba3aabe80131fc49eb08925602"
+  },
+  "EXPORT.XLSX": {
+    "bytes": 27237349,
+    "sha256": "3aabd6bc10f0e7a522172afc38558fa323bc763a64bb56264af43f03df4907c7"
+  },
+  "EXPORT1.XLSX": {
+    "bytes": 2100045,
+    "sha256": "bb7f61ba1b63cb5d48bdd2d0d3d7ca16aafaa48459098c1f43994337b81a4500"
+  },
+  "october_inventory.jsonl": {
+    "bytes": 35570,
+    "sha256": "85379a13990f5bfe42e17984296f6921c333a2742d33b3400c4ecac3f994ba05"
+  },
+  "orders_profile.json": {
+    "bytes": 6357,
+    "sha256": "b4a36e8287849c66721207c5970d23ade260e4880c37bf38b5ce8ebb64996ed1"
+  },
+  "priority_inventory.jsonl": {
+    "bytes": 116506,
+    "sha256": "4002ddf47daa6d17aff9044466bc084ecbf2cc7e61a38d1771e5941b449bae93"
+  },
+  "SAP октябрь опер BLC.xlsx": {
+    "bytes": 3020410,
+    "sha256": "7a7252e3cc7acc6ee9d237aaa690231bfa5e694686775b8fc74deb144c2152a1"
+  },
+  "SAP октябрь точки.xlsx": {
+    "bytes": 508502,
+    "sha256": "a282785b524f1a89dc65c83ace0982eae913697b7dc2c165c88e63c1e3ec9482"
+  },
+  "SAP октябрь.XLSX": {
+    "bytes": 21075622,
+    "sha256": "e1dd41c8a4116df700d6aa5f74407f158b9aa5143043f07d87a5a3d80b6e50da"
+  },
+  "SAP операции BLC сентябрь 26.XLSX": {
+    "bytes": 127707390,
+    "sha256": "f73db5f6720e8507335209b1ad18cad36f8bcbe45675aade779570390a7de06d"
+  },
+  "source_inventory.jsonl": {
+    "bytes": 442320,
+    "sha256": "b1b43db84cc58909ceef48c3e41c355be1bbdc904bbc62d1115ddc5ff66be93e"
+  },
+  "ГРАФИК ОТГРУЗКИ КЛИЕНТОВ.xlsx": {
+    "bytes": 245408,
+    "sha256": "bed43573fcf3208eeb140f7c827c363f689a62b8e8ed5a22bdc3bcec7237cde7"
+  },
+  "Данные/babak8.txt": {
+    "bytes": 6744090,
+    "sha256": "d23ff3be869b100c98060aff51eb016646cabec9cb8c3d4b6bc1e3085f982bf4"
+  },
+  "Данные/vbak7.txt": {
+    "bytes": 20007296,
+    "sha256": "fb4e0f99e6b6136d19a58dec65e16829ea2c90ad2cfe088376eef0c21451e37e"
+  },
+  "Протоколы совещаний/11-05 Рабочая встреча_ Правила погрузки, расчёт перевозок и обмен SAP–1С-Detailed Summary.docx": {
+    "bytes": 23702,
+    "sha256": "3d0a5156cb26ef0d22b85d2735128f1fdd63da3a52683dd7723ccaf646a71426"
+  },
+  "Протоколы совещаний/11-05 Рабочая встреча_ Правила погрузки, расчёт перевозок и обмен SAP–1С-Summary.docx": {
+    "bytes": 17574,
+    "sha256": "645c2e6d5b0cead18db578234079145891b126ec60b1e7ba918800178fabb881"
+  },
+  "Протоколы совещаний/11-05 Совещание_ Маршруты, расчет времени и паллетирование-Detailed Summary.docx": {
+    "bytes": 20423,
+    "sha256": "145302549657d958a9db36fd4f31de746e7a1369dd353164acf7ee3049a6903e"
+  },
+  "Протоколы совещаний/11-05 Совещание_ Маршруты, расчет времени и паллетирование-Summary.docx": {
+    "bytes": 16996,
+    "sha256": "9f97201afb8a5f9b7ee4925a8c6108ec0a024d15945a6d127a4369b60ba73ade"
+  },
+  "Протоколы совещаний/11-06 Сквозная логистика_ обработка заказов, подбор транспорта и маршрутизация-Detailed Summary (1).docx": {
+    "bytes": 42565,
+    "sha256": "7ce0e1f5f5fc05e74100bfa94f662bd83d5f1bf01e031ff710dff123220d658c"
+  },
+  "Протоколы совещаний/11-06 Сквозная логистика_ обработка заказов, подбор транспорта и маршрутизация-Detailed Summary.docx": {
+    "bytes": 43799,
+    "sha256": "7af5dad4ddbe3a56243589800461f18feb3704438b43f5057133340217186a57"
+  },
+  "Протоколы совещаний/11-06 Сквозная логистика_ обработка заказов, подбор транспорта и маршрутизация-Reasoning Summary.docx": {
+    "bytes": 1024049,
+    "sha256": "74d27d46d83cb4cd642b18875417eb02ef2bd7d1fe907b88281c1e34e52ead60"
+  },
+  "Протоколы совещаний/11-06 Сквозная логистика_ обработка заказов, подбор транспорта и маршрутизация-Summary (1).docx": {
+    "bytes": 3851561,
+    "sha256": "e2fb9f9f3bf332eaae976559037eae5a2e20e87461980064e29ef630308edda6"
+  },
+  "Протоколы совещаний/11-06 Сквозная логистика_ обработка заказов, подбор транспорта и маршрутизация-Summary.docx": {
+    "bytes": 3851562,
+    "sha256": "20ed4a00cdca17fbf26c9f07a6724a5e69e2ebcd69efda545d33ac6b3fef822e"
+  },
+  "Протоколы совещаний/11-06 Совещание_ Планирование перевозок, интеграция SAP и 1С и складские процессы-Reasoning Summary (1).docx": {
+    "bytes": 1036980,
+    "sha256": "a948090e5ebf04733492b75ccafb9fba89f2d3fb3d7da7d8c2b780923f0a894e"
+  },
+  "Протоколы совещаний/11-06 Совещание_ Планирование перевозок, интеграция SAP и 1С и складские процессы-Reasoning Summary.docx": {
+    "bytes": 1036979,
+    "sha256": "78ae9094c4bb8a5f202e0fd583311d2e5e08d5472e4e7ac0245f4501f5bff30c"
+  },
+  "Протоколы совещаний/11-06 Совещание_ Планирование перевозок, интеграция SAP и 1С и складские процессы-Summary (1).docx": {
+    "bytes": 3233478,
+    "sha256": "228ee0cd6657813e579a0cfbae75ea929ae7444f03562cd75f53a48479c9dd76"
+  },
+  "Протоколы совещаний/11-06 Совещание_ Планирование перевозок, интеграция SAP и 1С и складские процессы-Summary.docx": {
+    "bytes": 3233477,
+    "sha256": "3ec2f53e0f07b47192f089c4682488d2918bb3536e9d1de0dbea498842577085"
+  },
+  "Протоколы совещаний/11-06 Совещание_ сквозной процесс заказов, транспортное планирование и тарифы хаба «Грандо-Summary.docx": {
+    "bytes": 19526,
+    "sha256": "65047118655dc5489400fe36b226ebc06bf991316f216bb52c71dec355aaec95"
+  },
+  "Сентябрь 2026 SAP v2.XLSX": {
+    "bytes": 40308803,
+    "sha256": "baaafe7680c9c759b6595a3a7fcfbfa8c9b94c9c609a7e9d5f05cedbbc1f56eb"
+  },
+  "Сентябрь 2026 SAP.XLSX": {
+    "bytes": 37020087,
+    "sha256": "ba95d82cde9938db5fc0be4d9f90b358bb347149a5c853e0f43a0e4b79037969"
+  },
+  "recommendation_rows": 19
+}

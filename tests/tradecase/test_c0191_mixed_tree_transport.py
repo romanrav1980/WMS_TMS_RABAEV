@@ -136,12 +136,30 @@ def test_missing_real_transport_document_is_an_explicit_stop_not_a_synthetic_ack
     assert [k for k, *_ in live.sent] == ["t.depart"]  # nothing else (no document, no acknowledgement) was sent
 
 
+def test_departure_race_winner_is_reconciled_without_a_second_departure_command():
+    class RaceLive(FakeLive):
+        def read(self, sql, **binds):
+            if "RRL_TT_HU_LOAD_FACT" in sql:
+                return [("DEPARTED", "MT28X.RACE.B")]
+            if "RRL_STOCK_OPERATION" in sql:
+                return [("APPLIED", "TRIP_DEPART")]
+            raise AssertionError(sql)
+        def composition(self, root):
+            assert root == "MT28X.PAL"
+            return {"historical_composition": True, "top_place_count": 1}
+    live = RaceLive()
+    flow = adapter.MixedTreeTransport(live, INPUTS)
+    flow.t.update(transport_task_id=55, load_operation_id="MT28X.LOAD", departure_race={"winner_operation_id": "MT28X.RACE.B"})
+    flow.depart()
+    assert live.sent == [] and flow.t["historical_tree"]["historical_composition"] is True
+
+
 def test_completed_stages_are_not_repeated_on_resume():
     live = FakeLive()
     flow = adapter.MixedTreeTransport(live, INPUTS)
     calls = []
-    flow.stage("SHIPMENT", lambda: calls.append(1))
-    flow.stage("SHIPMENT", lambda: calls.append(2))
+    assert flow.stage("SHIPMENT", lambda: calls.append(1)) is True
+    assert flow.stage("SHIPMENT", lambda: calls.append(2)) is False
     assert calls == [1] and flow.t["last_verified_stage"] == "SHIPMENT"
 
 
@@ -155,6 +173,31 @@ def test_run_reports_the_last_verified_stage_on_a_stop():
     finally:
         flow_cls.shipment = original
     assert result == {"stopped": "ST_CREATE_FAILED", "last_verified_stage": None} and live.s["transport"]["stopped"] == "ST_CREATE_FAILED"
+
+
+def test_checkpoint_returns_after_the_requested_verified_stage_without_departure():
+    live = FakeLive()
+    flow_cls = adapter.MixedTreeTransport
+    original = flow_cls.shipment
+    flow_cls.shipment = lambda self: None
+    try:
+        result = adapter.run(live, INPUTS, stop_after="SHIPMENT")
+    finally:
+        flow_cls.shipment = original
+    assert result == {"status": "CHECKPOINT_SHIPMENT", "last_verified_stage": "SHIPMENT"}
+    assert live.s["transport"]["checkpoint"] == "SHIPMENT"
+
+
+def test_unknown_checkpoint_is_refused_before_transport_creation():
+    with pytest.raises(adapter.RunnerStop, match="UNKNOWN_TRANSPORT_CHECKPOINT"):
+        adapter.run(FakeLive(), INPUTS, stop_after="NOPE")
+
+
+def test_completed_success_clears_an_obsolete_stop():
+    live = FakeLive()
+    live.s["transport"] = {"inputs": INPUTS, "stages_done": list(adapter.STAGES), "stopped": "OLD_CONFIRMED_REFUSAL"}
+    result = adapter.run(live, INPUTS)
+    assert result["status"] == "STORE_RECEIVED" and "stopped" not in live.s["transport"]
 
 
 def test_stage_order_covers_control_load_departure_and_receipt():

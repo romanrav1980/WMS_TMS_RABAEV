@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-28",
+  "scope": "T10 resource timeline response and shift Gantt regression",
+  "checks": [
+    {
+      "command": "python -m pytest -q -p no:cacheprovider tests/retailcase/test_resource_timeline.py",
+      "result": "PASS",
+      "summary": "24 passed"
+    },
+    {
+      "command": "python -m pytest -q -p no:cacheprovider tests/retailcase/test_resource_timeline.py tests/retailcase/test_resource_timeline_queries.py tests/retailcase/test_weighted_case_pick.py",
+      "result": "PASS",
+      "summary": "61 passed"
+    },
+    {
+      "command": "python scripts/retailcase_quality_gate.py",
+      "result": "PASS"
+    },
+    {
+      "command": "node tests/retailcase/shift_gantt_rendered_mock.cjs",
+      "result": "PASS",
+      "viewports": [
+        360,
+        390,
+        1440
+      ],
+      "network": "intercepted; mocked read only"
+    },
+    {
+      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-encoding.ps1",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m pytest tests/tradecase -q -p no:cacheprovider --basetemp tmp/tradecase-final-20261028-0050",
+      "result": "PASS",
+      "summary": "396 passed"
+    }
+  ],
+  "runtime_oracle_writes": 0,
+  "api_restarted": false,
+  "remaining": [
+    "Repeat live latency comparison against the newly loaded code.",
+    "Measure the non-admin owner ACL path with a valid QA account.",
+    "Complete the T10 concurrent resource competition and load matrix."
+  ]
+}

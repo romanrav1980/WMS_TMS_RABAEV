@@ -22,7 +22,15 @@ try:
    q.execute("insert into RUSERS(ID,PASS,NAME,USER_GROUP,WARE_ID,DELETED,PRAVO_ADMIN_LOGIN)values(:a,:p,'QA bound CASE return','TC03QA',:w,0,1)",a=actor,p=password,w=w)
    q.execute("insert into RRL_ACCESS_ROLE(ROLE_ID,TITLE,ACTIVE,VERSION_NO)values(:a,'QA bound CASE return',1,1)",a=actor);q.execute("insert into RRL_ACCESS_ROLE_RIGHT(ROLE_ID,PERMISSION)values(:a,'case_pick_manage')",a=actor)
    q.execute("insert into RRL_ACCESS_ASSIGNMENT(ASSIGNMENT_ID,USERNAME,ROLE_ID,SCOPE_KIND,SCOPE_ID,MEMBERSHIP,VALID_FROM,VALID_UNTIL,ASSIGNED_BY,REASON,VERSION_NO)values(:a,:a,:a,'WAREHOUSE',:w,'CURRENT',systimestamp-interval '1'minute,systimestamp+interval '2'hour,'admin','BLC-only CASE return QA',1)",a=actor,w=str(w));c.commit();s['actor']=actor;save()
-  q.execute('select PASS from RUSERS where ID=:a and nvl(DELETED,0)=0',a=s['actor']);row=q.fetchone();assert row,'Do not reactivate retired QA actor';password=row[0]
+  q.execute('select PASS from RUSERS where ID=:a and nvl(DELETED,0)=0',a=s['actor']);row=q.fetchone()
+  if not row:
+   # A completed or abandoned fixture can retire its QA account.  Reusing it
+   # would change historical evidence, so report the condition without a write.
+   s['status']='NOT_REUSABLE_RETIRED_QA_ACTOR'
+   s['error']='Historical QA actor is retired; create a new isolated fixture for another acceptance run'
+   print(json.dumps(dict(status=s['status'],actor=s['actor'])))
+   raise SystemExit(0)
+  password=row[0]
   if 'body'not in s:
    q.execute('select SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t',t=cid);carrier,version=q.fetchone()
    q.execute('select lot.LOT_UID,l.CELL_CODE from RRL_CASE_CARRIER_LOT lot join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=lot.CASE_PICK_LINE_ID where lot.CASE_PICK_TASK_ID=:t',t=cid);targets=dict(q.fetchall());assert len(targets)==1

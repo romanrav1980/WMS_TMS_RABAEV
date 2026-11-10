@@ -5,7 +5,7 @@
    "w": 360,
    "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
    "body": {
-    "operation_id": "CASE.PICK.UI:86eae013-e77b-4579-9260-72729166fd36",
+    "operation_id": "CASE.PICK.UI:315b4361-317f-4608-a283-39b2234a3949",
     "net_weight_kg": "1.250",
     "scan_cell": "A-01",
     "scan_container": "146000000000000123",
@@ -21,7 +21,7 @@
    "w": 390,
    "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
    "body": {
-    "operation_id": "CASE.PICK.UI:595fd338-bbbe-491d-838e-a22f81788608",
+    "operation_id": "CASE.PICK.UI:762b3722-87aa-4c8d-a4e3-ac84643f62c4",
     "net_weight_kg": "1.250",
     "scan_cell": "A-01",
     "scan_container": "146000000000000123",
@@ -37,7 +37,7 @@
    "w": 1440,
    "case": "loose KG: manual NET by keyboard Enter -> /weigh-line-manual only",
    "body": {
-    "operation_id": "CASE.PICK.UI:785e6d1e-088c-4cbf-b4e3-e3fa7cc925f4",
+    "operation_id": "CASE.PICK.UI:3a976d95-1c7c-4779-acac-3f0080a57d4a",
     "net_weight_kg": "1.250",
     "scan_cell": "A-01",
     "scan_container": "146000000000000123",
@@ -73,7 +73,7 @@
    "w": 390,
    "case": "marked KG: forced manual NET, codes required, sent with unit_scans",
    "body": {
-    "operation_id": "CASE.PICK.UI:94efc874-1b33-430c-b66f-9daf1608eba6",
+    "operation_id": "CASE.PICK.UI:112f1dee-7a7f-4a46-8d70-56cdb076fb0d",
     "net_weight_kg": "0.5",
     "scan_cell": "A-01",
     "scan_container": "146000000000000123",

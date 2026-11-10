@@ -48,6 +48,13 @@ def plan_fact_vehicle(api):
         pytest.skip(f"Не удалось создать рейс: {created.status_code} {created.text}")
     task_id = created.json()["task_id"]
 
+    planned = api.patch(
+        f"{BASE_URL}/api/admin/transport/tasks/{task_id}",
+        json={"transport": vehicle, "shipment_time": "06:00"},
+    )
+    if planned.status_code != 200:
+        pytest.skip(f"Не удалось задать реквизиты рейса: {planned.status_code} {planned.text}")
+
     ops_response = api.post(f"{BASE_URL}/api/admin/transport/tasks/{task_id}/plan-operations")
     if ops_response.status_code != 200 or not ops_response.json():
         pytest.skip(f"Не удалось создать операции: {ops_response.status_code} {ops_response.text}")

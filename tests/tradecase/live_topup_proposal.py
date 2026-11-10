@@ -62,15 +62,21 @@ def run(f,r):
             expect(200,http('POST',base+'/stock/mark-confirmations',dict(operation_id=tag+'.valid',skm_id='TC03.SKM',external_event_id=tag+'.valid',expected_site_version=1,occurred_at=now.isoformat(),items=items)))
         grant(0 if f.get('stock_ready') else 3,True)
         for n in (1,2):
-            send('RECIPIENT','C'+str(n),dict(title='Top-up recipient '+str(n),target_owner_id='SNS',permitted_source_owners=['SNS'],buyout_mode='IN_TRANSIT',min_osg_days=0,lead_time_days=0))
+            send('RECIPIENT','C'+str(n),dict(title='Top-up recipient '+str(n),target_owner_id='SNS',permitted_source_owners=['SNS'],buyout_mode='IN_TRANSIT',min_osg_days=0,lead_time_days=0,topup_enabled=True,topup_horizon_days=1))
             send('ORDER','O'+str(n),dict(recipient_id='C'+str(n),planned_ship_at=depart.isoformat(),lines=[dict(line_id='1',sku_id='A',source_owner_id='SNS',target_owner_id='SNS',mrc='200',quantity='1',uom='BOX',min_osg_days=0)]))
         plate='TQ.'+str(w)
         vehicle=expect(201,http('POST','/api/admin/transport/vehicles',dict(num_plat=plate,transtype_id='10',max_weight_kg=8000,max_pallets=33,sobstvennyy=True)))['id']
         profile=expect(200,http('GET',f'/api/admin/transport/vehicles/{vehicle}/profile'))
         expect(200,http('POST','/api/admin/transport/vehicle-profiles',dict(operation_id=tag+'.profile',vehicle_id=vehicle,expected_source_hash=profile['base_hash'],expected_version=profile['version'],vehicle_size_class='QA_TOPUP',cargo_length_mm=13200,cargo_width_mm=2500,cargo_height_mm=2000,outer_height_mm=3000,outer_length_mm=14000,floor_variants=[dict(code='QA33',limits=[dict(pallet_type_id=1,max_places=33)])],reason='Synthetic capacity fixture',evidence_reference='TEST_NOT_HARDWARE')))
+        with oracle_connection() as c:
+            q=c.cursor();q.callproc('RRL_STOCK_CONFIG_API.begin_change',['admin','warehouse_settings_edit'])
+            try:
+                q.execute("insert into RRL_TRADE_TOPUP_PALLETIZATION(WARE_ID,SKU_ID,PALLET_TYPE_ID,BOXES_PER_PLACE,MAX_STACK_LAYERS,ACTIVE,VERSION_NO,CREATED_BY,UPDATED_BY) values(:w,'A',1,20,1,1,1,'admin','admin')",w=w)
+                c.commit()
+            finally:q.callproc('RRL_STOCK_CONFIG_API.end_change')
         send('TRIP','T1',dict(vehicle_id=plate,planning_source='SAP',planned_departure_at=depart.isoformat(),capacity_kg='8000',capacity_m3=str((capacity_boxes+2)/10),orders=[dict(order_id='O'+str(n),line_id='1',quantity='1')for n in(1,2)]))
         for n in (1,2):
-            send('NEED','N'+str(n),dict(recipient_id='C'+str(n),sku_id='A',recipient_version=1,sku_version=1,snapshot_at=now.isoformat(),period_from=now.isoformat(),period_until=(now+timedelta(days=1)).isoformat(),uom='BOX',forecast_quantity=str(proposal_boxes+1),target_quantity='0',available_quantity='0',received_in_available=True,supplies=[dict(supply_id='MAIN'+str(n),version=1,quantity='1',uom='BOX',status='PLANNED',confirmed=True,current_trip=True,expected_at=depart.isoformat())]))
+            send('NEED','N'+str(n),dict(recipient_id='C'+str(n),sku_id='A',recipient_version=1,sku_version=1,forecast_kind='MOVEMENT',snapshot_at=now.isoformat(),period_from=now.isoformat(),period_until=(now+timedelta(days=1)).isoformat(),uom='BOX',forecast_quantity=str(proposal_boxes+1),target_quantity='0',available_quantity='0',received_in_available=True,supplies=[dict(supply_id='MAIN'+str(n),version=1,quantity='1',uom='BOX',status='PLANNED',confirmed=True,current_trip=True,expected_at=depart.isoformat())]))
     else:
         grant(0,True)
     preview=expect(200,http('POST',trip+'/topup-preview',dict(need_ids=['N1'],max_age_minutes=1440),*qa))

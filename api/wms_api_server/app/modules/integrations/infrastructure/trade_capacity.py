@@ -1,6 +1,6 @@
 """Read one Oracle snapshot of the external plan and native package/vehicle dimensions."""
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, ROUND_CEILING
 from hashlib import sha256
 import json
 from typing import Any
@@ -24,7 +24,12 @@ def _box(cur:Any,ware:int,sku:str)->dict:
     if row is None or any(v is None or v<=0 for v in row):raise TradeTransportError('TRADE_CAPACITY_PACKAGE_MEASUREMENTS_REQUIRED',409)
     if row[0]!=doc['units_per_box']:raise TradeTransportError('TRADE_CAPACITY_PACKAGE_COEFFICIENT_MISMATCH',409)
     axes=tuple(Decimal(str(x))for x in row[2:]);weight=Decimal(str(row[1]))
-    return dict(sku_id=sku,sku_version=version,units_per_box=doc['units_per_box'],weight=weight,volume=axes[0]*axes[1]*axes[2],dimensions=axes,article=doc.get('wms_article_id'))
+    cur.execute("select p.PALLET_TYPE_ID,p.BOXES_PER_PLACE,p.MAX_STACK_LAYERS,p.VERSION_NO from RRL_TRADE_TOPUP_PALLETIZATION p join RRL_PALLET_TYPE t on t.PALLET_TYPE_ID=p.PALLET_TYPE_ID and t.ACTIVE=1 where p.WARE_ID=:w and p.SKU_ID=:s and p.ACTIVE=1",w=ware,s=sku)
+    mapping=cur.fetchone()
+    if mapping is None:raise TradeTransportError('TOPUP_PALLET_PLACE_MAPPING_REQUIRED',409)
+    pallet_type,boxes_per_place,layers,mapping_version=mapping
+    if boxes_per_place is None or boxes_per_place<=0 or layers!=1:raise TradeTransportError('TOPUP_PALLET_PLACE_MAPPING_REQUIRED',409)
+    return dict(sku_id=sku,sku_version=version,units_per_box=doc['units_per_box'],weight=weight,volume=axes[0]*axes[1]*axes[2],dimensions=axes,article=doc.get('wms_article_id'),pallet_type_id=int(pallet_type),boxes_per_place=Decimal(str(boxes_per_place)),palletization_version=int(mapping_version))
 
 def _planned(cur:Any,ware:int,trip:dict,actor:str)->tuple[list[dict],list[dict],dict[str,dict]]:
     items=[];versions=[];boxes={};orders={};bound_lines={};checked_owners=set()
@@ -125,12 +130,19 @@ def capacity_context(cur:Any,ware:int,trip_id:str,actor:str)->dict:
                 loaded=loaded,max_weight=max_weight,max_volume=max_volume,vehicle=int(vehicles[0][0]))
 
 
-def floor_admission(cur:Any,vehicle:int)->dict:
-    """C-0178 (T08 «товар не подходит для добивки»): pallet places and stacking are judged on confirmed data only. TRIP/ORDER lines carry no pallet
-    type or place count, and no authoritative product-to-pallet mapping or vehicle stacking rule exists (COUNT_IN_ROW*ROWS_IN_PAL and ALLOW_TOP_STACKING
-    have no established meaning), so the existing profile check sees the top-up places as type-unconfirmed and the candidate is refused, never fitted by volume."""
-    floor=read_oracle_json(cur.callfunc('RRL_VEHICLE_PROFILE_API.check_floor_capacity',oracledb.DB_TYPE_CLOB,[vehicle,'[]',1]))
-    return dict(floor_places_checked=False,stacking_rules_checked=False,floor_profile_status=floor.get('status'),blocking_reason='TOPUP_PALLET_PLACE_MAPPING_REQUIRED')
+def floor_admission(cur:Any,vehicle:int,planned:list[dict])->dict:
+    """Validate only explicitly configured SKU palletization.  One layer is the current supported stacking rule."""
+    counts:dict[int,int]={}
+    for item in planned:
+        if not item.get('boxes'):continue
+        if not item.get('pallet_type_id') or not item.get('boxes_per_place'):
+            return dict(floor_places_checked=False,stacking_rules_checked=False,floor_profile_status=None,blocking_reason='TOPUP_PALLET_PLACE_MAPPING_REQUIRED')
+        places=int((Decimal(item['boxes'])/Decimal(item['boxes_per_place'])).to_integral_value(rounding=ROUND_CEILING))
+        counts[int(item['pallet_type_id'])]=counts.get(int(item['pallet_type_id']),0)+places
+    payload=json.dumps([{'pallet_type_id':key,'places':value}for key,value in sorted(counts.items())])
+    floor=read_oracle_json(cur.callfunc('RRL_VEHICLE_PROFILE_API.check_floor_capacity',oracledb.DB_TYPE_CLOB,[vehicle,payload,0]))
+    blocked=None if floor.get('status')=='COMPATIBLE' else 'TOPUP_PALLET_PLACE_MAPPING_REQUIRED'
+    return dict(floor_places_checked=blocked is None,stacking_rules_checked=blocked is None,floor_profile_status=floor.get('status'),blocking_reason=blocked)
 
 
 def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,actor:str)->dict:
@@ -146,7 +158,7 @@ def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,a
             result.update(warehouse_id=ware,trip_id=trip_id,trip_version=version,sku_id=sku_id,order_versions=orders,profile_version=profile['version'],profile_base_hash=profile['base_hash'],
                           capacity_kg=str(max_weight),capacity_m3=str(max_volume),loading_started=started,loading_mode='BOX_FIXED_ORIENTATION',operational_admission=False,
                           stock_eligibility_checked=False,route_eligibility_checked=False,approval_available=False)
-            floor=floor_admission(cur,context['vehicle']);result.update({k:v for k,v in floor.items()if k!='blocking_reason'})
+            floor=floor_admission(cur,context['vehicle'],planned+[dict(packages[sku_id],boxes=Decimal(requested),recipient_id=None)]);result.update({k:v for k,v in floor.items()if k!='blocking_reason'})
             block=after_load_admission(context,None,datetime.now(timezone.utc))
             if started:result.update(loaded_places=context['loaded']['places'],loaded_overhead_kg=str(context['loaded']['overhead_kg']),
                                      loaded_overhead_m3=str(context['loaded']['overhead_m3']))

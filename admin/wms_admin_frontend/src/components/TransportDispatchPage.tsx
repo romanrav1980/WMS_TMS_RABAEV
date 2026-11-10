@@ -1,5 +1,5 @@
 import { adminAuthorization, adminBasicAuth, currentSessionCredentials } from "../api";
-import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError, saveTripEdit } from "../features/transport";
+import { useTripDeepLink, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar, VehicleChange, vehicleChangeError, saveTripEdit, summarizeAvailableSts, submitCluster, settleClusterPending, createTrip, usePendingTripCreate, TripCreateUncertain, useVehicleAvailability, type VehicleAvail } from "../features/transport";
 import { TransportStPlaceRemoval } from "./TransportStPlaceRemoval";
 import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -195,6 +195,7 @@ function fmtTime(s: string | null): string {
   return t || "";
 }
 
+
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -213,7 +214,6 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [selectedTask, setSelectedTask] = useState<TransportTask | null>(null);
   const [taskSts, setTaskSts] = useState<TaskSt[]>([]);
   const stSectionRef = useRef<HTMLDivElement | null>(null);
-  const [stScrollTop, setStScrollTop] = useState(0);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [transportTypes, setTransportTypes] = useState<TransportType[]>([]);
@@ -226,7 +226,6 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [stSortDir, setStSortDir]     = useState<"asc" | "desc">("asc");
 
   // Sprint 60 — pagination for STs table
-  const [stPage, setStPage] = useState(0);
 
   // Sprint 61 — warehouse quick-filter
   const [wareIdFilter, setWareIdFilter] = useState("");
@@ -320,6 +319,21 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [openingBilling, setOpeningBilling] = useState(false);
   const [clusterCreateRaion, setClusterCreateRaion] = useState<string | null>(null);
   const [clusterCreateLoading, setClusterCreateLoading] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  // Наличие незавершённого (intent/unknown) создания обычного рейса для предупреждения в диалоге.
+  const pendingCreate = usePendingTripCreate(createDialog, createLoading);
+
+  const closeCreateDialog = useCallback(() => {
+    if (createLoading) return;
+    // pending/unknown не удаляется при закрытии: разрешение требует фактической сверки (resolveTripCreatePending).
+    setCreateDialog(false);
+  }, [createLoading]);
+
+  const closeClusterDialog = useCallback(() => {
+    if (clusterCreateLoading) return;
+    // Кластерный intent не снимается при закрытии: он идемпотентен, повтор с тем же operation_id продолжит рейс.
+    setClusterCreateRaion(null);
+  }, [clusterCreateLoading]);
   const [billingOrder, setBillingOrder] = useState<BillingOrder | null>(null);
   const [billingActionLoading, setBillingActionLoading] = useState(false);
 
@@ -628,15 +642,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       }
       if (e.key !== "Escape") return;
       if (inTextInput) return;
-      if (createDialog) { setCreateDialog(false); return; }
-      if (clusterCreateRaion) { setClusterCreateRaion(null); return; }
+      if (createDialog) { closeCreateDialog(); return; }
+      if (clusterCreateRaion) { closeClusterDialog(); return; }
       if (editMode) { setEditMode(false); return; }
       if (selectedStNums.size > 0) { setSelectedStNums(new Set()); return; }
       if (selectedTripStNums.size > 0) { setSelectedTripStNums(new Set()); }
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [createDialog, clusterCreateRaion, editMode, selectedStNums, selectedTripStNums, selectedTask, activeTab]);
+  }, [createDialog, clusterCreateRaion, editMode, selectedStNums, selectedTripStNums, selectedTask, activeTab, closeCreateDialog, closeClusterDialog]);
 
   // ------------------------------------------------------------------
   // Auto-refresh every 60 s (Sprint 37)
@@ -840,51 +854,51 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }
 
   async function handleCreate(params: {
-    transtype: string; shipment_date: string;
+    transtype: string; shipment_date: string; shipment_time: string;
     vehicle: string; driver_id: number | null; dock: string;
   }) {
-    setLoading(true);
+    setCreateLoading(true);
     try {
-      const res = await apiFetch<{ task_id: number }>(
-        "/api/admin/transport/tasks",
-        { method: "POST", body: JSON.stringify({ transtype: params.transtype, shipment_date: params.shipment_date }) }
-      );
-      const taskId = res.task_id;
-      if (params.vehicle || params.driver_id || params.dock) {
-        await apiFetch(`/api/admin/transport/tasks/${taskId}`, {
-          method: "PATCH",
-          body: JSON.stringify({ transport: params.vehicle || null, voditel_id: params.driver_id, dock: params.dock || null }),
-        });
-      }
-      if (selectedStNums.size > 0) {
-        const result = await apiFetch<{ assigned: number; warnings: string[] }>(
-          `/api/admin/transport/tasks/${taskId}/sts`,
-          { method: "POST", body: JSON.stringify({ st_numbers: Array.from(selectedStNums) }) }
-        );
-        if (result.warnings.length > 0) setError(result.warnings.join("; "));
-        setSelectedStNums(new Set());
-      }
+      const res = await createTrip(params, Array.from(selectedStNums));
+      if (res.warnings.length > 0) setError(res.warnings.join("; "));
+      setSelectedStNums(new Set());
       setCreateDialog(false);
       const reloads: Promise<unknown>[] = [loadTasks(), loadAvailableSts()];
       if (viewMode === "clusters") reloads.push(loadClusters());
       await Promise.all(reloads);
-      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
+      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
       selectTask(newTask);
-      showToast(`Рейс #${taskId} создан`);
-    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+      showToast(`Рейс #${res.task_id} создан`);
+    } catch (e) {
+      if (e instanceof TripCreateUncertain) {
+        // Потерян ответ начального POST: обновить список для сверки, без слепого повтора.
+        await loadTasks();
+      }
+      setError(String(e));
+    } finally { setCreateLoading(false); }
   }
 
   async function handleCreateFromCluster(params: {
-    raion: string; transtype: string; vehicle: string; driver_id: number | null; dock: string;
+    raion: string; transtype: string; shipment_time: string; vehicle: string; driver_id: number | null; dock: string;
   }) {
+    const scope = { api: API_BASE, actor: adminBasicAuth().split(":", 1)[0] };
     setClusterCreateLoading(true);
     try {
-      const res = await submitCluster(apiFetch,
-        {api: API_BASE, actor: adminBasicAuth().split(":", 1)[0]},params.raion,{
-          stdate: stDate, transtype: params.transtype, vehicle: params.vehicle || null,
-          driver_id: params.driver_id, dock: params.dock || null, ware_ids: null,
-        });
+      const res = await submitCluster(apiFetch, scope, params.raion, {
+        stdate: stDate, transtype: params.transtype, vehicle: params.vehicle || null,
+        driver_id: params.driver_id, dock: params.dock || null, ware_ids: null,
+      });
       if (res.warnings.length > 0) setError(res.warnings.join("; "));
+      try {
+        await apiFetch(`/api/admin/transport/tasks/${res.task_id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ shipment_time: params.shipment_time }),
+        });
+      } catch (e) {
+        // Intent сохраняется: повтор с тем же operation_id продолжит этот рейс, а не создаст новый.
+        throw new Error(`Рейс #${res.task_id} создан, но время не сохранено. Повторите сохранение или сверьте рейс. (${String(e)})`);
+      }
+      settleClusterPending(scope);
       setClusterCreateRaion(null);
       await Promise.all([loadTasks(), loadClusters(), loadAvailableSts()]);
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
@@ -1197,17 +1211,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Sprint 61 → NI02.2: склад фильтруется на сервере, строки уже отфильтрованы запросом.
   const wareFilteredSts = availableSts;
 
-  const sortedSts = stSortField
-    ? [...wareFilteredSts].sort((a, b) => {
-        const va = (a as Record<string, unknown>)[stSortField];
-        const vb = (b as Record<string, unknown>)[stSortField];
-        if (va == null && vb == null) return 0;
-        if (va == null) return 1;
-        if (vb == null) return -1;
-        const cmp = va < vb ? -1 : va > vb ? 1 : 0;
-        return stSortDir === "asc" ? cmp : -cmp;
-      })
-    : wareFilteredSts;
+  const sortedSts = useMemo(() => {
+    if (!stSortField) return wareFilteredSts;
+    return [...wareFilteredSts].sort((a, b) => {
+      const va = (a as Record<string, unknown>)[stSortField];
+      const vb = (b as Record<string, unknown>)[stSortField];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+      return stSortDir === "asc" ? cmp : -cmp;
+    });
+  }, [wareFilteredSts, stSortField, stSortDir]);
 
   // Sprint 102 — @tanstack/react-virtual: заменяет пагинацию и ручную виртуализацию
   // sortedSts = все видимые СТ (без пагинации); virtualizer рендерит только видимые строки
@@ -1306,18 +1321,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     return d.toISOString().slice(0, 10);
   }
 
-  // ------------------------------------------------------------------
-  // PMV counters
-  // ------------------------------------------------------------------
-  const selSts = availableSts.filter(s => selectedStNums.has(s.ST_NUMBER));
-  const selP = selSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
-  const selM = selSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
-  const selV = selSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
+  const selectedStSummary = useMemo(
+    () => summarizeAvailableSts(availableSts, selectedStNums),
+    [availableSts, selectedStNums],
+  );
+  const selSts = selectedStSummary.rows;
+  const selP = selectedStSummary.pallets;
+  const selM = selectedStSummary.weight;
+  const selV = selectedStSummary.volume;
 
-  // Sprint 55 — totals for ALL visible STs (Sprint 61: warehouse-filtered)
-  const allP = wareFilteredSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
-  const allM = wareFilteredSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
-  const allV = wareFilteredSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
+  const visibleStSummary = useMemo(() => summarizeAvailableSts(wareFilteredSts), [wareFilteredSts]);
+  const allP = visibleStSummary.pallets;
+  const allM = visibleStSummary.weight;
+  const allV = visibleStSummary.volume;
   const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
   const tripV = taskSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
@@ -1611,7 +1627,6 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             className="dispatch-st-section"
             ref={stSectionRef}
             data-virtualized={viewMode === "flat" ? "true" : "false"}
-            onScroll={e => setStScrollTop(e.currentTarget.scrollTop)}
           >
             <table className={`dispatch-grid${stDenseMode ? " dispatch-grid-dense" : ""}`}>
               <thead>
@@ -2684,8 +2699,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           vehicles={vehicles}
           drivers={drivers}
           selectedCount={selectedStNums.size}
+          loading={createLoading}
+          unresolvedCreate={pendingCreate.kind !== null}
+          onResolveCreate={pendingCreate.resolve}
           onConfirm={handleCreate}
-          onClose={() => setCreateDialog(false)}
+          onClose={closeCreateDialog}
         />
       )}
 
@@ -2710,7 +2728,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             drivers={drivers}
             loading={clusterCreateLoading}
             onConfirm={handleCreateFromCluster}
-            onClose={() => setClusterCreateRaion(null)}
+            onClose={closeClusterDialog}
           />
         );
       })()}
@@ -3248,23 +3266,20 @@ function ReadinessBar({ perc, unready }: { perc: number; unready: number | null 
   );
 }
 
-type VehicleAvail = {
-  vehicle_id: number; vehicle_num: string; vehicle_type: string;
-  marka: string; max_pallets: number; gidrobort: boolean;
-  free_at: string | null; delay_min: number; status: "green" | "yellow" | "red"; detail: string;
-};
-
 const AVAIL_DOT: Record<string, string> = { green: "🟢", yellow: "🟡", red: "🔴" };
 
 function CreateTaskDialog({
-  filterDate, transportTypes, vehicles, drivers, selectedCount, onConfirm, onClose,
+  filterDate, transportTypes, vehicles, drivers, selectedCount, loading, unresolvedCreate, onResolveCreate, onConfirm, onClose,
 }: {
   filterDate: string;
   transportTypes: TransportType[];
   vehicles: Vehicle[];
   drivers: Driver[];
   selectedCount: number;
-  onConfirm: (params: { transtype: string; shipment_date: string; vehicle: string; driver_id: number | null; dock: string }) => void;
+  loading: boolean;
+  unresolvedCreate: boolean;
+  onResolveCreate: () => void;
+  onConfirm: (params: { transtype: string; shipment_date: string; shipment_time: string; vehicle: string; driver_id: number | null; dock: string }) => void;
   onClose: () => void;
 }) {
   const [transtype, setTranstype] = useState(transportTypes[0]?.TRANSPORTTYPE || "10");
@@ -3273,30 +3288,24 @@ function CreateTaskDialog({
   const [vehicle, setVehicle] = useState("");
   const [driverId, setDriverId] = useState<number | null>(null);
   const [dock, setDock] = useState("");
-  const [avail, setAvail] = useState<VehicleAvail[]>([]);
-  const [availLoading, setAvailLoading] = useState(false);
+  const { avail, availLoading, availError } = useVehicleAvailability(shipDate, shipTime, 0);
 
   const selectedAvail = avail.find(a => a.vehicle_num === vehicle);
-
-  // Reload availability when date/time changes
-  useEffect(() => {
-    if (!shipDate || !shipTime) return;
-    setAvailLoading(true);
-    apiFetch<VehicleAvail[]>(
-      `/api/admin/transport/vehicles/available?shipment_time=${shipDate}+${shipTime}&pallets=0`
-    )
-      .then(setAvail)
-      .catch(() => setAvail([]))
-      .finally(() => setAvailLoading(false));
-  }, [shipDate, shipTime]);
+  const invalid = !transtype || !shipDate || !/^\d{2}:\d{2}$/.test(shipTime);
 
   // Merge availability into vehicle list
   const availMap = new Map(avail.map(a => [a.vehicle_num, a]));
 
   return (
-    <div className="dispatch-dialog-overlay" onClick={onClose}>
+    <div className="dispatch-dialog-overlay" onClick={() => { if (!loading) onClose(); }}>
       <div className="dispatch-dialog" onClick={e => e.stopPropagation()}>
         <h3>Создать маршрут{selectedCount > 0 ? ` · ${selectedCount} СТ` : ""}</h3>
+        {unresolvedCreate && (
+          <div className="dispatch-avail-warn">
+            ⚠ Есть незавершённое создание рейса. Проверьте список рейсов (обновлён), затем подтвердите сверку.
+            <button className="dispatch-cancel-edit-btn" type="button" onClick={onResolveCreate}>Сверено</button>
+          </div>
+        )}
         <label className="dispatch-dialog-field">
           <span>Тип транспорта</span>
           <select value={transtype} onChange={e => setTranstype(e.target.value)}>
@@ -3341,6 +3350,9 @@ function CreateTaskDialog({
               ℹ {selectedAvail.detail}
             </div>
           )}
+          {availError && (
+            <div className="dispatch-avail-warn">⚠ {availError}</div>
+          )}
         </label>
         <label className="dispatch-dialog-field">
           <span>Водитель</span>
@@ -3359,11 +3371,12 @@ function CreateTaskDialog({
           <input type="text" value={dock} onChange={e => setDock(e.target.value)} placeholder="Д1" />
         </label>
         <div className="dispatch-dialog-actions">
-          <button className="dispatch-new-btn"
-            onClick={() => onConfirm({ transtype, shipment_date: shipDate, vehicle, driver_id: driverId, dock })}>
-            Создать{selectedCount > 0 ? ` (${selectedCount} СТ)` : ""}
+          <button className="dispatch-new-btn" disabled={loading || invalid}
+            title={invalid ? "Укажите тип транспорта, дату и время отгрузки" : ""}
+            onClick={() => onConfirm({ transtype, shipment_date: shipDate, shipment_time: shipTime, vehicle, driver_id: driverId, dock })}>
+            {loading ? "Создаём…" : `Создать${selectedCount > 0 ? ` (${selectedCount} СТ)` : ""}`}
           </button>
-          <button className="dispatch-cancel-edit-btn" onClick={onClose}>Отмена</button>
+          <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>
         </div>
       </div>
     </div>
@@ -3383,38 +3396,33 @@ function ClusterQuickCreateDialog({
   vehicles: Vehicle[];
   drivers: Driver[];
   loading: boolean;
-  onConfirm: (params: { raion: string; transtype: string; vehicle: string; driver_id: number | null; dock: string }) => void;
+  onConfirm: (params: { raion: string; transtype: string; shipment_time: string; vehicle: string; driver_id: number | null; dock: string }) => void;
   onClose: () => void;
 }) {
   const [transtype, setTranstype] = useState(transportTypes[0]?.TRANSPORTTYPE || "10");
+  const [shipTime, setShipTime] = useState("09:00");
   const [vehicle, setVehicle] = useState("");
   const [driverId, setDriverId] = useState<number | null>(null);
   const [dock, setDock] = useState("");
-  const [avail, setAvail] = useState<VehicleAvail[]>([]);
-  const [availLoading, setAvailLoading] = useState(false);
+  const { avail, availLoading, availError } = useVehicleAvailability(stDate, shipTime, cluster.PALLET_COUNT);
 
-  useEffect(() => {
-    if (!stDate) return;
-    setAvailLoading(true);
-    apiFetch<VehicleAvail[]>(
-      `/api/admin/transport/vehicles/available?shipment_time=${stDate}+09:00&pallets=${cluster.PALLET_COUNT}`
-    )
-      .then(setAvail)
-      .catch(() => setAvail([]))
-      .finally(() => setAvailLoading(false));
-  }, [stDate, cluster.PALLET_COUNT]);
+  const invalid = !stDate || !/^\d{2}:\d{2}$/.test(shipTime);
 
   const availMap = new Map(avail.map(a => [a.vehicle_num, a]));
   const selectedAvail = availMap.get(vehicle);
 
   return (
-    <div className="dispatch-dialog-overlay" onClick={onClose}>
+    <div className="dispatch-dialog-overlay" onClick={() => { if (!loading) onClose(); }}>
       <div className="dispatch-dialog" onClick={e => e.stopPropagation()}>
         <h3>⚡ Рейс из кластера «{cluster.RAION}»</h3>
         <div className="cluster-dialog-summary">
           {cluster.ST_COUNT} СТ · {cluster.PALLET_COUNT} пал · {cluster.WEIGHT_KG.toFixed(0)} кг · {cluster.VOLUME_M3.toFixed(2)} м³
         </div>
         <div className="cluster-dialog-date">Дата: {stDate}</div>
+        <label className="dispatch-dialog-field">
+          <span>Время отгрузки</span>
+          <input type="time" value={shipTime} onChange={e => setShipTime(e.target.value)} />
+        </label>
         <label className="dispatch-dialog-field">
           <span>Тип транспорта</span>
           <select value={transtype} onChange={e => setTranstype(e.target.value)}>
@@ -3447,6 +3455,9 @@ function ClusterQuickCreateDialog({
           {selectedAvail && selectedAvail.status === "yellow" && (
             <div className="dispatch-avail-info">ℹ {selectedAvail.detail}</div>
           )}
+          {availError && (
+            <div className="dispatch-avail-warn">⚠ {availError}</div>
+          )}
         </label>
         <label className="dispatch-dialog-field">
           <span>Водитель</span>
@@ -3465,8 +3476,9 @@ function ClusterQuickCreateDialog({
           <input type="text" value={dock} onChange={e => setDock(e.target.value)} placeholder="Д1" />
         </label>
         <div className="dispatch-dialog-actions">
-          <button className="dispatch-new-btn" disabled={loading}
-            onClick={() => onConfirm({ raion: cluster.RAION, transtype, vehicle, driver_id: driverId, dock })}>
+          <button className="dispatch-new-btn" disabled={loading || invalid}
+            title={invalid ? "Укажите время отгрузки" : ""}
+            onClick={() => onConfirm({ raion: cluster.RAION, transtype, shipment_time: shipTime, vehicle, driver_id: driverId, dock })}>
             {loading ? "Создаём…" : `Создать рейс (${cluster.ST_COUNT} СТ)`}
           </button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>

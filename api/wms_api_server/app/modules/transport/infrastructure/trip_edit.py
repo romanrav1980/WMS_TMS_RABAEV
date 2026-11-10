@@ -13,11 +13,21 @@ def trip_error(exc: oracledb.DatabaseError) -> TransportPlanError:
     if code in {6502,12899,1841,1843,1858,1861}:return TransportPlanError("TRANSPORT_EDIT_INPUT_INVALID","Проверьте длину полей, дату и время",422)
     return TransportPlanError("TRANSPORT_EDIT_UNCONFIRMED","Повторите исходное изменение реквизитов",503)
 
-def create_existing_trip(gateway: Any,transport_type: str,day: date,actor: str) -> int:
+def _idempotent_available(cur: Any) -> bool:
+    try:
+        cur.execute("select count(*) from user_tables where table_name='RRL_TRIP_CREATE_RESULT'")
+        return int(cur.fetchone()[0]) > 0
+    except oracledb.DatabaseError:
+        return False
+
+def create_existing_trip(gateway: Any,transport_type: str,day: date,actor: str,operation_id: str|None=None) -> int:
     try:
         with gateway.transaction("Create existing owned transport draft")as cur:
             result=cur.var(oracledb.DB_TYPE_NUMBER)
-            cur.callproc("RRL_TRANSPORT_EDIT_API.create_trip",[transport_type,day,actor,result])
+            if operation_id and _idempotent_available(cur):
+                cur.callproc("RRL_TRANSPORT_IDEMPOTENT_API.create_trip",[transport_type,day,actor,operation_id,result])
+            else:
+                cur.callproc("RRL_TRANSPORT_EDIT_API.create_trip",[transport_type,day,actor,result])
             return int(result.getvalue())
     except oracledb.DatabaseError as exc:raise trip_error(exc) from exc
 

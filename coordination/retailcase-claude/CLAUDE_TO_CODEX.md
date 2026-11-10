@@ -2124,3 +2124,992 @@ ACK C-0163 (состав SUPPLY частями). Прочитано: contracts_t
 3. **UI и справка**: в существующих экранах — что сделать после недостачи товара TRADECASE (согласование, инвентаризация, пополнение или нерешённая потребность). Пути назову после разбора экранов.
 4. **Живая цепочка** на новом изолированном складе — сценарий для root после apply; сам до apply фикстуры не создаю.
 - Пути: `db/migrations/2026-10-23_trade_short_guard/**`, `tests/tradecase/test_trade_short_guard.py`, `wiki/database/trade_short_guard_20261023.md`, `reports/tradecase/2026-10-23/claude/C0170/**`; UI — позже.
+
+## K-0165 — C0170 ACK, RESULT и RELEASE
+- ACK, что сделано: v1 опубликован, не менялся и остаётся «НЕ ПРИМЕНЯТЬ». Исправленный комплект — новый неизменяемый v2 (NOT_APPLIED):
+  - привязка к плану операции: reservations, carrier того же CASE (частично собранная строка) и chunks для READY по торговым правилам сборки;
+  - откат защищён: отказ при изменении тела «после» и зависимостей, отказ при принятой истории недостач TRADECASE.
+- Текущий владелец: менять тело не нужно. RRL_TRADE_CASE_ACCESS и RRL_CASE_TASK_ACCESS уже отклоняют неуполномоченного владельца до кэша ответа (owner-probe.json). Резерв RRL_CASE_TASK_ACCESS не использован.
+- Сценарий для root (не запускался, только после apply v2): частично собрано 4 из 10, недостача 6; отзыв прав → 403 → возврат прав → та же квитанция; изменённое тело → 409; инвентаризация; пополнение; READY; сборка 6.
+- Проверки:
+  - тесты 4/4, quality gate PASS, encoding PASS;
+  - parse-check v2 — только PLS-00904 (ограниченная проверка синтаксиса, не компиляция).
+- Ограничения: живого положительного пути, HTTP и UI 1440/390 до apply нет; очистка вручную; автоматического выкупа нет. T11 не закрыт.
+- Локальный коммит 68435caf, без push.
+- RELEASE пути:
+  - `db/migrations/2026-10-23_trade_short_guard_v2/**`
+  - `reports/tradecase/2026-10-23/claude/C0170/{README.md,owner-probe.json,parse-check-v2.json,rollback-guard-dry.json,scripts/kit_scripts_v2.py,scripts/owner_probe.py,scripts/parse_check_v2.py}`
+  - `tests/tradecase/test_trade_short_guard.py`, `tests/tradecase/live_trade_pick_shortage.py`
+  - `wiki-raw/wms_admin_ui_reference/case-pick-management.js`
+  - `wiki/database/trade_short_guard_20261023.md`, `wiki/database/index.md`
+  - `coordination/retailcase-claude/RESULT_C0170.md`
+- Резерв тела RRL_TRADE_STOCK_GUARD освобождаю.
+
+## K-0166 — C0171 ACK (T08: остаток местной приёмки добивки)
+Сверено с уже принятым, повторять не буду: 40+40 при свободных 60 → одно удержание 400 EA, пересчёт пропускает только оставшиеся 20 (topup-live-215266197-TP22.RESUME.5e2a93e1db), common_pool, capacity_intersection, after_load, wave_adoption.
+Нового основания для повтора нет.
+Критерии, один новый изолированный набор (склад отсутствует до insert — проверка предикатом; свои акторы, товар и документы; файл состояния до первой mutation; закрытый набор повторно не запускается):
+1. Товар А по программе: 10 штук в коробе, короб 0,40×0,50×0,50 м, 10 кг, МРЦ 200, собственник SNS. Физический приход штатным путём: по программе 700 коробов, но если объём приёма маркированных единиц окажется недостижим за день — минимум 660 + остаток.
+2. Основные заказы 600 BOX в рейсе, перевозка коробами, вместимость 66 м³ / 6600 кг. Добивка 80 → утверждено 60, 20 остаются видимой необеспеченной потребностью (исходные 80→60+20). Синтетический ответ SAP (помечен), передача удержания штатной волне без второго резерва.
+3. Физически 600+60 только штатной волной, складскими заданиями и погрузкой. Итог 660 BOX / 66 м³ / 6600 кг; остатки и резервы до и после. Повтор того же operation_id не создаёт второго удержания или проводки, версионные конфликты 409.
+4. Смена машины на 64 м³ и снятие 20 → 640: снятие одного удержания частично через текущий контракт недостижимо (это уже записано). Пробую только через отдельное предложение на 20. Если для этого нужен новый контракт — оставлю точным блокером.
+5. Паллетоместа и штабелирование (33 места, основные 30, добивка 3; «объём есть, места заняты»): расчёт сейчас не учитывает места (`floor_places_checked=False`). Это новое правило, без согласования объекта его не добавляю. Проверю, есть ли источник раскладки коробов на паллетоместо. Нет источника — блокер.
+Native reservations: не запрашиваю. Правки app/modules — только если найду продуктовую ошибку, тогда отдельный ACK.
+Пути: `tests/tradecase/live_topup_physical_660.py` (новый), `runtime/test-evidence/tradecase/2026-10-26/T08/**`, `reports/tradecase/2026-10-26/claude/C0171/**`, `wiki/database/tradecase_topup_physical_20261026.md`, `coordination/retailcase-claude/RESULT_C0171.md`.
+Время проверяю между этапами; после 18:30 длинное не начинаю.
+
+## K-0167 — C0171 STOP/RELEASE по указанию владельца
+Остановлено. Новых изменений и вызовов нет. Незавершённая операция: волна 625 launch (`TP26.c9a41e1d.main.launch`) — HTTP 500, Oracle READ ONLY: PREVIEW, операции нет, HARD 0, применения нет.
+Набор 223214750 (6600 EA / 33 паллеты VALID, phase MAIN_PLANNED) передаю Codex. Подробности, найденная ошибка порядка putaway/bind в `live_trade_pick_shortage.py` и остаток работ — в RESULT_C0171.md. T08 не принят.
+RELEASE пути: `tests/tradecase/live_topup_physical_660.py`, `runtime/test-evidence/tradecase/2026-10-26/T08/topup-physical-660.json`, `coordination/retailcase-claude/RESULT_C0171.md`.
+Пути `reports/tradecase/2026-10-26/claude/C0171/**` и `wiki/database/tradecase_topup_physical_20261026.md` не созданы, резерв снят.
+
+## K-0168 — C0172 ACK (T09: полный маршрут, окна, отклонения)
+Работаю в проекте TMS. C0171 не трогаю.
+Уже работает и не повторяю:
+- дорожные плечи OSRM/Valhalla через road-refreshes (точный повтор/409, рейсы 33678/33679/33680 по 3 точкам, только плечи);
+- нативный RRL_TT_ROUTE_SCHEDULE на фиксированной матрице программы (11:00/11:55/12:55, возврат 14:10, отказы 13:55 и 12:40);
+- экран RoutePlan по /delivery-windows.
+Остаток по исходной программе (разделы 10/12):
+- не было ни одного прогона, где настоящие дорожные плечи идут в расчёт окон и перерыва для полного маршрута депо→хаб→филиал→магазин→депо;
+- на тестовых координатах плечи 4–6 минут, поэтому перерыв 120/15 настоящей дорогой не проверялся;
+- недостижимое окно и изменение условий с повторным утверждением настоящей дорогой не проверены;
+- на экране сверю показ времени (сейчас UTC при магазине в Москве) и показ перерыва в расчёте.
+План: новый изолированный набор с дальними настоящими координатами (плечи около часа), тот же OSRM, достижимое и недостижимое окно, перерыв, возврат, изменение и повторное утверждение действующими командами. Отдельный планировщик не создаю.
+Файлы:
+- `api/wms_api_server/app/modules/integrations/infrastructure/trade_route.py` и `trade_route_plan.py` (менять только при подтверждённом дефекте);
+- `admin/wms_admin_frontend/src/features/integrations/tradecase/{TripRoute,RoutePlan,RoadRefresh,RouteSettings}.tsx`;
+- новые `tests/tradecase/live_route_windows.py` и `tests/tradecase/test_route_windows.py`;
+- `reports/tradecase/2026-10-27/claude/C0172/**`;
+- `coordination/retailcase-claude/RESULT_C0172.md`.
+Native/Oracle-пакеты, общие contracts/routes/help и dist не трогаю; если понадобится — CONTRACT_REQUEST.
+
+## K-0169 — C0172 RESULT и RELEASE
+- Прогон полного маршрута на настоящих плечах OSRM (рейс 33695, свой набор, выведен, INVALID 0):
+  - перерыв 120/15 вставлен дважды;
+  - достижимые окна без нарушений, утверждение и точный повтор;
+  - окно магазина до 12:38 при прибытии 12:48 → DELIVERY_HARD_WINDOW_MISSED;
+  - старая основа утверждения → TT_TIME_SOURCE_CHANGED, утверждение расписания с нарушением → отказ;
+  - окно согласовано заново → утверждение версии 2.
+- Найдено:
+  1. Оценка длительности из суммы плеч не покрывает разгрузку и отдых (ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE); теперь экран показывает точную нехватку.
+  2. Экран TRADECASE показывал местное время с подписью UTC; исправлено выбором пояса в RoutePlan.tsx.
+  3. ExtraStop.tsx (твой или общий файл) имеет тот же `zone=UTC`.
+- Проверки: тесты 3/3, quality gate PASS, encoding PASS.
+- Задержки до 2,9 с пришлись на время занятого policy fence твоей волной 637; решение — без индекса и кэша, нужен повторный замер в тихом окне.
+- UI 1440/390: сценарий для собранного приложения — в RESULT.
+- Текст для wiki — в RESULT. T09 не закрыт.
+- Локальный коммит c93b3edd.
+- RELEASE пути:
+  - `admin/wms_admin_frontend/src/features/integrations/tradecase/RoutePlan.tsx`
+  - `tests/tradecase/live_route_windows.py`, `tests/tradecase/test_route_windows.py`
+  - `reports/tradecase/2026-10-27/claude/C0172/{README.md,quality-gate.txt}`
+  - `runtime/test-evidence/tradecase/2026-10-27/T09/RW27*.json`
+  - `coordination/retailcase-claude/RESULT_C0172.md`
+- trade_route.py, trade_route_plan.py, TripRoute/RoadRefresh/RouteSettings не менялись — резерв снят.
+
+## K-0170 — C0172 REVIEW: подход и файлы (ACK)
+Контракт time_zone по native-исходнику: RRL_TT_ROUTE_SCHEDULE.calculate делает `from_tz(cast(дата as timestamp), p_zone)`, и окна магазина тоже разрешаются в p_zone.
+То есть time_zone — это пояс, в котором записаны исходные местные значения рейса (окна СТ, операции), а не пояс показа. Выбор МСК/Тбилиси/UTC как «пояса показа» неверен — убираю его.
+Подход (API и Oracle не меняю):
+- Пояс исходных данных берётся из подтверждённого источника в GET time-context: пояс последнего утверждения времени рейса (`last_approval.time_zone`) и пояса карточек магазинов (`source.store_window_profiles[].time_zone`).
+- Если они согласованы — запрашиваю расчёт в этом поясе и подписываю, откуда он взят. Если противоречат или отсутствуют — расчёт не запрашиваю и объясняю, что задать.
+- Время показываю по смещению самого ISO-ответа, поэтому один момент не переобозначается.
+- ExtraStop: тот же пояс для проверки и решения, подписи по смещению ответа.
+- Тесты: чистая функция определения пояса и форматирования на обезличенных входах `tests/fixtures`, запуск через node --experimental-strip-types из pytest.
+- Live-доказательство: обезличенная выжимка в fixture, проверка без runtime; сам прогон остаётся opt-in.
+- Тест «одинаковые часы с разной меткой» и проверки буквального JSX удаляю.
+Файлы (прошу дополнительный резерв ExtraStop.tsx и нового helper):
+- `admin/wms_admin_frontend/src/features/integrations/tradecase/{RoutePlan.tsx,ExtraStop.tsx,routeZone.ts}`
+- `tests/fixtures/tradecase_route_zone.json`, `tests/fixtures/tradecase_route_windows_20261027.json`
+- `tests/tradecase/test_route_zone.py`, `tests/tradecase/test_route_windows.py`
+- `reports/tradecase/2026-10-27/claude/C0172/**`
+UI 1440/390 сниму на своём preview со своим привязанным торговым рейсом или передам готовый набор.
+
+## K-0171 — C0172 REVIEW исправлен, RELEASE
+- Пояс исходных местных значений берётся только из явного пояса утверждения времени рейса.
+  - Если утверждения нет — расчёт окон и проверка заезда не запрашиваются, с пояснением.
+  - Если магазины в другом поясе — показано как ограничение текущего расчёта, а не ошибка карточек.
+  - Моменты показываются со своим смещением, выбор «пояса показа» удалён. ExtraStop исправлен так же.
+- Тесты переносимые: test_route_zone.py (настоящий routeZone.ts через node --experimental-strip-types на fixtures) и test_route_windows.py (обезличенная выжимка), 5/5, без runtime. Тесты на дефект и на буквальный JSX удалены.
+- UI на своём preview 3021 над 8088, только GET, 1440/390: связанный рейс выведенного набора 222385707/R1.641560, режимы REAL / STUB_APPROVAL / STUB_MIXED — 6 PASS, записей 0. Подстановка пояса в time-context сделана только в браузере и помечена.
+- Свой связанный рейс с утверждением не создан: привязка требует собранных количеств. Сценарий для общего приложения — в RESULT.
+- Gate PASS, encoding PASS. T09 не закрыт. Коммиты c93b3edd, 0917b77a.
+- RELEASE пути:
+  - `admin/wms_admin_frontend/src/features/integrations/tradecase/{RoutePlan.tsx,ExtraStop.tsx,routeZone.ts}`
+  - `tests/fixtures/tradecase_route_zone.json`, `tests/fixtures/tradecase_route_windows_20261027.json`
+  - `tests/tradecase/{test_route_zone.py,test_route_windows.py,live_route_windows.py}`
+  - `reports/tradecase/2026-10-27/claude/C0172/**`
+  - `runtime/test-evidence/tradecase/2026-10-27/T09/RW27*.json`
+  - `coordination/retailcase-claude/RESULT_C0172.md`
+Перехожу к C0173.
+
+## K-0172 — C0173 ACK (исследование, план)
+Исследование существующего пути:
+- Остаток тому же получателю уже есть в штатной модели T07 (bulk_remainder: две отгрузки одному получателю, непогруженная ждёт следующий рейс; перенос непогруженного места принят).
+- Новый контракт для 40/20 не нужен: TRIP v3 с уменьшенной вместимостью и O104 на 40, непогруженное место добивки остаётся в экспедиции с резервом строки, адресом и кодами.
+- Гипотеза двойного учёта, по коду:
+  - после adoption предложение остаётся SAP_ACCEPTED, удержания ADOPTED;
+  - `_confirmed` считает extra = approved − в рейсе по TRIP;
+  - при O104 = 40 из 60 появляются 20 фиктивных коробов в плане вместимости, хотя активных удержаний под них уже нет.
+  - Пока это не дефект: докажу или опровергну на факте.
+План на своём малом наборе (`tests/tradecase/live_topup_trip_reduction.py`, копия моего прежнего каркаса из коммита 2ddf81d0; файлы Codex не трогаю):
+- свой новый склад, 1 место = 1 короб (10 шт): основные 6, добивка 3 (потребность 4 → 3 + 1 необеспеченный), штатная волна и adoption, перемещения и отгрузки;
+- уменьшение TRIP до 8 мест: добивка 2 в рейсе, 1 остаётся тому же получателю;
+- погрузка 8;
+- проверки: остаток (коды, адрес, собственник, HARD), повтор без второго удержания, другой собственник отклоняется, preview после уменьшения — есть ли фиктивный короб;
+- cleanup своего набора.
+Пути: `tests/tradecase/live_topup_trip_reduction.py`, `tests/tradecase/test_topup_trip_reduction.py`, `reports/tradecase/2026-10-27/claude/C0173/**`, `runtime/test-evidence/tradecase/2026-10-27/T08/**`.
+trade_topup.py и native не трогаю до отдельного ACK по факту.
+
+## K-0173 — C0173 ACK уточнённого объёма (блокер версии получателя)
+Факт по live:
+- RRL_TRADE_DOCUMENT хранит только текущую версию (PK WARE_ID, ENTITY_TYPE, EXTERNAL_ID).
+- Ссылка O103 хранит RECIPIENT_VERSION=1, документ C103 сейчас v4. enter_line соединяет `r.VERSION_NO=l.RECIPIENT_VERSION`, получает n=0 → g_valid=false → TRADE_ORDER_BINDING_STALE.
+- В истории RRL_TRADE_MESSAGE payload v1 и v4 отличаются только topup_enabled; v2/v3 переключали его же.
+- Live SHA тела RRL_TRADE_PICK_CONTEXT: F7733DEBAEC656E7C6919BF0B98280B0866069D0A4221016CC07DADC11A9405C, спецификации: 229656B2…0991.
+Исправление (минимальное):
+- Новый отдельный объект — функция `RRL_TRADE_RECIPIENT_VERSION(p_ware,p_recipient,p_bound) return number`:
+  - если текущая принятая версия равна привязанной — возвращает её без чтения истории (быстрый путь не меняется);
+  - иначе читает ровно одну принятую запись истории привязанной версии (индекс RRL_TRADE_MSG_DOC_IX) и сравнивает её `$.payload` с текущим BODY_JSON через JSON_EQUAL после `JSON_MERGEPATCH(...,'{"topup_enabled":null,"topup_horizon_days":null}')` — в Oracle 19c нет JSON_TRANSFORM, mergepatch с null удаляет ровно эти два поля;
+  - совпало — возвращает текущую версию; нет истории, неоднозначно или отличается любое другое поле (active, собственники, клиент, ОСГ, выкуп, разрешения) — null, то есть прежний stale.
+- RRL_TRADE_PICK_CONTEXT BODY: enter_line и второе чтение в check_source соединяют получателя по версии из функции, она хранится в контексте (compatible сохраняет и восстанавливает её). LINK, версии и stale-check не трогаю.
+- Найдено: RRL_TRADE_TRANSPORT_CORE.current_plan, стр. 67, так же соединяет точную версию — после отбора O103 остановится на TRADE_TRANSPORT_DEMAND_BINDING_STALE. **Прошу резерв RRL_TRADE_TRANSPORT_CORE BODY** только для замены этого соединения на ту же функцию. Без резерва — оставлю как точный блокер.
+- topup-confirm не затрагивается (он читает текущий документ и topup_enabled).
+Комплект: `db/migrations/2026-10-27_trade_recipient_version/` (NOT_APPLIED, live before/after SHA, зависимости, apply/verify/rollback с отказом при дрейфе, зеркало wiki/database), генератор и проверки в `reports/tradecase/2026-10-27/claude/C0173/**`.
+Свой малый набор без стока (свой склад, получатель и заказ, привязка): v2 только с topup → функция совместима; v3 с изменением min_osg_days / inactive → несовместима. Плюс READ ONLY вычисление кандидата на C103 210069361 (только чтение).
+Тесты: `tests/tradecase/test_trade_recipient_version.py`. trade_topup.py не трогаю.
+
+## K-0174 — C0173 RESULT и RELEASE (блокер версии получателя)
+- Оба уточнения учтены:
+  1. Принятые записи истории привязанной версии с пустым или null payload считаются неоднозначностью (`payload is null or not json_equal`); быстрый путь равной версии сохранён.
+  2. Спецификация RRL_TRADE_TRANSPORT_CORE добавлена в неизменные зависимости preflight/verify/rollback/rollback_verify.
+- Комплект frozen, NOT_APPLIED: `db/migrations/2026-10-27_trade_recipient_version/`.
+  - Функция 9974A571…0200.
+  - Тело PICK_CONTEXT: F7733DEB…405C → 0938CD82…9DAD.
+  - Тело TRANSPORT_CORE: E5645184…DEA9 → 40D1EFA0…2F34.
+  - Полные SHA — в manifest.json.
+- Проверки:
+  - свой набор без стока (последний прогон на финальной функции — склад 223491197): live STALE на каждой новой версии получателя; кандидат VALID только для версий, где меняется лишь добивка; STALE для OSG, собственников, выкупа, inactive и отсутствующей истории;
+  - повтор v1 под новым event_id: 2 записи одного снимка, совместимость сохраняется;
+  - C103 только чтение: live STALE, кандидат v4;
+  - синтаксис: PICK_CONTEXT скомпилирован, в TRANSPORT_CORE только PLS-00231 (локальная функция в SQL);
+  - тесты 3/3 (вместе с C0172 — 8/8), gate PASS, encoding PASS.
+- 640/20 в этом запросе не выполнено. Исследование и гипотеза — в RESULT; `live_topup_trip_reduction.py` подготовлен, не запускался, дефект не объявлен.
+- Пустые свои склады без стока перечислены в RESULT. T08 не закрыт.
+- Коммит 18c47fbc.
+- RELEASE пути:
+  - `db/migrations/2026-10-27_trade_recipient_version/**`
+  - `reports/tradecase/2026-10-27/claude/C0173/**`
+  - `tests/tradecase/{live_trade_recipient_version.py,test_trade_recipient_version.py,live_topup_trip_reduction.py}`
+  - `tests/fixtures/tradecase_recipient_version_20261027.json`
+  - `wiki/database/trade_recipient_version_20261027.md`
+  - `runtime/test-evidence/tradecase/2026-10-27/C0173/**`
+  - `coordination/retailcase-claude/RESULT_C0173.md`
+- Резервы RRL_TRADE_PICK_CONTEXT BODY, RRL_TRADE_TRANSPORT_CORE BODY и RRL_TRADE_RECIPIENT_VERSION освобождаю после применения root; до применения изменения только в комплекте.
+
+## K-0175 — C0174 ACK (уменьшение рейса 6+3→8/1 и учёт вместимости)
+План:
+1. Довести `live_topup_trip_reduction.py` на своём новом складе (synthetic master data и SAP-ответы обозначены):
+   - основные 6, прогноз MOVEMENT 4 → добивка 3 (1 необеспечен), настройка/X, отдельный заказ O104, TRIP v2, штатная волна и adoption, перемещения и отгрузки;
+   - затем TRIP v3: вместимость 0.9→0.8 м³, O104 = 2 короба;
+   - погрузка 8 мест, отказ 9-го (переполнение), неизменный повтор LOAD, current-owner отказ;
+   - 1 место остаётся в экспедиции с резервом, адресом и кодами, без двойных кодов;
+   - локальный native DEPART с synthetic документом — только если достижим штатно;
+   - cleanup своего набора.
+2. Фактом проверить extra = approved − currentTrip после adoption: preview/capacity после TRIP v3 при удержаниях ADOPTED.
+   - Если фиктивный короб подтвердится — минимальная правка `_confirmed`: extra ограничивается активными (ACTIVE) удержаниями предложения. До передачи заказа и до появления его строки в TRIP подтверждённая добивка по-прежнему занимает место.
+   - Учёт SAP_ACCEPTED и ADOPTED целиком не выключаю. Zero-capacity short circuit и nullable sender_stock_boxes сохраняю.
+Файлы:
+- `tests/tradecase/live_topup_trip_reduction.py`
+- `api/wms_api_server/app/modules/integrations/infrastructure/trade_topup.py` (только при подтверждении)
+- `tests/tradecase/test_trade_topup_reduction.py`
+- `reports/tradecase/2026-10-27/claude/C0174/**`, `runtime/test-evidence/tradecase/2026-10-27/T08/topup-trip-reduction*.json`
+- `coordination/retailcase-claude/RESULT_C0174.md`
+Native, общие contracts/routes и набор root не трогаю.
+
+## K-0176 — C0174 RESULT и RELEASE
+- Гипотеза подтверждена фактом на своём наборе 226192056.
+  - После adoption (удержания ADOPTED) и TRIP v3 (O104 = 2 из 3) документ рейса даёт 0,8 м³, а расчёт добивки на 8088 — 0,9 м³: фиктивный короб = approved − в рейсе.
+  - Исправление в `trade_topup._confirmed`: extra ограничено ещё АКТИВНЫМИ удержаниями предложения. До передачи и до строки в TRIP место занято полностью; zero-capacity short circuit и nullable sender_stock_boxes сохранены.
+  - In-process на том же наборе — 0,8 м³. На 8088 — после твоего перезапуска.
+- Существующая последовательность разделения (команды — в RESULT):
+  - отдельные СТ мест добивки; TRIP новой версии; `DELETE .../tasks/{tt}/sts/{st}` остатка; привязка рейса (v3 прошла 60 + 20);
+  - погрузка 8 и неизменный повтор;
+  - место остатка: `409 LOAD_ALL_STS_ASSIGNED_TO_THIS_TRIP_REQUIRED`, остаётся в экспедиции у того же получателя — 10/H10, 10 уникальных кодов, SNS;
+  - current-owner: 403 без права операций, 409 за квитанцию чужого актора.
+- DEPART не выполнялся (нужен транспортный документ). Набор закрыт как доказательство. Первый набор 216754699 с одним СТ оставлен в PICKED (90 шт в резерве своего склада).
+- Тесты добивки 68/68 (3 существующих — только форма строк курсора), gate PASS, encoding PASS.
+- Коммит 5a2c1d58.
+- RELEASE пути:
+  - `api/wms_api_server/app/modules/integrations/infrastructure/trade_topup.py`
+  - `tests/tradecase/{test_trade_topup_reduction.py,test_trade_topup_adoption.py,live_topup_trip_reduction.py}`
+  - `tests/fixtures/tradecase_topup_reduction_20261027.json`
+  - `reports/tradecase/2026-10-27/claude/C0174/**`
+  - `runtime/test-evidence/tradecase/2026-10-27/T08/topup-trip-reduction*.json`
+  - `coordination/retailcase-claude/RESULT_C0174.md`
+- Резерв trade_topup.py освобождаю.
+
+## K-0177 — C0175 ACK + CONTRACT_REQUEST (единицы заказа)
+Факт:
+- TradeOrderLine принимает только EA/BOX, TradeSku — base EA.
+- Native RRL_TRADE_DOCUMENT_API (целый короб, целые количества TRIP), RRL_TRADE_ORDER_API.bind_order (`UNIT_CODE=uom`, `ORDER_QTY=quantity`, коэффициент EA=1 / BOX=units_per_box), PICK_CONTEXT, TRANSPORT_CORE и вместимость работают на EA/BOX.
+- NI02 (StoreOrders, SAP XML) уже переводит вход в базу через RRL_STOCK_UOM_CONVERSION + RRL_STOCK_MATH.convert_exact, но запрещённое округление отклоняет всё сообщение.
+- Настройки «единственная единица обработки» и «разрешено округление» в системе нет; RRL_ARTICULS.ROUND_TO — только точность.
+Предлагаемый контракт (один пересчёт — при приёме документа; всё ниже по цепочке работает на обработанной EA/BOX строке без изменений):
+1. `TradeSku`: + `processing_uom: "EA" | "BOX" | null` (единственная единица обработки; null — текущее поведение) и + `round_to_processing_unit: bool = true`.
+2. `TradeOrderLine.uom`: `EA | BOX | BLOCK | G | KG`.
+3. Нормализация в TradecaseDocuments.receive для ORDER, до native:
+   - коэффициенты только из RRL_STOCK_UOM_CONVERSION артикула (актуальная POLICY_VERSION), точная арифметика RRL_STOCK_MATH;
+   - вход → база → вниз до шага единицы обработки (BOX = units_per_box, проверено по реестру; EA = 1; шаг/точность из BASE_SCALE);
+   - в строке документа: `quantity`/`uom` = обработанные, плюс `source_quantity`, `source_uom`, `base_difference`, `conversion_policy`, `sku_version`, `normalization.status` (EXACT / ROUNDED_DOWN / ROUNDED_DOWN_INTEGRATION_ERROR / ZERO / COEFFICIENT_MISSING) и `error_code`;
+   - результат сообщения ACCEPTED + `line_results` различает «загружено с ошибкой» и отклонение;
+   - точный повтор — прежний результат (существующий event/payload hash); изменение настройки SKU не пересчитывает принятый заказ.
+4. Строки ZERO и COEFFICIENT_MISSING сохраняются в документе, но без складской строки и задания. Для этого нужен native: bind_order и проверки TRIP должны пропускать неисполняемые строки (количество 0 / без обработанного количества). Подготовлю NOT_APPLIED kit — **прошу резерв тел RRL_TRADE_ORDER_API и RRL_TRADE_DOCUMENT_API**. Без него такие строки будут отклоняться с диагностикой, и это ограничение я назову.
+5. G/KG для торгового SKU с базой EA — только при наличии в реестре рационального коэффициента G/KG→EA; иначе COEFFICIENT_MISSING. Весовой SKU с базой KG и дробным шагом в TRADECASE ниже по цепочке (вместимость, TRIP) не поддержан. Сам нормализатор считает дробный шаг (тесты), а подключение к NI02 оставлю следующим шагом — без тихого расширения.
+Файлы:
+- `api/wms_api_server/app/modules/integrations/contracts_tradecase.py` (общий контракт — после твоего OK)
+- `api/wms_api_server/app/modules/integrations/domain/order_units.py` (новый чистый нормализатор)
+- `api/wms_api_server/app/modules/integrations/infrastructure/tradecase_documents.py` (вызов нормализатора и чтение реестра)
+- `tests/tradecase/test_order_units.py`, `tests/tradecase/live_order_units.py`, `tests/fixtures/tradecase_order_units*.json`
+- native kit `db/migrations/2026-10-27_trade_order_units/` (если резерв дан)
+- `reports/tradecase/2026-10-27/claude/C0175/**`, `coordination/retailcase-claude/RESULT_C0175.md`
+Пока жду OK по контракту, делаю независимую часть: чистый нормализатор и его тесты (25 EA при коробке 12 → 2 BOX/остаток 1 в обоих режимах; блок; дробный вес и шаг; нет коэффициента; ноль).
+
+## K-0178 — C0175 RESULT и RELEASE (единицы заказа, первый этап)
+- Сделано по согласованному контракту:
+  - TradeSku `processing_uom` / `processing_step` / `round_to_processing_unit`; uom строки EA/BOX/BLOCK/BLK/G/KG;
+  - нормализация один раз при приёме ORDER: реестр RRL_STOCK_UOM_CONVERSION, точные дроби, вниз до явного шага;
+  - флаг выключен — строка загружена с ORDER_UNIT_ROUNDING_NOT_ALLOWED, в том числе 24 EA → 2 BOX;
+  - точный повтор — сохранённый запрос без повторной нормализации;
+  - в строке исходные и обработанные значения, разница, версии и статус; ответ `line_results` и `loaded_with_integration_error`. Ниже по цепочке второго пересчёта нет.
+- Native NOT_APPLIED `db/migrations/2026-10-27_trade_order_units/`:
+  - тела DOCUMENT_API 3EBF80AB…A924 → DBFE94BF…596A, ORDER_API 2A2924D2…2381 → AC41B2AA…5689;
+  - неисполнимые строки хранятся с 0, TRIP → ORDER_LINE_NOT_EXECUTABLE, привязка их пропускает;
+  - откат защищён от дрейфа и истории; синтаксис обоих тел чистый.
+- Проверки:
+  - live — текущий код в процессе ASGI + настоящий Oracle (не served-8088), свой склад 216552364: 25 EA → 2 BOX, 5 BLK → 4 BOX, 3 BOX; запрет округления → загружено с ошибкой; повтор, 409, 403; привязка 2/4/3 BOX прошла;
+  - до комплекта нулевая или безкоэффициентная строка отклоняет ORDER целиком — это ограничение;
+  - тесты 9/9 и все TRADECASE 351/351 (audit 5/5 с собственным basetemp); gate PASS, encoding PASS.
+- После твоего применения комплекта: `python tests/tradecase/live_order_units.py --after-kit`. Новый код приёма на 8088 появится после твоего перезапуска.
+- Не закрыто: весовой base KG end-to-end, NI02 StoreOrders, документ раньше своего SKU (строки неисполнимые SKU_SETTINGS_MISSING). Пустые свои склады перечислены в RESULT.
+- Коммит e9e9286f.
+- RELEASE пути:
+  - `api/wms_api_server/app/modules/integrations/{contracts_tradecase.py,domain/order_units.py,infrastructure/order_unit_registry.py,infrastructure/tradecase_documents.py}`
+  - `tests/tradecase/{test_order_units.py,live_order_units.py}`
+  - `db/migrations/2026-10-27_trade_order_units/**`
+  - `reports/tradecase/2026-10-27/claude/C0175/**`
+  - `wiki/database/trade_order_units_20261027.md`
+  - `runtime/test-evidence/tradecase/2026-10-27/C0175/**`
+  - `coordination/retailcase-claude/RESULT_C0175.md`
+- Резервы contracts_tradecase.py и tradecase_documents.py освобождаю; тела native — после твоего применения.
+
+## K-0179 — C0176 ACK + CONTRACT (выборочное снятие мест)
+Проверено по live-исходникам:
+- Совместимо: LOAD (RRL_STOCK_HU_LOAD_CORE, стр. 45–48) проверяет TRANSTASK_ID каждой строки RRL_SBORKA_PALLETS своего места, а не весь ST_NUMBER, поэтому смешанное назначение одного номера с LOAD совместимо. TRANSPORT_CORE.validate_members суммирует только строки на рейсе.
+- Writer: RRL_TT_ADD_PALL(TT_ID,ST_NUMBER1) находит строки по ST_NUMBER. Прямые вызовы — RRL_TRANSPORT_PLAN_API (стр. 19) и RRL_ST_DEFER_API (стр. 255), оба с 2 аргументами. Триггер RRL_TT_MEMBERSHIP_WRITER_GUARD требует контекст writer на каждую строку.
+Native (NOT_APPLIED kit `db/migrations/2026-10-27_tt_selected_places/`):
+1. `RRL_TT_ADD_PALL(TT_ID int, ST_NUMBER1 varchar2, p_member_id number default null)`:
+   - 2 аргумента — прежнее поведение;
+   - с ID — только TT_ID=0 (снятие); discovery и снимок по ST_NUMBER и ID; прежние блокировки TT→member, проверки отгружено/погружено/счёт и контекст без изменений; граница 1000 сохраняется.
+   - Зависимые тела перекомпилируются; verify — INVALID 0.
+2. Новый `RRL_TT_PLACE_REMOVAL_API.remove(p_request clob, p_actor varchar2, p_result out clob)` и журнал `RRL_TT_PLACE_REMOVAL_CMD` (OPERATION_ID PK, ACTOR, REQUEST_HASH, TRIP_ID, ST_NUMBER, RESULT_JSON, CREATED_AT):
+   - право transport_dispatch_edit по складу мест, owner-operate для торговых мест (fulfillment → UID → RRL_TRADE_STOCK_ATTR → RRL_TRADE_STOCK_GUARD.owner_allowed) — **до** чтения сохранённого ответа;
+   - точный повтор — прежний результат; другой payload или actor — OPERATION_CONFLICT;
+   - 1..200 ID одной сборки, каждое сейчас на этом рейсе, иначе TRIP_MEMBER_NOT_ON_TRIP (конкурирующая вторая команда получит его);
+   - ожидаемое число мест сборки на рейсе (expected_on_trip) — версия снимка, иначе TRIP_MEMBERSHIP_SNAPSHOT_CHANGED;
+   - по ID — writer(0, st, id), всё в одной транзакции (ошибка откатывает всё);
+   - получатель, заказ, UID, коды, остаток, резерв и адрес не меняются.
+   - Откат журнал не удаляет: при наличии записей откат отказывает.
+API (новый модуль transport):
+- `GET /api/transport/trips/{trip_id}/sts/{st_number}/places` → `{trip_id, st_number, on_trip, places:[{member_id, pallet_uid, address, on_trip, loaded, shipped, quantity}]}`;
+- `POST /api/transport/trips/{trip_id}/place-removals` с телом `{operation_id, st_number, member_ids:[...], expected_on_trip, reason}` → `{operation_id, trip_id, st_number, removed:[...], on_trip_after, replayed}`;
+- ошибки 403/409 с кодом, 503 при неизвестном исходе с повтором того же operation_id.
+UI: отдельный компонент `admin/wms_admin_frontend/src/components/TransportStPlaceRemoval.tsx` (список мест сборки, выбор/количество, подтверждение, help, intent и повтор после неизвестного исхода, 403 очищает данные); минимальная точка подключения в TransportDispatchPage без роста baseline.
+Свой fixture (свой склад, своя сборка из нескольких мест). Набор root 210069361 — только чтение. Пока kit не применён, UI проверяю на своём preview со stub и так это и отмечаю.
+Файлы:
+- `db/migrations/2026-10-27_tt_selected_places/**`
+- `api/wms_api_server/app/modules/transport/{api/place_removal_routes.py,infrastructure/place_removal.py}` + подключение в main/routers
+- компонент UI и минимальная точка в TransportDispatchPage
+- `tests/tradecase/{test_place_removal.py,live_place_removal.py}`
+- `reports/tradecase/2026-10-27/claude/C0176/**`, `wiki/database/tt_selected_places_20261027.md`, `coordination/retailcase-claude/RESULT_C0176.md`
+
+## K-0180 — C0176 RESULT и RELEASE (выборочное снятие мест)
+- Все замечания учтены:
+  - source_hash в GET и обязательный expected_source_hash в POST, проверка под блокировкой рейса;
+  - точный повтор отдаёт сохранённый JSON (поля replayed нет); повторная проверка журнала после lockTT, поэтому одновременный точный повтор даёт 2×200 и одну запись; тот же op на другом рейсе — OPERATION_CONFLICT без частичного снятия;
+  - shared-lock RRL_ACCESS_REV до проверки прав;
+  - граница 1000 в source_hash; место без WARE_ID — явный отказ;
+  - StrictInt member_ids; для POST 403 и OPERATION_CONFLICT — outcome_confirmed=false, intent сохраняется.
+- Native NOT_APPLIED `db/migrations/2026-10-27_tt_selected_places/`:
+  - writer 4157F23B…A25A → 7F464DEA…C37F (3-й аргумент только для снятия, 2 аргумента — прежние);
+  - RRL_TT_PLACE_REMOVAL_API: спецификация 182FED73…0CBF, тело 8508DF83…DA8E; журнал;
+  - откат при пустом журнале; синтаксис чистый, остальные ошибки — ожидаемые до apply.
+- API GET places / POST place-removals зарегистрированы в main.py (новая composition).
+- UI в панели «Паллеты СТ» обеих вкладок диспетчера, без роста файла (архитектура PASS).
+- Проверки:
+  - тесты 6/6, все TRADECASE 361 (audit — TEMP), gate PASS, encoding PASS;
+  - UI на моём preview со **STUB** новых endpoint (kit не применён) 11/11 на 1440/390; замечание: на 390 существующая правая панель перекрывает кнопку строки СТ.
+- После apply и API_READY: `python tests/tradecase/live_place_removal.py --after-kit` (свой набор) и полный масштаб 20 мест ST P210069361104 (последовательность в RESULT). Живой UI без stub — после API_READY.
+- Коммит 65840278.
+- RELEASE пути:
+  - `db/migrations/2026-10-27_tt_selected_places/**`
+  - `api/wms_api_server/app/{place_removal_composition.py,main.py}`
+  - `api/wms_api_server/app/modules/transport/{contracts_place_removal.py,api/place_removal_routes.py,infrastructure/place_removal.py,public.py}`
+  - `admin/wms_admin_frontend/src/features/transport/{TransportStPlaceRemoval.tsx,index.ts}`
+  - `admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx`
+  - `tests/tradecase/{test_place_removal.py,live_place_removal.py}`
+  - `reports/tradecase/2026-10-27/claude/C0176/**`
+  - `wiki/database/tt_selected_places_20261027.md`
+  - `runtime/test-evidence/tradecase/2026-10-27/C0176/**`
+  - `coordination/retailcase-claude/RESULT_C0176.md`
+
+## K-0181 — C0176 UI rev1 ACK
+Принимаю: native kit (компиляции зависимостей, SHA) и reader (NULL WARE) делает root. Native и backend я больше не меняю. Прошу в reader заодно убрать SUM(QUANTITY) из _PLACES и поле quantity из ответа: UI его уже не показывает.
+UI rev1 (только `admin/wms_admin_frontend/src/features/transport/TransportStPlaceRemoval.tsx`, точки подключения в TransportDispatchPage без роста, экспорт через публичные index):
+- чтение через useApiRead (отмена устаревшего запроса, 401/403/404 очищают данные); команда через проверенный общий journal/useCommand (TRADECASE, экспорт через features/integrations): тело сохраняется до POST, неизвестный исход повторяется тем же телом, outcome_confirmed=false и конфликт сохраняют команду, повреждённая запись блокирует;
+- компонент монтируется с key рейс:сборка, поэтому поздний ответ прежнего контекста не меняет новый экран;
+- кнопки — HelpButton и ссылка на статью `trip-place-removal` (wiki-статья, регистрация в docs/help/wiki-sources.json, публикация через существующие knowledge-команды);
+- колонка «Кол-во» убрана;
+- исправлю перекрытие кнопки строки СТ на 390 (dispatchNarrow.css), приёмка — реальным кликом по видимой кнопке.
+Живая проверка без stub — после API_READY.
+
+## K-0182 — C0176 UI rev1 RESULT и RELEASE (живая проверка после API_READY)
+- UI на общих механизмах:
+  - useApiRead, journal/useCommand (экспорт через features/integrations), HelpButton (useApiRead экспортирован через features/platform);
+  - компонент перенесён в `components/` — features/transport → platform замыкал цикл через DeviceDesks;
+  - remount по key рейс:сборка (поздний ответ не трогает новый контекст); колонка количества убрана.
+- 390: dispatchNarrow.css — карточка рейса в естественной высоте, прокручивается только список СТ; реальный клик работает.
+- Справка: `wiki/runbooks/transport_trip_place_removal.md`, `trip-place-removal` в docs/help/wiki-sources.json, опубликована существующими knowledge-командами (v2); кнопка «?» открывает статью.
+- Живая проверка без stub (свой preview над served 8088, свой рейс 33703, 6 мест), 7/7:
+  - потерянный ответ после фактического выполнения → «неизвестно» → reload и вход → тот же запрос → сохранённая квитанция;
+  - 390: реальный клик и реальное снятие, справка открылась;
+  - без права — 403;
+  - Oracle: 4 из 6 в рейсе, журнал 2/2 — каждое снятие один раз;
+  - набор и учётная запись выведены.
+- Не проверен настоящий 401 по истечении сессии. Gate PASS, encoding PASS, тесты place_removal 7/7, архитектура PASS.
+- Коммит 2c77b952.
+- RELEASE пути:
+  - `admin/wms_admin_frontend/src/components/{TransportStPlaceRemoval.tsx,TransportDispatchPage.tsx}`
+  - `admin/wms_admin_frontend/src/features/{integrations/index.ts,platform/index.ts,transport/index.ts,transport/dispatchNarrow.css}` (удалён `features/transport/TransportStPlaceRemoval.tsx`)
+  - `docs/help/wiki-sources.json`, `wiki/runbooks/transport_trip_place_removal.md`
+  - `tests/tradecase/live_place_removal.py`
+  - `reports/tradecase/2026-10-27/claude/C0176/**`
+  - `runtime/test-evidence/tradecase/2026-10-27/C0176/**`
+  - `coordination/retailcase-claude/RESULT_C0176.md`
+
+## K-0183 — C0177 ACK (T10: двойное назначение сотрудника и техники)
+Сверка источников:
+- T10 по BP15/18 (история roadmap, строка 48): общие ворота вход/выход, задержка и поломка, двойное назначение сотрудника.
+- Принято:
+  - общие ворота и машины, интервалы, параллельный победитель (C0158, 23.10);
+  - визиты EXPECT/ASSIGN (C0150);
+  - две машины на одни ворота на приёмке (23.10);
+  - риски смены (C0159).
+- Поломка ворот: в системе нет писателя DOCK_IS_BLOCKED — YARD_* его только читают. Это новый механизм, не «существующий writer»; оставляю как точный остаток, не изобретаю.
+Выбранный непокрытый сценарий — **двойное назначение сотрудника/техники при параллельном открытии сеанса ресурса** (`POST /api/resources/sessions/login`):
+- Защита есть только уникальными индексами RRL_RESOURCE_SESSION_U1/U2/U3 (ресурс, техника, оператор ACTIVE/PAUSED) и для смен ричтраков — лимитом EXPECTED_DRIVERS под FOR UPDATE.
+- Гипотеза, проверю фактом до правки: при гонке проигравший получает ORA-00001 → HTTP 500 (неизвестный исход вместо понятного отказа), а повтор после потерянного ответа даёт отказ вместо прежнего сеанса.
+План:
+- свой склад, смена, 2 ресурса и техника, свои операторы;
+- параллельно: один оператор на два ресурса; два оператора на один ресурс/технику; лимит смены 1 при двух входах; точный повтор тем же телом; права;
+- при подтверждении — минимальная правка в существующем модуле:
+  - `api/wms_api_server/app/modules/resources/infrastructure/session_lifecycle.py`: 409 с кодом OPERATOR/RESOURCE/EQUIPMENT_ALREADY_IN_SESSION без частичного изменения;
+  - точный повтор (тот же оператор, смена, ресурс и техника уже ACTIVE) возвращает тот же SESSION_ID;
+- native и миграция не нужны. UI этот вызов не использует: экран не проверяется, причина будет в отчёте.
+Файлы:
+- `api/wms_api_server/app/modules/resources/infrastructure/session_lifecycle.py`
+- `tests/tradecase/{test_session_competition.py,live_session_competition.py}`
+- `reports/tradecase/2026-10-27/claude/C0177/**`, `runtime/test-evidence/tradecase/2026-10-27/C0177/**`
+- `coordination/retailcase-claude/RESULT_C0177.md`
+
+## K-0184 — RELEASE C0177 T10 (double assignment; done before the TASK rewrite)
+My ACK K-0183 took C0177 as T10, and that work was already finished when the TASK changed to T08. To keep the numbers apart, the result is filed as `RESULT_C0177_T10.md`. Local commit f89236ba, no push.
+- `session_lifecycle.py`: a concurrent ORA-00001 now gives 409 `OPERATOR/RESOURCE/EQUIPMENT_ALREADY_IN_SESSION` with outcome_confirmed=true instead of 500. An exact repeat, concurrent or after a lost reply, returns the same SESSION_ID. The repeat check runs before the reach-shift capacity check.
+- ASGI+Oracle before/after: losers 500→409; repeat 500→200 with the same id 112; reach capacity 409 kept; exactly 1 session open each time. Offline 8/8; gate, encoding and architecture PASS.
+- Cleanup: 4 own warehouses verified clean.
+- Remainder: no writer for dock breakdown; `resource_session_manage` is not scoped to a warehouse (owner's decision).
+If this needs a different number, renumber it; the files stay as they are.
+
+## K-0185 — ACK C0177 T08 floor places / stacking
+Read `TASK_C0177_T08_FLOOR_CAPACITY.md`. I'm not touching warehouse 210069361, its runner/API commands, `live_topup_physical_660.py`, `TopupProposals.tsx`, the shared dist or native code.
+Plan:
+- reconcile the source criterion with `trade_capacity.py` and `trade_topup.py`;
+- read-only, check the Oracle profile of the vehicle and goods: floor places, floor/pallet type, stacking;
+- if the data defines a rule unambiguously, compute floor places and stacking; otherwise block the candidate with a reason, keep readiness false, and propose the minimal profile fields without inventing values.
+Ownership:
+- `api/wms_api_server/app/modules/integrations/infrastructure/trade_capacity.py` (plus a new neighbouring module `trade_floor_capacity.py` if needed to stay within the size baseline)
+- `tests/tradecase/test_trade_floor_capacity.py`, `tests/tradecase/live_trade_floor_capacity.py`
+- `reports/tradecase/2026-10-27/claude/C0177_T08/**`, `runtime/test-evidence/tradecase/2026-10-27/C0177_T08/**`
+- `coordination/retailcase-claude/RESULT_C0177.md`
+`trade_topup.py` is read-only for me until you confirm; the same flags there are changed only with your consent, via CONTRACT_REQUEST.
+
+## K-0186 — C0177 correction received: T10 stands, K-0185 ACK withdrawn
+I read "keep accepted T10 task". I withdraw ACK K-0185 for T08 and made no changes for T08. RELEASE K-0184 for T10 stands; the result is now in `RESULT_C0177.md` (local commit f89236ba plus a rename commit, no push).
+Read-only T08 notes for you, unverified as a rule:
+- `RRL_VEHICLE_PROFILE_API.check_floor_capacity(p_vehicle,p_counts,p_unknown)` is in the spec and checks `floor_capacity.variants[].limits{pallet_type_id,max_places}`. If p_unknown>0 it returns `TARE_TYPE_UNCONFIRMED` (a safe refusal).
+- Planned boxes have no places or pallet type in the TRIP document (`TradeTrip`: only capacity_kg/m3).
+- Candidate sources:
+  - `RRL_ARTICULS.COUNT_IN_ROW×ROWS_IN_PAL` (no pallet type, no column comments);
+  - `RRL_CUSTOMER_PRODUCT_RULE` (pallet_case_qty, pallet_type, allow_top_stacking, must_be_separate_pallet, stack_compatibility_group): 64 active rules, PALLET_CASE_QTY in 32, PALLET_TYPE in 0, ALLOW_TOP_STACKING=1 in 13.
+- In the live source of user_source, ALLOW_TOP_STACKING/PALLET_CASE_QTY are not read by native code. Its meaning (stacking pallets in the vehicle vs boxes on a pallet) is not confirmed by code.
+
+## K-0187 — ACK C0178 T08 fail-closed pallet capacity
+I read `TASK_C0178_T08_FLOOR_CAPACITY.md`. I won't touch 210069361, its runner, Oracle schema/packages, `TopupProposals.tsx`, the shared build, or Codex fixtures.
+Plan:
+- in capacity_preview and in top-up, an explicit check of pallet places and stacking: when there is no authoritative pallet type/place count or stacking rule, return a blocking reason (`maximum_boxes`/`fitting_boxes`=null), keep `approval_available=false`, and allow no save/confirm/reservation;
+- I'll use the existing `RRL_VEHICLE_PROFILE_API.check_floor_capacity` only if there is an authoritative mapping;
+- the weight/volume/dimension formula stays unchanged.
+Paths:
+- `api/wms_api_server/app/modules/integrations/infrastructure/trade_capacity.py`, `.../trade_topup.py`
+- `tests/tradecase/test_trade_floor_capacity.py`, `tests/tradecase/live_trade_floor_capacity.py` (read-only/API preview)
+- `reports/tradecase/2026-10-27/claude/C0178/**`, `runtime/test-evidence/tradecase/2026-10-27/C0178/**`
+- `coordination/retailcase-claude/RESULT_C0178.md`
+
+## K-0188 — RELEASE C0178 T08 fail-closed pallet capacity
+`RESULT_C0178.md`, local commit (see git log, "C-0178 T08"), no push.
+- There is no authoritative product → pallet type/places mapping and no stacking rule in Oracle, so there is no positive case and none was invented.
+- `floor_admission` uses the existing `check_floor_capacity` with type-unconfirmed places; the reason is `TOPUP_PALLET_PLACE_MAPPING_REQUIRED`.
+- capacity_preview: fitting/maximum/remaining are null. topup preview/save: 409 after the existing gates; save never reaches `RRL_TRADE_TOPUP_API.save`, holds 0.
+- Live, ASGI+Oracle, 226192056/T1: capacity 1 and 100000 both refused; preview 409; save 409; counts 1/3/0 = 1/3/0. Max HTTP 378 ms; slow log 0.
+- Offline 9/9, existing capacity/topup 82; gate, encoding and architecture PASS.
+- Note: your 660→640 runner will now get 409 on top-up (intended). Proposals saved before this change can still be confirmed natively. The master-data requirements are listed in RESULT.
+
+## K-0189 — ACK C0179 T08 capacity refusal explanation (UI)
+I read `TASK_C0179_T08_CAPACITY_REASON_UI.md`. Reserved paths:
+- `admin/wms_admin_frontend/src/features/integrations/tradecase/CapacityPreview.tsx`
+- a focused UI check: `reports/tradecase/2026-10-27/claude/C0179/**` (a Playwright script on my own Vite 127.0.0.1:3021 against the served API 8088, no stub), plus an offline mapping test if the existing test setup allows it
+- `coordination/retailcase-claude/RESULT_C0179.md`
+Reasons that capacity_preview returns today: TOPUP_PALLET_PLACE_MAPPING_REQUIRED, MIXED_PACKAGE_LAYOUT_REQUIRED, TOPUP_DEPARTURE_TIME_PASSED, TOPUP_AFTER_LOAD_ROUTE_ORDER_UNVERIFIED, TOPUP_AFTER_LOAD_RECIPIENT_NOT_ON_TRIP, plus LOAD_ALREADY_STARTED from the task. Any unknown code is shown explicitly, with a neutral text. Backend, Oracle, dist and Codex data stay unchanged; no new API calls.
+
+## K-0190 — RELEASE C0179 T08 capacity refusal explanation
+`RESULT_C0179.md`, local commit "C-0179 T08" (git log), no push. Only `CapacityPreview.tsx` changed: a text for every current reason (including TOPUP_PALLET_PLACE_MAPPING_REQUIRED and LOAD_ALREADY_STARTED from the task); an unknown code is an explicit refusal shown with its code; ceilings are labelled "оценка"; the "fitting" line is hidden when there is a refusal; the help link is kept; no new API calls.
+Live, no stub: the shared 8088 still serves pre-C0178 code (T1: reason null), so I used my own API 8093 (current code, real Oracle) plus my own Vite 3023, both now stopped. 1440/390: real click, the screen's data-reason = the real API reason, no horizontal scroll. PASS 2/2.
+tsc, gate, encoding and architecture PASS. On 8088 the reason will appear after root restarts the API with C0178.
+
+## K-0191 — ACK C0180 T10 dock status UI
+I read `TASK_C0180_T10_DOCK_STATUS_UI.md`. Paths:
+- new `admin/wms_admin_frontend/src/features/platform/workspaces/shift/YardDockStatus.tsx`: list of docks with status and reason; BLOCK/UNBLOCK with a required reason; a journal of my own in localStorage with operation_id saved before sending and an exact retry; 403/409/503/unknown outcome kept visible, cleared only on confirmation;
+- `.../shift/YardPanel.tsx`: mounting the section only (one line plus an import);
+- `.../shift/help.ts`: help entries for the new buttons;
+- `reports/tradecase/2026-10-27/claude/C0180/**`, `coordination/retailcase-claude/RESULT_C0180.md`.
+Built against the contract in the task; no mocking as final evidence. The live check at 1440/390 comes after `API_READY_C0180.md`. I'm not touching backend/SQL/dist/fixtures or the API.
+
+## K-0192 — C0180 UI ready for the contract, waiting for API_READY_C0180
+Local commit "C-0180 T10" (git log), no push. `YardDockStatus.tsx` is mounted in the yard panel under the dock plan; help entries are `shift.yard.dock.*`.
+- The receipt is accepted only when operation_id, dock and blocked=(action==BLOCK) all match.
+- A 409 with outcome_confirmed=true is a refusal and clears the record.
+- *_OPERATION_CONFLICT, 401/403, 503 and network failures keep the record and offer a retry with the same bytes.
+- A response that arrives after the login changed is not applied.
+tsc, gate, encoding and architecture PASS. The live check at 1440/390 runs after API_READY. Please list in API_READY the exact refusal codes (unknown dock, ambiguity, repeated BLOCK/UNBLOCK) and an own warehouse/dock for the check, or permission to use my own warehouse with my own docks.
+
+## K-0193 — C0180 contract update applied
+`blocked=null` with `ambiguous` or `status_error`: the state is shown as "состояние неизвестно: …" with the reason, and BLOCK/UNBLOCK is disabled, both the row button and the form's send button. The texts for YARD_DOCK_NOT_FOUND, YARD_DOCK_AMBIGUOUS, YARD_DOCK_STATUS_INVALID and YARD_ACCESS_DENIED are added; on 403 the rights text is shown and the command is kept for a retry. tsc, architecture and encoding PASS; local commit "C-0180 … unknown dock state". Waiting for API_READY_C0180.
+
+## K-0194 — C0180 urgent check: already done; UI released for the API-ready check
+The `blocked:null` type and rendering were in 7cd8ae79 (K-0193): null is never shown as "исправны"; for ambiguous/status_error the row shows "состояние неизвестно" with the code (YARD_DOCK_AMBIGUOUS or status_error), and the row button and the form's send button are disabled. The REFUSAL texts match YARD_DOCK_NOT_FOUND, YARD_DOCK_AMBIGUOUS, YARD_DOCK_STATUS_INVALID and YARD_ACCESS_DENIED. The last commit adds the code to the duplicate row. I've stopped editing the UI. After API_READY_C0180 I'll run the live check at 1440/390 on the dock/warehouse you specify.
+
+## K-0195 — RELEASE C0180 T10 dock status UI
+`RESULT_C0180.md`; local commits deeb08f2, 7cd8ae79, 0e78b208 plus the last "C-0180 … live", no push.
+Live, no stub: my own Vite 3023 → your API 8093 (not touched), 226192056/TR27D226192056.
+- 1440: real BLOCK, reply lost after execution → unknown outcome kept → reload → retry with the same bytes (one operation_id) → receipt → GET shows blocked with the reason.
+- 390: real UNBLOCK → GET shows open; no horizontal scroll.
+- Final state: blocked=false (dock left open). tsc, gate, encoding and architecture PASS.
+Not checked live: 403 (no identity without tradecase_yard_operate) and blocked=null rows (none on the QA warehouse).
+
+## K-0196 — ACK C0181 T10 shared shift resource Gantt
+I read `TASK_C0181_T10_RESOURCE_GANTT.md` (TASK.md still shows C0180; I'm taking C0181 from the task file). Reserved:
+- `admin/wms_admin_frontend/src/features/platform/workspaces/resources/**` (ResourceGantt.tsx, timelineModel.ts, timelineAdapter.ts, timelineTypes.ts, ganttHelp.ts, gantt.css, SourceChips.tsx, ResourceCard.tsx: only where a defect is found)
+- `.../workspaces/shift/ShiftSupervisorDesk.tsx` (only if needed)
+- `reports/tradecase/2026-10-27/claude/C0181/**` (checks/screenshots), `coordination/retailcase-claude/RESULT_C0181.md`
+Plan:
+- read-only real `GET /api/resources/timeline` for 220793322 and 226192056: resources and events by type, and the source of each type;
+- own Vite against the current local API, no stub; 1440/390: type switching, event/resource selection, unknown/closed sources, search/scale, no horizontal scroll, names plus help on buttons/filters.
+Not touching API/SQL/Oracle/fixtures/dist/YardDockStatus.tsx/wiki; not restarting the API.
+
+## K-0197 — RELEASE C0181 T10 shared resource Gantt
+`RESULT_C0181.md`, local commit "C-0181 T10" (git log), no push.
+- Real API 8093 (= 8088), today's window: 220793322 = 6 pickers + 2 docks, 3 CASE_PICK_TASK; 226192056 = 1 dock + 1 vehicle, 8 LOAD_CONFIRMATION. All 7 sources READY.
+- **Source gap for you:** neither warehouse has REACHTRUCK (or OTHER) in the registry; the screen now names that as a source limitation. `warehouse_time_zone=null`, so the axis is in UTC.
+- Three UI fixes:
+  1. type counts plus an "absent from the source" note;
+  2. the id on the second line for repeated labels (6× "Factory CASE QA");
+  3. CONTROLLED tasks without a finish, started before the window, were counted but invisible; they are now in the queue with the reason "начата до окна".
+- Live 1440/390, 4 runs PASS: types, resource/work selection → card, search, 4 h scale plus pan, names and help-ids on all controls, no horizontal scroll. tsc, gate, encoding and architecture PASS.
+- Not checked live: FORBIDDEN/ERROR sources.
+
+## K-0198 — IDLE, ready for the next request
+C0181 handed over (K-0197, RESULT_C0181.md, b6356608). I have no active work. I'm checking the channel every 3 minutes; I'll ACK a new TASK/API_READY immediately and see it through to RESULT and RELEASE.
+
+## K-0199 — ACK C0182 T10 dock plan refused on a broken dock
+I read `TASK_C0182_T10_BLOCKED_DOCK_PLAN.md`. Reserved:
+- `admin/wms_admin_frontend/src/features/platform/workspaces/shift/YardDockPlan.tsx`, `.../shift/yardModel.ts` (only on a confirmed defect)
+- `reports/tradecase/2026-10-27/claude/C0182/**`, `coordination/retailcase-claude/RESULT_C0182.md`
+Plan:
+- read-only first: GET docks/visits/dock-plans on 226192056 and choose a QA visit without a plan;
+- if there is none, I stop the live part and record the blocker;
+- otherwise, in a live UI run on my own Vite → 8093: BLOCK TR27D226192056 → plan attempt → 409 YARD_DOCK_BLOCKED, no plan → UNBLOCK in finally;
+- final GET: dock open, no new plans/visits.
+Not touching API/SQL/Oracle/dist/fixtures/YardDockStatus.tsx/wiki; existing plans/visits are not changed.
+
+## K-0200 — RELEASE C0182 (live part blocked: no safe QA visit)
+`RESULT_C0182.md`, local commit "C-0182 T10" (git log), no push.
+- Read-only GET 8093 on 226192056: dock TR27D226192056 blocked=false; active visits `[]`; plans (7 days) `[]`. There's no safe QA visit without a plan, so per the task I created nothing, did not block the dock and wrote nothing. The dock stays open.
+- UI fix in `yardModel.ts`: the YARD_DOCK_BLOCKED text now says the dock is marked broken, that no plan/assignment was created, what to do, and that current work is unchanged (plan and visit). From `yard_plan_routes.py` (read-only): a 409 with outcome_confirmed means a confirmed refusal, and the UI clears the command.
+- Focused text test PASS; tsc, gate, encoding and architecture PASS.
+- **Blocker:** please provide an active QA visit without a plan on 226192056 (or name an allowed one). I'll then run the live BLOCK → plan → 409 → UNBLOCK (finally) at 1440/390 within the same request.
+
+## K-0201 — ACK C0183 T10 yard refusal texts
+I read `TASK_C0183_T10_YARD_REFUSAL_TEXT.md`. Reserved:
+- `admin/wms_admin_frontend/src/features/platform/workspaces/shift/yardModel.ts`
+- a focused test: `reports/tradecase/2026-10-27/claude/C0183/scripts/c0183_yard_refusals.cjs` (transpiles the real model, no network)
+- `reports/tradecase/2026-10-27/claude/C0183/**`, `coordination/retailcase-claude/RESULT_C0183.md`
+Plan: collect the codes from yard_plan_routes.py, the yard routes, 003_visit_body.sql, 004_plan_api.sql and 002_supply_api.sql; build a code → UI text / fallback table; add texts only for confirmed codes. No live writes.
+
+## K-0202 — RELEASE C0183 T10 yard refusal texts
+`RESULT_C0183.md`, local commit "C-0183 T10" (git log), no push.
+- Audit of live native (RRL_YARD_VISIT_API/DOCK_PLAN_API/SUPPLY_API), the API and the migrations; full list in `codes-found.json`.
+- Added 4 command codes: YARD_CANCEL_REASON_REQUIRED, YARD_DOCK_AMBIGUOUS, YARD_REQUEST_INVALID, YARD_INBOUND_UNSUPPORTED (the last only in the rollback base 2026-10-22).
+- Read, infrastructure, install and dock-status codes stay on the visible fallback, each with a reason in the table. No "nothing changed" claims in the new texts.
+- Focused test 9/9 PASS; tsc, gate, encoding and architecture PASS. No live writes.
+
+## K-0203 — ACK C0184 T10 read-only Gantt load profile
+I read `TASK_C0184_T10_GANTT_LOAD.md`. Paths:
+- `reports/tradecase/2026-10-27/claude/C0184/**`, including the diagnostic script `reports/tradecase/2026-10-27/claude/C0184/scripts/c0184_gantt_load.py`
+- `coordination/retailcase-claude/RESULT_C0184.md`
+Safeguards:
+- GET only, against the running 8093, with current admin rights;
+- 2 warehouses (220793322, 226192056), a 6 h window; per warehouse 3 serial plus 1 round of 4 concurrent (14 GETs total, ≤30);
+- a 403 stops that warehouse; Oracle only read-only (`set transaction read only`) for RRL_SQL_SLOW_LOG;
+- no API restart, no dist changes, no code changes without a proven bottleneck.
+
+## K-0204 — RELEASE C0184 T10 read-only Gantt load profile
+`RESULT_C0184.md`, local commit "C-0184 T10" (git log), no push.
+- 22 GETs to 8093 (cap 30), window 27.10 12–18Z, all 200, admin without a 403.
+- **Serial:** 0.12–0.21 s (the first request was cold at 0.98 s).
+- **Concurrent ×4:** in each run one burst slowed to ~1 s and the other did not, regardless of warehouse/payload (1.6/4.6 KB).
+- **Equality:** event and assignment IDs are equal across all responses.
+- **Slow log:** RRL_SQL_SLOW_LOG has 0 rows; SQL is not attributed.
+- Processes 8088 PID 87992 / 8093 PID 24236 unchanged; zero writes.
+- **Decision:** backlog for the API owner. Most likely a cost of the first concurrent burst (pool/threads), unproven; it needs pool acquire-time metrics. No code fix, no index.
+- Not covered: REACHTRUCK/OTHER and non-admin.
+
+## K-0205 — ACK C0185 T10 live refusal on a blocked dock
+I read `TASK_C0185_T10_BLOCKED_PLAN_LIVE.md`. Paths:
+- `reports/tradecase/2026-10-27/claude/C0185/**` (driver `scripts/c0185_blocked_plan.py` + `scripts/c0185_ui.cjs`, json/md, screenshots)
+- `coordination/retailcase-claude/RESULT_C0185.md`
+- code only if a defect reproduces: `YardDockPlan.tsx`, `yardModel.ts`
+Plan, as admin with no temporary user, which minimizes writes:
+1. preflight read-only (B22D1161/N22DA1168 docks, active visits, plans for 7 days, stock sums for 220793322, slow LOG_ID max); if the state changed, abort without writing;
+2. the only non-API write: one tagged SUPPLY metadata document `C0185.<tag>` in RRL_TRADE_DOCUMENT (absence checked first; marked as no physical receipt);
+3. API: an inbound visit (supply_ids=[tag], vehicle=tag) → BLOCK B22D1161 (unique op);
+4. own Vite 1440/390: real plan attempt for my visit at B22D1161 → 409 YARD_DOCK_BLOCKED, C0182 text, no plan;
+5. finally: UNBLOCK (a separate op) → CANCEL only my visit;
+6. readback: dock open, visit CANCELLED, no plan, others' visits/plans unchanged, stock equal.
+An unknown outcome means a retry with the same body only, with no second operation. No direct yard table writes, no API restart.
+
+## K-0206 — RELEASE C0185 T10 live refusal on a broken dock (C0182 gate closed)
+`RESULT_C0185.md`, local commit "C-0185 T10" (git log), no push.
+- Preflight 220793322: B22D1161/N22DA1168 open; visits [] and plans [] for 7 days; stock 7/5/14.
+- Tag C0185.119165bc3b: SUPPLY metadata → API visit 638 (inbound, EXPECTED) → BLOCK B22D1161.
+- UI on my own Vite → 8093 at 1440 and 390: real plan attempt → 409 YARD_DOCK_BLOCKED outcome_confirmed=true; the C0182 text; no plan; no pending command.
+- finally: UNBLOCK (separate op) and CANCEL only 638. All POSTs 200 on the first attempt.
+- Readback: dock open/unambiguous; 638 CANCELLED; 0 plans; visits/plans before=after; stock 7/5/14 = 7/5/14; no temporary user (admin); API not restarted; slow SQL unrelated to yard.
+- No code changes. Notes:
+  - the tagged SUPPLY document remains, as in the earlier fixtures;
+  - the shared HelpButton hint is cut off on the left at 390 (outside my files).
+
+## K-0207 — ACK C0186 responsive HelpButton hint
+I read `TASK_C0186_RESPONSIVE_HELP_TOOLTIP.md`. Paths:
+- `admin/wms_admin_frontend/src/features/platform/help/HelpButton.tsx`, `.../help/help.css`
+- the test `reports/tradecase/2026-10-27/claude/C0186/scripts/c0186_tooltip.cjs` (Playwright, real HelpButton in the real app; GET only, no writes)
+- `reports/tradecase/2026-10-27/claude/C0186/**`, `coordination/retailcase-claude/RESULT_C0186.md`
+Cause: `.help-tooltip{position:absolute;right:0;width:min(270px,70vw)}`; anchored to the right edge of the button, so near the left edge of the screen it runs off it.
+Fix: on show (hover/focus) the hint is placed `position:fixed` from the button rect and clamped to [8, viewport−8]; flipped below if there is no room above; recalculated on scroll/resize. Escape, aria-describedby and title stay.
+Test: own Vite → API (GET only), shift desk → yard; widths 320/390/768/1440; hover and keyboard focus on a button near the left edge ("Обновить план") and near the right edge; the tooltip rect stays inside the viewport, Escape hides it, aria-describedby points to the tooltip, title is not empty, scrollWidth = viewport. Recorded before and after the fix.
+
+## K-0208 — RELEASE C0186 responsive HelpButton hint
+`RESULT_C0186.md`, local commit "C-0186" (git log), no push.
+- **Before:** at 390/768 the hint of "Обновить план" and of dock-status "Обновить" started at −31 px (anchored `right:0`).
+- **Fix** in HelpButton.tsx + help.css only:
+  - after showing, `position:fixed` from the button rect, clamped to [8, vw−8]; below the button if there is no room above; recalculated on scroll/resize;
+  - width min(270px, 100vw−16px);
+  - Escape, aria-describedby/role=tooltip and title kept.
+- **Regression** `c0186_tooltip.cjs after` PASS at 320/390/768/1440: hover/focus on the left and right edges plus the top edge (flip below), Escape, no horizontal scroll. tsc, gate, encoding and architecture PASS. No live writes.
+
+## K-0209 — RELEASE C0187 T06 weighted CASE write paths
+`RESULT_C0187.md`, local commit "C-0187 T06" (git log), no push.
+- **`tests/retailcase/test_weighted_case_pick.py`, 36 passed (offline):** fake cursor plus a recording StockPosting.
+  - weigh-line: NET capture of exactly this line/scope; another line, missing or not NET, and access denied → no posting; exact replay → stored metadata; different capture/actor/task/line/body → OPERATION_CONTENT_CONFLICT.
+  - weighted-box: reserved box → exactly one posting; another line or ambiguity, another SKU, KG mismatch or non-KG, missing/duplicate/excess marking and a stale profile, another unit's marking, a malformed label → refusal without posting; ISSUED is not found again.
+  - routes: case_pick_execute (403 without it), ValueError → 409 confirmed; global handler 403/409-conflict/503-retry; extra field 422.
+- **Defects:** none; production code unchanged.
+- **HU review:** a parent CONTAINER ← attach-case (a CASE task carrier, any mix of weighed/weighted/box lines) or attach (HU), at one location, with a scan and versions, ≤200 nodes, validate_tree, temperature and trade guards.
+  - Missing: an acceptance of the combined tree; weighed assembly without a CASE line has no path; the parent's gross weight only via MANUAL_CONFIRMED.
+- gate, encoding and architecture PASS.
+
+## K-0210 — TASK.md 23:38 looks like a history stitch; not resuming C0176 without confirmation
+TASK.md now carries "ACTIVE REVIEW C0176 — UI rev1" at the top, then C0176/C0175/C0174 and the old STOP of 26.10, with "COMPLETE C0187 — No active task" at the bottom. CODEX_TO_CLAUDE.md has not changed since 23:14, with no new REVIEW.
+C0176 UI rev1 is already done and handed over:
+- 2c77b952 (shared read/command helpers, remount on context, HelpButton with the published guide, the 390 fix);
+- the live UI after API_READY_C0176 (lost response → retry with the receipt, a real click at 390, the help article, a real 403), `RESULT_C0176.md`.
+The rule says "do not resume old tasks", so I'm treating the current state as "no active task". If C0176 does have new remarks, post them in CODEX_TO_CLAUDE.md and I'll pick them up right away.
+
+## K-0211 — ACK C0188 T06 manual NET weighing of a CASE line (waiting for review before edits)
+I read `TASK_C0188_T06_MANUAL_NET_CASE.md` and the required wiki/policy documents. Paths:
+- `api/wms_api_server/app/modules/inventory/contracts_weighted_case.py`, `.../api/weighted_case_routes.py`, `.../infrastructure/weighted_case_pick.py`
+- `tests/retailcase/test_weighted_case_pick.py`
+- `reports/tradecase/2026-10-27/claude/C0188/**`, `coordination/retailcase-claude/RESULT_C0188.md`
+
+**Native authority (read-only, live user_source):**
+1. **Writer:** the single writer is `CASE_PICK_CONFIRM` (RRL_STOCK_CASE_PICK_CMD via StockPosting). The canonical request in RRL_STOCK_OPERATION records the actor, source {case_task_id, case_line_id}, metadata, idempotency by operation_id, and the time. That is an authoritative idempotent record without new DDL.
+2. **Scale optional:** `RRL_CASE_SCALE_ADMISSION.assert_capture/claim_capture` return immediately when there is no `warehouse_scale_capture` in metadata. So native does not require a scale for a KG line. `RRL_CASE_WEIGHT_SCAN.assert_scan` applies only to SERIALIZED_WEIGHT_BOXES SKUs (the weighted-box path).
+3. **Native guards still apply:** CASE_TASK_ACTOR_CONFLICT (assigned/case_pick_manage), CASE_WAVE_STATE_CONFLICT (LAUNCHED), task/line status, `previous_qty` closure (CLOSURE_CHANGED), fact>previous and ≤PLANNED_QTY, carrier/cell/product scan, own HARD in the cell, CASE_MARKED_UNIT_SCANS_REQUIRED.
+4. **No separate archive:** there is no separate manual NET table (unlike RRL_WH_SCALE_CAPTURE / RRL_CASE_MANUAL_TARE). The manual weight would live only in the operation's canonical metadata. If you need a separate append-only archive with its own key, that is new DDL; I'll then return a handoff and won't write it.
+
+**Proposal without DDL** (a separate variant; the electronic `/weigh-line` and `WeighedLineRequest` are not changed):
+- `POST /api/case-pick/tasks/{task}/lines/{line}/weigh-line-manual`, `ManualNetLineRequest` (extra=forbid, so `warehouse_scale_capture` cannot be sent):
+  - `operation_id`, `net_weight_kg` (Decimal >0, finite, at most 3 decimals), `reason` (min 8), `scan_cell`, `scan_container`.
+- The server, read-only, under `assert_scope(case_pick_execute)`:
+  - requires base KG with the KG→KG 1:1 conversion, not SERIALIZED_WEIGHT_BOXES, not MARKING_REQUIRED;
+  - takes `scan_product` from the line;
+  - `fact_qty = PICKED_QTY + net_weight_kg`; the client's `fact_qty` is not accepted;
+  - metadata `manual_net_confirmation=submitted` + `measurement={basis:NET, uom:KG, origin:MANUAL_OPERATOR_ENTRY}`.
+- **Repeat:** stored by canonical request. A different body/actor/task/line, or an operation from `/weigh-line`/`weighted-box`, gives OPERATION_CONTENT_CONFLICT.
+- **Unknown outcome:** RESULT_UNCERTAIN → 503 retry the same op (global handler).
+- **Refusals:** ValueError → 409 `WEIGHED_CASE_MANUAL_REJECTED` outcome_confirmed=true.
+
+**Questions for you before I edit:**
+- (a) Right: case_pick_execute, as for `/weigh-line`, or a stricter case_pick_manage for manual mass?
+- (b) Is the record in operation metadata enough as the authoritative record, or is a separate archive needed (then a DDL handoff)?
+- (c) Note: the general `CasePickLineConfirmRequest` already accepts a client `fact_qty` for a KG line without a scale (looser). Leave it as is, or is that a separate decision?
+
+## K-0212 — RELEASE C0188 T06 manual NET weighing of a CASE line
+`RESULT_C0188.md`, local commit "C-0188 T06" (git log), no push. Native matches the ACK: no metadata whitelist, assert_capture is skipped without a capture.
+- **New route** `POST …/lines/{line}/weigh-line-manual` (case_pick_execute), `ManualNetLineRequest` extra=forbid: net_weight_kg >0, finite, 27/9 like CASE fact_qty; scan_cell/container; optional unit_scans.
+- **Server read** (read only, assert_scope): only KG→KG 1:1 and not SERIALIZED; fact=PICKED+net; provenance `measurement{NET,KG,net,MANUAL_OPERATOR_ENTRY}` + `manual_net_confirmation`.
+- **Unchanged:** the electronic /weigh-line, weighted-box and the general confirm.
+- **Tests 57 passed** (+21): exclusivity of the sources, task/line/actor, positive finite NET, exact repeat, body/actor/task/line conflict and the electronic op under the manual route, refusals without posting, 503 retry after commit.
+- gate, architecture and encoding PASS.
+- **General path gap:** `CasePickLineConfirmRequest` still accepts a client fact_qty for KG without provenance; needs a separate decision.
+- Live Oracle/API acceptance not done; T06 is not complete.
+
+## K-0213 — ACK C0189 T06 manual NET in the CASE picker (waiting for review before edits)
+I read `TASK_C0189_T06_MANUAL_NET_UI.md`, RESULT_C0188, T06 in the roadmap, case-pick-tsd.html/.js, case-pick-posting.js and manual-weight.html.
+
+**KG eligibility signal (verified in source):**
+- `order-weight-preview` (RRL_ORDER_WEIGHT_READ.snapshot_json) returns `unit:"KG"` from the order rows and TYPE_W only. It **does not state the KG→KG 1:1 conversion or SERIALIZED**, so it is not suitable as the signal.
+- `GET /api/case-pick/tasks/{task}/lines/{line}/marking-policy` (`case_pick_policy.py`) returns `loose_weight_kg = TYPE_W∈(2,3,5,6,7) ∧ the KG→KG 1:1 conversion ∧ ¬serialized_weight_boxes ∧ ¬marking_required`, plus `serialized_weight_boxes`, `marking_required` and `profiles`.
+  - The conversion check is the same as the server-side check of `/weigh-line-manual`. The screen already reads this endpoint (posting.js:33).
+- **Gap:** for a **marked** KG line the response has no separate `weighted_kg`; `loose_weight_kg` is false because of the marking. Per K-0211 marked products are not rejected outright, but the UI has no explicit KG signal for them.
+  - Options: (a) add `weighted_kg` to the marking-policy response (one field in `case_pick_policy.py`, your backend file, or allow it to me); (b) for now the UI offers manual NET only for `loose_weight_kg=true`, and marked KG lines stay on the current path until the field exists.
+
+**Files** (proposed):
+- `wiki-raw/wms_admin_ui_reference/case-pick-tsd.html` (the field/button block and script include)
+- new `wiki-raw/wms_admin_ui_reference/case-pick-manual-net.js` (the journal: operation_id plus exact body saved before sending, retry with the same bytes, 409 confirmed vs 503/network unknown, POST only to `/weigh-line-manual`)
+- `wiki-raw/wms_admin_ui_reference/case-pick-posting.js`: **ownership requested**. Only a minimal hook is needed there: on `loose_weight_kg` show the manual block and do not send the line to the general `/confirm`. Without it, the "zero general confirm" requirement cannot be guaranteed, because the line flow lives in this file.
+- `docs/help/public/manual-weight.html` (a section on manual NET for a CASE line, with an anchor)
+- the test `reports/tradecase/2026-10-28/claude/C0189/scripts/c0189_ui.cjs` (Playwright, intercepted reads/POSTs only; 360/390/1440, keyboard/scanner, non-KG, marked KG, unknown → retry, changed body, 409/503, 0 general confirm), evidence there, `RESULT_C0189.md`.
+No backend/Oracle, API restart, hardware or GitHub.
+
+## K-0214 — RELEASE C0189 T06 manual NET in the CASE picker
+`RESULT_C0189.md`, local commit "C-0189 T06" (git log), no push.
+- **Signal:** `marking-policy.weighted_kg` (not order-weight-preview).
+- **New `case-pick-manual-net.js`:** checkbox + "Нетто вручную, кг" field + help link `#case-manual-net`; for marked KG it is forced, with all profile codes required (≤50).
+- **posting.js:** route `weigh-line-manual` in the existing journal: body `{operation_id, net_weight_kg, scan_cell, scan_container, unit_scans}` without fact_qty/capture; exact retry after reload; a different value cannot start a new command; a KG line never goes to `/confirm`.
+- **Other files:** a block in html, a section in manual-weight.html.
+- **UI check, intercepted requests only, PASS 9:** 360/390/1440 keyboard Enter → only /weigh-line-manual, 0 confirm; 503 → reload → identical bytes; 409 confirmed vs OPERATION_CONTENT_CONFLICT; KG without a source → no request; marked KG with codes; non-KG → regular /confirm.
+- gate, encoding and architecture PASS. Live posting not done; T06 is not complete.
+
+## K-0215 — ACK C0190 T06 mixed-tree runner (plan + assumptions; waiting for review before edits)
+I read the task, `tradecase_nested_shipping_20261023.md` (6-point criterion), `scripts/ni042_warehouse_scale_net_case.py`, `tests/tradecase/live_nested_shipping.py`, `bulk_case_pack.py`, and C0188/C0189.
+**No existing runner covers the criterion:**
+- the 23.10 nested run is a whole warehouse place with one SKU;
+- T07 bulk-packing is two CASEs of the same SKU;
+- ni042 is a weighed CASE without a tree, and with an electronic capture.
+
+**Files** (new, isolated):
+- `scripts/c0190_mixed_tree_runner.py`
+- `tests/retailcase/test_c0190_mixed_tree_runner.py` (offline)
+- `reports/tradecase/2026-10-28/claude/C0190/**`, `coordination/retailcase-claude/RESULT_C0190.md`
+I don't change existing harnesses: I import their functions (`live_document_acceptance.http/expect`, `bulk_case_pack` patterns, `full_pallet_fixture.prepare_shipment`).
+
+**Runner design:** modes `preflight | plan | run | cleanup`. Default `plan`, with no network or Oracle writes. Root runs it.
+- **Journal:** every step is stored before sending as `{key, method, path, body}`. A repeat sends exactly the same bytes. An unknown outcome (503/network) only allows repeating the same step; the next step is blocked. The state file lives under `runtime/test-evidence/tradecase/2026-10-28/T06/mixed-tree/` (root's evidence).
+- **Preflight (read-only), refuses on:**
+  - the `MT28.<hex>` tag already present in RRL_TRADE_DOCUMENT/RRL_PALLETS/RRL_ARTICULS/RUSERS;
+  - other people's stock, CASEs or active visits on the chosen warehouse (a new warehouse ID is checked for absence, as in NS23);
+  - `/weigh-line-manual` or `marking-policy.weighted_kg` missing in the served API (OpenAPI GET);
+  - API_READY not confirmed.
+- **Fixture (steps 1–2):** using existing patterns.
+  - A KG article: TYPE_W=3 + KG→KG 1:1, as in ni042, via `RRL_STOCK_CONFIG_API.begin_change`.
+  - An EA/BOX article.
+  - One recipient/order with two rows.
+  - Two CASE tasks via the existing services, as in ni042.
+- **Picking:**
+  - the KG CASE → **`/weigh-line-manual`** (manual NET, no synthetic capture);
+  - the EA/BOX CASE → the regular `/confirm` with fact_qty/scans.
+- **Tree:** `/api/warehouse-hus/create` (PALLET) → `attach-case` for both CASEs (their SSCC, current versions, one cell).
+- **Checks:**
+  - the composition of the parent (each SKU/quantity/SSCC/provenance once, `physical_unit_count`, no double counting);
+  - negatives: stale version, someone else's SSCC, another cell, a changed body with the same op → 409 and the composition unchanged.
+- **Gross weight of the parent:** only the operator-confirmed value `Measurements origin=MANUAL_CONFIRMED`, entered as a run parameter. I don't invent it.
+- **Then:** control → LOAD → DEPART of the root via the existing routes, as in NS23, with a lost-response simulation (exact repeat) and stock/reservation/tree invariants before and after.
+- **Cleanup:** ordered native reversals (detach → unpack/return carriers → cancel waves/plans → retire users and roles). If the state cannot be returned, stop and report it.
+
+**Questions:**
+- (1) **Store receipt** (point 6 of the criterion): the task says "do not invent store receipt". I'm excluding it from the runner and marking it as open. Agreed?
+- (2) **Fixture:** is creating the KG/EA articles by direct metadata inserts under `RRL_STOCK_CONFIG_API.begin_change` (as in ni042/bulk_case_pack) allowed in the runner, or do you have a preferred existing fixture (warehouse + two SKUs + order)?
+- (3) **Scope:** control/LOAD/DEPART add a lot of transport fixture (trip, vehicle, documents, as in NS23). Include them now, or limit C0190 to the tree (points 1–4) plus invariants and cleanup, with LOAD/DEPART as a separate request?
+
+The offline tests (pytest, no network): preflight refusals (collision, other people's stock, missing route), plan order, the manual NET body without capture/fact, byte-identical journal repeat and blocking after unknown, and the cleanup plan order.
+
+
+## K-0216 — RELEASE C0190 T06 mixed-tree runner (not run in live modes)
+`RESULT_C0190.md`, local commit "C-0190 T06" (git log), no push.
+- **`scripts/c0190_mixed_tree_runner.py`:** modes plan/preflight/run/cleanup. `--api`, `--api-ready`, `--parent-tare-kg` and `--manual-net-kg` are required.
+  - **Preflight** refuses before writes on: no API_READY or route/weighted_kg, a tag collision, a protected or non-empty warehouse, no template, missing measurements, measurements changed on resume.
+  - **Journal:** steps stored before sending, byte-identical repeats, unknown outcome blocks the rest.
+- **Stages:**
+  - FIXTURE (ni042 under begin_change, new warehouse, KG TYPE_W=3 + 1:1, EA copy);
+  - WAVE (two orders of one recipient → exactly 2 CASEs, tare, claim/start);
+  - PICK_KG via /weigh-line-manual with provenance MANUAL_OPERATOR_ENTRY;
+  - PICK_EA via /confirm;
+  - TREE: create PALLET (measured tare) → attach-case KG → replay → 4 refusals (stale, someone else's scan, changed body, another cell) with the composition unchanged → attach-case EA → tree_findings.
+- **TRANSPORT:** an explicit stop TRANSPORT_NOT_WIRED (needs the live_nested_shipping fixture, per your item 3).
+- **Cleanup:** ordered native reversals up to P=0/H=0.
+- **Checks:** offline 32 passed; gate, encoding and architecture PASS.
+- **Limitation:** the live stages have not been run against the target runtime; assumptions listed in RESULT, every deviation is a stop with a code.
+- **Gap:** /confirm KG without provenance is yours; not changed.
+
+## K-0218 — ACK K-0217 (C0190 rework, the same task)
+I read the three blockers. I'll change only: `scripts/c0190_mixed_tree_runner.py`, `tests/retailcase/test_c0190_mixed_tree_runner.py`, `reports/tradecase/2026-10-28/claude/C0190/**`, `RESULT_C0190.md`.
+(1) Cleanup only for this run's lots and carrier lots, two articles, exact expected totals; any other UID/article/active reservation/other task → stop before INVENTORY_COUNT.
+(2) Native post: the full command {operation_id, command_type, source, metadata} goes into the same journal before calling StockPosting; an unknown outcome blocks later steps; a retry sends the stored bytes; changed content under the same key → stop.
+(3) Each refusal checks its expected code (HU_CONTENT_VERSION_CONFLICT / HU_CASE_CARRIER_SCAN_REQUIRED / HU_PACK_SAME_LOCATION_REQUIRED / OPERATION_CONTENT_CONFLICT), and the parent composition is re-read after each one.
+Live modes are not run; no Oracle writes.
+
+
+## K-0219 — RELEASE C0190 rework K-0217 (the three blockers fixed)
+`RESULT_C0190.md` (the "Rework K-0217" section), local commit "C-0190 rework" (git log), no push. Live modes not run.
+1. **Cleanup:** only the fixture lots and this run's carrier lots, the two articles, the exact registered remainder (only for posted lots), 0 active reservations, no other CASEs or open tasks. Otherwise `CLEANUP_SCOPE_REFUSED`, before INVENTORY_COUNT.
+2. **Native post:** the full command in the journal `native.<key>` before StockPosting; 200/409/0 classification; an unknown outcome blocks later steps; a retry sends exactly the stored content; changed content under the same key → `STEP_CONTENT_CHANGED` before posting.
+3. **Negatives:** only 409 with the exact rule (HU_CONTENT_VERSION_CONFLICT, HU_CASE_CARRIER_SCAN_REQUIRED, HU_PACK_SAME_LOCATION_REQUIRED, OPERATION_CONTENT_CONFLICT in code or reason); the parent composition re-read after **each** refusal; unrelated denials → `UNEXPECTED_REFUSAL`.
+- **Checks:** tests 55 passed (+23 for these points); gate, encoding and architecture PASS. TRANSPORT and the store receipt stay explicitly outside the runner.
+
+## K-0220 — ACK C0191 mixed-pallet transport and store receipt
+I read TASK_C0191_MIXED_TRANSPORT.md. Paths:
+- new `scripts/c0191_mixed_tree_transport.py` (accepts the C0190 Live object/state; does no live work on import)
+- `tests/tradecase/test_c0191_mixed_tree_transport.py` (offline, fakes)
+- `reports/tradecase/2026-10-28/claude/C0191/**`, `coordination/retailcase-claude/RESULT_C0191.md`
+I don't touch C0190 (Codex-owned). Contracts come from tests/tradecase/live_nested_shipping.py and the current store receipt routes; synthetic fixture values are marked as such; real external ACK prerequisites stay explicit in the input contract. No Oracle writes, API restarts or GitHub.
+
+
+## K-0221 — RELEASE C0191 mixed-pallet transport and store receipt (adapter; not run live)
+`RESULT_C0191.md`, local commit "C-0191" (git log), no push. C0190 not changed.
+- **`scripts/c0191_mixed_tree_transport.py`:** `run(live, inputs)` after C0190 TREE; no live work on import.
+- **Stages through the C0190 journal:** SHIPMENT (one ST for one recipient, detach → bind → attach both CASEs) → TRANSPORT_TASK (dock/vehicle/driver/trip/ST/profile) → FLOOR_QC_TARE → LOAD (one root, replay, events −(NET+4), one APPLIED) → TARE_HANDOVER (a separate driver) → DEPART (replay, DEPARTED, historical tree) → STORE_RECEIPT (PAPER_COUNT, scan_place = root, one address, observations per leaf, replay, ACCEPTED).
+- **Input contract** `validate_inputs` (listed in RESULT); synthetic values are marked `SYNTHETIC_FIXTURE_NOT_PHYSICAL`.
+- **Explicit stops:** `EXTERNAL_TRANSPORT_DOCUMENT_REQUIRED`, `STORE_MARKED_RECIPIENT_FLOW_REQUIRED`, `SINGLE_RECIPIENT_REQUIRED`, `STORE_ROOT_OR_RECIPIENT_MISMATCH`.
+- **Checks:** 25 offline tests passed; gate, encoding and architecture PASS.
+- **Integration for you:**
+  - C0190 cleanup must take `transport.expected_remainder_after_load` (only the halves remain after LOAD);
+  - adapter cleanup (tare return, binding off, retire users) is not implemented, per the NS23 finish() pattern.
+
+## K-0222 — C0191 is already done via the file channel (the CLI error is on Codex's side)
+Re the note from 28.10 08:10 ("OAuth session expired… No ACK received"): this session works through the file channel and is authorized. The ACK is K-0220; RESULT/RELEASE is K-0221 (`RESULT_C0191.md`, commit 854e459e: `scripts/c0191_mixed_tree_transport.py` + 25 offline tests, not run live). No need to queue C0191 again; it is ready for your review and integration with C0190. I'm checking the channel every 3 minutes.
+
+## K-0223 — ACK C0192 mixed-tree cleanup (the Russian text arrived as '?')
+TASK_C0192_MIXED_CLEANUP.md and the 08:19 message were saved with the Cyrillic replaced by '?' (encoding loss on write). I'm reading them from the surviving fragments, file names and identifiers. **If anything differs, please resend in English or UTF-8.**
+My reading:
+- new companion `scripts/c0192_mixed_tree_cleanup.py` + `tests/tradecase/test_c0192_mixed_tree_cleanup.py` on the C0190+C0191 Live/state (I don't edit C0190/C0191);
+- the cleanup path is chosen by the reached stage:
+  - **after DEPART/STORE_RECEIPT:** return the root tare from the vehicle (offer by the driver, accept by the warehouse: two participants), close the tare count to 0 by balance_version, driver-binding active=false, retire only this run's synthetic users (driver/receiver/group), then hand the expected remainder (the halves) to C0190 cleanup;
+  - **LOADED but not DEPARTED:** stop and report (native unload is not invented);
+  - **before LOAD:** native book-cancel of the root tare and detach/return via C0190 cleanup;
+- every write goes through the C0190 journal (exact repeat by operation_id/body, unknown outcome blocks the rest); scope only for own tags/IDs; offline tests; no live runs.
+- Root state noted: warehouse 234459647, wave 644, CASE 1182/1183, TREE PASS, ST 643008/643009.
+Paths: the two new files, `reports/tradecase/2026-10-28/claude/C0192/**`, `RESULT_C0192.md`.
+
+
+## K-0224 — RELEASE C0192 mixed-pallet cleanup companion (not run live)
+`RESULT_C0192.md`, local commit "C-0192" (git log), no push. C0190/C0191 not changed; against the English TASK_C0192 (08:21).
+- **`scripts/c0192_mixed_tree_cleanup.py`:** `run(live)` only after the complete C0191 delivery (STORE_RECEIPT, no stopped), with checks that users/IDs belong to the run.
+- **Steps through the C0190 journal:** tare return driver→warehouse (two participants) → tare zero (balance exactly 1; not twice if C0190 zeroes the same type) → driver-binding off → wave finish-execution + replay → stock scope (only the run's lots, the exact remainder, 0 reservations) → INVENTORY_COUNT to 0 → P=0/H=0 → remove the receiver's right via the admin API, users DELETED=1, the driver's rights.
+- The departed tree is not detached.
+- **Checks:** 23 offline tests passed; gate, encoding and architecture PASS.
+- **Integration:** after the companion, C0190 cleanup must not count the lots a second time.
+
+## K-0226 — ACK C0192 rework (K-0225)
+I read TASK_C0192_REWORK.md. Only the C0192 files. retire() no longer performs DML or the rights API: before it, a stop RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER, and the retire step is not marked done. The completed safe steps (tare return, tare zero, binding off, wave finish, own stock zero) are kept; a resume does not repeat them. Offline tests prove that no user/rights SQL runs after the stop. After the RELEASE I take the C0191 DOCID/recovery rework from K-0224 (with a separate ACK).
+
+
+## K-0227 — RELEASE C0192 rework (K-0225)
+`RESULT_C0192.md` (the "Rework K-0225" section), local commit "C-0192 rework" (git log), no push.
+- retire() stops with `RETIRE_REQUIRES_DURABLE_OWNER_FINALIZER` before any RUSERS/RIGHTS mutation and before the rights API; retire is not marked done; `c0192.retire_pending` saved.
+- The safe steps are kept; a resume repeats nothing and stops again. Cleanup is explicitly incomplete until the owner finalizer exists.
+- 24 offline tests passed (no SQL after the stop, resume without repeats); gate, encoding and architecture PASS.
+Next I take the C0191 DOCID/recovery rework from K-0224 (ACK first).
+
+## K-0228 — ACK C0191 rework (K-0224: DOCID ≤15 + SHIPMENT reconciliation)
+Only `scripts/c0191_mixed_tree_transport.py`, `tests/tradecase/test_c0191_mixed_tree_transport.py`, `reports/tradecase/2026-10-28/claude/C0191/**`, `RESULT_C0191.md`. I don't touch C0190/C0192 or the fixture.
+Plan: a bounded ST number (≤15, deterministic from the tag, saved once in the state, checked for collisions read-only); the external identifiers (ST pallet UID) and journal operation_ids unchanged. Every SHIPMENT metadata write: the intent is saved before the write, plus a read-only reconciliation before the write and on resume (an existing ST/rows/fulfillment are reused only if they match, otherwise a stop). An existing ST with a number >15 from the failed run → an explicit stop for your repair.
+
+
+## K-0230 — RELEASE C0191 rework (K-0224: DOCID ≤15 + SHIPMENT reconciliation)
+`RESULT_C0191.md` (the "Rework K-0224" section), local commit "C-0191 rework" (git log), no push. C0190/C0192 not changed.
+- **ST number:** `ST` + SHA-256(tag)[:13] = 15 characters (DOCID VARCHAR2(15)); deterministic, saved once, collision-checked read-only. `<tag>.ST.PAL` and the operation_ids unchanged.
+- **Every SHIPMENT metadata write** (ADD2, CONDITION, 2×ADD4, 2×fulfillment): read-only check → SENT intent in the state → write → visible check. A post-commit failure gives no duplicates on retry; mismatches → stop.
+- **The pre-rework ST with a 16-character number** → `EXISTING_ST_NUMBER_EXCEEDS_DOCID_15`: repair is yours.
+- 33 offline tests passed (+8); gate, encoding and architecture PASS.
+
+## K-0232 — ACK C0191 rework 2 (K-0231)
+Only the C0191 files. (1) Before every SHIPMENT metadata write, a deterministic descriptor {operation, kind CALL|EXEC, function|SQL, JSON-safe args/binds} goes into shipment_writes; on resume the regenerated one is compared with the stored one, and a difference → SHIPMENT_INTENT_CHANGED:<key> before any reconciliation or write. The ADD2 date is fixed in the state once (so it doesn't change on a resume the next day). (2) The read-before/after reconciliation stays; only a fully matching record is reused. (3) A fulfillment matches only order + ST id + root UID + address + PLANNED + FACT_QTY/FACT_WEIGHT=0 + QA_C0191_ONLY; any other value under the same order/ST → FULFILLMENT_MISMATCH before an insert. (4) Tests for the saved intent, a changed intent, and a mismatching fulfillment.
+
+
+## K-0233 — RELEASE C0191 rework 2 (K-0231)
+`RESULT_C0191.md` (the "Rework 2 K-0231" section), local commit "C-0191 rework 2" (git log), no push. C0190/C0192 not changed.
+- **Intent:** a deterministic descriptor {operation, CALL|EXEC, function|SQL, JSON-safe args} goes into the state before every SHIPMENT write; a resume compares it and stops on a difference with `SHIPMENT_INTENT_CHANGED:<key>` before reconciliation/write; the ADD2 date is fixed in the state.
+- **Fulfillment:** only the full match (UID, address, PLANNED, 0/0, QA_C0191_ONLY); otherwise `FULFILLMENT_MISMATCH` before the insert.
+- 43 offline tests passed (+10); gate, encoding and architecture PASS. Waiting for your acceptance.
+
+## K-0235 — ACK C0192 finalizer (K-0234)
+Only the C0192 files; C0190/C0191 not changed. Plan: the safe steps unchanged; retire = (1) a read-only preflight of exact rights before the first deletion (the driver's group has exactly tare_accept/tare_offer/driver_return_accept, the receiver's group has store_receipt_confirm; anything else → stop), saved to the state; (2) the receiver's right through the journaled admin API DELETE + verification; (3) via Live.finalizer_sql: delete exactly the driver's three rights (verify: their post-state count=0 → 1), RUSERS.DELETED=1 for the driver and the receiver (verify DELETED=1 → 1). Each step validates the identifiers (MT28D/R + 9 hex) before the mutation and saves progress; a resume repeats nothing. Offline tests run against the real C0190 finalizer_sql on a fake DB: normal retirement, post-commit reconciliation, changed content, a foreign user, resume without repeats.
+
+
+## K-0236 — RELEASE C0192 finalizer (K-0234)
+`RESULT_C0192.md` (the "Finalizer K-0234" section), local commit "C-0192 finalizer" (git log), no push. C0190/C0191 not changed.
+- **Retirement:** read-only rights preflight (exact sets, users active; saved) → the receiver's right via the journaled admin DELETE + check → `finalizer_sql` for exactly three driver rights (post-state verify) → `finalizer_sql` RUSERS.DELETED=1 for the driver and the receiver.
+- `retire_scope` before every mutation; progress after every step; a resume repeats nothing.
+- **Without finalizer_sql:** the stop as before, with retire_pending.
+- 31 offline tests passed (+7, against the real C0190 finalizer_sql); gate, encoding and architecture PASS. Waiting for acceptance.
+
+## K-0238 — ACK C0193 binding one root HU to one mixed ST
+I read TASK_C0193_ROOT_HU_SHIPMENT_BIND.md. C0190–C0192 not changed; no live writes.
+Files (inventory module):
+- `api/wms_api_server/app/modules/inventory/contracts_root_shipment.py` (public request model + port)
+- `.../inventory/domain/root_shipment.py` (pure checks: tree, order uniqueness, one recipient, composition equality, request hash)
+- `.../inventory/infrastructure/root_shipment_binding.py` (one metadata transaction `receipt_task_metadata`, as in case_shipment_binding)
+- `.../inventory/api/root_shipment_routes.py` (POST `/api/warehouse-hus/bind-shipment`, case_pick_execute)
+- registration: an export in `inventory/public.py` + a router/override line in `app/main.py` (2 lines)
+- `tests/retailcase/test_root_hu_shipment_bind.py`, `reports/tradecase/2026-10-28/claude/C0193/**`, `RESULT_C0193.md`
+Design: lock the ST and the CASE children FOR UPDATE; the root composition from the native `RRL_STOCK_HU_READ.snapshot_json`; aggregated carrier lots vs ST rows through the existing `assert_matching_composition`/`physical_composition`; one PLANNED fulfillment per order, one address; each CASE gets LEGACY_SBORKA_PALLET_ID = the ST, each fulfillment PICKED with its own composition/version; the HU tree is not touched. Idempotency without DDL: a ROOT_SHIPMENT_BOUND event per CASE with OFFLINE_EVENT_ID=`<op>:<task>` (the global unique index U1) and request_hash in the payload; exact repeat → the stored result, a changed body → 409 OPERATION_CONTENT_CONFLICT. If you prefer not to register in main.py, tell me.
+
+
+## K-0241 — (renumbered: was K-0240, a number collision with Codex K-0240) C0193 result written before reading the withdrawal
+`RESULT_C0193.md`, local commit "C-0193" (git log), no push. C0190–C0192 not changed; no live writes.
+- **`POST /api/warehouse-hus/bind-shipment`** (case_pick_execute), `RootShipmentBindRequest{operation_id≤80, shipment_identifier, scanned_root, expected_root_version}`; inventory module: contracts / domain / infrastructure / api.
+- **One `receipt_task_metadata`:**
+  - ST FOR UPDATE → operation journal → ST not bound to another root;
+  - root snapshot (native read): top-level PALLET/BOX, version, ≥1 closed CASE;
+  - CASE FOR UPDATE: same warehouse/SSCC/version, not bound, one per order;
+  - fulfillments: one PLANNED per order, one address;
+  - tree = carriers; carriers = ST in base units (`assert_matching_composition`);
+  - then all CASEs → the same ST, each fulfillment PICKED with its own composition, an event per CASE. The tree is not changed.
+- **Idempotency:** `OFFLINE_EVENT_ID=<op>:<task>` (unique U1) + request_hash; exact repeat → the stored result; a changed body/actor → 409 OPERATION_CONTENT_CONFLICT.
+- **Registration:** public.py + 2 lines in app/main.py (as agreed; prepared_carrier_routes.py not changed).
+- 26 offline tests passed; gate, encoding and architecture PASS.
+
+## K-0242 — C0193 withdrawal (Codex K-0240): honest status, work stopped
+
+Codex K-0240 is read; I accept it. From now on I do no C0193 backend/API/test work, and I am limited to UI and strategic analysis.
+
+**I cannot confirm "no edits", because they were made.** The implementation was complete before I read K-0240. The local commit `8be60c93` was made at 09:53, one minute after K-0240 appeared (09:52). It was not pushed, and there were no live Oracle writes and no API restart.
+
+Commit contents:
+- new files:
+  - `inventory/contracts_root_shipment.py`;
+  - `inventory/domain/root_shipment.py`;
+  - `inventory/infrastructure/root_shipment_binding.py`;
+  - `inventory/api/root_shipment_routes.py`;
+  - `tests/retailcase/test_root_hu_shipment_bind.py` (26 offline);
+- `reports/tradecase/2026-10-28/claude/C0193/README.md` and `RESULT_C0193.md`;
+- edits to shared files:
+  - `inventory/public.py` +7 lines;
+  - `app/main.py` +2 lines (route + dependency override).
+
+The K-0241 message above (formerly K-0240) is not a release request and needs no acceptance.
+
+**Root's choice; I do nothing on my own:**
+- (a) Keep `8be60c93` as reference material for the native implementation.
+- (b) Remove it with `git revert 8be60c93` (one commit, reversible). I will do this only on your order, or you can do it yourself.
+
+Until your decision I do not touch these files.
+
+## K-0244 — K-0243 received
+C0193 accepted, thank you. I am not changing the committed API files. My role is UI and strategic analysis; waiting for a task.
+
+## K-0246 — ACK C0194
+Task received: analysis only. The single output file is `reports/tradecase/2026-10-28/claude/C0194/root_hu_floor_design.md` (plus a copy in RESULT_C0194.md). No code, tests or writes.
+
+## K-0247 — RESULT C0194 (analysis only)
+Report: `reports/tradecase/2026-10-28/claude/C0194/root_hu_floor_design.md`. Contrary to my ACK, there is no separate RESULT_C0194.md: the task forbids edits outside the report. No code, tests, Oracle/API changes or commit.
+- **Main point:** do not extend pallet-floor to CONTAINER. Loading already reads the CONTAINER root type from the HELD `RRL_TARE_BOOK PLACE_KIND=HU` (`compile_load` CONTAINER branch → HELD_HU_TARE_BOOK). A floor row for the root would be a second source of truth that nobody reads.
+- **Smallest design (no DDL):** make `TARE_BOOK place_kind=HU` the operator confirmation step.
+  - three optional fields in `RRL_STOCK_TARE_BOOK_CMD.describe_command` and the `Book` model: `expected_root_version`, `scan_place` (uid/SSCC), `scan_cell` (HU_CURRENT_CELL), refusing with TARE_ROOT_VERSION_CHANGED / TARE_ROOT_SCAN_REQUIRED / TARE_ROOT_CELL_SCAN_REQUIRED;
+  - optional read hint in `RRL_PALLET_FLOOR_READ.describe_type`: status USE_HU_TARE_BOOK for a CONTAINER root.
+  - Loading, QC, the STOCK floor path and the cancel flow are unchanged.
+- **Risks for root to decide** (verify read-only on the live root):
+  - a BOX root cannot get a tare book;
+  - HELD CASE books on the children give TARE_NESTED_PLACE_ALREADY_BOOKED;
+  - a type cannot be corrected without unpacking;
+  - the `tare_plan` right vs the shipping floor scope;
+  - GOOD availability of at least 1.
+
+## K-0249 — K-0248 received
+C0194 accepted. Ownership of `scripts/c0191_mixed_tree_transport.py` and its test moved to Codex; I am not touching them. No active task; waiting.
+
+## K-0251 — ACK C0195
+Task received: strategy only. The single output file is `reports/tradecase/2026-10-28/claude/C0195/multi_order_root_shipment_design.md`. No code, tests, writes or commit.
+
+## K-0252 — RESULT C0195 (analysis only)
+Report: `reports/tradecase/2026-10-28/claude/C0195/multi_order_root_shipment_design.md`. No code, tests, writes or commit.
+- **Predicted from source** for MT285C7190E3A (ST 643011, orders 2248/2249): the QC status read and HU_SHIP fail in `SHIPPING_CORE.compile_shipment` with SHIPMENT_CUSTOMER_ORDER_AMBIGUOUS; past that check there is an unmapped TOO_MANY_ROWS on the CASE select.
+- **Boundary:** the existing HU_SHIP operation, one transaction for the whole root. HU_SHIP already groups CASEs by ST and checks whole leaves.
+- **Change only SHIPPING_CORE:**
+  - a multi-order branch, entered only when the ST has more than one order; the one-order domain and QC signature stay byte-for-byte;
+  - per CASE: its own order, reservations, fulfillment (PICKED_CASE_TASK_ID, version, composition);
+  - aggregate: sum of carriers = ST rows in base units;
+  - one root, one recipient (CUSTOMER_ID + ADDR);
+  - QC_CASE.nested=1, so a multi-order ST ships only via HU_SHIP;
+  - proposed `project_ship_case` matching by PICKED_CASE_TASK_ID;
+  - replay is the HU_SHIP operation_id.
+- **Audit before implementation:** QC_POLICY/MARK/WEIGHT/SCOPE/FINAL_SCALE use case_task/customer_order_id from the domain.
+
+## K-0254 — K-0253 received
+C0195 accepted. I am not touching backend, SQL, tests or Oracle. Waiting for the server contract and a UI task.
+
+## K-0256 — ACK C0196
+Task received: UI strategy only. The single output file is `reports/tradecase/2026-10-28/claude/C0196/multi_order_root_hu_ui.md`. No code, tests, SQL, API/Oracle calls, screenshots or commit.
+
+## K-0257 — RESULT C0196 (UI strategy)
+Report: `reports/tradecase/2026-10-28/claude/C0196/multi_order_root_hu_ui.md`. No code, tests, SQL, API calls, screenshots or commit.
+- **No new screen.** One shared read-only block "Root → ST, one recipient" (built on `parseHuSnapshot`) goes into the existing steps:
+  - warehouse-hus.html: the only new action, "Bind root to ST", via the C0193 route and the existing HU command journal;
+  - warehouse-tasks.html: outgoing QC;
+  - transport-loading.html: HU mode → HU_SHIP.
+- **CASE list** (SSCC, status, version, composition) comes from the existing composition read.
+- **Order/fulfillment per CASE and `slices`** appear only after the C0195 contract; until then the column shows "—".
+- **QC** is a single badge for the whole ST; there is no per-CASE QC.
+- Includes a stop-reason table (C0195 proposals marked †) and help texts in the existing articles.
+
+## K-0259 — K-0258 received
+C0196 accepted. I will not implement UI until the multi-order shipment server contract is accepted. Waiting.
+
+## K-0260 — ACK C0197
+Task received: UI only. I will edit only `wiki-raw/wms_admin_ui_reference/warehouse-hus.html`, `wiki-raw/wms_admin_ui_reference/warehouse-hus.js`, `docs/help/public/warehouse-hus.html`, `reports/tradecase/2026-10-28/claude/C0197/README.md` and `coordination/retailcase-claude/RESULT_C0197.md`. POST goes only to `/api/warehouse-hus/bind-shipment`; I am not touching backend, tests, Oracle or API calls. Starting implementation.
+
+## K-0261 — RESULT/RELEASE C0197 (raw UI: bind root to ST)
+`RESULT_C0197.md`, local commit `94655f28`, no push. Changed: warehouse-hus.html/.js, docs/help/public/warehouse-hus.html, report.
+- **Visibility:** the section "Привязать корень к СТ" appears only for the current composition of a top-level CONTAINER with ≥1 CASE.
+- **Request:** saved before POST as `{operation_id:HUBIND:<uuid>, shipment_identifier, scanned_root=<root uid>, expected_root_version}`; POST goes only to `/api/warehouse-hus/bind-shipment`.
+- **Outcome:**
+  - success: shows the CASE count and re-reads the composition;
+  - confirmed refusal on the first send: shows the server code/message and clears the saved request;
+  - uncertain outcome: keeps the saved request; only exact retry or re-read is offered, and other HU commands stay blocked.
+- **Storage:** the binding uses the same `wmsCommandIntent` store owner under its own key, `wms-hu-bind-intent:`, because the `hu-command-intent.js` validator (not my file) would mark the binding body as damaged.
+- **Help:** buttons have title/data-help-id; help `#bind` says one root = one ST = one recipient and makes no promise about several orders or electronic weighing.
+- **Checks:** node --check OK, encoding PASS. No tests were run or claimed; acceptance is yours.
+
+## K-0263 — K-0262 received
+C0197 accepted. No active task; waiting.

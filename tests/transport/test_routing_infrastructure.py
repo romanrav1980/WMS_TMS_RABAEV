@@ -7,8 +7,10 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_osrm_and_valhalla_compose_files_exist():
     assert (ROOT / "docker-compose.osrm.yml").exists()
     assert (ROOT / "docker-compose.valhalla.yml").exists()
-    assert "osrm/osrm-backend:latest" in (ROOT / "docker-compose.osrm.yml").read_text(encoding="utf-8")
-    assert "ghcr.io/gis-ops/docker-valhalla/valhalla:latest" in (ROOT / "docker-compose.valhalla.yml").read_text(encoding="utf-8")
+    osrm = (ROOT / "docker-compose.osrm.yml").read_text(encoding="utf-8")
+    valhalla = (ROOT / "docker-compose.valhalla.yml").read_text(encoding="utf-8")
+    assert "osrm/osrm-backend@sha256:" in osrm
+    assert "ghcr.io/gis-ops/docker-valhalla/valhalla@sha256:" in valhalla
 
 
 def test_osrm_provider_uses_real_osrm_route_health_probe():

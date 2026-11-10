@@ -598,7 +598,7 @@ class TransportService:
 
     def create_task(self, req: TransportTaskCreateRequest, user_id: str) -> int:
         from ..modules.transport.public import create_existing_trip,TransportPlanError
-        try:return create_existing_trip(self.gateway,_normalize_transtype(req.transtype),req.shipment_date,user_id)
+        try:return create_existing_trip(self.gateway,_normalize_transtype(req.transtype),req.shipment_date,user_id,req.operation_id)
         except TransportPlanError as exc:raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
 
     def update_task(self, task_id: int, req: TransportTaskUpdateRequest, user_id: str) -> None:
@@ -1134,6 +1134,14 @@ class TransportService:
                 dist_cache=dist_cache or None,duration_cache=duration_cache or None,origin=origin,
                 time_limit_s=time_limit_s,
                 solver=solver,
+            )
+        # A plan without a route cannot be applied and must not be presented as
+        # a successful optimisation.  The caller needs a business error and the
+        # original constraints to correct, rather than a persisted empty plan.
+        if raw_orders and not plan.routes:
+            raise HTTPException(
+                status_code=422,
+                detail="Не удалось построить рейсы: проверьте вместимость ТС, тип транспорта и временные окна",
             )
         explain_steps.append({
             "code": "optimization_done",

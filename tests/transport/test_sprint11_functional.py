@@ -47,7 +47,14 @@ def task_id(api):
     })
     if r.status_code not in (200, 201):
         pytest.skip(f"Не удалось создать рейс: {r.status_code} {r.text}")
-    return r.json()["task_id"]
+    task_id = r.json()["task_id"]
+    planned = api.patch(
+        f"{BASE_URL}/api/admin/transport/tasks/{task_id}",
+        json={"shipment_time": "06:00"},
+    )
+    if planned.status_code != 200:
+        pytest.skip(f"Не удалось задать время рейса: {planned.status_code} {planned.text}")
+    return task_id
 
 
 # ---------------------------------------------------------------------------

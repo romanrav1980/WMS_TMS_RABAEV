@@ -166,12 +166,10 @@ def test_tariffs_table_info_endpoint():
     assert any("table-info" in r for r in routes)
 
 
-def test_get_tariff_table_handles_no_table():
-    """_get_tariff_table возвращает None если нужной таблицы нет."""
-    from api.wms_api_server.app.routers.transport_tariffs import _get_tariff_table
-    # Function should return None gracefully if table not found
-    # We can't run it without Oracle, but verify it's callable
-    assert callable(_get_tariff_table)
+def test_tariff_table_info_handler_is_public():
+    """Публичный handler таблицы тарифов остаётся доступен после модульной переработки."""
+    from api.wms_api_server.app.routers.transport_tariffs import get_tariff_table_info
+    assert callable(get_tariff_table_info)
 
 
 # ---------------------------------------------------------------------------

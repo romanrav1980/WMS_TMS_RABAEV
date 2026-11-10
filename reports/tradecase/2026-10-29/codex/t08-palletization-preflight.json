@@ -1,0 +1,12 @@
+{
+  "case": "T08 current-contract top-up preflight",
+  "status": "BLOCKED_BY_REQUIRED_MASTER_DATA",
+  "accepted_rule": "The recipient is enabled for top-up and the NEED source is MOVEMENT forecast.",
+  "refusal": "TOPUP_PALLET_PLACE_MAPPING_REQUIRED",
+  "writes_after_refusal": {
+    "topup_proposal_created": false,
+    "topup_hold_created": false
+  },
+  "decision": "Do not derive pallet places or stacking from box dimensions. Add explicit SKU palletization before positive capacity or concurrent hold acceptance.",
+  "evidence": "runtime/test-evidence/tradecase/2026-10-22/T08/topup-live-226708363.json"
+}

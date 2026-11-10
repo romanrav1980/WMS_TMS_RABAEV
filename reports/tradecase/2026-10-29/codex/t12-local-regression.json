@@ -1,0 +1,7 @@
+{
+  "case": "T12 local regression gate",
+  "status": "PASS",
+  "tradecase_pytest": {"tests": 474, "duration_seconds": 13.65, "command": "python -m pytest -q -p no:cacheprovider --basetemp tmp/pytest-tradecase-full-20261029 tests/tradecase"},
+  "retailcase_quality_gate": {"architecture": "PASS", "architecture_tests": "24 passed", "admin_frontend_typecheck": "PASS"},
+  "limitations": ["This is a local regression gate, not a load test or pilot.", "No external connector or equipment was used."]
+}

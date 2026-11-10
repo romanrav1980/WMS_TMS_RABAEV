@@ -1,0 +1,178 @@
+{
+  "kind": "LIVE_READ_ONLY_UI",
+  "api": "127.0.0.1:8093",
+  "runs": [
+    {
+      "warehouse": 51365792,
+      "width": 390,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 3",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "IW22713508027ed\nРичтрак",
+        "QD23713508027ed\nВорота",
+        "QI22513508027ed\nВорота",
+        "QO22513508027ed\nВорота"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 390
+    },
+    {
+      "warehouse": 51365792,
+      "width": 1440,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 3",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "IW22713508027ed\nРичтрак\nНеизвестно",
+        "QD23713508027ed\nВорота\nНеизвестно",
+        "QI22513508027ed\nВорота\nНеизвестно",
+        "QO22513508027ed\nВорота\nНеизвестно"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 1440
+    },
+    {
+      "warehouse": 213059748,
+      "width": 390,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак",
+        "NS23D213059748\nВорота"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 390
+    },
+    {
+      "warehouse": 213059748,
+      "width": 1440,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак\nНеизвестно",
+        "NS23D213059748\nВорота\nНеизвестно"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 1440
+    },
+    {
+      "warehouse": 220639789,
+      "width": 390,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак",
+        "TFP22.1221\nВорота"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 390
+    },
+    {
+      "warehouse": 220639789,
+      "width": 1440,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак\nНеизвестно",
+        "TFP22.1221\nВорота\nНеизвестно"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 1440
+    },
+    {
+      "warehouse": 222385707,
+      "width": 390,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак",
+        "NS23D222385707\nВорота"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 390
+    },
+    {
+      "warehouse": 222385707,
+      "width": 1440,
+      "status": "PASS",
+      "type_filters": [
+        "Ричтраки 1",
+        "Комплектовщики 0",
+        "Ворота 1",
+        "Машины 0",
+        "Прочие ресурсы 0"
+      ],
+      "reachtruck_lane": true,
+      "labels": [
+        "Synthetic reach truck QA\nРичтрак\nНеизвестно",
+        "NS23D222385707\nВорота\nНеизвестно"
+      ],
+      "events": 0,
+      "assignments": 0,
+      "posts": 0,
+      "page_width": 1440
+    }
+  ]
+}
